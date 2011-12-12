@@ -376,9 +376,15 @@
   Color.cls2rgb = function(c, l, s) {
     var L, TAU, a, angle, b, r, _ref2;
     if (s == null) s = 1;
+    /*
+    	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
+    	
+    	A saturation multiplier was added by Gregor Aisch
+    */
     if (c !== void 0 && c.length === 3) {
       _ref2 = c, c = _ref2[0], l = _ref2[1], s = _ref2[2];
     }
+    c /= 360.0;
     TAU = 6.283185307179586476925287;
     L = l * 0.61 + 0.09;
     angle = TAU / 6.0 - c * TAU;

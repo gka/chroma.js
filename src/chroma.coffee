@@ -320,10 +320,17 @@ Color.lab2rgb = (l,a,b) ->
 	[x,y,z] = Color.lab2xyz(l,a,b)
 	Color.xyz2rgb(x,y,z)
 	
+	
 Color.cls2rgb = (c,l,s=1) ->
+	###
+	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
+	
+	A saturation multiplier was added by Gregor Aisch
+	###
 	if c != undefined and c.length == 3
 		[c,l,s] = c
 		
+	c /= 360.0
 	TAU = 6.283185307179586476925287
 	L = l*0.61+0.09 # L of L*a*b*
 	angle = TAU/6.0-c*TAU
@@ -331,6 +338,7 @@ Color.cls2rgb = (c,l,s=1) ->
 	a = Math.sin(angle)*r
 	b = Math.cos(angle)*r
 	Color.lab2rgb(L,a,b)
+	
 	
 Color.rgb2xyz = (r,g,b) ->
 	if r != undefined and r.length == 3
@@ -362,6 +370,7 @@ Color.xyz2lab = (x,y,z) ->
 	b = 2 * (f(y/ill[1]) - f(z/ill[2])) 
 	[l,a,b]
 	
+	
 Color.rgb2lab = (r,g,b) ->
 	if r != undefined and r.length == 3
 		[r,g,b] = r
@@ -369,6 +378,9 @@ Color.rgb2lab = (r,g,b) ->
 	Color.xyz2lab(x,y,z)
 
 
+
+	
+	
 
 
 chroma.Color = Color	
