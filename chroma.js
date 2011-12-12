@@ -18,7 +18,7 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
 
-  var CSSColors, Categories, Color, ColorScale, Diverging, Ramp, chroma, root, _ref, _ref2;
+  var CSSColors, Categories, Color, ColorScale, Diverging, Ramp, chroma, root, type, _ref, _ref2;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
@@ -42,16 +42,16 @@
       var me, _ref2;
       me = this;
       if (!(x != null) && !(y != null) && !(z != null) && !(m != null)) {
-        x = [0, 1, 1];
+        x = [255, 0, 255];
       }
-      if (typeof x === "object" && x.length === 3) {
-        m = y;
+      if (type(x) === "array" && x.length === 3) {
+        if (m == null) m = y;
         _ref2 = x, x = _ref2[0], y = _ref2[1], z = _ref2[2];
       }
-      if (typeof x === "string" && x.length === 7) {
+      if (type(x) === "string") {
         m = 'hex';
       } else {
-        if (m == null) m = 'hsl';
+        if (m == null) m = 'rgb';
       }
       if (m === 'rgb') {
         me.rgb = [x, y, z];
@@ -84,6 +84,10 @@
       return Color.rgb2hsv(this.rgb);
     };
 
+    Color.prototype.lab = function() {
+      return Color.rgb2lab(this.rgb);
+    };
+
     Color.prototype.interpolate = function(f, col, m) {
       /*
       		interpolates between colors
@@ -91,7 +95,7 @@
       var dh, hue, hue0, hue1, lbv, lbv0, lbv1, me, sat, sat0, sat1, xyz0, xyz1;
       me = this;
       if (m == null) m = 'rgb';
-      if (typeof col === "string") col = new Color(col);
+      if (type(col) === "string") col = new Color(col);
       if (m === 'hsl' || m === 'hsv') {
         if (m === 'hsl') {
           xyz0 = me.hsl();
@@ -164,7 +168,7 @@
 
   Color.hsv2rgb = function(h, s, v) {
     var b, f, g, i, l, p, q, r, t, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
-    if (h !== void 0 && h.length === 3) {
+    if (type(h) === "array" && h.length === 3) {
       _ref2 = h, h = _ref2[0], s = _ref2[1], l = _ref2[2];
     }
     v *= 255;
@@ -198,6 +202,9 @@
           _ref8 = [v, p, q], r = _ref8[0], g = _ref8[1], b = _ref8[2];
       }
     }
+    r = Math.round(r);
+    g = Math.round(g);
+    b = Math.round(b);
     return [r, g, b];
   };
 
@@ -209,7 +216,6 @@
     min = Math.min(r, g, b);
     max = Math.max(r, g, b);
     delta = max - min;
-    console.log(r, g, b, min, max, delta);
     v = max / 255.0;
     s = delta / max;
     if (s === 0) {
@@ -294,7 +300,7 @@
     	Formulas drawn from http://en.wikipedia.org/wiki/Lab_color_spaces
     */
     var finv, ill, sl, x, y, z, _ref2;
-    if (l !== void 0 && l.length === 3) {
+    if (type(l) === "array" && l.length === 3) {
       _ref2 = l, l = _ref2[0], a = _ref2[1], b = _ref2[2];
     }
     finv = function(t) {
@@ -305,7 +311,7 @@
       }
     };
     sl = (l + 0.16) / 1.16;
-    ill = [0.9643, 1.00, 0.8251];
+    ill = [0.96421, 1.00000, 0.82519];
     y = ill[1] * finv(sl);
     x = ill[0] * finv(sl + (a / 5.0));
     z = ill[2] * finv(sl - (b / 2.0));
@@ -318,13 +324,13 @@
     	Formulas drawn from http://en.wikipedia.org/wiki/Srgb
     */
     var b, bl, clip, correct, g, gl, r, rl, _ref2, _ref3;
-    if (x !== void 0 && x.length === 3) {
+    if (type(x) === "array" && x.length === 3) {
       _ref2 = x, x = _ref2[0], y = _ref2[1], z = _ref2[2];
     }
     rl = 3.2406 * x - 1.5372 * y - 0.4986 * z;
     gl = -0.9689 * x + 1.8758 * y + 0.0415 * z;
     bl = 0.0557 * x - 0.2040 * y + 1.0570 * z;
-    clip = Math.min(rl, gl, bl) < 0 || Math.max(rl, gl, bl) > 1;
+    clip = Math.min(rl, gl, bl) < -0.001 || Math.max(rl, gl, bl) > 1.001;
     if (clip) {
       rl = rl < 0.0 ? 0.0 : rl > 1.0 ? 1.0 : rl;
       gl = gl < 0.0 ? 0.0 : gl > 1.0 ? 1.0 : gl;
@@ -342,9 +348,9 @@
         return (1 + a) * Math.pow(cl, 1 / 2.4) - a;
       }
     };
-    r = 255.0 * correct(rl);
-    g = 255.0 * correct(gl);
-    b = 255.0 * correct(bl);
+    r = Math.round(255.0 * correct(rl));
+    g = Math.round(255.0 * correct(gl));
+    b = Math.round(255.0 * correct(bl));
     return [r, g, b];
   };
 
@@ -407,7 +413,7 @@
     if (x !== void 0 && x.length === 3) {
       _ref2 = x, x = _ref2[0], y = _ref2[1], z = _ref2[2];
     }
-    ill = [0.9643, 1.00, 0.8251];
+    ill = [0.96421, 1.00000, 0.82519];
     f = function(t) {
       if (t > Math.pow(6.0 / 29.0, 3)) {
         return Math.pow(t, 1 / 3);
@@ -428,42 +434,6 @@
     }
     _ref3 = Color.rgb2xyz(r, g, b), x = _ref3[0], y = _ref3[1], z = _ref3[2];
     return Color.xyz2lab(x, y, z);
-  };
-
-  Color.correct = function(cl) {
-    var a;
-    a = 0.055;
-    if (cl <= 0.0031308) {
-      return 12.92 * cl;
-    } else {
-      return (1 + a) * Math.pow(cl, 1 / 2.4) - a;
-    }
-  };
-
-  Color.uncorrect = function(c) {
-    var a;
-    a = 0.055;
-    if (c <= 0.04045) {
-      return c / 12.92;
-    } else {
-      return Math.pow((c + a) / (1 + a), 2.4);
-    }
-  };
-
-  Color.finv = function(t) {
-    if (t > (6.0 / 29.0)) {
-      return t * t * t;
-    } else {
-      return 3 * (6.0 / 29.0) * (6.0 / 29.0) * (t - 4.0 / 29.0);
-    }
-  };
-
-  Color.f = function(t) {
-    if (t > (6.0 / 29.0)) {
-      return Math.pow(t, 1 / 3);
-    } else {
-      return (1 / 3) * (29 / 6) * (29 / 6) * t + 4.0 / 29.0;
-    }
   };
 
   chroma.Color = Color;
@@ -728,16 +698,6 @@
 
   chroma.Categories = Categories;
 
-  if ((_ref2 = chroma.scales) == null) chroma.scales = {};
-
-  chroma.scales.COOL = new Ramp(Color.hsl(180, 1, .9), Color.hsl(250, .7, .4));
-
-  chroma.scales.HOT = new ColorScale(['#000000', '#ff0000', '#ffff00', '#ffffff'], [0, .25, .75, 1], 'rgb');
-
-  chroma.scales.BWO = new Diverging(Color.hsl(30, 1, .55), '#ffffff', new Color(220, 1, .55));
-
-  chroma.scales.GWP = new Diverging(Color.hsl(120, .8, .4), '#ffffff', new Color(280, .8, .4));
-
   CSSColors = (function() {
 
     __extends(CSSColors, ColorScale);
@@ -762,5 +722,50 @@
   })();
 
   chroma.CSSColors = CSSColors;
+
+  if ((_ref2 = chroma.scales) == null) chroma.scales = {};
+
+  chroma.scales.cool = function() {
+    return new Ramp(chroma.hsl(180, 1, .9), chroma.hsl(250, .7, .4));
+  };
+
+  chroma.scales.hot = function() {
+    return new ColorScale(['#000000', '#ff0000', '#ffff00', '#ffffff'], [0, .25, .75, 1], 'rgb');
+  };
+
+  chroma.scales.BlWhOr = function() {
+    return new Diverging(chroma.hsl(30, 1, .55), '#ffffff', new Color(220, 1, .55));
+  };
+
+  chroma.scales.GrWhPu = function() {
+    return new Diverging(chroma.hsl(120, .8, .4), '#ffffff', new Color(280, .8, .4));
+  };
+
+  /*
+  utils.coffee
+  */
+
+  type = (function() {
+    /*
+    	for browser-safe type checking+
+    	ported from jQuery's $.type
+    */
+    var classToType, name, _i, _len, _ref3;
+    classToType = {};
+    _ref3 = "Boolean Number String Function Array Date RegExp Undefined Null".split(" ");
+    for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
+      name = _ref3[_i];
+      classToType["[object " + name + "]"] = name.toLowerCase();
+    }
+    return function(obj) {
+      var strType;
+      strType = Object.prototype.toString.call(obj);
+      return classToType[strType] || "object";
+    };
+  })();
+
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
+  root.type = type;
 
 }).call(this);

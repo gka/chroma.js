@@ -34,17 +34,18 @@ class Color
 	###
 	constructor: (x,y,z,m) ->
 		me = @
+		
 		if not x? and not y? and not z? and not m?
-			x = [0,1,1]
+			x = [255,0,255]
 			
-		if typeof(x) == "object" and x.length == 3
-			m = y
+		if type(x) == "array" and x.length == 3
+			m ?= y
 			[x,y,z] = x
 		
-		if  typeof(x) == "string" and x.length == 7
+		if type(x) == "string"
 			m = 'hex'
 		else 
-			m ?= 'hsl'
+			m ?= 'rgb'
 
 		if m == 'rgb'
 			me.rgb = [x,y,z]
@@ -71,15 +72,18 @@ class Color
 	hsv: ->
 		Color.rgb2hsv(@rgb)
 		
+	lab: ->
+		Color.rgb2lab(@rgb)
+		
 	interpolate: (f, col, m) ->
 		###
 		interpolates between colors
 		###
 		me = @
 		m ?= 'rgb'
-		col = new Color(col) if typeof col == "string"
+		col = new Color(col) if type(col) == "string"
 		
-		if m == 'hsl' or m == 'hsv' # or hsb...
+		if m == 'hsl' or m == 'hsv' # or hsb..
 			if m == 'hsl'
 				xyz0 = me.hsl()
 				xyz1 = col.hsl()
@@ -148,7 +152,7 @@ Color.rgb2hex = (r,g,b) ->
 
 
 Color.hsv2rgb = (h,s,v) ->
-	if h != undefined and h.length == 3
+	if type(h) == "array" and h.length == 3
 		[h,s,l] = h
 	v *= 255
 	if s is 0 and isNaN(h)
@@ -168,6 +172,9 @@ Color.hsv2rgb = (h,s,v) ->
 			when 3 then [r,g,b] = [p, q, v]
 			when 4 then [r,g,b] = [t, p, v]
 			when 5 then [r,g,b] = [v, p, q]	
+	r = Math.round r
+	g = Math.round g
+	b = Math.round b
 	[r, g, b]
 
 	
@@ -177,7 +184,6 @@ Color.rgb2hsv = (r,g,b) ->
 	min = Math.min(r, g, b)
 	max = Math.max(r, g, b)
 	delta = max - min
-	console.log r,g,b,min,max,delta
 	v = max / 255.0
 	s = delta / max
 	if s is 0
@@ -255,13 +261,13 @@ Color.lab2xyz = (l,a,b) ->
 	Convert from L*a*b* doubles to XYZ doubles
 	Formulas drawn from http://en.wikipedia.org/wiki/Lab_color_spaces
 	###
-	if l != undefined and l.length == 3
+	if type(l) == "array" and l.length == 3
 		[l,a,b] = l
 
 	finv = (t) ->
 		if t > (6.0/29.0) then t*t*t else 3*(6.0/29.0)*(6.0/29.0)*(t-4.0/29.0)
 	sl = (l+0.16) / 1.16
-	ill = [0.9643,1.00,0.8251]
+	ill = [0.96421, 1.00000, 0.82519]
 	y = ill[1] * finv(sl)
 	x = ill[0] * finv(sl + (a/5.0))
 	z = ill[2] * finv(sl - (b/2.0))
@@ -272,13 +278,13 @@ Color.xyz2rgb = (x,y,z) ->
 	Convert from XYZ doubles to sRGB bytes
 	Formulas drawn from http://en.wikipedia.org/wiki/Srgb
 	###
-	if x != undefined and x.length == 3
+	if type(x) == "array" and x.length == 3
 		[x,y,z] = x
 	
 	rl =  3.2406*x - 1.5372*y - 0.4986*z
 	gl = -0.9689*x + 1.8758*y + 0.0415*z
 	bl =  0.0557*x - 0.2040*y + 1.0570*z
-	clip = Math.min(rl,gl,bl) < 0 || Math.max(rl,gl,bl) > 1
+	clip = Math.min(rl,gl,bl) < -0.001 || Math.max(rl,gl,bl) > 1.001
 	if clip
 		rl = if rl<0.0 then 0.0 else if rl>1.0 then 1.0 else rl
 		gl = if gl<0.0 then 0.0 else if gl>1.0 then 1.0 else gl
@@ -287,13 +293,15 @@ Color.xyz2rgb = (x,y,z) ->
 	# Uncomment the below to detect clipping by making clipped zones red.
 	if clip 
 		[rl,gl,bl] = [undefined,undefined,undefined]
+		
 	correct = (cl) ->
 		a = 0.055
 		if cl<=0.0031308 then 12.92*cl else (1+a)*Math.pow(cl,1/2.4)-a
 	
-	r = 255.0*correct(rl)
-	g = 255.0*correct(gl)
-	b = 255.0*correct(bl)
+	r = Math.round 255.0*correct(rl)
+	g = Math.round 255.0*correct(gl)
+	b = Math.round 255.0*correct(bl)
+	 
 	[r,g,b]
 	
 Color.lab2rgb = (l,a,b) ->
@@ -343,7 +351,7 @@ Color.xyz2lab = (x,y,z) ->
 	if x != undefined and x.length == 3
 		[x,y,z] = x
 		
-	ill = [0.9643,1.00,0.8251]	
+	ill = [0.96421, 1.00000, 0.82519]	
 	f = (t) ->
 		if t > Math.pow(6.0/29.0,3) then Math.pow(t, 1/3) else (1/3)*(29/6)*(29/6)*t+4.0/29.0
 	l = 1.16 * f(y/ill[1]) - 0.16
@@ -358,20 +366,6 @@ Color.rgb2lab = (r,g,b) ->
 	Color.xyz2lab(x,y,z)
 
 
-Color.correct = (cl) ->
-	a = 0.055
-	if cl<=0.0031308 then 12.92*cl else (1+a)*Math.pow(cl,1/2.4)-a
-
-Color.uncorrect = (c) ->
-	a = 0.055
-	if c <= 0.04045 then c/12.92 else Math.pow((c+a)/(1+a), 2.4)	
-
-Color.finv = (t) ->
-	if t > (6.0/29.0) then t*t*t else 3*(6.0/29.0)*(6.0/29.0)*(t-4.0/29.0)
-
-Color.f = (t) ->
-	if t > (6.0/29.0) then Math.pow(t, 1/3) else (1/3)*(29/6)*(29/6)*t+4.0/29.0
-	
 
 
 chroma.Color = Color	
@@ -577,16 +571,6 @@ class Categories extends ColorScale
 		@colors.hasOwnProperty value
 		
 chroma.Categories = Categories
-	
-# some pre-defined color scales:
-chroma.scales ?= {}
-
-# Generates a color palette that uses a "cool", blue-heavy color scheme.
-chroma.scales.COOL = new Ramp(Color.hsl(180,1,.9), Color.hsl(250,.7,.4))
-chroma.scales.HOT = new ColorScale(['#000000','#ff0000','#ffff00','#ffffff'],[0,.25,.75,1],'rgb')
-chroma.scales.BWO = new Diverging(Color.hsl(30,1,.55),'#ffffff', new Color(220,1,.55))
-chroma.scales.GWP = new Diverging(Color.hsl(120,.8,.4),'#ffffff', new Color(280,.8,.4))
-
 
 
 class CSSColors extends ColorScale
@@ -604,5 +588,20 @@ class CSSColors extends ColorScale
 
 chroma.CSSColors = CSSColors
 
+
+# some pre-defined color scales:
+chroma.scales ?= {}
+
+chroma.scales.cool = ->
+	new Ramp(chroma.hsl(180,1,.9), chroma.hsl(250,.7,.4))
+
+chroma.scales.hot = ->
+	new ColorScale(['#000000','#ff0000','#ffff00','#ffffff'],[0,.25,.75,1],'rgb')
+	
+chroma.scales.BlWhOr = ->
+	new Diverging(chroma.hsl(30,1,.55),'#ffffff', new Color(220,1,.55))
+
+chroma.scales.GrWhPu = ->
+	new Diverging(chroma.hsl(120,.8,.4),'#ffffff', new Color(280,.8,.4))
 
 
