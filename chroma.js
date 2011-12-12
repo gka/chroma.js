@@ -16,7 +16,9 @@
       may distribute non-source (e.g., minimized or compacted) forms of
       that code without the copy of the GNU GPL normally required by
       section 4, provided you include this license notice and a URL
-      through which recipients can access the Corresponding Source.
+      through which recipients can access the Corresponding Source.  
+      
+      @source: https://github.com/gka/chroma.js
   */
 
   var CSSColors, Categories, Color, ColorScale, Diverging, Ramp, chroma, root, type, _ref, _ref2;
