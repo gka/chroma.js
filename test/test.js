@@ -151,13 +151,23 @@ colors.push( ['azure', '#f0ffff', [240, 255, 255], [180.0, 0.05882352941176472, 
 colors.push( ['lightsteelblue', '#b0c4de', [176, 196, 222], [213.91304347826087, 0.20720720720720723, 0.8705882352941177], [213.91304347826087, 0.41071428571428575, 0.7803921568627451], [0.7845233742822654, -0.03212707859202413, -0.32460574178167767]] );
 colors.push( ['oldlace', '#fdf5e6', [253, 245, 230], [39.130434782608695, 0.09090909090909093, 0.9921568627450981], [39.130434782608695, 0.8518518518518523, 0.9470588235294117], [0.9677967120416257, -0.0214561895514237, -0.09880175419085213]] );
 
+try {
+
 var chroma = require('../chroma.js').chroma,
 	type = require('../chroma.js').type;
+	var col;
+	
+	for (var h=0;h<360;h+=10) {
+		col = chroma.hsv(h,.5,.5);
 		
-try {
+		
+		//console.log(h, col.lab()[1], col.lab()[2], col.csl()[0]);
+	}
+//	colors = [];
+
 	for (var c in colors) {
 		var col, f = colors[c], out = [], 
-			hex = f[1], rgb = f[2], hsv = f[3], hsl = f[4], lab= f[5];
+			hex = f[1], rgb = f[2], hsv = f[3], hsl = f[4], lab=f[5];
 		
 		out.push(['rgb array', chroma.rgb(rgb)]);
 		out.push(['rgb', chroma.rgb(rgb[0], rgb[1], rgb[2])]);
@@ -169,7 +179,8 @@ try {
 		out.push(['lab array', chroma.lab(lab)]);
 		out.push(['lab', chroma.lab(lab[0], lab[1], lab[2])]);		
 // */
-
+		var lab2csl = chroma.Color.lab2csl, csl2lab = chroma.Color.csl2lab;
+		
 		for (var o in out) {
 		
 			var c = out[o][1], orgb = c.rgb, ohex = c.hex(), 
@@ -204,11 +215,21 @@ try {
 			if (!equals(olab, lab)) {
 				throw ''+out[o][0]+' to lab conversion at '+f[0]+' '+lab+' '+olab
 			}
+					
+			var _lab = csl2lab(lab2csl(lab));
+			if (!equals(lab, _lab)) {
+				throw 'csl conversion failed for '+f[0]+' '+lab+' '+_lab
+				return;
+			}
 		}
 	}
+	
+	
+	//console.log(csl2rgb(rgb2csl(255,0,0)))
+	
 
 } catch (er) {
-	console.error('Error: '+er+'\007');
+	console.error('Error:. '+er+'\007');
 	console.log(er.stack);
 
 }

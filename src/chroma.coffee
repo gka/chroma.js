@@ -60,8 +60,8 @@ class Color
 			me.rgb = Color.hex2rgb(x)
 		else if m == 'lab'
 			me.rgb = Color.lab2rgb(x,y,z)
-		else if m == 'cls'
-			me.rgb = Color.cls2rgb(x,y,z)
+		else if m == 'csl'
+			me.rgb = Color.csl2rgb(x,y,z)
 		
 	hex: ->
 		Color.rgb2hex(@rgb)
@@ -77,6 +77,9 @@ class Color
 		
 	lab: ->
 		Color.rgb2lab(@rgb)
+		
+	csl: ->
+		Color.rgb2csl(@rgb)
 		
 	interpolate: (f, col, m) ->
 		###
@@ -321,14 +324,14 @@ Color.lab2rgb = (l,a,b) ->
 	Color.xyz2rgb(x,y,z)
 	
 	
-Color.cls2rgb = (c,l,s=1) ->
+Color.csl2lab = (c,s,l) ->
 	###
 	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
 	
 	A saturation multiplier was added by Gregor Aisch
 	###
-	if c != undefined and c.length == 3
-		[c,l,s] = c
+	if type(c) == "array" and c.length == 3
+		[c,s,l] = c
 		
 	c /= 360.0
 	TAU = 6.283185307179586476925287
@@ -337,6 +340,14 @@ Color.cls2rgb = (c,l,s=1) ->
 	r = (l*0.311+0.125)*s # ~chroma
 	a = Math.sin(angle)*r
 	b = Math.cos(angle)*r
+
+	#log = console.log
+	#log 'csl2lab',c*360,s,l,'a:',angle,'\n\t',L,a,b
+	[L,a,b]
+	
+
+Color.csl2rgb = (c,s,l) ->
+	[L,a,b] = Color.csl2lab(c,s,l)
 	Color.lab2rgb(L,a,b)
 	
 	
@@ -378,8 +389,36 @@ Color.rgb2lab = (r,g,b) ->
 	Color.xyz2lab(x,y,z)
 
 
-
+Color.lab2csl = (l,a,b) ->
+	###
+	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
 	
+	A saturation multiplier was added by Gregor Aisch
+	###
+	if type(l) == "array" and l.length == 3
+		[l,a,b] = l
+	L = l
+	l = (l-0.09) / 0.61
+	
+	r = Math.sqrt(a*a + b*b)
+	s = r / (l*0.311+0.125)
+	
+	TAU = 6.283185307179586476925287
+	
+	angle = Math.atan2(a,b)
+		
+	c = (TAU/6 - angle) / TAU
+	c *= 360
+	c += 360 if c < 0
+	
+	[c,s,l]
+
+
+Color.rgb2csl = (r,g,b) ->
+	if type(r) == "array" and r.length == 3
+		[r,g,b] = r
+	[l,a,b] = Color.rgb2lab(r,g,b)
+	Color.lab2csl(l,a,b)
 	
 
 
@@ -404,8 +443,8 @@ chroma.hex = (x) ->
 chroma.lab = (l,a,b) ->
 	new Color(l,a,b,'lab')
 
-chroma.cls = (c,l,s) ->
-	new Color(c,l,s,'cls')
+chroma.csl = (c,s,l) ->
+	new Color(c,s,l,'csl')
 	
 	
 	

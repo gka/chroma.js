@@ -66,8 +66,8 @@
         me.rgb = Color.hex2rgb(x);
       } else if (m === 'lab') {
         me.rgb = Color.lab2rgb(x, y, z);
-      } else if (m === 'cls') {
-        me.rgb = Color.cls2rgb(x, y, z);
+      } else if (m === 'csl') {
+        me.rgb = Color.csl2rgb(x, y, z);
       }
     }
 
@@ -89,6 +89,10 @@
 
     Color.prototype.lab = function() {
       return Color.rgb2lab(this.rgb);
+    };
+
+    Color.prototype.csl = function() {
+      return Color.rgb2csl(this.rgb);
     };
 
     Color.prototype.interpolate = function(f, col, m) {
@@ -373,16 +377,15 @@
     return Color.xyz2rgb(x, y, z);
   };
 
-  Color.cls2rgb = function(c, l, s) {
-    var L, TAU, a, angle, b, r, _ref2;
-    if (s == null) s = 1;
+  Color.csl2lab = function(c, s, l) {
     /*
     	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
     	
     	A saturation multiplier was added by Gregor Aisch
     */
-    if (c !== void 0 && c.length === 3) {
-      _ref2 = c, c = _ref2[0], l = _ref2[1], s = _ref2[2];
+    var L, TAU, a, angle, b, r, _ref2;
+    if (type(c) === "array" && c.length === 3) {
+      _ref2 = c, c = _ref2[0], s = _ref2[1], l = _ref2[2];
     }
     c /= 360.0;
     TAU = 6.283185307179586476925287;
@@ -391,6 +394,12 @@
     r = (l * 0.311 + 0.125) * s;
     a = Math.sin(angle) * r;
     b = Math.cos(angle) * r;
+    return [L, a, b];
+  };
+
+  Color.csl2rgb = function(c, s, l) {
+    var L, a, b, _ref2;
+    _ref2 = Color.csl2lab(c, s, l), L = _ref2[0], a = _ref2[1], b = _ref2[2];
     return Color.lab2rgb(L, a, b);
   };
 
@@ -445,6 +454,37 @@
     return Color.xyz2lab(x, y, z);
   };
 
+  Color.lab2csl = function(l, a, b) {
+    /*
+    	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
+    	
+    	A saturation multiplier was added by Gregor Aisch
+    */
+    var L, TAU, angle, c, r, s, _ref2;
+    if (type(l) === "array" && l.length === 3) {
+      _ref2 = l, l = _ref2[0], a = _ref2[1], b = _ref2[2];
+    }
+    L = l;
+    l = (l - 0.09) / 0.61;
+    r = Math.sqrt(a * a + b * b);
+    s = r / (l * 0.311 + 0.125);
+    TAU = 6.283185307179586476925287;
+    angle = Math.atan2(a, b);
+    c = (TAU / 6 - angle) / TAU;
+    c *= 360;
+    if (c < 0) c += 360;
+    return [c, s, l];
+  };
+
+  Color.rgb2csl = function(r, g, b) {
+    var a, l, _ref2, _ref3;
+    if (type(r) === "array" && r.length === 3) {
+      _ref2 = r, r = _ref2[0], g = _ref2[1], b = _ref2[2];
+    }
+    _ref3 = Color.rgb2lab(r, g, b), l = _ref3[0], a = _ref3[1], b = _ref3[2];
+    return Color.lab2csl(l, a, b);
+  };
+
   chroma.Color = Color;
 
   chroma.hsl = function(h, s, l) {
@@ -467,8 +507,8 @@
     return new Color(l, a, b, 'lab');
   };
 
-  chroma.cls = function(c, l, s) {
-    return new Color(c, l, s, 'cls');
+  chroma.csl = function(c, s, l) {
+    return new Color(c, s, l, 'csl');
   };
 
   ColorScale = (function() {
