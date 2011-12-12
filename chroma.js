@@ -1,6 +1,6 @@
 (function() {
 
-  /*
+  /**
       chroma.js - a neat JS lib for color conversions
       Copyright (C) 2011  Gregor Aisch
   
