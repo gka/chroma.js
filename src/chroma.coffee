@@ -62,6 +62,9 @@ class Color
 			me.rgb = Color.lab2rgb(x,y,z)
 		else if m == 'csl'
 			me.rgb = Color.csl2rgb(x,y,z)
+		else if m == 'hsi'
+			me.rgb = Color.hsi2rgb(x,y,z)
+		
 		
 	hex: ->
 		Color.rgb2hex(@rgb)
@@ -81,6 +84,9 @@ class Color
 	csl: ->
 		Color.rgb2csl(@rgb)
 		
+	hsi: ->
+		Color.rgb2hsi(@rgb)
+		
 	interpolate: (f, col, m) ->
 		###
 		interpolates between colors
@@ -89,7 +95,7 @@ class Color
 		m ?= 'rgb'
 		col = new Color(col) if type(col) == "string"
 		
-		if m == 'hsl' or m == 'hsv' or m == 'csl'
+		if m == 'hsl' or m == 'hsv' or m == 'csl' or m == 'hsi'
 			if m == 'hsl'
 				xyz0 = me.hsl()
 				xyz1 = col.hsl()
@@ -99,6 +105,9 @@ class Color
 			else if m == 'csl'
 				xyz0 = me.csl()
 				xyz1 = col.csl()
+			else if m == 'hsi'
+				xyz0 = me.hsi()
+				xyz1 = col.hsi()
 		
 			[hue0, sat0, lbv0] = xyz0
 			[hue1, sat1, lbv1] = xyz1
@@ -428,6 +437,67 @@ Color.rgb2csl = (r,g,b) ->
 	Color.lab2csl(l,a,b)
 	
 
+Color.rgb2hsi = (r,g,b) ->
+	###
+	borrowed from here:
+	http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/rgb2hsi.cpp
+	###
+	if type(r) == "array" and r.length == 3
+		[r,g,b] = r
+	TWOPI = Math.PI*2
+	r /= 255
+	g /= 255
+	b /= 255
+	min = Math.min(r,g,b)
+	i = (r+g+b)/3
+	s = 1 - min/i
+	if s == 0
+		h = 0
+	else
+		h = ((r-g)+(r-b)) / 2
+		h /= Math.sqrt((r-g)*(r-g) + (r-b)*(g-b))
+		h = Math.acos(h)
+		if b > g
+			h = TWOPI - H
+		h /= TWOPI
+	[h*360,s,i]	
+	
+	
+Color.hsi2rgb = (h,s,i) ->
+	###
+	borrowed from here:
+	http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
+	###
+	if type(h) == "array" and h.length == 3
+		[h,s,i] = h
+	TWOPI = Math.PI*2
+	PITHIRD = Math.PI/3 
+	cos = Math.cos
+	
+	# normalize hue
+	h += 360 if h < 0
+	h -= 360 if h > 360
+	
+	h /= 360
+	if h < 1/3
+		b = (1-s)/3
+		r = (1+s*cos(TWOPI*h)/cos(PITHIRD-TWOPI*h))/3
+		g = 1 - (b+r)
+	else if h < 2/3
+		h -= 1/3
+		r = (1-s)/3
+		g = (1+s*cos(TWOPI*h)/cos(PITHIRD-TWOPI*h))/3
+		b = 1 - (r+g)
+	else
+		h -= 2/3
+		g = (1-s)/3
+		b = (1+s*cos(TWOPI*h)/cos(PITHIRD-TWOPI*h))/3
+		r = 1 - (g+b)
+	r = i*r*3
+	g = i*g*3
+	b = i*b*3
+	[r*255,g*255,b*255]
+	
 
 chroma.Color = Color	
 
@@ -452,6 +522,9 @@ chroma.lab = (l,a,b) ->
 
 chroma.csl = (c,s,l) ->
 	new Color(c,s,l,'csl')
+	
+chroma.hsi = (h,s,i) ->
+	new Color(h,s,i,'hsi')
 	
 chroma.interpolate = (a,b,f,m) ->
 	a = new Color(a) if type(a) == 'string'

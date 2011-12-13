@@ -68,6 +68,8 @@
         me.rgb = Color.lab2rgb(x, y, z);
       } else if (m === 'csl') {
         me.rgb = Color.csl2rgb(x, y, z);
+      } else if (m === 'hsi') {
+        me.rgb = Color.hsi2rgb(x, y, z);
       }
     }
 
@@ -95,6 +97,10 @@
       return Color.rgb2csl(this.rgb);
     };
 
+    Color.prototype.hsi = function() {
+      return Color.rgb2hsi(this.rgb);
+    };
+
     Color.prototype.interpolate = function(f, col, m) {
       /*
       		interpolates between colors
@@ -103,7 +109,7 @@
       me = this;
       if (m == null) m = 'rgb';
       if (type(col) === "string") col = new Color(col);
-      if (m === 'hsl' || m === 'hsv' || m === 'csl') {
+      if (m === 'hsl' || m === 'hsv' || m === 'csl' || m === 'hsi') {
         if (m === 'hsl') {
           xyz0 = me.hsl();
           xyz1 = col.hsl();
@@ -113,6 +119,9 @@
         } else if (m === 'csl') {
           xyz0 = me.csl();
           xyz1 = col.csl();
+        } else if (m === 'hsi') {
+          xyz0 = me.hsi();
+          xyz1 = col.hsi();
         }
         hue0 = xyz0[0], sat0 = xyz0[1], lbv0 = xyz0[2];
         hue1 = xyz1[0], sat1 = xyz1[1], lbv1 = xyz1[2];
@@ -494,6 +503,70 @@
     return Color.lab2csl(l, a, b);
   };
 
+  Color.rgb2hsi = function(r, g, b) {
+    /*
+    	borrowed from here:
+    	http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/rgb2hsi.cpp
+    */
+    var TWOPI, h, i, min, s, _ref2;
+    if (type(r) === "array" && r.length === 3) {
+      _ref2 = r, r = _ref2[0], g = _ref2[1], b = _ref2[2];
+    }
+    TWOPI = Math.PI * 2;
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    min = Math.min(r, g, b);
+    i = (r + g + b) / 3;
+    s = 1 - min / i;
+    if (s === 0) {
+      h = 0;
+    } else {
+      h = ((r - g) + (r - b)) / 2;
+      h /= Math.sqrt((r - g) * (r - g) + (r - b) * (g - b));
+      h = Math.acos(h);
+      if (b > g) h = TWOPI - H;
+      h /= TWOPI;
+    }
+    return [h * 360, s, i];
+  };
+
+  Color.hsi2rgb = function(h, s, i) {
+    /*
+    	borrowed from here:
+    	http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
+    */
+    var PITHIRD, TWOPI, b, cos, g, r, _ref2;
+    if (type(h) === "array" && h.length === 3) {
+      _ref2 = h, h = _ref2[0], s = _ref2[1], i = _ref2[2];
+    }
+    TWOPI = Math.PI * 2;
+    PITHIRD = Math.PI / 3;
+    cos = Math.cos;
+    if (h < 0) h += 360;
+    if (h > 360) h -= 360;
+    h /= 360;
+    if (h < 1 / 3) {
+      b = (1 - s) / 3;
+      r = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
+      g = 1 - (b + r);
+    } else if (h < 2 / 3) {
+      h -= 1 / 3;
+      r = (1 - s) / 3;
+      g = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
+      b = 1 - (r + g);
+    } else {
+      h -= 2 / 3;
+      g = (1 - s) / 3;
+      b = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
+      r = 1 - (g + b);
+    }
+    r = i * r * 3;
+    g = i * g * 3;
+    b = i * b * 3;
+    return [r * 255, g * 255, b * 255];
+  };
+
   chroma.Color = Color;
 
   chroma.hsl = function(h, s, l) {
@@ -518,6 +591,10 @@
 
   chroma.csl = function(c, s, l) {
     return new Color(c, s, l, 'csl');
+  };
+
+  chroma.hsi = function(h, s, i) {
+    return new Color(h, s, i, 'hsi');
   };
 
   chroma.interpolate = function(a, b, f, m) {
