@@ -458,7 +458,7 @@ Color.rgb2hsi = (r,g,b) ->
 		h /= Math.sqrt((r-g)*(r-g) + (r-b)*(g-b))
 		h = Math.acos(h)
 		if b > g
-			h = TWOPI - H
+			h = TWOPI - h
 		h /= TWOPI
 	[h*360,s,i]	
 	

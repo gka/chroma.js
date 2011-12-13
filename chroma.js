@@ -525,7 +525,7 @@
       h = ((r - g) + (r - b)) / 2;
       h /= Math.sqrt((r - g) * (r - g) + (r - b) * (g - b));
       h = Math.acos(h);
-      if (b > g) h = TWOPI - H;
+      if (b > g) h = TWOPI - h;
       h /= TWOPI;
     }
     return [h * 360, s, i];
