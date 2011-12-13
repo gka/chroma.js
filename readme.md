@@ -1,43 +1,42 @@
 # Chroma.js
 
-Chroma.js is a neat library for all kinds of color conversions.
+Chroma.js is a tiny JavaScript library for all kinds of color conversions.
 
 ## Instanciate colors
-Instanciate red in multiple ways:
-	
-	col = chroma.rgb(255,0,0); 
-	col = chroma.hex('#ff0000');
-	col = chroma.hsv(0,1,1);
-	col = chroma.hsl(0,1,.5);
 
-Behind the scenes, the previous shorthand statements would resolve to
+Short API:
 
-	col = new chroma.Color(255,0,0); // defaut to rgb
-	col = new chroma.Color('#ff0000'); // or hex, if first param is string
-	col = new chroma.Color(0,1,1,'hsv');
-	col = new chroma.Color(0,1,.5,'hsl');	
+	col = chroma.hex("#ff0000");
+	col = chroma.rgb(255,128,10);
+	col = chroma.hsl(120,1,.5);
+	col = chroma.hsv(120,1,1);
+	col = chroma.lab(.8,.7,-.4);
+	col = chroma.csl(120,1,1);
+
+Long API:
+
+	col = new chroma.Color(255,128,10,'rgb');
+	col = new chroma.Color(120,1,.5,'hsv');
+
 	
 ## Convert colors
 Regardless of how you instanciated the color, you can convert 
 
-	col.rgb // 
+	col.rgb // [255,0,0]
 	col.hex() // '#ff0000'
  	col.hsv() // [0,1,1]
 	col.hsl() // [0,1,.5]
-	col.lab() //
+	col.lab() // ...
 	col.cls() // ..
 
 ## Interpolating colors
 
-Simple RGB interpolation:
+Short API
 
-	col2 = chroma.hex('#0000ff'); 
-	col.interpolate(.5, col2);
+	chroma.interpolate("#c00", "#e88", .5, 'hsl')
 
-You can define
+Long API
 
-	col.interpolate(.5, col2, 'hsv');
-	col.interpolate(.5, col2, 'hsl');
-	col.interpolate(.5, col2, 'lab');
-	col.interpolate(.5, col2, 'cls');
-
+	col1 = chroma.hex('#c00');
+	col2 = chroma.hex('#e88'); 
+	col1.interpolate(.5, col2, 'hsl');
