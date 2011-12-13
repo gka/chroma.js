@@ -103,13 +103,16 @@
       me = this;
       if (m == null) m = 'rgb';
       if (type(col) === "string") col = new Color(col);
-      if (m === 'hsl' || m === 'hsv') {
+      if (m === 'hsl' || m === 'hsv' || m === 'csl') {
         if (m === 'hsl') {
           xyz0 = me.hsl();
           xyz1 = col.hsl();
         } else if (m === 'hsv') {
           xyz0 = me.hsv();
           xyz1 = col.hsv();
+        } else if (m === 'csl') {
+          xyz0 = me.csl();
+          xyz1 = col.csl();
         }
         hue0 = xyz0[0], sat0 = xyz0[1], lbv0 = xyz0[2];
         hue1 = xyz1[0], sat1 = xyz1[1], lbv1 = xyz1[2];
@@ -138,7 +141,11 @@
         xyz0 = me.rgb;
         xyz1 = col.rgb;
         return new Color(xyz0[0] + f * (xyz1[0] - xyz0[0]), xyz0[1] + f * (xyz1[1] - xyz0[1]), xyz0[2] + f * (xyz1[2] - xyz0[2]), m);
-      } else if (m === 'lab') {} else {
+      } else if (m === 'lab') {
+        xyz0 = me.lab();
+        xyz1 = col.lab();
+        return new Color(xyz0[0] + f * (xyz1[0] - xyz0[0]), xyz0[1] + f * (xyz1[1] - xyz0[1]), xyz0[2] + f * (xyz1[2] - xyz0[2]), m);
+      } else {
         throw "color mode " + m + " is not supported";
       }
     };
@@ -150,7 +157,7 @@
   Color.hex2rgb = function(hex) {
     var b, g, r, u;
     if (!hex.match(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
-      throw new "wrong hex color format: " + hex;
+      throw "wrong hex color format: " + hex;
     }
     if (hex.length === 4 || hex.length === 7) hex = hex.substr(1);
     if (hex.length === 3) {
@@ -183,6 +190,8 @@
       r = g = b = v;
     } else {
       if (h === 360) h = 0;
+      if (h > 360) h -= 360;
+      if (h < 0) h += 360;
       h /= 60;
       i = Math.floor(h);
       f = h - i;
@@ -509,6 +518,12 @@
 
   chroma.csl = function(c, s, l) {
     return new Color(c, s, l, 'csl');
+  };
+
+  chroma.interpolate = function(a, b, f, m) {
+    if (type(a) === 'string') a = new Color(a);
+    if (type(b) === 'string') b = new Color(b);
+    return a.interpolate(f, b, m);
   };
 
   ColorScale = (function() {

@@ -89,13 +89,16 @@ class Color
 		m ?= 'rgb'
 		col = new Color(col) if type(col) == "string"
 		
-		if m == 'hsl' or m == 'hsv' # or hsb..
+		if m == 'hsl' or m == 'hsv' or m == 'csl'
 			if m == 'hsl'
 				xyz0 = me.hsl()
 				xyz1 = col.hsl()
 			else if m == 'hsv'
 				xyz0 = me.hsv()
 				xyz1 = col.hsv()
+			else if m == 'csl'
+				xyz0 = me.csl()
+				xyz1 = col.csl()
 		
 			[hue0, sat0, lbv0] = xyz0
 			[hue1, sat1, lbv1] = xyz1
@@ -115,12 +118,12 @@ class Color
 				hue = hue1
 				sat = sat1 if lbv0 == 1 or lbv0 == 0
 			else
-				hue = undefined
+				hue = undefined					
 								
 			sat ?= sat0 + f*(sat1 - sat0)
 
 			lbv = lbv0 + f*(lbv1-lbv0)
-		
+			
 			new Color(hue, sat, lbv, m)
 			
 		else if m == 'rgb'
@@ -129,14 +132,16 @@ class Color
 			new Color(xyz0[0]+f*(xyz1[0]-xyz0[0]), xyz0[1] + f*(xyz1[1]-xyz0[1]), xyz0[2] + f*(xyz1[2]-xyz0[2]), m)
 		
 		else if m == 'lab'
-			
+			xyz0 = me.lab()
+			xyz1 = col.lab()
+			new Color(xyz0[0]+f*(xyz1[0]-xyz0[0]), xyz0[1] + f*(xyz1[1]-xyz0[1]), xyz0[2] + f*(xyz1[2]-xyz0[2]), m)
 		
 		else
 			throw "color mode "+m+" is not supported"
 
 Color.hex2rgb = (hex) ->
 	if not hex.match /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
-		throw new "wrong hex color format: "+hex
+		throw "wrong hex color format: "+hex
 		
 	if hex.length == 4 or hex.length == 7
 		hex = hex.substr(1)
@@ -165,6 +170,8 @@ Color.hsv2rgb = (h,s,v) ->
 		r = g = b = v
 	else
 		h = 0 if h is 360
+		h -= 360 if h > 360
+		h += 360 if h < 0
 		h /= 60
 		i = Math.floor h
 		f = h - i
@@ -446,9 +453,10 @@ chroma.lab = (l,a,b) ->
 chroma.csl = (c,s,l) ->
 	new Color(c,s,l,'csl')
 	
-	
-	
-	
+chroma.interpolate = (a,b,f,m) ->
+	a = new Color(a) if type(a) == 'string'
+	b = new Color(b) if type(b) == 'string'
+	a.interpolate(f,b,m)
 	
 
 class ColorScale
