@@ -1,0 +1,108 @@
+<html>
+<head>
+	<title>colorscale demonstration</title>
+	<script src="../chroma.js"></script>
+	<script src="jquery.min.js"></script>
+	<style>
+	body { font-family: Lato, 'Helvetica Neue', sans-serif; }
+	.container { width: 940px; margin: 0 auto; }
+	.bar { margin: 1em 0 1em; height: 80px;clear: both; }
+	.bar .b { height:80px; width:2px; float:left; }
+	</style>
+	<script>
+	
+
+	
+	$(function() {
+		
+		var
+		
+		testData = [25899, 15094, 21617, 90273, 94946, 65933, 877, 113761, 23160, 124029, 273160, 308700, 50777, 2164, 44248, 249720, 445846, 4781, 39284, 7263, 464212, 153104, 4897909, 373115, 38669, 50934, 370775, 171194, 160714, 21577, 337628, 998706, 68479, 8712, 1655309, 42855, 137263, 32266, 157238, 62076, 47263, 208481, 12378, 189993, 5500, 81259, 159216, 139583, 71558, 23598, 177321, 179130, 295674, 30538, 80463, 290558, 13141, 6784],
+		
+		minVal = Array.min(testData),
+		maxVal = Array.max(testData),
+		
+		YlBl = ['#EFEE69', '#21313E'],
+		
+		scales = [
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: [minVal, maxVal]
+			}),
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: [minVal, maxVal],
+				mode: 'csl'
+			}),
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: chroma.limits(testData, 'equal', 7),
+				mode: 'csl'
+			}),
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: chroma.limits(testData, 'equal', 14),
+				mode: 'csl'
+			}),
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: chroma.limits(testData, 'quartiles', 7),
+				mode: 'csl'
+			}),
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: chroma.limits(testData, 'quartiles', 14),
+				mode: 'csl'
+			}),
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: chroma.limits(testData, 'k-means', 4),
+				mode: 'csl'
+			}),
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: chroma.limits(testData, 'k-means', 8),
+				mode: 'csl'
+			}),
+			
+			new chroma.ColorScale({
+				colors: YlBl,
+				limits: chroma.limits(testData, 'k-means', 12),
+				mode: 'csl'
+			})
+			
+		],
+		
+		showScale = function(sc) {
+			var w=600,
+				pw,num=340,
+				i,v,col,
+				//num = sc.numClasses,
+				bar = $('<div class="bar" />');
+				
+			
+			$('#bars').append(bar);
+			
+			for (i=0; i<num; i++) {
+				v = i/(num-1) * (maxVal - minVal) + minVal;
+				col = sc.getColor(v);
+				bar.append('<div class="b" style="background:'+col+';" />');
+			}	
+		},
+		
+		i;
+		
+		for (i in scales) {
+			showScale(scales[i]);
+		}
+		
+
+	});
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div id="bars"></div>
+	</div>
+</body>
+</html>

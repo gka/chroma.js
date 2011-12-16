@@ -19,3 +19,9 @@ root = (exports ? this)
 root.type = type
 
 
+Array.max = (array) ->
+	Math.max.apply Math, array 
+
+Array.min = (array) ->
+	Math.min.apply Math, array 
+	

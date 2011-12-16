@@ -532,111 +532,86 @@ chroma.interpolate = (a,b,f,m) ->
 	a.interpolate(f,b,m)
 	
 
+
+
+
+
 class ColorScale
 	###
 	base class for color scales
 	###
-	constructor: (colors, positions, mode, nacol='#cccccc') ->
+	constructor: (opts) ->
 		me = @
-		for c in [0..colors.length-1]
-			colors[c] = new Color(colors[c]) if typeof(colors[c]) == "string"
-		me.colors = colors
-		me.pos = positions
-		me.mode = mode
-		me.nacol = nacol
+		me.colors = cols = opts.colors ? ['#ddd', '#222']
+		for c in [0..cols.length-1]
+			col = cols[c]
+			cols[c] = new Color(col) if type(col) == "string"
+		me.pos = opts.positions ? [0,1]
+		me.mode = opts.mode ? 'hsv'
+		me.nacol = opts.nacol ? '#ccc'
+		me.setClasses opts.limits ? [0,1]
 		me
 		
 	
 	getColor: (value) ->
 		me = @
 		if isNaN(value) then return me.nacol
-		value = me.classifyValue value	
-		f = f0 = (value - me.min) / (me.max - me.min)
-		f = Math.min(1, Math.max(0, f))
+		
+		if me.classLimits.length > 2
+			c = me.getClass value
+			f = c/me.numClasses
+			
+		else
+			f = f0 = (value - me.min) / (me.max - me.min)
+			f = Math.min(1, Math.max(0, f))
+		
+		me.fColor f
+		
+		
+	fColor: (f) ->
+		me = @
+		cols = me.colors
 		for i in [0..me.pos.length-1]
 			p = me.pos[i]
 			if f <= p
-				col = me.colors[i]
+				col = cols[i]
 				break			
 			if f >= p and i == me.pos.length-1
-				col = me.colors[i]
+				col = cols[i]
 				break
 			if f > p and f < me.pos[i+1]
 				f = (f-p)/(me.pos[i+1]-p)
-				col = me.colors[i].interpolate(f, me.colors[i+1], me.mode)
+				col = chroma.interpolate cols[i], cols[i+1], f, me.mode
 				break
 		col
 	
-	setClasses: (numClasses = 5, method='equalinterval', limits = []) ->
-		###
-		# use this if you want to display a limited number of data classes
-		# possible methods are "equalinterval", "quantiles", "custom"
-		###
-		me = @
-		me.classMethod = method
-		me.numClasses = numClasses
-		me.classLimits = limits
-		me
-			
-	parseData: (data, data_col) ->
-		self = @
-		min = Number.MAX_VALUE
-		max = Number.MAX_VALUE*-1
-		sum = 0
-		values = []
-		for id,row of data
-			val = if data_col? then row[data_col] else row
-			if not self.validValue(val) 
-				continue
-			min = Math.min(min, val)
-			max = Math.max(max, val)
-			values.push(val)
-			sum += val
-		values = values.sort()
-		if values.length % 2 == 1
-			self.median = values[Math.floor(values.length*0.5)]
-		else
-			h = values.length*0.5
-			self.median = values[h-1]*0.5 + values[h]*0.5
-		self.values = values
-		self.mean = sum/values.length
-		self.min = min
-		self.max = max
 		
-		method = self.classMethod
-		num = self.numClasses
-		limits = self.classLimits
-		if method?
-			if method == "equalinterval"
-				for i in [1..num-1]
-					limits.push min+(i/num)*(max-min) 
-			else if method == "quantiles"
-				for i in [1..num-1] 
-					p = values.length * i/num
-					pb = Math.floor(p)
-					if pb == p
-						limits.push values[pb] 
-					else # p > pb 
-						pr = p - pb
-						limits.push values[pb]*pr + values[pb+1]*(1-pr)
-			limits.unshift(min)
-			limits.push(max)
-		return
-	
-	
-	
 	classifyValue: (value) ->
 		self = @ 
 		limits = self.classLimits
-		if limits?
-			n = limits.length -1
+		if limits.length > 2
+			n = limits.length-1
 			i = self.getClass(value)
 			value = limits[i] + (limits[i+1] - limits[i]) * 0.5			
 			minc = limits[0] + (limits[1]-limits[0])*0.3
 			maxc = limits[n-1] + (limits[n]-limits[n-1])*0.7
 			value = self.min + ((value - minc) / (maxc-minc)) * (self.max - self.min)
 		value
-		
+	
+	
+	setClasses: (limits = []) ->
+		###
+		# use this if you want to display a limited number of data classes
+		# possible methods are "equalinterval", "quantiles", "custom"
+		###
+		me = @
+		me.classLimits = limits
+		me.min = limits[0]
+		me.max = limits[limits.length-1]
+		if limits.length == 2
+			me.numClasses = 0
+		else
+			me.numClasses = limits.length-1
 		
 	getClass: (value) ->
 		self = @ 
@@ -648,10 +623,11 @@ class ColorScale
 				i++
 			return i-1
 		return undefined
-		
-		
+				
 	validValue: (value) ->
 		not isNaN(value)
+
+chroma.ColorScale = ColorScale
 
 
 
@@ -731,7 +707,10 @@ chroma.scales.cool = ->
 	new Ramp(chroma.hsl(180,1,.9), chroma.hsl(250,.7,.4))
 
 chroma.scales.hot = ->
-	new ColorScale(['#000000','#ff0000','#ffff00','#ffffff'],[0,.25,.75,1],'rgb')
+	new ColorScale
+		colors: ['#000000','#ff0000','#ffff00','#ffffff']
+		positions: [0,.25,.75,1]
+		mode: 'rgb'
 	
 chroma.scales.BlWhOr = ->
 	new Diverging(chroma.hsl(30,1,.55),'#ffffff', new Color(220,1,.55))
@@ -740,3 +719,126 @@ chroma.scales.GrWhPu = ->
 	new Diverging(chroma.hsl(120,.8,.4),'#ffffff', new Color(280,.8,.4))
 
 
+chroma.limits = (data, mode='equal', num=7, center) ->
+	min = Number.MAX_VALUE
+	max = Number.MAX_VALUE*-1
+	sum = 0
+	values = []
+	
+	for val in data
+		if not not isNaN val 
+			continue
+		min = val if val < min
+		max = val if val > max
+		values.push val
+		sum += val
+	values = values.sort()
+	
+	limits = []
+	
+	
+	if mode == 'continuous':
+		limits.push min
+		limits.push max
+		
+	if mode == 'equal'
+		limits.push min
+		for i in [1..num-1]
+			limits.push min+(i/num)*(max-min) 
+		limits.push max
+		
+	else if mode == 'quartiles'
+		limits.push min
+		for i in [1..num-1] 
+			p = values.length * i/num
+			pb = Math.floor p
+			if pb == p
+				limits.push values[pb] 
+			else # p > pb 
+				pr = p - pb
+				limits.push values[pb]*pr + values[pb+1]*(1-pr)
+		limits.push max
+		
+	else if mode == 'k-means'
+		###
+		implementation borrowed from
+		http://code.google.com/p/figue/source/browse/trunk/figue.js#336
+		###
+		n = values.length
+		assignments = new Array n
+		clusterSizes = new Array num
+		repeat = true
+		nb_iters = 0
+		centroids = null
+		
+		# get seed values
+		centroids = []
+		l = [0..n-1]
+		for i in [0..num-1]
+			centroids.push values[ l.splice(Math.round(Math.random() * (l.length-1)),1) ]
+		console.log 'seed', centroids
+	
+		while repeat
+			# assignment step
+			for j in [0..num-1]
+				clusterSizes[j] = 0
+			for i in [0..n-1]
+				value = values[i]
+				mindist = Number.MAX_VALUE
+				for j in [0..num-1]
+					dist = Math.abs centroids[j]-value
+					if dist < mindist
+						mindist = dist
+						best = j
+				clusterSizes[best]++
+				assignments[i] = best
+			
+			# update centroids step
+			newCentroids = new Array num
+			for j in [0..num-1]
+				newCentroids[j] = null
+			for i in [0..n-1]
+				cluster = assignments[i]
+				if newCentroids[cluster] == null
+					newCentroids[cluster] = values[i]
+				else
+					newCentroids[cluster] += values[i]
+			for j in [0..num-1]
+				newCentroids[j] *= 1/clusterSizes[j]
+					
+			# check convergence
+			repeat = false
+			for j in [0..num-1]
+				if newCentroids[j] != centroids[i]
+					repeat = true
+					break
+			centroids = newCentroids
+			nb_iters++
+			
+			if nb_iters > 20
+				repeat = false
+		
+		# finished k-means clustering
+		# the next part is borrowed from gabrielflor.it
+		kClusters = {}
+		for j in [0..num-1]
+			kClusters[j] = []
+		for i in [0..n-1]
+			cluster = assignments[i]
+			kClusters[cluster].push values[i]
+		tmpKMeansBreaks = []
+		for j in [0..num-1]
+			tmpKMeansBreaks.push kClusters[j][0]
+			tmpKMeansBreaks.push kClusters[j][kClusters[j].length-1]
+		tmpKMeansBreaks = tmpKMeansBreaks.sort (a,b)->
+			a-b
+		limits.push tmpKMeansBreaks[0]
+		for i in [1..tmpKMeansBreaks.length-1] by 2
+			limits.push tmpKMeansBreaks[i]
+
+	limits
+	#else if mode == 'quartiles'
+	#else if mode == 'k-means'
+	
+	
+		

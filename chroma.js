@@ -609,120 +609,64 @@
     	base class for color scales
     */
 
-    function ColorScale(colors, positions, mode, nacol) {
-      var c, me, _ref2;
-      if (nacol == null) nacol = '#cccccc';
+    function ColorScale(opts) {
+      var c, col, cols, me, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
       me = this;
-      for (c = 0, _ref2 = colors.length - 1; 0 <= _ref2 ? c <= _ref2 : c >= _ref2; 0 <= _ref2 ? c++ : c--) {
-        if (typeof colors[c] === "string") colors[c] = new Color(colors[c]);
+      me.colors = cols = (_ref2 = opts.colors) != null ? _ref2 : ['#ddd', '#222'];
+      for (c = 0, _ref3 = cols.length - 1; 0 <= _ref3 ? c <= _ref3 : c >= _ref3; 0 <= _ref3 ? c++ : c--) {
+        col = cols[c];
+        if (type(col) === "string") cols[c] = new Color(col);
       }
-      me.colors = colors;
-      me.pos = positions;
-      me.mode = mode;
-      me.nacol = nacol;
+      me.pos = (_ref4 = opts.positions) != null ? _ref4 : [0, 1];
+      me.mode = (_ref5 = opts.mode) != null ? _ref5 : 'hsv';
+      me.nacol = (_ref6 = opts.nacol) != null ? _ref6 : '#ccc';
+      me.setClasses((_ref7 = opts.limits) != null ? _ref7 : [0, 1]);
       me;
     }
 
     ColorScale.prototype.getColor = function(value) {
-      var col, f, f0, i, me, p, _ref2;
+      var c, f, f0, me;
       me = this;
       if (isNaN(value)) return me.nacol;
-      value = me.classifyValue(value);
-      f = f0 = (value - me.min) / (me.max - me.min);
-      f = Math.min(1, Math.max(0, f));
+      if (me.classLimits.length > 2) {
+        c = me.getClass(value);
+        f = c / me.numClasses;
+      } else {
+        f = f0 = (value - me.min) / (me.max - me.min);
+        f = Math.min(1, Math.max(0, f));
+      }
+      return me.fColor(f);
+    };
+
+    ColorScale.prototype.fColor = function(f) {
+      var col, cols, i, me, p, _ref2;
+      me = this;
+      cols = me.colors;
       for (i = 0, _ref2 = me.pos.length - 1; 0 <= _ref2 ? i <= _ref2 : i >= _ref2; 0 <= _ref2 ? i++ : i--) {
         p = me.pos[i];
         if (f <= p) {
-          col = me.colors[i];
+          col = cols[i];
           break;
         }
         if (f >= p && i === me.pos.length - 1) {
-          col = me.colors[i];
+          col = cols[i];
           break;
         }
         if (f > p && f < me.pos[i + 1]) {
           f = (f - p) / (me.pos[i + 1] - p);
-          col = me.colors[i].interpolate(f, me.colors[i + 1], me.mode);
+          col = chroma.interpolate(cols[i], cols[i + 1], f, me.mode);
           break;
         }
       }
       return col;
     };
 
-    ColorScale.prototype.setClasses = function(numClasses, method, limits) {
-      var me;
-      if (numClasses == null) numClasses = 5;
-      if (method == null) method = 'equalinterval';
-      if (limits == null) limits = [];
-      /*
-      		# use this if you want to display a limited number of data classes
-      		# possible methods are "equalinterval", "quantiles", "custom"
-      */
-      me = this;
-      me.classMethod = method;
-      me.numClasses = numClasses;
-      me.classLimits = limits;
-      return me;
-    };
-
-    ColorScale.prototype.parseData = function(data, data_col) {
-      var h, i, id, limits, max, method, min, num, p, pb, pr, row, self, sum, val, values, _ref2, _ref3;
-      self = this;
-      min = Number.MAX_VALUE;
-      max = Number.MAX_VALUE * -1;
-      sum = 0;
-      values = [];
-      for (id in data) {
-        row = data[id];
-        val = data_col != null ? row[data_col] : row;
-        if (!self.validValue(val)) continue;
-        min = Math.min(min, val);
-        max = Math.max(max, val);
-        values.push(val);
-        sum += val;
-      }
-      values = values.sort();
-      if (values.length % 2 === 1) {
-        self.median = values[Math.floor(values.length * 0.5)];
-      } else {
-        h = values.length * 0.5;
-        self.median = values[h - 1] * 0.5 + values[h] * 0.5;
-      }
-      self.values = values;
-      self.mean = sum / values.length;
-      self.min = min;
-      self.max = max;
-      method = self.classMethod;
-      num = self.numClasses;
-      limits = self.classLimits;
-      if (method != null) {
-        if (method === "equalinterval") {
-          for (i = 1, _ref2 = num - 1; 1 <= _ref2 ? i <= _ref2 : i >= _ref2; 1 <= _ref2 ? i++ : i--) {
-            limits.push(min + (i / num) * (max - min));
-          }
-        } else if (method === "quantiles") {
-          for (i = 1, _ref3 = num - 1; 1 <= _ref3 ? i <= _ref3 : i >= _ref3; 1 <= _ref3 ? i++ : i--) {
-            p = values.length * i / num;
-            pb = Math.floor(p);
-            if (pb === p) {
-              limits.push(values[pb]);
-            } else {
-              pr = p - pb;
-              limits.push(values[pb] * pr + values[pb + 1] * (1 - pr));
-            }
-          }
-        }
-        limits.unshift(min);
-        limits.push(max);
-      }
-    };
-
     ColorScale.prototype.classifyValue = function(value) {
       var i, limits, maxc, minc, n, self;
       self = this;
       limits = self.classLimits;
-      if (limits != null) {
-        n = limits.length(-1);
+      if (limits.length > 2) {
+        n = limits.length - 1;
         i = self.getClass(value);
         value = limits[i] + (limits[i + 1] - limits[i]) * 0.5;
         minc = limits[0] + (limits[1] - limits[0]) * 0.3;
@@ -730,6 +674,24 @@
         value = self.min + ((value - minc) / (maxc - minc)) * (self.max - self.min);
       }
       return value;
+    };
+
+    ColorScale.prototype.setClasses = function(limits) {
+      var me;
+      if (limits == null) limits = [];
+      /*
+      		# use this if you want to display a limited number of data classes
+      		# possible methods are "equalinterval", "quantiles", "custom"
+      */
+      me = this;
+      me.classLimits = limits;
+      me.min = limits[0];
+      me.max = limits[limits.length - 1];
+      if (limits.length === 2) {
+        return me.numClasses = 0;
+      } else {
+        return me.numClasses = limits.length - 1;
+      }
     };
 
     ColorScale.prototype.getClass = function(value) {
@@ -753,6 +715,8 @@
     return ColorScale;
 
   })();
+
+  chroma.ColorScale = ColorScale;
 
   Ramp = (function() {
 
@@ -871,7 +835,11 @@
   };
 
   chroma.scales.hot = function() {
-    return new ColorScale(['#000000', '#ff0000', '#ffff00', '#ffffff'], [0, .25, .75, 1], 'rgb');
+    return new ColorScale({
+      colors: ['#000000', '#ff0000', '#ffff00', '#ffffff'],
+      positions: [0, .25, .75, 1],
+      mode: 'rgb'
+    });
   };
 
   chroma.scales.BlWhOr = function() {
@@ -880,6 +848,131 @@
 
   chroma.scales.GrWhPu = function() {
     return new Diverging(chroma.hsl(120, .8, .4), '#ffffff', new Color(280, .8, .4));
+  };
+
+  chroma.getLimits = function(data, mode, num, center) {
+    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, kClusters, l, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, val, value, values, _i, _j, _len, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results;
+    if (mode == null) mode = 'equal';
+    if (num == null) num = 7;
+    min = Number.MAX_VALUE;
+    max = Number.MAX_VALUE * -1;
+    sum = 0;
+    values = [];
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      val = data[_i];
+      if (!!isNaN(val)) continue;
+      if (val < min) min = val;
+      if (val > max) max = val;
+      values.push(val);
+      sum += val;
+    }
+    values = values.sort();
+    limits = [];
+    if (mode === 'equal') {
+      limits.push(min);
+      for (i = 1, _ref3 = num - 1; 1 <= _ref3 ? i <= _ref3 : i >= _ref3; 1 <= _ref3 ? i++ : i--) {
+        limits.push(min + (i / num) * (max - min));
+      }
+      limits.push(max);
+    } else if (mode === 'quartiles') {
+      limits.push(min);
+      for (i = 1, _ref4 = num - 1; 1 <= _ref4 ? i <= _ref4 : i >= _ref4; 1 <= _ref4 ? i++ : i--) {
+        p = values.length * i / num;
+        pb = Math.floor(p);
+        if (pb === p) {
+          limits.push(values[pb]);
+        } else {
+          pr = p - pb;
+          limits.push(values[pb] * pr + values[pb + 1] * (1 - pr));
+        }
+      }
+      limits.push(max);
+    } else if (mode === 'k-means') {
+      /*
+      		implementation borrowed from
+      		http://code.google.com/p/figue/source/browse/trunk/figue.js#336
+      */
+      n = values.length;
+      assignments = new Array(n);
+      clusterSizes = new Array(num);
+      repeat = true;
+      nb_iters = 0;
+      centroids = null;
+      centroids = [];
+      l = (function() {
+        _results = [];
+        for (var _j = 0, _ref5 = n - 1; 0 <= _ref5 ? _j <= _ref5 : _j >= _ref5; 0 <= _ref5 ? _j++ : _j--){ _results.push(_j); }
+        return _results;
+      }).apply(this);
+      for (i = 0, _ref6 = num - 1; 0 <= _ref6 ? i <= _ref6 : i >= _ref6; 0 <= _ref6 ? i++ : i--) {
+        centroids.push(values[l.splice(Math.round(Math.random() * (l.length - 1)), 1)]);
+      }
+      console.log('seed', centroids);
+      while (repeat) {
+        for (j = 0, _ref7 = num - 1; 0 <= _ref7 ? j <= _ref7 : j >= _ref7; 0 <= _ref7 ? j++ : j--) {
+          clusterSizes[j] = 0;
+        }
+        for (i = 0, _ref8 = n - 1; 0 <= _ref8 ? i <= _ref8 : i >= _ref8; 0 <= _ref8 ? i++ : i--) {
+          value = values[i];
+          mindist = Number.MAX_VALUE;
+          for (j = 0, _ref9 = num - 1; 0 <= _ref9 ? j <= _ref9 : j >= _ref9; 0 <= _ref9 ? j++ : j--) {
+            dist = Math.abs(centroids[j] - value);
+            if (dist < mindist) {
+              mindist = dist;
+              best = j;
+            }
+          }
+          clusterSizes[best]++;
+          assignments[i] = best;
+        }
+        newCentroids = new Array(num);
+        for (j = 0, _ref10 = num - 1; 0 <= _ref10 ? j <= _ref10 : j >= _ref10; 0 <= _ref10 ? j++ : j--) {
+          newCentroids[j] = null;
+        }
+        for (i = 0, _ref11 = n - 1; 0 <= _ref11 ? i <= _ref11 : i >= _ref11; 0 <= _ref11 ? i++ : i--) {
+          cluster = assignments[i];
+          if (newCentroids[cluster] === null) {
+            newCentroids[cluster] = values[i];
+          } else {
+            newCentroids[cluster] += values[i];
+          }
+        }
+        for (j = 0, _ref12 = num - 1; 0 <= _ref12 ? j <= _ref12 : j >= _ref12; 0 <= _ref12 ? j++ : j--) {
+          newCentroids[j] *= 1 / clusterSizes[j];
+        }
+        repeat = false;
+        for (j = 0, _ref13 = num - 1; 0 <= _ref13 ? j <= _ref13 : j >= _ref13; 0 <= _ref13 ? j++ : j--) {
+          if (newCentroids[j] !== centroids[i]) {
+            repeat = true;
+            break;
+          }
+        }
+        centroids = newCentroids;
+        nb_iters++;
+        if (nb_iters > 20) repeat = false;
+      }
+      kClusters = {};
+      for (j = 0, _ref14 = num - 1; 0 <= _ref14 ? j <= _ref14 : j >= _ref14; 0 <= _ref14 ? j++ : j--) {
+        kClusters[j] = [];
+      }
+      for (i = 0, _ref15 = n - 1; 0 <= _ref15 ? i <= _ref15 : i >= _ref15; 0 <= _ref15 ? i++ : i--) {
+        cluster = assignments[i];
+        kClusters[cluster].push(values[i]);
+      }
+      tmpKMeansBreaks = [];
+      for (j = 0, _ref16 = num - 1; 0 <= _ref16 ? j <= _ref16 : j >= _ref16; 0 <= _ref16 ? j++ : j--) {
+        tmpKMeansBreaks.push(kClusters[j][0]);
+        tmpKMeansBreaks.push(kClusters[j][kClusters[j].length - 1]);
+      }
+      tmpKMeansBreaks = tmpKMeansBreaks.sort(function(a, b) {
+        return a - b;
+      });
+      limits.push(tmpKMeansBreaks[0]);
+      for (i = 1, _ref17 = tmpKMeansBreaks.length - 1; i <= _ref17; i += 2) {
+        limits.push(tmpKMeansBreaks[i]);
+      }
+    }
+    return limits;
   };
 
   /*
@@ -908,5 +1001,13 @@
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
   root.type = type;
+
+  Array.max = function(array) {
+    return Math.max.apply(Math, array);
+  };
+
+  Array.min = function(array) {
+    return Math.min.apply(Math, array);
+  };
 
 }).call(this);
