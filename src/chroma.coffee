@@ -737,7 +737,7 @@ chroma.limits = (data, mode='equal', num=7, center) ->
 	limits = []
 	
 	
-	if mode == 'continuous':
+	if mode == 'continuous'
 		limits.push min
 		limits.push max
 		

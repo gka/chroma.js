@@ -850,7 +850,7 @@
     return new Diverging(chroma.hsl(120, .8, .4), '#ffffff', new Color(280, .8, .4));
   };
 
-  chroma.getLimits = function(data, mode, num, center) {
+  chroma.limits = function(data, mode, num, center) {
     var assignments, best, centroids, cluster, clusterSizes, dist, i, j, kClusters, l, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, val, value, values, _i, _j, _len, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results;
     if (mode == null) mode = 'equal';
     if (num == null) num = 7;
@@ -868,6 +868,10 @@
     }
     values = values.sort();
     limits = [];
+    if (mode === 'continuous') {
+      limits.push(min);
+      limits.push(max);
+    }
     if (mode === 'equal') {
       limits.push(min);
       for (i = 1, _ref3 = num - 1; 1 <= _ref3 ? i <= _ref3 : i >= _ref3; 1 <= _ref3 ? i++ : i--) {
