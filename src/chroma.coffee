@@ -356,9 +356,6 @@ Color.csl2lab = (c,s,l) ->
 	r = (l*0.311+0.125)*s # ~chroma
 	a = Math.sin(angle)*r
 	b = Math.cos(angle)*r
-
-	#log = console.log
-	#log 'csl2lab',c*360,s,l,'a:',angle,'\n\t',L,a,b
 	[L,a,b]
 	
 
@@ -776,7 +773,6 @@ chroma.limits = (data, mode='equal', num=7, center) ->
 		l = [0..n-1]
 		for i in [0..num-1]
 			centroids.push values[ l.splice(Math.round(Math.random() * (l.length-1)),1) ]
-		console.log 'seed', centroids
 	
 		while repeat
 			# assignment step

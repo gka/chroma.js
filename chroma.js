@@ -911,7 +911,6 @@
       for (i = 0, _ref6 = num - 1; 0 <= _ref6 ? i <= _ref6 : i >= _ref6; 0 <= _ref6 ? i++ : i--) {
         centroids.push(values[l.splice(Math.round(Math.random() * (l.length - 1)), 1)]);
       }
-      console.log('seed', centroids);
       while (repeat) {
         for (j = 0, _ref7 = num - 1; 0 <= _ref7 ? j <= _ref7 : j >= _ref7; 0 <= _ref7 ? j++ : j--) {
           clusterSizes[j] = 0;
