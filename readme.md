@@ -57,12 +57,16 @@ In the simplest case, you would just pass two *colors*:
 	// all colors between 0 and 1
 	scale.getColor(0.23)
 
-You can determine the color space, in which the colors should be interpolated using the *mode* option. The following example would interpolate in **C**hroma **S**aturation **L**ightness space:
+![Simple scale](https://github.com/gka/chroma.js/raw/master/demo/cont-hsv.png)
+
+You can determine the color space, in which the colors should be interpolated using the *mode* option. The default mode is *hsv*. The following example would interpolate in **C**hroma **S**aturation **L**ightness space:
 
 	scale = new chroma.ColorScale(
 		colors: ['#F7E1C5', '#6A000B'],
 		mode: 'csl'
 	})
+
+![CSL scale](https://github.com/gka/chroma.js/raw/master/demo/cont-csl.png)
 
 
 ### Data specific color scales
@@ -82,6 +86,8 @@ You can use the *limits* parameter to convert the continuous scale into a scale 
 		colors: ['#F7E1C5', '#6A000B'],
 		limits: [0, 2000, 4000, 6000, 8000, 10000]
 	})
+
+![Equal interval scale](https://github.com/gka/chroma.js/raw/master/demo/equal-csl.png)
 	
 Chroma.js comes with a handy utility function that helps you to fill in the *limits* array. For instance, the following would create the same color scale as in the last example:
 
@@ -98,6 +104,10 @@ The **chroma.limits()** function currently supports four types of scales. The de
 * *k-means*: The **k-means clustering** system creates classes of values such that the sum of the squared distance from each value to the center of its respective class is minimized.
 * *continuous*: Equivalent to choosing equal intervals and increasing the number of classes to infinity. Would just return [min, max]
 
+![Quantiles scale](https://github.com/gka/chroma.js/raw/master/demo/quant-csl.png)
+
+![k-means clustering scale](https://github.com/gka/chroma.js/raw/master/demo/kmeans-csl.png)
+
 ### Complex color scales
 
 The following example creates the "hot" scale which goes from black to red to yellow to white (taken from [Flare Visualization Toolkit](https://github.com/prefuse/Flare/blob/master/flare/src/flare/util/palette/ColorPalette.as#L117)).
@@ -108,3 +118,4 @@ The following example creates the "hot" scale which goes from black to red to ye
 		mode: 'rgb'
 	})
 
+![hot scale](https://github.com/gka/chroma.js/raw/master/demo/hot.png)
