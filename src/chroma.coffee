@@ -22,6 +22,7 @@
 root = (exports ? this)	
 chroma = root.chroma ?= {}
 
+chroma.version = "0.2.2"
 
 class Color
 	###
@@ -151,11 +152,10 @@ class Color
 Color.hex2rgb = (hex) ->
 	if not hex.match /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
 		throw "wrong hex color format: "+hex
-		
 	if hex.length == 4 or hex.length == 7
 		hex = hex.substr(1)
 	if hex.length == 3
-		hex = hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]
 	u = parseInt(hex, 16)
 	r = u >> 16
 	g = u >> 8 & 0xFF
@@ -543,7 +543,14 @@ class ColorScale
 		for c in [0..cols.length-1]
 			col = cols[c]
 			cols[c] = new Color(col) if type(col) == "string"
-		me.pos = opts.positions ? [0,1]
+		
+		if opts.positions?
+			me.pos = opts.positions
+		else
+			me.pos = []
+			for c in [0..cols.length-1]
+				me.pos.push c/(cols.length-1)
+		
 		me.mode = opts.mode ? 'hsv'
 		me.nacol = opts.nacol ? '#ccc'
 		me.setClasses opts.limits ? [0,1]
@@ -716,19 +723,29 @@ chroma.scales.GrWhPu = ->
 	new Diverging(chroma.hsl(120,.8,.4),'#ffffff', new Color(280,.8,.4))
 
 
-chroma.limits = (data, mode='equal', num=7, center) ->
+chroma.limits = (data, mode='equal', num=7, prop=null) ->
 	min = Number.MAX_VALUE
 	max = Number.MAX_VALUE*-1
 	sum = 0
 	values = []
 	
-	for val in data
+	if type(data) == "array"
+		for val in data
+			values.push val
+	else if type(data) == "object"
+		for k,val of data
+			if type(val) == "object" and type(prop) == "string"
+				values.push val[prop]
+			else if type(val) == "number"
+				values.push val
+			
+	for val in values
 		if not not isNaN val 
 			continue
 		min = val if val < min
 		max = val if val > max
-		values.push val
 		sum += val
+
 	values = values.sort()
 	
 	limits = []
@@ -758,8 +775,9 @@ chroma.limits = (data, mode='equal', num=7, center) ->
 		
 	else if mode == 'k-means'
 		###
-		implementation borrowed from
+		implementation based on
 		http://code.google.com/p/figue/source/browse/trunk/figue.js#336
+		simplified for 1-d input values
 		###
 		n = values.length
 		assignments = new Array n

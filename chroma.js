@@ -28,6 +28,8 @@
 
   chroma = (_ref = root.chroma) != null ? _ref : root.chroma = {};
 
+  chroma.version = "0.2.2";
+
   Color = (function() {
 
     /*
@@ -170,7 +172,7 @@
     }
     if (hex.length === 4 || hex.length === 7) hex = hex.substr(1);
     if (hex.length === 3) {
-      hex = hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
     u = parseInt(hex, 16);
     r = u >> 16;
@@ -617,7 +619,14 @@
         col = cols[c];
         if (type(col) === "string") cols[c] = new Color(col);
       }
-      me.pos = (_ref4 = opts.positions) != null ? _ref4 : [0, 1];
+      if (opts.positions != null) {
+        me.pos = opts.positions;
+      } else {
+        me.pos = [];
+        for (c = 0, _ref4 = cols.length - 1; 0 <= _ref4 ? c <= _ref4 : c >= _ref4; 0 <= _ref4 ? c++ : c--) {
+          me.pos.push(c / (cols.length - 1));
+        }
+      }
       me.mode = (_ref5 = opts.mode) != null ? _ref5 : 'hsv';
       me.nacol = (_ref6 = opts.nacol) != null ? _ref6 : '#ccc';
       me.setClasses((_ref7 = opts.limits) != null ? _ref7 : [0, 1]);
@@ -850,20 +859,35 @@
     return new Diverging(chroma.hsl(120, .8, .4), '#ffffff', new Color(280, .8, .4));
   };
 
-  chroma.limits = function(data, mode, num, center) {
-    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, kClusters, l, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, val, value, values, _i, _j, _len, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results;
+  chroma.limits = function(data, mode, num, prop) {
+    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, k, kClusters, l, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, val, value, values, _i, _j, _k, _len, _len2, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results;
     if (mode == null) mode = 'equal';
     if (num == null) num = 7;
+    if (prop == null) prop = null;
     min = Number.MAX_VALUE;
     max = Number.MAX_VALUE * -1;
     sum = 0;
     values = [];
-    for (_i = 0, _len = data.length; _i < _len; _i++) {
-      val = data[_i];
+    if (type(data) === "array") {
+      for (_i = 0, _len = data.length; _i < _len; _i++) {
+        val = data[_i];
+        values.push(val);
+      }
+    } else if (type(data) === "object") {
+      for (k in data) {
+        val = data[k];
+        if (type(val) === "object" && type(prop) === "string") {
+          values.push(val[prop]);
+        } else if (type(val) === "number") {
+          values.push(val);
+        }
+      }
+    }
+    for (_j = 0, _len2 = values.length; _j < _len2; _j++) {
+      val = values[_j];
       if (!!isNaN(val)) continue;
       if (val < min) min = val;
       if (val > max) max = val;
-      values.push(val);
       sum += val;
     }
     values = values.sort();
@@ -893,8 +917,9 @@
       limits.push(max);
     } else if (mode === 'k-means') {
       /*
-      		implementation borrowed from
+      		implementation based on
       		http://code.google.com/p/figue/source/browse/trunk/figue.js#336
+      		simplified for 1-d input values
       */
       n = values.length;
       assignments = new Array(n);
@@ -905,7 +930,7 @@
       centroids = [];
       l = (function() {
         _results = [];
-        for (var _j = 0, _ref5 = n - 1; 0 <= _ref5 ? _j <= _ref5 : _j >= _ref5; 0 <= _ref5 ? _j++ : _j--){ _results.push(_j); }
+        for (var _k = 0, _ref5 = n - 1; 0 <= _ref5 ? _k <= _ref5 : _k >= _ref5; 0 <= _ref5 ? _k++ : _k--){ _results.push(_k); }
         return _results;
       }).apply(this);
       for (i = 0, _ref6 = num - 1; 0 <= _ref6 ? i <= _ref6 : i >= _ref6; 0 <= _ref6 ? i++ : i--) {
