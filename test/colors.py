@@ -10,5 +10,5 @@ for k in Color.NAMED_COLOR:
 	out.append(list(c.hsl))
 	l,a,b = c.lab
 	out.append([l/100.0,a,b])
-	print 'colors.push( ' + str(out) +' );'
-
+	#print 'colors.push( ' + str(out) +' );'
+	print 'colors.'+k+' = "'+c.html+'"'

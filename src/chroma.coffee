@@ -151,7 +151,10 @@ class Color
 
 Color.hex2rgb = (hex) ->
 	if not hex.match /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
-		throw "wrong hex color format: "+hex
+		if chroma.colors? and chroma.colors[hex]
+			hex = chroma.colors[hex]
+		else
+			throw "unknown color format: "+hex
 	if hex.length == 4 or hex.length == 7
 		hex = hex.substr(1)
 	if hex.length == 3
@@ -731,13 +734,13 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 	
 	if type(data) == "array"
 		for val in data
-			values.push val
+			values.push val if not isNaN val
 	else if type(data) == "object"
 		for k,val of data
 			if type(val) == "object" and type(prop) == "string"
-				values.push val[prop]
+				values.push val[prop] if not isNaN val[prop]
 			else if type(val) == "number"
-				values.push val
+				values.push val if not isNaN val 
 			
 	for val in values
 		if not not isNaN val 
@@ -792,6 +795,8 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 		for i in [0..num-1]
 			centroids.push values[ l.splice(Math.round(Math.random() * (l.length-1)),1) ]
 	
+		console.log 'a', centroids
+	
 		while repeat
 			# assignment step
 			for j in [0..num-1]
@@ -826,11 +831,16 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 				if newCentroids[j] != centroids[i]
 					repeat = true
 					break
+			
+			console.log 'b', newCentroids
+	
 			centroids = newCentroids
 			nb_iters++
 			
 			if nb_iters > 20
 				repeat = false
+				
+		console.log centroids	
 		
 		# finished k-means clustering
 		# the next part is borrowed from gabrielflor.it

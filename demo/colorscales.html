@@ -2,7 +2,7 @@
 <head>
 	<title>colorscale demonstration</title>
 	<script src="../chroma.js"></script>
-	<script src="../../d3/d3.js"></script>
+	<script src="../chroma.colors.js"></script>
 	<script src="jquery.min.js"></script>
 	<style>
 	body { font-family: Lato, 'Helvetica Neue', sans-serif; }
@@ -59,8 +59,8 @@
 			}),
 			
 			new chroma.ColorScale({
-				colors: ['#eef', '#336'],
-				mode: 'csl',
+				colors: ['lemonchiffon', 'indigo'],
+				mode: 'hsv',
 				limits: [minVal, maxVal]
 			})
 			
