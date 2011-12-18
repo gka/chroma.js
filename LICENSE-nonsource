@@ -17,4 +17,6 @@
     through which recipients can access the Corresponding Source.  
     
     @source: https://github.com/gka/chroma.js
+    
+    Also, the chroma.js release contains colors of colorbrewer.org which are copyright (c) 2002 Cynthia Brewer, Mark Harrower, and The Pennsylvania State University.
 */

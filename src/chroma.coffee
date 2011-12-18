@@ -22,7 +22,7 @@
 root = (exports ? this)	
 chroma = root.chroma ?= {}
 
-chroma.version = "0.2.2"
+chroma.version = "0.2.4"
 
 class Color
 	###
