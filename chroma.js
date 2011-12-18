@@ -643,7 +643,7 @@
       if (isNaN(value)) return me.nacol;
       if (me.classLimits.length > 2) {
         c = me.getClass(value);
-        f = c / me.numClasses;
+        f = c / (me.numClasses - 1);
       } else {
         f = f0 = (value - me.min) / (me.max - me.min);
         f = Math.min(1, Math.max(0, f));
@@ -682,8 +682,8 @@
         n = limits.length - 1;
         i = self.getClass(value);
         value = limits[i] + (limits[i + 1] - limits[i]) * 0.5;
-        minc = limits[0] + (limits[1] - limits[0]) * 0.3;
-        maxc = limits[n - 1] + (limits[n] - limits[n - 1]) * 0.7;
+        minc = limits[0];
+        maxc = limits[n - 1];
         value = self.min + ((value - minc) / (maxc - minc)) * (self.max - self.min);
       }
       return value;
@@ -864,7 +864,7 @@
   };
 
   chroma.limits = function(data, mode, num, prop) {
-    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, k, kClusters, l, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, val, value, values, _i, _j, _k, _len, _len2, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _results;
+    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, k, kClusters, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, val, value, values, _i, _j, _len, _len2, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
     if (mode == null) mode = 'equal';
     if (num == null) num = 7;
     if (prop == null) prop = null;
@@ -932,23 +932,19 @@
       nb_iters = 0;
       centroids = null;
       centroids = [];
-      l = (function() {
-        _results = [];
-        for (var _k = 0, _ref5 = n - 1; 0 <= _ref5 ? _k <= _ref5 : _k >= _ref5; 0 <= _ref5 ? _k++ : _k--){ _results.push(_k); }
-        return _results;
-      }).apply(this);
-      for (i = 0, _ref6 = num - 1; 0 <= _ref6 ? i <= _ref6 : i >= _ref6; 0 <= _ref6 ? i++ : i--) {
-        centroids.push(values[l.splice(Math.round(Math.random() * (l.length - 1)), 1)]);
+      centroids.push(min);
+      for (i = 1, _ref5 = num - 1; 1 <= _ref5 ? i <= _ref5 : i >= _ref5; 1 <= _ref5 ? i++ : i--) {
+        centroids.push(min + (i / num) * (max - min));
       }
-      console.log('a', centroids);
+      centroids.push(max);
       while (repeat) {
-        for (j = 0, _ref7 = num - 1; 0 <= _ref7 ? j <= _ref7 : j >= _ref7; 0 <= _ref7 ? j++ : j--) {
+        for (j = 0, _ref6 = num - 1; 0 <= _ref6 ? j <= _ref6 : j >= _ref6; 0 <= _ref6 ? j++ : j--) {
           clusterSizes[j] = 0;
         }
-        for (i = 0, _ref8 = n - 1; 0 <= _ref8 ? i <= _ref8 : i >= _ref8; 0 <= _ref8 ? i++ : i--) {
+        for (i = 0, _ref7 = n - 1; 0 <= _ref7 ? i <= _ref7 : i >= _ref7; 0 <= _ref7 ? i++ : i--) {
           value = values[i];
           mindist = Number.MAX_VALUE;
-          for (j = 0, _ref9 = num - 1; 0 <= _ref9 ? j <= _ref9 : j >= _ref9; 0 <= _ref9 ? j++ : j--) {
+          for (j = 0, _ref8 = num - 1; 0 <= _ref8 ? j <= _ref8 : j >= _ref8; 0 <= _ref8 ? j++ : j--) {
             dist = Math.abs(centroids[j] - value);
             if (dist < mindist) {
               mindist = dist;
@@ -959,10 +955,10 @@
           assignments[i] = best;
         }
         newCentroids = new Array(num);
-        for (j = 0, _ref10 = num - 1; 0 <= _ref10 ? j <= _ref10 : j >= _ref10; 0 <= _ref10 ? j++ : j--) {
+        for (j = 0, _ref9 = num - 1; 0 <= _ref9 ? j <= _ref9 : j >= _ref9; 0 <= _ref9 ? j++ : j--) {
           newCentroids[j] = null;
         }
-        for (i = 0, _ref11 = n - 1; 0 <= _ref11 ? i <= _ref11 : i >= _ref11; 0 <= _ref11 ? i++ : i--) {
+        for (i = 0, _ref10 = n - 1; 0 <= _ref10 ? i <= _ref10 : i >= _ref10; 0 <= _ref10 ? i++ : i--) {
           cluster = assignments[i];
           if (newCentroids[cluster] === null) {
             newCentroids[cluster] = values[i];
@@ -970,11 +966,11 @@
             newCentroids[cluster] += values[i];
           }
         }
-        for (j = 0, _ref12 = num - 1; 0 <= _ref12 ? j <= _ref12 : j >= _ref12; 0 <= _ref12 ? j++ : j--) {
+        for (j = 0, _ref11 = num - 1; 0 <= _ref11 ? j <= _ref11 : j >= _ref11; 0 <= _ref11 ? j++ : j--) {
           newCentroids[j] *= 1 / clusterSizes[j];
         }
         repeat = false;
-        for (j = 0, _ref13 = num - 1; 0 <= _ref13 ? j <= _ref13 : j >= _ref13; 0 <= _ref13 ? j++ : j--) {
+        for (j = 0, _ref12 = num - 1; 0 <= _ref12 ? j <= _ref12 : j >= _ref12; 0 <= _ref12 ? j++ : j--) {
           if (newCentroids[j] !== centroids[i]) {
             repeat = true;
             break;
@@ -983,19 +979,18 @@
         console.log('b', newCentroids);
         centroids = newCentroids;
         nb_iters++;
-        if (nb_iters > 20) repeat = false;
+        if (nb_iters > 200) repeat = false;
       }
-      console.log(centroids);
       kClusters = {};
-      for (j = 0, _ref14 = num - 1; 0 <= _ref14 ? j <= _ref14 : j >= _ref14; 0 <= _ref14 ? j++ : j--) {
+      for (j = 0, _ref13 = num - 1; 0 <= _ref13 ? j <= _ref13 : j >= _ref13; 0 <= _ref13 ? j++ : j--) {
         kClusters[j] = [];
       }
-      for (i = 0, _ref15 = n - 1; 0 <= _ref15 ? i <= _ref15 : i >= _ref15; 0 <= _ref15 ? i++ : i--) {
+      for (i = 0, _ref14 = n - 1; 0 <= _ref14 ? i <= _ref14 : i >= _ref14; 0 <= _ref14 ? i++ : i--) {
         cluster = assignments[i];
         kClusters[cluster].push(values[i]);
       }
       tmpKMeansBreaks = [];
-      for (j = 0, _ref16 = num - 1; 0 <= _ref16 ? j <= _ref16 : j >= _ref16; 0 <= _ref16 ? j++ : j--) {
+      for (j = 0, _ref15 = num - 1; 0 <= _ref15 ? j <= _ref15 : j >= _ref15; 0 <= _ref15 ? j++ : j--) {
         tmpKMeansBreaks.push(kClusters[j][0]);
         tmpKMeansBreaks.push(kClusters[j][kClusters[j].length - 1]);
       }
@@ -1003,7 +998,7 @@
         return a - b;
       });
       limits.push(tmpKMeansBreaks[0]);
-      for (i = 1, _ref17 = tmpKMeansBreaks.length - 1; i <= _ref17; i += 2) {
+      for (i = 1, _ref16 = tmpKMeansBreaks.length - 1; i <= _ref16; i += 2) {
         limits.push(tmpKMeansBreaks[i]);
       }
     }

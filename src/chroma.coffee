@@ -566,7 +566,7 @@ class ColorScale
 		
 		if me.classLimits.length > 2
 			c = me.getClass value
-			f = c/me.numClasses
+			f = c/(me.numClasses-1)
 			
 		else
 			f = f0 = (value - me.min) / (me.max - me.min)
@@ -600,8 +600,8 @@ class ColorScale
 			n = limits.length-1
 			i = self.getClass(value)
 			value = limits[i] + (limits[i+1] - limits[i]) * 0.5			
-			minc = limits[0] + (limits[1]-limits[0])*0.3
-			maxc = limits[n-1] + (limits[n]-limits[n-1])*0.7
+			minc = limits[0]# + (limits[1]-limits[0])*0.3
+			maxc = limits[n-1]# + (limits[n]-limits[n-1])*0.7
 			value = self.min + ((value - minc) / (maxc-minc)) * (self.max - self.min)
 		value
 	
@@ -791,12 +791,11 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 		
 		# get seed values
 		centroids = []
-		l = [0..n-1]
-		for i in [0..num-1]
-			centroids.push values[ l.splice(Math.round(Math.random() * (l.length-1)),1) ]
-	
-		console.log 'a', centroids
-	
+		centroids.push min
+		for i in [1..num-1]
+			centroids.push min+(i/num)*(max-min) 
+		centroids.push max
+		
 		while repeat
 			# assignment step
 			for j in [0..num-1]
@@ -837,11 +836,9 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 			centroids = newCentroids
 			nb_iters++
 			
-			if nb_iters > 20
+			if nb_iters > 200
 				repeat = false
 				
-		console.log centroids	
-		
 		# finished k-means clustering
 		# the next part is borrowed from gabrielflor.it
 		kClusters = {}
