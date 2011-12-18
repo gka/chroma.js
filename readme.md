@@ -9,6 +9,10 @@ Chroma.js is a tiny JavaScript library for all kinds of color conversions.
 * [Supported Color Spaces](https://github.com/gka/chroma.js/wiki/Color-Spaces)
 * [Named Colors and ColorBrewer Scales](https://github.com/gka/chroma.js/wiki/Predefined-Colors)
 
+### Similar Libraries
+
+* [GrapeFruit](http://code.google.com/p/grapefruit/) (Python)
+
 ### Author
 
 Chroma.js is written by [Gregor Aisch](http://twitter.com/driven_by_data).
