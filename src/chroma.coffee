@@ -751,17 +751,17 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 	limits = []
 	
 	
-	if mode == 'continuous'
+	if mode.substr(0,1) == 'c' # continuous
 		limits.push min
 		limits.push max
 		
-	if mode == 'equal'
+	if mode.substr(0,1) == 'e' # equal interval
 		limits.push min
 		for i in [1..num-1]
 			limits.push min+(i/num)*(max-min) 
 		limits.push max
 		
-	else if mode == 'quartiles'
+	else if mode.substr(0,1) == 'q' # quantile scale
 		limits.push min
 		for i in [1..num-1] 
 			p = values.length * i/num
@@ -773,7 +773,7 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 				limits.push values[pb]*pr + values[pb+1]*(1-pr)
 		limits.push max
 		
-	else if mode == 'k-means'
+	else if mode.substr(0,1) == 'k' # k-means clustering
 		###
 		implementation based on
 		http://code.google.com/p/figue/source/browse/trunk/figue.js#336

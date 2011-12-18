@@ -892,17 +892,17 @@
     }
     values = values.sort();
     limits = [];
-    if (mode === 'continuous') {
+    if (mode.substr(0, 1) === 'c') {
       limits.push(min);
       limits.push(max);
     }
-    if (mode === 'equal') {
+    if (mode.substr(0, 1) === 'e') {
       limits.push(min);
       for (i = 1, _ref3 = num - 1; 1 <= _ref3 ? i <= _ref3 : i >= _ref3; 1 <= _ref3 ? i++ : i--) {
         limits.push(min + (i / num) * (max - min));
       }
       limits.push(max);
-    } else if (mode === 'quartiles') {
+    } else if (mode.substr(0, 1) === 'q') {
       limits.push(min);
       for (i = 1, _ref4 = num - 1; 1 <= _ref4 ? i <= _ref4 : i >= _ref4; 1 <= _ref4 ? i++ : i--) {
         p = values.length * i / num;
@@ -915,7 +915,7 @@
         }
       }
       limits.push(max);
-    } else if (mode === 'k-means') {
+    } else if (mode.substr(0, 1) === 'k') {
       /*
       		implementation based on
       		http://code.google.com/p/figue/source/browse/trunk/figue.js#336
