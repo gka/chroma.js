@@ -7,6 +7,7 @@ Chroma.js is a tiny JavaScript library for all kinds of color conversions.
 * [Working with Colors](https://github.com/gka/chroma.js/wiki/Colors)
 * [Working with Color Scales](https://github.com/gka/chroma.js/wiki/Color-Scales)
 * [Supported Color Spaces](https://github.com/gka/chroma.js/wiki/Color-Spaces)
+* [Named Colors and ColorBrewer Scales](https://github.com/gka/chroma.js/wiki/Predefined-Colors)
 
 ### Author
 
