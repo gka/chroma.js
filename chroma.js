@@ -28,7 +28,7 @@
 
   chroma = (_ref = root.chroma) != null ? _ref : root.chroma = {};
 
-  chroma.version = "0.2.4";
+  chroma.version = "0.2.5";
 
   Color = (function() {
 
