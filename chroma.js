@@ -976,7 +976,6 @@
             break;
           }
         }
-        console.log('b', newCentroids);
         centroids = newCentroids;
         nb_iters++;
         if (nb_iters > 200) repeat = false;
@@ -999,7 +998,7 @@
       });
       limits.push(tmpKMeansBreaks[0]);
       for (i = 1, _ref16 = tmpKMeansBreaks.length - 1; i <= _ref16; i += 2) {
-        limits.push(tmpKMeansBreaks[i]);
+        if (!isNaN(tmpKMeansBreaks[i])) limits.push(tmpKMeansBreaks[i]);
       }
     }
     return limits;

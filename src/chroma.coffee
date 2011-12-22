@@ -793,7 +793,7 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 		centroids = []
 		centroids.push min
 		for i in [1..num-1]
-			centroids.push min+(i/num)*(max-min) 
+			centroids.push min + (i/num) * (max-min)
 		centroids.push max
 		
 		while repeat
@@ -831,8 +831,6 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 					repeat = true
 					break
 			
-			console.log 'b', newCentroids
-	
 			centroids = newCentroids
 			nb_iters++
 			
@@ -855,7 +853,8 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 			a-b
 		limits.push tmpKMeansBreaks[0]
 		for i in [1..tmpKMeansBreaks.length-1] by 2
-			limits.push tmpKMeansBreaks[i]
+			if not isNaN(tmpKMeansBreaks[i])
+				limits.push tmpKMeansBreaks[i]
 
 	limits
 	#else if mode == 'quartiles'
