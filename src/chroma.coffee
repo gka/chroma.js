@@ -19,8 +19,11 @@
     @source: https://github.com/gka/chroma.js
 ###
 
-root = (exports ? this)	
+root = (exports ? this)
 chroma = root.chroma ?= {}
+
+# Browserify-compatible export
+module.exports = chroma if module?
 
 chroma.version = "0.2.5"
 
