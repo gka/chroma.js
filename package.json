@@ -18,6 +18,6 @@
     },
     "devDependencies": {
         "uglify-js"     : "1.x",
-        "coffees-cript" : "1.2"
+        "coffee-script" : "1.2"
     }
 }
