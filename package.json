@@ -15,5 +15,9 @@
     "main"         : "chroma.js",
     "scripts"      : {
         "compile": "./build.sh"
+    },
+    "devDependencies": {
+        "uglify-js"     : "1.x",
+        "coffees-cript" : "1.2"
     }
 }
