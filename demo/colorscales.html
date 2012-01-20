@@ -28,6 +28,11 @@
 		scales = [
 			new chroma.ColorScale({
 				colors: YlBl,
+				limits: chroma.limits(testData, 'equal', 10),
+				mode: 'csl'
+			})
+			new chroma.ColorScale({
+				colors: YlBl,
 				limits: [minVal, maxVal]
 			}),
 			new chroma.ColorScale({

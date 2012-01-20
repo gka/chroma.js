@@ -864,7 +864,7 @@
   };
 
   chroma.limits = function(data, mode, num, prop) {
-    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, k, kClusters, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, val, value, values, _i, _j, _len, _len2, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, k, kClusters, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, row, sum, tmpKMeansBreaks, val, value, values, _i, _j, _k, _len, _len2, _len3, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
     if (mode == null) mode = 'equal';
     if (num == null) num = 7;
     if (prop == null) prop = null;
@@ -873,9 +873,16 @@
     sum = 0;
     values = [];
     if (type(data) === "array") {
-      for (_i = 0, _len = data.length; _i < _len; _i++) {
-        val = data[_i];
-        if (!isNaN(val)) values.push(val);
+      if (!isNaN(data[0])) {
+        for (_i = 0, _len = data.length; _i < _len; _i++) {
+          val = data[_i];
+          if (!isNaN(val)) values.push(val);
+        }
+      } else {
+        for (_j = 0, _len2 = data.length; _j < _len2; _j++) {
+          row = data[_j];
+          values.push(row[prop]);
+        }
       }
     } else if (type(data) === "object") {
       for (k in data) {
@@ -887,8 +894,8 @@
         }
       }
     }
-    for (_j = 0, _len2 = values.length; _j < _len2; _j++) {
-      val = values[_j];
+    for (_k = 0, _len3 = values.length; _k < _len3; _k++) {
+      val = values[_k];
       if (!!isNaN(val)) continue;
       if (val < min) min = val;
       if (val > max) max = val;

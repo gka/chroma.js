@@ -733,8 +733,12 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 	values = []
 	
 	if type(data) == "array"
-		for val in data
-			values.push val if not isNaN val
+		if not isNaN data[0]
+			for val in data
+				values.push val if not isNaN val
+		else
+			for row in data
+				values.push row[prop]
 	else if type(data) == "object"
 		for k,val of data
 			if type(val) == "object" and type(prop) == "string"
