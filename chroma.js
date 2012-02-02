@@ -1,5 +1,4 @@
 (function() {
-
   /**
       chroma.js - a neat JS lib for color conversions
       Copyright (C) 2011  Gregor Aisch
@@ -20,18 +19,22 @@
       
       @source: https://github.com/gka/chroma.js
   */
-
   var CSSColors, Categories, Color, ColorScale, Diverging, Ramp, chroma, root, type, _ref, _ref2;
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
-
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  };
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
-
   chroma = (_ref = root.chroma) != null ? _ref : root.chroma = {};
-
+  if (typeof module !== "undefined" && module !== null) {
+    module.exports = chroma;
+  }
   chroma.version = "0.2.5";
-
   Color = (function() {
-
     /*
     	data type for colors
     	
@@ -41,22 +44,25 @@
     	new Color([120,.8,.5]) // this also works
     	new Color(255,100,50,'rgb') //  color using RGB
     	new Color('#ff0000') // or hex value
-    */
-
-    function Color(x, y, z, m) {
+    	
+    	*/    function Color(x, y, z, m) {
       var me, _ref2;
       me = this;
       if (!(x != null) && !(y != null) && !(z != null) && !(m != null)) {
         x = [255, 0, 255];
       }
       if (type(x) === "array" && x.length === 3) {
-        if (m == null) m = y;
+        if (m == null) {
+          m = y;
+        }
         _ref2 = x, x = _ref2[0], y = _ref2[1], z = _ref2[2];
       }
       if (type(x) === "string") {
         m = 'hex';
       } else {
-        if (m == null) m = 'rgb';
+        if (m == null) {
+          m = 'rgb';
+        }
       }
       if (m === 'rgb') {
         me.rgb = [x, y, z];
@@ -74,43 +80,39 @@
         me.rgb = Color.hsi2rgb(x, y, z);
       }
     }
-
     Color.prototype.hex = function() {
       return Color.rgb2hex(this.rgb);
     };
-
     Color.prototype.toString = function() {
       return this.hex();
     };
-
     Color.prototype.hsl = function() {
       return Color.rgb2hsl(this.rgb);
     };
-
     Color.prototype.hsv = function() {
       return Color.rgb2hsv(this.rgb);
     };
-
     Color.prototype.lab = function() {
       return Color.rgb2lab(this.rgb);
     };
-
     Color.prototype.csl = function() {
       return Color.rgb2csl(this.rgb);
     };
-
     Color.prototype.hsi = function() {
       return Color.rgb2hsi(this.rgb);
     };
-
     Color.prototype.interpolate = function(f, col, m) {
       /*
       		interpolates between colors
-      */
+      		*/
       var dh, hue, hue0, hue1, lbv, lbv0, lbv1, me, sat, sat0, sat1, xyz0, xyz1;
       me = this;
-      if (m == null) m = 'rgb';
-      if (type(col) === "string") col = new Color(col);
+      if (m == null) {
+        m = 'rgb';
+      }
+      if (type(col) === "string") {
+        col = new Color(col);
+      }
       if (m === 'hsl' || m === 'hsv' || m === 'csl' || m === 'hsi') {
         if (m === 'hsl') {
           xyz0 = me.hsl();
@@ -138,14 +140,20 @@
           hue = hue0 + f * dh;
         } else if (!isNaN(hue0)) {
           hue = hue0;
-          if (lbv1 === 1 || lbv1 === 0) sat = sat0;
+          if (lbv1 === 1 || lbv1 === 0) {
+            sat = sat0;
+          }
         } else if (!isNaN(hue1)) {
           hue = hue1;
-          if (lbv0 === 1 || lbv0 === 0) sat = sat1;
+          if (lbv0 === 1 || lbv0 === 0) {
+            sat = sat1;
+          }
         } else {
           hue = void 0;
         }
-        if (sat == null) sat = sat0 + f * (sat1 - sat0);
+        if (sat == null) {
+          sat = sat0 + f * (sat1 - sat0);
+        }
         lbv = lbv0 + f * (lbv1 - lbv0);
         return new Color(hue, sat, lbv, m);
       } else if (m === 'rgb') {
@@ -160,11 +168,8 @@
         throw "color mode " + m + " is not supported";
       }
     };
-
     return Color;
-
   })();
-
   Color.hex2rgb = function(hex) {
     var b, g, r, u;
     if (!hex.match(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
@@ -174,7 +179,9 @@
         throw "unknown color format: " + hex;
       }
     }
-    if (hex.length === 4 || hex.length === 7) hex = hex.substr(1);
+    if (hex.length === 4 || hex.length === 7) {
+      hex = hex.substr(1);
+    }
     if (hex.length === 3) {
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
@@ -184,7 +191,6 @@
     b = u & 0xFF;
     return [r, g, b];
   };
-
   Color.rgb2hex = function(r, g, b) {
     var str, u, _ref2;
     if (r !== void 0 && r.length === 3) {
@@ -194,7 +200,6 @@
     str = "000000" + u.toString(16).toUpperCase();
     return "#" + str.substr(str.length - 6);
   };
-
   Color.hsv2rgb = function(h, s, v) {
     var b, f, g, i, l, p, q, r, t, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
     if (type(h) === "array" && h.length === 3) {
@@ -204,9 +209,15 @@
     if (s === 0 && isNaN(h)) {
       r = g = b = v;
     } else {
-      if (h === 360) h = 0;
-      if (h > 360) h -= 360;
-      if (h < 0) h += 360;
+      if (h === 360) {
+        h = 0;
+      }
+      if (h > 360) {
+        h -= 360;
+      }
+      if (h < 0) {
+        h += 360;
+      }
       h /= 60;
       i = Math.floor(h);
       f = h - i;
@@ -238,7 +249,6 @@
     b = Math.round(b);
     return [r, g, b];
   };
-
   Color.rgb2hsv = function(r, g, b) {
     var delta, h, max, min, s, v, _ref2;
     if (r !== void 0 && r.length === 3) {
@@ -253,15 +263,22 @@
       h = void 0;
       s = 0;
     } else {
-      if (r === max) h = (g - b) / delta;
-      if (g === max) h = 2 + (b - r) / delta;
-      if (b === max) h = 4 + (r - g) / delta;
+      if (r === max) {
+        h = (g - b) / delta;
+      }
+      if (g === max) {
+        h = 2 + (b - r) / delta;
+      }
+      if (b === max) {
+        h = 4 + (r - g) / delta;
+      }
       h *= 60;
-      if (h < 0) h += 360;
+      if (h < 0) {
+        h += 360;
+      }
     }
     return [h, s, v];
   };
-
   Color.hsl2rgb = function(h, s, l) {
     var b, c, g, i, r, t1, t2, t3, _ref2, _ref3;
     if (h !== void 0 && h.length === 3) {
@@ -279,8 +296,12 @@
       t3[1] = h;
       t3[2] = h - 1 / 3;
       for (i = 0; i <= 2; i++) {
-        if (t3[i] < 0) t3[i] += 1;
-        if (t3[i] > 1) t3[i] -= 1;
+        if (t3[i] < 0) {
+          t3[i] += 1;
+        }
+        if (t3[i] > 1) {
+          t3[i] -= 1;
+        }
         if (6 * t3[i] < 1) {
           c[i] = t1 + (t2 - t1) * 6 * t3[i];
         } else if (2 * t3[i] < 1) {
@@ -295,7 +316,6 @@
     }
     return [r, g, b];
   };
-
   Color.rgb2hsl = function(r, g, b) {
     var h, l, max, min, s, _ref2;
     if (r !== void 0 && r.length === 3) {
@@ -321,15 +341,16 @@
       h = 4 + (r - g) / (max - min);
     }
     h *= 60;
-    if (h < 0) h += 360;
+    if (h < 0) {
+      h += 360;
+    }
     return [h, s, l];
   };
-
   Color.lab2xyz = function(l, a, b) {
     /*
     	Convert from L*a*b* doubles to XYZ doubles
     	Formulas drawn from http://en.wikipedia.org/wiki/Lab_color_spaces
-    */
+    	*/
     var finv, ill, sl, x, y, z, _ref2;
     if (type(l) === "array" && l.length === 3) {
       _ref2 = l, l = _ref2[0], a = _ref2[1], b = _ref2[2];
@@ -348,12 +369,11 @@
     z = ill[2] * finv(sl - (b / 2.0));
     return [x, y, z];
   };
-
   Color.xyz2rgb = function(x, y, z) {
     /*
     	Convert from XYZ doubles to sRGB bytes
     	Formulas drawn from http://en.wikipedia.org/wiki/Srgb
-    */
+    	*/
     var b, bl, clip, correct, g, gl, r, rl, _ref2, _ref3;
     if (type(x) === "array" && x.length === 3) {
       _ref2 = x, x = _ref2[0], y = _ref2[1], z = _ref2[2];
@@ -384,12 +404,11 @@
     b = Math.round(255.0 * correct(bl));
     return [r, g, b];
   };
-
   Color.lab2rgb = function(l, a, b) {
     /*
     	Convert from LAB doubles to sRGB bytes 
     	(just composing the above transforms)
-    */
+    	*/
     var x, y, z, _ref2, _ref3, _ref4;
     if (l !== void 0 && l.length === 3) {
       _ref2 = l, l = _ref2[0], a = _ref2[1], b = _ref2[2];
@@ -400,13 +419,12 @@
     _ref4 = Color.lab2xyz(l, a, b), x = _ref4[0], y = _ref4[1], z = _ref4[2];
     return Color.xyz2rgb(x, y, z);
   };
-
   Color.csl2lab = function(c, s, l) {
     /*
     	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
     	
     	A saturation multiplier was added by Gregor Aisch
-    */
+    	*/
     var L, TAU, a, angle, b, r, _ref2;
     if (type(c) === "array" && c.length === 3) {
       _ref2 = c, c = _ref2[0], s = _ref2[1], l = _ref2[2];
@@ -420,13 +438,11 @@
     b = Math.cos(angle) * r;
     return [L, a, b];
   };
-
   Color.csl2rgb = function(c, s, l) {
     var L, a, b, _ref2;
     _ref2 = Color.csl2lab(c, s, l), L = _ref2[0], a = _ref2[1], b = _ref2[2];
     return Color.lab2rgb(L, a, b);
   };
-
   Color.rgb2xyz = function(r, g, b) {
     var bl, correct, gl, rl, x, y, z, _ref2;
     if (r !== void 0 && r.length === 3) {
@@ -449,7 +465,6 @@
     z = 0.0193 * rl + 0.1192 * gl + 0.9505 * bl;
     return [x, y, z];
   };
-
   Color.xyz2lab = function(x, y, z) {
     var a, b, f, ill, l, _ref2;
     if (x !== void 0 && x.length === 3) {
@@ -468,7 +483,6 @@
     b = 2 * (f(y / ill[1]) - f(z / ill[2]));
     return [l, a, b];
   };
-
   Color.rgb2lab = function(r, g, b) {
     var x, y, z, _ref2, _ref3;
     if (r !== void 0 && r.length === 3) {
@@ -477,13 +491,12 @@
     _ref3 = Color.rgb2xyz(r, g, b), x = _ref3[0], y = _ref3[1], z = _ref3[2];
     return Color.xyz2lab(x, y, z);
   };
-
   Color.lab2csl = function(l, a, b) {
     /*
     	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
     	
     	A saturation multiplier was added by Gregor Aisch
-    */
+    	*/
     var L, TAU, angle, c, r, s, _ref2;
     if (type(l) === "array" && l.length === 3) {
       _ref2 = l, l = _ref2[0], a = _ref2[1], b = _ref2[2];
@@ -496,10 +509,11 @@
     angle = Math.atan2(a, b);
     c = (TAU / 6 - angle) / TAU;
     c *= 360;
-    if (c < 0) c += 360;
+    if (c < 0) {
+      c += 360;
+    }
     return [c, s, l];
   };
-
   Color.rgb2csl = function(r, g, b) {
     var a, l, _ref2, _ref3;
     if (type(r) === "array" && r.length === 3) {
@@ -508,12 +522,11 @@
     _ref3 = Color.rgb2lab(r, g, b), l = _ref3[0], a = _ref3[1], b = _ref3[2];
     return Color.lab2csl(l, a, b);
   };
-
   Color.rgb2hsi = function(r, g, b) {
     /*
     	borrowed from here:
     	http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/rgb2hsi.cpp
-    */
+    	*/
     var TWOPI, h, i, min, s, _ref2;
     if (type(r) === "array" && r.length === 3) {
       _ref2 = r, r = _ref2[0], g = _ref2[1], b = _ref2[2];
@@ -531,17 +544,18 @@
       h = ((r - g) + (r - b)) / 2;
       h /= Math.sqrt((r - g) * (r - g) + (r - b) * (g - b));
       h = Math.acos(h);
-      if (b > g) h = TWOPI - h;
+      if (b > g) {
+        h = TWOPI - h;
+      }
       h /= TWOPI;
     }
     return [h * 360, s, i];
   };
-
   Color.hsi2rgb = function(h, s, i) {
     /*
     	borrowed from here:
     	http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
-    */
+    	*/
     var PITHIRD, TWOPI, b, cos, g, r, _ref2;
     if (type(h) === "array" && h.length === 3) {
       _ref2 = h, h = _ref2[0], s = _ref2[1], i = _ref2[2];
@@ -549,8 +563,12 @@
     TWOPI = Math.PI * 2;
     PITHIRD = Math.PI / 3;
     cos = Math.cos;
-    if (h < 0) h += 360;
-    if (h > 360) h -= 360;
+    if (h < 0) {
+      h += 360;
+    }
+    if (h > 360) {
+      h -= 360;
+    }
     h /= 360;
     if (h < 1 / 3) {
       b = (1 - s) / 3;
@@ -572,56 +590,49 @@
     b = i * b * 3;
     return [r * 255, g * 255, b * 255];
   };
-
   chroma.Color = Color;
-
   chroma.hsl = function(h, s, l) {
     return new Color(h, s, l, 'hsl');
   };
-
   chroma.hsv = function(h, s, v) {
     return new Color(h, s, v, 'hsv');
   };
-
   chroma.rgb = function(r, g, b) {
     return new Color(r, g, b, 'rgb');
   };
-
   chroma.hex = function(x) {
     return new Color(x);
   };
-
   chroma.lab = function(l, a, b) {
     return new Color(l, a, b, 'lab');
   };
-
   chroma.csl = function(c, s, l) {
     return new Color(c, s, l, 'csl');
   };
-
   chroma.hsi = function(h, s, i) {
     return new Color(h, s, i, 'hsi');
   };
-
   chroma.interpolate = function(a, b, f, m) {
-    if (type(a) === 'string') a = new Color(a);
-    if (type(b) === 'string') b = new Color(b);
+    if (type(a) === 'string') {
+      a = new Color(a);
+    }
+    if (type(b) === 'string') {
+      b = new Color(b);
+    }
     return a.interpolate(f, b, m);
   };
-
   ColorScale = (function() {
-
     /*
     	base class for color scales
-    */
-
-    function ColorScale(opts) {
+    	*/    function ColorScale(opts) {
       var c, col, cols, me, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
       me = this;
       me.colors = cols = (_ref2 = opts.colors) != null ? _ref2 : ['#ddd', '#222'];
       for (c = 0, _ref3 = cols.length - 1; 0 <= _ref3 ? c <= _ref3 : c >= _ref3; 0 <= _ref3 ? c++ : c--) {
         col = cols[c];
-        if (type(col) === "string") cols[c] = new Color(col);
+        if (type(col) === "string") {
+          cols[c] = new Color(col);
+        }
       }
       if (opts.positions != null) {
         me.pos = opts.positions;
@@ -636,11 +647,12 @@
       me.setClasses((_ref7 = opts.limits) != null ? _ref7 : [0, 1]);
       me;
     }
-
     ColorScale.prototype.getColor = function(value) {
       var c, f, f0, me;
       me = this;
-      if (isNaN(value)) return me.nacol;
+      if (isNaN(value)) {
+        return me.nacol;
+      }
       if (me.classLimits.length > 2) {
         c = me.getClass(value);
         f = c / (me.numClasses - 1);
@@ -650,7 +662,6 @@
       }
       return me.fColor(f);
     };
-
     ColorScale.prototype.fColor = function(f) {
       var col, cols, i, me, p, _ref2;
       me = this;
@@ -673,7 +684,6 @@
       }
       return col;
     };
-
     ColorScale.prototype.classifyValue = function(value) {
       var i, limits, maxc, minc, n, self;
       self = this;
@@ -688,14 +698,15 @@
       }
       return value;
     };
-
     ColorScale.prototype.setClasses = function(limits) {
       var me;
-      if (limits == null) limits = [];
+      if (limits == null) {
+        limits = [];
+      }
       /*
       		# use this if you want to display a limited number of data classes
       		# possible methods are "equalinterval", "quantiles", "custom"
-      */
+      		*/
       me = this;
       me.classLimits = limits;
       me.min = limits[0];
@@ -706,7 +717,6 @@
         return me.numClasses = limits.length - 1;
       }
     };
-
     ColorScale.prototype.getClass = function(value) {
       var i, limits, n, self;
       self = this;
@@ -720,51 +730,53 @@
         return i - 1;
       }
     };
-
     ColorScale.prototype.validValue = function(value) {
       return !isNaN(value);
     };
-
     return ColorScale;
-
   })();
-
   chroma.ColorScale = ColorScale;
-
   Ramp = (function() {
-
     __extends(Ramp, ColorScale);
-
     function Ramp(col0, col1, mode) {
-      if (col0 == null) col0 = '#fe0000';
-      if (col1 == null) col1 = '#feeeee';
-      if (mode == null) mode = 'hsl';
+      if (col0 == null) {
+        col0 = '#fe0000';
+      }
+      if (col1 == null) {
+        col1 = '#feeeee';
+      }
+      if (mode == null) {
+        mode = 'hsl';
+      }
       Ramp.__super__.constructor.call(this, [col0, col1], [0, 1], mode);
     }
-
     return Ramp;
-
   })();
-
   chroma.Ramp = Ramp;
-
   Diverging = (function() {
-
     __extends(Diverging, ColorScale);
-
     function Diverging(col0, col1, col2, center, mode) {
       var me;
-      if (col0 == null) col0 = '#d73027';
-      if (col1 == null) col1 = '#ffffbf';
-      if (col2 == null) col2 = '#1E6189';
-      if (center == null) center = 'mean';
-      if (mode == null) mode = 'hsl';
+      if (col0 == null) {
+        col0 = '#d73027';
+      }
+      if (col1 == null) {
+        col1 = '#ffffbf';
+      }
+      if (col2 == null) {
+        col2 = '#1E6189';
+      }
+      if (center == null) {
+        center = 'mean';
+      }
+      if (mode == null) {
+        mode = 'hsl';
+      }
       me = this;
       me.mode = mode;
       me.center = center;
       Diverging.__super__.constructor.call(this, [col0, col1, col2], [0, .5, 1], mode);
     }
-
     Diverging.prototype.parseData = function(data, data_col) {
       var c, me;
       Diverging.__super__.parseData.call(this, data, data_col);
@@ -777,25 +789,17 @@
       }
       return me.pos[1] = (c - me.min) / (me.max - me.min);
     };
-
     return Diverging;
-
   })();
-
   chroma.Diverging = Diverging;
-
   Categories = (function() {
-
     __extends(Categories, ColorScale);
-
     function Categories(colors) {
       var me;
       me = this;
       me.colors = colors;
     }
-
     Categories.prototype.parseData = function(data, data_col) {};
-
     Categories.prototype.getColor = function(value) {
       var me;
       me = this;
@@ -805,21 +809,14 @@
         return '#cccccc';
       }
     };
-
     Categories.prototype.validValue = function(value) {
       return this.colors.hasOwnProperty(value);
     };
-
     return Categories;
-
   })();
-
   chroma.Categories = Categories;
-
   CSSColors = (function() {
-
     __extends(CSSColors, ColorScale);
-
     function CSSColors(name) {
       var me;
       me = this;
@@ -827,26 +824,21 @@
       me.setClasses(7);
       me;
     }
-
     CSSColors.prototype.getColor = function(value) {
       var c, me;
       me = this;
       c = me.getClass(value);
       return me.name + ' l' + me.numClasses + ' c' + c;
     };
-
     return CSSColors;
-
   })();
-
   chroma.CSSColors = CSSColors;
-
-  if ((_ref2 = chroma.scales) == null) chroma.scales = {};
-
+  if ((_ref2 = chroma.scales) == null) {
+    chroma.scales = {};
+  }
   chroma.scales.cool = function() {
     return new Ramp(chroma.hsl(180, 1, .9), chroma.hsl(250, .7, .4));
   };
-
   chroma.scales.hot = function() {
     return new ColorScale({
       colors: ['#000000', '#ff0000', '#ffff00', '#ffffff'],
@@ -854,25 +846,36 @@
       mode: 'rgb'
     });
   };
-
   chroma.scales.BlWhOr = function() {
     return new Diverging(chroma.hsl(30, 1, .55), '#ffffff', new Color(220, 1, .55));
   };
-
   chroma.scales.GrWhPu = function() {
     return new Diverging(chroma.hsl(120, .8, .4), '#ffffff', new Color(280, .8, .4));
   };
-
   chroma.limits = function(data, mode, num, prop) {
+<<<<<<< HEAD
     var assignments, best, centroids, cluster, clusterSizes, dist, i, j, k, kClusters, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, row, sum, tmpKMeansBreaks, val, value, values, _i, _j, _k, _len, _len2, _len3, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
     if (mode == null) mode = 'equal';
     if (num == null) num = 7;
     if (prop == null) prop = null;
+=======
+    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, k, kClusters, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, val, value, values, _i, _j, _len, _len2, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+    if (mode == null) {
+      mode = 'equal';
+    }
+    if (num == null) {
+      num = 7;
+    }
+    if (prop == null) {
+      prop = null;
+    }
+>>>>>>> 147e5db3c8f723a0e28da5b999a215bb6687c5f7
     min = Number.MAX_VALUE;
     max = Number.MAX_VALUE * -1;
     sum = 0;
     values = [];
     if (type(data) === "array") {
+<<<<<<< HEAD
       if (!isNaN(data[0])) {
         for (_i = 0, _len = data.length; _i < _len; _i++) {
           val = data[_i];
@@ -882,23 +885,47 @@
         for (_j = 0, _len2 = data.length; _j < _len2; _j++) {
           row = data[_j];
           values.push(row[prop]);
+=======
+      for (_i = 0, _len = data.length; _i < _len; _i++) {
+        val = data[_i];
+        if (!isNaN(val)) {
+          values.push(val);
+>>>>>>> 147e5db3c8f723a0e28da5b999a215bb6687c5f7
         }
       }
     } else if (type(data) === "object") {
       for (k in data) {
         val = data[k];
         if (type(val) === "object" && type(prop) === "string") {
-          if (!isNaN(val[prop])) values.push(val[prop]);
+          if (!isNaN(val[prop])) {
+            values.push(val[prop]);
+          }
         } else if (type(val) === "number") {
-          if (!isNaN(val)) values.push(val);
+          if (!isNaN(val)) {
+            values.push(val);
+          }
         }
       }
     }
+<<<<<<< HEAD
     for (_k = 0, _len3 = values.length; _k < _len3; _k++) {
       val = values[_k];
       if (!!isNaN(val)) continue;
       if (val < min) min = val;
       if (val > max) max = val;
+=======
+    for (_j = 0, _len2 = values.length; _j < _len2; _j++) {
+      val = values[_j];
+      if (!!isNaN(val)) {
+        continue;
+      }
+      if (val < min) {
+        min = val;
+      }
+      if (val > max) {
+        max = val;
+      }
+>>>>>>> 147e5db3c8f723a0e28da5b999a215bb6687c5f7
       sum += val;
     }
     values = values.sort();
@@ -931,7 +958,7 @@
       		implementation based on
       		http://code.google.com/p/figue/source/browse/trunk/figue.js#336
       		simplified for 1-d input values
-      */
+      		*/
       n = values.length;
       assignments = new Array(n);
       clusterSizes = new Array(num);
@@ -985,7 +1012,9 @@
         }
         centroids = newCentroids;
         nb_iters++;
-        if (nb_iters > 200) repeat = false;
+        if (nb_iters > 200) {
+          repeat = false;
+        }
       }
       kClusters = {};
       for (j = 0, _ref13 = num - 1; 0 <= _ref13 ? j <= _ref13 : j >= _ref13; 0 <= _ref13 ? j++ : j--) {
@@ -1005,21 +1034,21 @@
       });
       limits.push(tmpKMeansBreaks[0]);
       for (i = 1, _ref16 = tmpKMeansBreaks.length - 1; i <= _ref16; i += 2) {
-        if (!isNaN(tmpKMeansBreaks[i])) limits.push(tmpKMeansBreaks[i]);
+        if (!isNaN(tmpKMeansBreaks[i])) {
+          limits.push(tmpKMeansBreaks[i]);
+        }
       }
     }
     return limits;
   };
-
   /*
   utils.coffee
   */
-
   type = (function() {
     /*
     	for browser-safe type checking+
     	ported from jQuery's $.type
-    */
+    	*/
     var classToType, name, _i, _len, _ref3;
     classToType = {};
     _ref3 = "Boolean Number String Function Array Date RegExp Undefined Null".split(" ");
@@ -1033,17 +1062,12 @@
       return classToType[strType] || "object";
     };
   })();
-
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
-
   root.type = type;
-
   Array.max = function(array) {
     return Math.max.apply(Math, array);
   };
-
   Array.min = function(array) {
     return Math.min.apply(Math, array);
   };
-
 }).call(this);
