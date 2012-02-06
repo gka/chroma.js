@@ -2,6 +2,8 @@
 utils.coffee
 ###
 
+root = (exports ? this)	
+
 type = do ->
 	###
 	for browser-safe type checking+
@@ -15,8 +17,7 @@ type = do ->
 		strType = Object::toString.call(obj)
 		classToType[strType] or "object"
     
-root = (exports ? this)	
-root.type = type
+root.type ?= type
 
 
 Array.max = (array) ->
