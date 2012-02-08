@@ -21,7 +21,7 @@
       @source: https://github.com/gka/chroma.js
   */
 
-  var CSSColors, Categories, Color, ColorScale, Diverging, Ramp, brewer, chroma, colors, root, type, _ref, _ref2, _ref3, _ref4;
+  var CSSColors, Categories, Color, ColorScale, Diverging, Ramp, brewer, chroma, colors, root, type, _ref, _ref2, _ref3, _ref4, _ref5;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
@@ -878,23 +878,23 @@
       if (type(data[0]) !== "object" && type(data[0]) !== "array") {
         for (_i = 0, _len = data.length; _i < _len; _i++) {
           val = data[_i];
-          if (!isNaN(val)) values.push(val);
+          if (!isNaN(val)) values.push(Number(val));
         }
       } else {
         for (_j = 0, _len2 = data.length; _j < _len2; _j++) {
           row = data[_j];
-          values.push(row[prop]);
+          values.push(Number(row[prop]));
         }
       }
     } else if (type(data) === "object") {
       for (k in data) {
         val = data[k];
         if (type(val) === "object" && type(prop) === "string") {
-          if (!isNaN(val[prop])) values.push(val[prop]);
+          if (!isNaN(val[prop])) values.push(Number(val[prop]));
         } else if (type(val) === "array" && type(prop) === "number") {
-          if (!isNaN(val[prop])) values.push(val[prop]);
+          if (!isNaN(val[prop])) values.push(Number(val[prop]));
         } else if (type(val) === "number") {
-          if (!isNaN(val)) values.push(val);
+          if (!isNaN(val)) values.push(Number(val));
         }
       }
     }
@@ -905,7 +905,9 @@
       if (val > max) max = val;
       sum += val;
     }
-    values = values.sort();
+    values = values.sort(function(a, b) {
+      return a - b;
+    });
     limits = [];
     if (mode.substr(0, 1) === 'c') {
       limits.push(min);
@@ -1019,6 +1021,8 @@
   utils.coffee
   */
 
+  root = typeof exports !== "undefined" && exports !== null ? exports : this;
+
   type = (function() {
     /*
     	for browser-safe type checking+
@@ -1038,9 +1042,7 @@
     };
   })();
 
-  root = typeof exports !== "undefined" && exports !== null ? exports : this;
-
-  root.type = type;
+  if ((_ref3 = root.type) == null) root.type = type;
 
   Array.max = function(array) {
     return Math.max.apply(Math, array);
@@ -1069,7 +1071,7 @@
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
-  chroma = (_ref3 = root.chroma) != null ? _ref3 : root.chroma = {};
+  chroma = (_ref4 = root.chroma) != null ? _ref4 : root.chroma = {};
 
   chroma.brewer = brewer = {};
 
@@ -1151,7 +1153,7 @@
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
-  chroma = (_ref4 = root.chroma) != null ? _ref4 : root.chroma = {};
+  chroma = (_ref5 = root.chroma) != null ? _ref5 : root.chroma = {};
 
   chroma.colors = colors = {};
 

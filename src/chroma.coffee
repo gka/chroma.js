@@ -738,18 +738,18 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 	if type(data) == "array"
 		if type(data[0]) != "object" and type(data[0]) != "array"
 			for val in data
-				values.push val if not isNaN val
+				values.push Number(val) if not isNaN val
 		else
 			for row in data
-				values.push row[prop]
+				values.push Number(row[prop])
 	else if type(data) == "object"
 		for k,val of data
 			if type(val) == "object" and type(prop) == "string"
-				values.push val[prop] if not isNaN val[prop]
+				values.push Number(val[prop]) if not isNaN val[prop]
 			else if type(val) == "array" and type(prop) == "number"
-				values.push val[prop] if not isNaN val[prop]
+				values.push Number(val[prop]) if not isNaN val[prop]
 			else if type(val) == "number"
-				values.push val if not isNaN val 
+				values.push Number(val) if not isNaN val 
 			
 	for val in values
 		if not not isNaN val 
@@ -758,7 +758,8 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 		max = val if val > max
 		sum += val
 
-	values = values.sort()
+	values = values.sort (a,b)->
+		a-b
 	
 	limits = []
 	
