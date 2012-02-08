@@ -25,7 +25,7 @@ chroma = root.chroma ?= {}
 # Browserify-compatible export
 module.exports = chroma if module?
 
-chroma.version = "0.2.5"
+chroma.version = "0.3.0"
 
 class Color
 	###
@@ -64,8 +64,8 @@ class Color
 			me.rgb = Color.hex2rgb(x)
 		else if m == 'lab'
 			me.rgb = Color.lab2rgb(x,y,z)
-		else if m == 'csl'
-			me.rgb = Color.csl2rgb(x,y,z)
+		else if m == 'hcl'
+			me.rgb = Color.hcl2rgb(x,y,z)
 		else if m == 'hsi'
 			me.rgb = Color.hsi2rgb(x,y,z)
 		
@@ -85,8 +85,8 @@ class Color
 	lab: ->
 		Color.rgb2lab(@rgb)
 		
-	csl: ->
-		Color.rgb2csl(@rgb)
+	hcl: ->
+		Color.rgb2hcl(@rgb)
 		
 	hsi: ->
 		Color.rgb2hsi(@rgb)
@@ -99,16 +99,16 @@ class Color
 		m ?= 'rgb'
 		col = new Color(col) if type(col) == "string"
 		
-		if m == 'hsl' or m == 'hsv' or m == 'csl' or m == 'hsi'
+		if m == 'hsl' or m == 'hsv' or m == 'hcl' or m == 'hsi'
 			if m == 'hsl'
 				xyz0 = me.hsl()
 				xyz1 = col.hsl()
 			else if m == 'hsv'
 				xyz0 = me.hsv()
 				xyz1 = col.hsv()
-			else if m == 'csl'
-				xyz0 = me.csl()
-				xyz1 = col.csl()
+			else if m == 'hcl'
+				xyz0 = me.hcl()
+				xyz1 = col.hcl()
 			else if m == 'hsi'
 				xyz0 = me.hsi()
 				xyz1 = col.hsi()
@@ -346,7 +346,7 @@ Color.lab2rgb = (l,a,b) ->
 	Color.xyz2rgb(x,y,z)
 	
 	
-Color.csl2lab = (c,s,l) ->
+Color.hcl2lab = (c,s,l) ->
 	###
 	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
 	
@@ -365,8 +365,8 @@ Color.csl2lab = (c,s,l) ->
 	[L,a,b]
 	
 
-Color.csl2rgb = (c,s,l) ->
-	[L,a,b] = Color.csl2lab(c,s,l)
+Color.hcl2rgb = (c,s,l) ->
+	[L,a,b] = Color.hcl2lab(c,s,l)
 	Color.lab2rgb(L,a,b)
 	
 	
@@ -408,7 +408,7 @@ Color.rgb2lab = (r,g,b) ->
 	Color.xyz2lab(x,y,z)
 
 
-Color.lab2csl = (l,a,b) ->
+Color.lab2hcl = (l,a,b) ->
 	###
 	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
 	
@@ -433,11 +433,11 @@ Color.lab2csl = (l,a,b) ->
 	[c,s,l]
 
 
-Color.rgb2csl = (r,g,b) ->
+Color.rgb2hcl = (r,g,b) ->
 	if type(r) == "array" and r.length == 3
 		[r,g,b] = r
 	[l,a,b] = Color.rgb2lab(r,g,b)
-	Color.lab2csl(l,a,b)
+	Color.lab2hcl(l,a,b)
 	
 
 Color.rgb2hsi = (r,g,b) ->
@@ -523,8 +523,8 @@ chroma.hex = (x) ->
 chroma.lab = (l,a,b) ->
 	new Color(l,a,b,'lab')
 
-chroma.csl = (c,s,l) ->
-	new Color(c,s,l,'csl')
+chroma.hcl = (c,s,l) ->
+	new Color(c,s,l,'hcl')
 	
 chroma.hsi = (h,s,i) ->
 	new Color(h,s,i,'hsi')
@@ -867,8 +867,6 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 				limits.push tmpKMeansBreaks[i]
 
 	limits
-	#else if mode == 'quartiles'
-	#else if mode == 'k-means'
 	
 	
 		

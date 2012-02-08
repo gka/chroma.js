@@ -30,7 +30,7 @@
 
   if (typeof module !== "undefined" && module !== null) module.exports = chroma;
 
-  chroma.version = "0.2.5";
+  chroma.version = "0.3.0";
 
   Color = (function() {
 
@@ -70,8 +70,8 @@
         me.rgb = Color.hex2rgb(x);
       } else if (m === 'lab') {
         me.rgb = Color.lab2rgb(x, y, z);
-      } else if (m === 'csl') {
-        me.rgb = Color.csl2rgb(x, y, z);
+      } else if (m === 'hcl') {
+        me.rgb = Color.hcl2rgb(x, y, z);
       } else if (m === 'hsi') {
         me.rgb = Color.hsi2rgb(x, y, z);
       }
@@ -97,8 +97,8 @@
       return Color.rgb2lab(this.rgb);
     };
 
-    Color.prototype.csl = function() {
-      return Color.rgb2csl(this.rgb);
+    Color.prototype.hcl = function() {
+      return Color.rgb2hcl(this.rgb);
     };
 
     Color.prototype.hsi = function() {
@@ -113,16 +113,16 @@
       me = this;
       if (m == null) m = 'rgb';
       if (type(col) === "string") col = new Color(col);
-      if (m === 'hsl' || m === 'hsv' || m === 'csl' || m === 'hsi') {
+      if (m === 'hsl' || m === 'hsv' || m === 'hcl' || m === 'hsi') {
         if (m === 'hsl') {
           xyz0 = me.hsl();
           xyz1 = col.hsl();
         } else if (m === 'hsv') {
           xyz0 = me.hsv();
           xyz1 = col.hsv();
-        } else if (m === 'csl') {
-          xyz0 = me.csl();
-          xyz1 = col.csl();
+        } else if (m === 'hcl') {
+          xyz0 = me.hcl();
+          xyz1 = col.hcl();
         } else if (m === 'hsi') {
           xyz0 = me.hsi();
           xyz1 = col.hsi();
@@ -403,7 +403,7 @@
     return Color.xyz2rgb(x, y, z);
   };
 
-  Color.csl2lab = function(c, s, l) {
+  Color.hcl2lab = function(c, s, l) {
     /*
     	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
     	
@@ -423,9 +423,9 @@
     return [L, a, b];
   };
 
-  Color.csl2rgb = function(c, s, l) {
+  Color.hcl2rgb = function(c, s, l) {
     var L, a, b, _ref2;
-    _ref2 = Color.csl2lab(c, s, l), L = _ref2[0], a = _ref2[1], b = _ref2[2];
+    _ref2 = Color.hcl2lab(c, s, l), L = _ref2[0], a = _ref2[1], b = _ref2[2];
     return Color.lab2rgb(L, a, b);
   };
 
@@ -480,7 +480,7 @@
     return Color.xyz2lab(x, y, z);
   };
 
-  Color.lab2csl = function(l, a, b) {
+  Color.lab2hcl = function(l, a, b) {
     /*
     	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
     	
@@ -502,13 +502,13 @@
     return [c, s, l];
   };
 
-  Color.rgb2csl = function(r, g, b) {
+  Color.rgb2hcl = function(r, g, b) {
     var a, l, _ref2, _ref3;
     if (type(r) === "array" && r.length === 3) {
       _ref2 = r, r = _ref2[0], g = _ref2[1], b = _ref2[2];
     }
     _ref3 = Color.rgb2lab(r, g, b), l = _ref3[0], a = _ref3[1], b = _ref3[2];
-    return Color.lab2csl(l, a, b);
+    return Color.lab2hcl(l, a, b);
   };
 
   Color.rgb2hsi = function(r, g, b) {
@@ -597,8 +597,8 @@
     return new Color(l, a, b, 'lab');
   };
 
-  chroma.csl = function(c, s, l) {
-    return new Color(c, s, l, 'csl');
+  chroma.hcl = function(c, s, l) {
+    return new Color(c, s, l, 'hcl');
   };
 
   chroma.hsi = function(h, s, i) {

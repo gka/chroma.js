@@ -160,7 +160,7 @@ var chroma = require('../dist/chroma.pack.js'),col;
 		col = chroma.hsv(h,.5,.5);
 		
 		
-		//console.log(h, col.lab()[1], col.lab()[2], col.csl()[0]);
+		//console.log(h, col.lab()[1], col.lab()[2], col.hcl()[0]);
 	}
 //	colors = [];
 
@@ -178,7 +178,7 @@ var chroma = require('../dist/chroma.pack.js'),col;
 		out.push(['lab array', chroma.lab(lab)]);
 		out.push(['lab', chroma.lab(lab[0], lab[1], lab[2])]);		
 // */
-		var lab2csl = chroma.Color.lab2csl, csl2lab = chroma.Color.csl2lab;
+		var lab2hcl = chroma.Color.lab2hcl, hcl2lab = chroma.Color.hcl2lab;
 		
 		for (var o in out) {
 		
@@ -215,16 +215,16 @@ var chroma = require('../dist/chroma.pack.js'),col;
 				throw ''+out[o][0]+' to lab conversion at '+f[0]+' '+lab+' '+olab
 			}
 					
-			var _lab = csl2lab(lab2csl(lab));
+			var _lab = hcl2lab(lab2hcl(lab));
 			if (!equals(lab, _lab)) {
-				throw 'csl conversion failed for '+f[0]+' '+lab+' '+_lab
+				throw 'hcl conversion failed for '+f[0]+' '+lab+' '+_lab
 				return;
 			}
 		}
 	}
 	
 	
-	//console.log(csl2rgb(rgb2csl(255,0,0)))
+	//console.log(hcl2rgb(rgb2hcl(255,0,0)))
 	
 
 } catch (er) {
