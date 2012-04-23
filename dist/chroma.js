@@ -30,7 +30,7 @@
 
   if (typeof module !== "undefined" && module !== null) module.exports = chroma;
 
-  chroma.version = "0.3.0";
+  chroma.version = "0.3.1";
 
   Color = (function() {
 
