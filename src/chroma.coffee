@@ -14,8 +14,8 @@
     may distribute non-source (e.g., minimized or compacted) forms of
     that code without the copy of the GNU GPL normally required by
     section 4, provided you include this license notice and a URL
-    through which recipients can access the Corresponding Source.  
-    
+    through which recipients can access the Corresponding Source.
+
     @source: https://github.com/gka/chroma.js
 ###
 
@@ -30,28 +30,28 @@ chroma.version = "0.3.0"
 class Color
 	###
 	data type for colors
-	
+
 	eg.
 	new Color() // white
 	new Color(120,.8,.5) // defaults to hsl color
 	new Color([120,.8,.5]) // this also works
 	new Color(255,100,50,'rgb') //  color using RGB
 	new Color('#ff0000') // or hex value
-	
+
 	###
 	constructor: (x,y,z,m) ->
 		me = @
-		
+
 		if not x? and not y? and not z? and not m?
 			x = [255,0,255]
-			
+
 		if type(x) == "array" and x.length == 3
 			m ?= y
 			[x,y,z] = x
-		
+
 		if type(x) == "string"
 			m = 'hex'
-		else 
+		else
 			m ?= 'rgb'
 
 		if m == 'rgb'
@@ -68,29 +68,29 @@ class Color
 			me.rgb = Color.hcl2rgb(x,y,z)
 		else if m == 'hsi'
 			me.rgb = Color.hsi2rgb(x,y,z)
-		
-		
+
+
 	hex: ->
 		Color.rgb2hex(@rgb)
-		
+
 	toString: ->
 		@hex()
-		
+
 	hsl: ->
 		Color.rgb2hsl(@rgb)
-		
+
 	hsv: ->
 		Color.rgb2hsv(@rgb)
-		
+
 	lab: ->
 		Color.rgb2lab(@rgb)
-		
+
 	hcl: ->
 		Color.rgb2hcl(@rgb)
-		
+
 	hsi: ->
 		Color.rgb2hsi(@rgb)
-		
+
 	interpolate: (f, col, m) ->
 		###
 		interpolates between colors
@@ -98,7 +98,7 @@ class Color
 		me = @
 		m ?= 'rgb'
 		col = new Color(col) if type(col) == "string"
-		
+
 		if m == 'hsl' or m == 'hsv' or m == 'hcl' or m == 'hsi'
 			if m == 'hsl'
 				xyz0 = me.hsl()
@@ -112,10 +112,10 @@ class Color
 			else if m == 'hsi'
 				xyz0 = me.hsi()
 				xyz1 = col.hsi()
-		
+
 			[hue0, sat0, lbv0] = xyz0
 			[hue1, sat1, lbv1] = xyz1
-								
+
 			if not isNaN(hue0) and not isNaN(hue1)
 				if hue1 > hue0 and hue1 - hue0 > 180
 					dh = hue1-(hue0+360)
@@ -131,24 +131,24 @@ class Color
 				hue = hue1
 				sat = sat1 if lbv0 == 1 or lbv0 == 0
 			else
-				hue = undefined					
-								
+				hue = undefined
+
 			sat ?= sat0 + f*(sat1 - sat0)
 
 			lbv = lbv0 + f*(lbv1-lbv0)
-			
+
 			new Color(hue, sat, lbv, m)
-			
+
 		else if m == 'rgb'
 			xyz0 = me.rgb
 			xyz1 = col.rgb
 			new Color(xyz0[0]+f*(xyz1[0]-xyz0[0]), xyz0[1] + f*(xyz1[1]-xyz0[1]), xyz0[2] + f*(xyz1[2]-xyz0[2]), m)
-		
+
 		else if m == 'lab'
 			xyz0 = me.lab()
 			xyz1 = col.lab()
 			new Color(xyz0[0]+f*(xyz1[0]-xyz0[0]), xyz0[1] + f*(xyz1[1]-xyz0[1]), xyz0[2] + f*(xyz1[2]-xyz0[2]), m)
-		
+
 		else
 			throw "color mode "+m+" is not supported"
 
@@ -167,7 +167,7 @@ Color.hex2rgb = (hex) ->
 	g = u >> 8 & 0xFF
 	b = u & 0xFF
 	[r,g,b]
-	
+
 
 Color.rgb2hex = (r,g,b) ->
 	if r != undefined and r.length == 3
@@ -199,13 +199,13 @@ Color.hsv2rgb = (h,s,v) ->
 			when 2 then [r,g,b] = [p, v, t]
 			when 3 then [r,g,b] = [p, q, v]
 			when 4 then [r,g,b] = [t, p, v]
-			when 5 then [r,g,b] = [v, p, q]	
+			when 5 then [r,g,b] = [v, p, q]
 	r = Math.round r
 	g = Math.round g
 	b = Math.round b
 	[r, g, b]
 
-	
+
 Color.rgb2hsv = (r,g,b) ->
 	if r != undefined and r.length == 3
 		[r,g,b] = r
@@ -249,10 +249,10 @@ Color.hsl2rgb = (h,s,l) ->
 				c[i] = t2
 			else if 3 * t3[i] < 2
 				c[i] = t1 + (t2 - t1) * ((2 / 3) - t3[i]) * 6
-			else 
+			else
 				c[i] = t1
 		[r,g,b] = [Math.round(c[0]*255),Math.round(c[1]*255),Math.round(c[2]*255)]
-	[r,g,b]	
+	[r,g,b]
 
 
 Color.rgb2hsl = (r,g,b) ->
@@ -265,7 +265,7 @@ Color.rgb2hsl = (r,g,b) ->
 	max = Math.max(r, g, b)
 
 	l = (max + min) / 2
-	
+
 	if max == min
 		s = 0
 		h = undefined
@@ -275,14 +275,14 @@ Color.rgb2hsl = (r,g,b) ->
 	if r == max then h = (g - b) / (max - min)
 	else if (g == max) then h = 2 + (b - r) / (max - min)
 	else if (b == max) then h = 4 + (r - g) / (max - min)
-	
+
 	h *= 60;
 	h += 360 if h < 0
 	[h,s,l]
 
 #
-# L*a*b* scale by David Dalrymple	
-# http://davidad.net/colorviz/	
+# L*a*b* scale by David Dalrymple
+# http://davidad.net/colorviz/
 #
 Color.lab2xyz = (l,a,b) ->
 	###
@@ -300,7 +300,7 @@ Color.lab2xyz = (l,a,b) ->
 	x = ill[0] * finv(sl + (a/5.0))
 	z = ill[2] * finv(sl - (b/2.0))
 	[x,y,z]
-	
+
 Color.xyz2rgb = (x,y,z) ->
 	###
 	Convert from XYZ doubles to sRGB bytes
@@ -308,7 +308,7 @@ Color.xyz2rgb = (x,y,z) ->
 	###
 	if type(x) == "array" and x.length == 3
 		[x,y,z] = x
-	
+
 	rl =  3.2406*x - 1.5372*y - 0.4986*z
 	gl = -0.9689*x + 1.8758*y + 0.0415*z
 	bl =  0.0557*x - 0.2040*y + 1.0570*z
@@ -317,24 +317,24 @@ Color.xyz2rgb = (x,y,z) ->
 		rl = if rl<0.0 then 0.0 else if rl>1.0 then 1.0 else rl
 		gl = if gl<0.0 then 0.0 else if gl>1.0 then 1.0 else gl
 		bl = if bl<0.0 then 0.0 else if bl>1.0 then 1.0 else bl
-	
+
 	# Uncomment the below to detect clipping by making clipped zones red.
-	if clip 
+	if clip
 		[rl,gl,bl] = [undefined,undefined,undefined]
-		
+
 	correct = (cl) ->
 		a = 0.055
 		if cl<=0.0031308 then 12.92*cl else (1+a)*Math.pow(cl,1/2.4)-a
-	
+
 	r = Math.round 255.0*correct(rl)
 	g = Math.round 255.0*correct(gl)
 	b = Math.round 255.0*correct(bl)
-	 
+
 	[r,g,b]
-	
+
 Color.lab2rgb = (l,a,b) ->
 	###
-	Convert from LAB doubles to sRGB bytes 
+	Convert from LAB doubles to sRGB bytes
 	(just composing the above transforms)
 	###
 	if l != undefined and l.length == 3
@@ -344,17 +344,17 @@ Color.lab2rgb = (l,a,b) ->
 		[l,a,b] = l
 	[x,y,z] = Color.lab2xyz(l,a,b)
 	Color.xyz2rgb(x,y,z)
-	
-	
+
+
 Color.hcl2lab = (c,s,l) ->
 	###
 	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
-	
+
 	A saturation multiplier was added by Gregor Aisch
 	###
 	if type(c) == "array" and c.length == 3
 		[c,s,l] = c
-		
+
 	c /= 360.0
 	TAU = 6.283185307179586476925287
 	L = l*0.61+0.09 # L of L*a*b*
@@ -363,44 +363,44 @@ Color.hcl2lab = (c,s,l) ->
 	a = Math.sin(angle)*r
 	b = Math.cos(angle)*r
 	[L,a,b]
-	
+
 
 Color.hcl2rgb = (c,s,l) ->
 	[L,a,b] = Color.hcl2lab(c,s,l)
 	Color.lab2rgb(L,a,b)
-	
-	
+
+
 Color.rgb2xyz = (r,g,b) ->
 	if r != undefined and r.length == 3
 		[r,g,b] = r
-	
+
 	correct = (c) ->
 		a = 0.055
-		if c <= 0.04045 then c/12.92 else Math.pow((c+a)/(1+a), 2.4)	
-	
+		if c <= 0.04045 then c/12.92 else Math.pow((c+a)/(1+a), 2.4)
+
 	rl = correct(r/255.0)
 	gl = correct(g/255.0)
 	bl = correct(b/255.0)
-	
+
 	x = 0.4124 * rl + 0.3576 * gl + 0.1805 * bl
 	y = 0.2126 * rl + 0.7152 * gl + 0.0722 * bl
 	z = 0.0193 * rl + 0.1192 * gl + 0.9505 * bl
 	[x,y,z]
-	
+
 Color.xyz2lab = (x,y,z) ->
 	# 6500K color templerature
 	if x != undefined and x.length == 3
 		[x,y,z] = x
-		
-	ill = [0.96421, 1.00000, 0.82519]	
+
+	ill = [0.96421, 1.00000, 0.82519]
 	f = (t) ->
 		if t > Math.pow(6.0/29.0,3) then Math.pow(t, 1/3) else (1/3)*(29/6)*(29/6)*t+4.0/29.0
 	l = 1.16 * f(y/ill[1]) - 0.16
 	a = 5 * (f(x/ill[0]) - f(y/ill[1]))
-	b = 2 * (f(y/ill[1]) - f(z/ill[2])) 
+	b = 2 * (f(y/ill[1]) - f(z/ill[2]))
 	[l,a,b]
-	
-	
+
+
 Color.rgb2lab = (r,g,b) ->
 	if r != undefined and r.length == 3
 		[r,g,b] = r
@@ -411,25 +411,25 @@ Color.rgb2lab = (r,g,b) ->
 Color.lab2hcl = (l,a,b) ->
 	###
 	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
-	
+
 	A saturation multiplier was added by Gregor Aisch
 	###
 	if type(l) == "array" and l.length == 3
 		[l,a,b] = l
 	L = l
 	l = (l-0.09) / 0.61
-	
+
 	r = Math.sqrt(a*a + b*b)
 	s = r / (l*0.311+0.125)
-	
+
 	TAU = 6.283185307179586476925287
-	
+
 	angle = Math.atan2(a,b)
-		
+
 	c = (TAU/6 - angle) / TAU
 	c *= 360
 	c += 360 if c < 0
-	
+
 	[c,s,l]
 
 
@@ -438,7 +438,7 @@ Color.rgb2hcl = (r,g,b) ->
 		[r,g,b] = r
 	[l,a,b] = Color.rgb2lab(r,g,b)
 	Color.lab2hcl(l,a,b)
-	
+
 
 Color.rgb2hsi = (r,g,b) ->
 	###
@@ -463,9 +463,9 @@ Color.rgb2hsi = (r,g,b) ->
 		if b > g
 			h = TWOPI - h
 		h /= TWOPI
-	[h*360,s,i]	
-	
-	
+	[h*360,s,i]
+
+
 Color.hsi2rgb = (h,s,i) ->
 	###
 	borrowed from here:
@@ -474,13 +474,13 @@ Color.hsi2rgb = (h,s,i) ->
 	if type(h) == "array" and h.length == 3
 		[h,s,i] = h
 	TWOPI = Math.PI*2
-	PITHIRD = Math.PI/3 
+	PITHIRD = Math.PI/3
 	cos = Math.cos
-	
+
 	# normalize hue
 	h += 360 if h < 0
 	h -= 360 if h > 360
-	
+
 	h /= 360
 	if h < 1/3
 		b = (1-s)/3
@@ -500,9 +500,9 @@ Color.hsi2rgb = (h,s,i) ->
 	g = i*g*3
 	b = i*b*3
 	[r*255,g*255,b*255]
-	
 
-chroma.Color = Color	
+
+chroma.Color = Color
 
 #
 # static constructors
@@ -519,21 +519,21 @@ chroma.rgb = (r,g,b) ->
 
 chroma.hex = (x) ->
 	new Color(x)
-	
+
 chroma.lab = (l,a,b) ->
 	new Color(l,a,b,'lab')
 
 chroma.hcl = (c,s,l) ->
 	new Color(c,s,l,'hcl')
-	
+
 chroma.hsi = (h,s,i) ->
 	new Color(h,s,i,'hsi')
-	
+
 chroma.interpolate = (a,b,f,m) ->
 	a = new Color(a) if type(a) == 'string'
 	b = new Color(b) if type(b) == 'string'
 	a.interpolate(f,b,m)
-	
+
 
 
 
@@ -549,35 +549,35 @@ class ColorScale
 		for c in [0..cols.length-1]
 			col = cols[c]
 			cols[c] = new Color(col) if type(col) == "string"
-		
+
 		if opts.positions?
 			me.pos = opts.positions
 		else
 			me.pos = []
 			for c in [0..cols.length-1]
 				me.pos.push c/(cols.length-1)
-		
+
 		me.mode = opts.mode ? 'hsv'
 		me.nacol = opts.nacol ? '#ccc'
 		me.setClasses opts.limits ? [0,1]
 		me
-		
-	
+
+
 	getColor: (value) ->
 		me = @
 		if isNaN(value) then return me.nacol
-		
+
 		if me.classLimits.length > 2
 			c = me.getClass value
 			f = c/(me.numClasses-1)
-			
+
 		else
 			f = f0 = (value - me.min) / (me.max - me.min)
 			f = Math.min(1, Math.max(0, f))
-		
+
 		me.fColor f
-		
-		
+
+
 	fColor: (f) ->
 		me = @
 		cols = me.colors
@@ -585,7 +585,7 @@ class ColorScale
 			p = me.pos[i]
 			if f <= p
 				col = cols[i]
-				break			
+				break
 			if f >= p and i == me.pos.length-1
 				col = cols[i]
 				break
@@ -594,37 +594,37 @@ class ColorScale
 				col = chroma.interpolate cols[i], cols[i+1], f, me.mode
 				break
 		col
-	
-		
+
+
 	classifyValue: (value) ->
-		self = @ 
+		self = @
 		limits = self.classLimits
 		if limits.length > 2
 			n = limits.length-1
 			i = self.getClass(value)
-			value = limits[i] + (limits[i+1] - limits[i]) * 0.5			
+			value = limits[i] + (limits[i+1] - limits[i]) * 0.5
 			minc = limits[0]# + (limits[1]-limits[0])*0.3
 			maxc = limits[n-1]# + (limits[n]-limits[n-1])*0.7
 			value = self.min + ((value - minc) / (maxc-minc)) * (self.max - self.min)
 		value
-	
-	
+
+
 	setClasses: (limits = []) ->
 		###
 		# use this if you want to display a limited number of data classes
 		# possible methods are "equalinterval", "quantiles", "custom"
 		###
 		me = @
-		me.classLimits = limits
+		me.classLimits = me.limits = limits
 		me.min = limits[0]
 		me.max = limits[limits.length-1]
 		if limits.length == 2
 			me.numClasses = 0
 		else
 			me.numClasses = limits.length-1
-		
+
 	getClass: (value) ->
-		self = @ 
+		self = @
 		limits = self.classLimits
 		if limits?
 			n = limits.length-1
@@ -633,7 +633,7 @@ class ColorScale
 				i++
 			return i-1
 		return undefined
-				
+
 	validValue: (value) ->
 		not isNaN(value)
 
@@ -642,7 +642,7 @@ chroma.ColorScale = ColorScale
 
 
 class Ramp extends ColorScale
-	
+
 	constructor: (col0='#fe0000', col1='#feeeee', mode='hsl') ->
 		super [col0,col1], [0,1], mode
 
@@ -650,13 +650,13 @@ chroma.Ramp = Ramp
 
 
 class Diverging extends ColorScale
-	
+
 	constructor: (col0='#d73027', col1='#ffffbf', col2='#1E6189', center='mean', mode='hsl') ->
 		me=@
 		me.mode = mode
 		me.center = center
 		super [col0,col1,col2], [0,.5,1], mode
-	
+
 	parseData: (data, data_col) ->
 		super data, data_col
 		me = @
@@ -664,9 +664,9 @@ class Diverging extends ColorScale
 		if c == 'median'
 			c = me.median
 		else if c == 'mean'
-			c = me.mean	
+			c = me.mean
 		me.pos[1] = (c-me.min)/(me.max-me.min)
-	
+
 
 chroma.Diverging = Diverging
 
@@ -677,20 +677,20 @@ class Categories extends ColorScale
 		# colors: dictionary of id: colors
 		me = @
 		me.colors = colors
-		
+
 	parseData: (data, data_col) ->
 		# nothing to do here..
-		
+
 	getColor: (value) ->
 		me = @
 		if me.colors.hasOwnProperty value
 			return me.colors[value]
 		else
 			return '#cccccc'
-	
+
 	validValue: (value) ->
 		@colors.hasOwnProperty value
-		
+
 chroma.Categories = Categories
 
 
@@ -698,10 +698,10 @@ class CSSColors extends ColorScale
 
 	constructor: (name) ->
 		me = @
-		me.name = name			
+		me.name = name
 		me.setClasses(7)
 		me
-		
+
 	getColor: (value) ->
 		me = @
 		c = me.getClass(value)
@@ -721,7 +721,7 @@ chroma.scales.hot = ->
 		colors: ['#000000','#ff0000','#ffff00','#ffffff']
 		positions: [0,.25,.75,1]
 		mode: 'rgb'
-	
+
 chroma.scales.BlWhOr = ->
 	new Diverging(chroma.hsl(30,1,.55),'#ffffff', new Color(220,1,.55))
 
@@ -734,7 +734,7 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 	max = Number.MAX_VALUE*-1
 	sum = 0
 	values = []
-	
+
 	if type(data) == "array"
 		if type(data[0]) != "object" and type(data[0]) != "array"
 			for val in data
@@ -749,10 +749,10 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 			else if type(val) == "array" and type(prop) == "number"
 				values.push Number(val[prop]) if not isNaN val[prop]
 			else if type(val) == "number"
-				values.push Number(val) if not isNaN val 
-			
+				values.push Number(val) if not isNaN val
+
 	for val in values
-		if not not isNaN val 
+		if not not isNaN val
 			continue
 		min = val if val < min
 		max = val if val > max
@@ -760,32 +760,31 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 
 	values = values.sort (a,b)->
 		a-b
-	
+
 	limits = []
-	
-	
+
 	if mode.substr(0,1) == 'c' # continuous
 		limits.push min
 		limits.push max
-		
+
 	if mode.substr(0,1) == 'e' # equal interval
 		limits.push min
 		for i in [1..num-1]
-			limits.push min+(i/num)*(max-min) 
+			limits.push min+(i/num)*(max-min)
 		limits.push max
-		
+
 	else if mode.substr(0,1) == 'q' # quantile scale
 		limits.push min
-		for i in [1..num-1] 
+		for i in [1..num-1]
 			p = values.length * i/num
 			pb = Math.floor p
 			if pb == p
-				limits.push values[pb] 
-			else # p > pb 
+				limits.push values[pb]
+			else # p > pb
 				pr = p - pb
 				limits.push values[pb]*pr + values[pb+1]*(1-pr)
 		limits.push max
-		
+
 	else if mode.substr(0,1) == 'k' # k-means clustering
 		###
 		implementation based on
@@ -798,14 +797,14 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 		repeat = true
 		nb_iters = 0
 		centroids = null
-		
+
 		# get seed values
 		centroids = []
 		centroids.push min
 		for i in [1..num-1]
 			centroids.push min + (i/num) * (max-min)
 		centroids.push max
-		
+
 		while repeat
 			# assignment step
 			for j in [0..num-1]
@@ -820,7 +819,7 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 						best = j
 				clusterSizes[best]++
 				assignments[i] = best
-			
+
 			# update centroids step
 			newCentroids = new Array num
 			for j in [0..num-1]
@@ -833,20 +832,20 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 					newCentroids[cluster] += values[i]
 			for j in [0..num-1]
 				newCentroids[j] *= 1/clusterSizes[j]
-					
+
 			# check convergence
 			repeat = false
 			for j in [0..num-1]
 				if newCentroids[j] != centroids[i]
 					repeat = true
 					break
-			
+
 			centroids = newCentroids
 			nb_iters++
-			
+
 			if nb_iters > 200
 				repeat = false
-				
+
 		# finished k-means clustering
 		# the next part is borrowed from gabrielflor.it
 		kClusters = {}
@@ -867,6 +866,6 @@ chroma.limits = (data, mode='equal', num=7, prop=null) ->
 				limits.push tmpKMeansBreaks[i]
 
 	limits
-	
-	
-		
+
+
+
