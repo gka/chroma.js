@@ -25,7 +25,7 @@ chroma = root.chroma ?= {}
 # Browserify-compatible export
 module.exports = chroma if module?
 
-chroma.version = "0.3.0"
+chroma.version = "0.3.1"
 
 class Color
 	###
