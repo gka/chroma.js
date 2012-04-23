@@ -16,8 +16,8 @@
       may distribute non-source (e.g., minimized or compacted) forms of
       that code without the copy of the GNU GPL normally required by
       section 4, provided you include this license notice and a URL
-      through which recipients can access the Corresponding Source.  
-      
+      through which recipients can access the Corresponding Source.
+  
       @source: https://github.com/gka/chroma.js
   */
 
@@ -36,7 +36,7 @@
 
     /*
     	data type for colors
-    	
+    
     	eg.
     	new Color() // white
     	new Color(120,.8,.5) // defaults to hsl color
@@ -389,7 +389,7 @@
 
   Color.lab2rgb = function(l, a, b) {
     /*
-    	Convert from LAB doubles to sRGB bytes 
+    	Convert from LAB doubles to sRGB bytes
     	(just composing the above transforms)
     */
     var x, y, z, _ref2, _ref3, _ref4;
@@ -406,7 +406,7 @@
   Color.hcl2lab = function(c, s, l) {
     /*
     	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
-    	
+    
     	A saturation multiplier was added by Gregor Aisch
     */
     var L, TAU, a, angle, b, r, _ref2;
@@ -483,7 +483,7 @@
   Color.lab2hcl = function(l, a, b) {
     /*
     	Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
-    	
+    
     	A saturation multiplier was added by Gregor Aisch
     */
     var L, TAU, angle, c, r, s, _ref2;
@@ -606,6 +606,7 @@
   };
 
   chroma.interpolate = function(a, b, f, m) {
+    if (!(a != null) || !(b != null)) return '#000';
     if (type(a) === 'string') a = new Color(a);
     if (type(b) === 'string') b = new Color(b);
     return a.interpolate(f, b, m);
@@ -699,7 +700,7 @@
       		# possible methods are "equalinterval", "quantiles", "custom"
       */
       me = this;
-      me.classLimits = limits;
+      me.classLimits = me.limits = limits;
       me.min = limits[0];
       me.max = limits[limits.length - 1];
       if (limits.length === 2) {

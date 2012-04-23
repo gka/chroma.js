@@ -530,6 +530,8 @@ chroma.hsi = (h,s,i) ->
 	new Color(h,s,i,'hsi')
 
 chroma.interpolate = (a,b,f,m) ->
+	if not a? or not b?
+		return '#000'
 	a = new Color(a) if type(a) == 'string'
 	b = new Color(b) if type(b) == 'string'
 	a.interpolate(f,b,m)
