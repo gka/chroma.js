@@ -731,27 +731,31 @@ chroma.scales.GrWhPu = ->
 	new Diverging(chroma.hsl(120,.8,.4),'#ffffff', new Color(280,.8,.4))
 
 
-chroma.limits = (data, mode='equal', num=7, prop=null) ->
+chroma.limits = (data, mode='equal', num=7, prop=null, filter=null) ->
 	min = Number.MAX_VALUE
 	max = Number.MAX_VALUE*-1
 	sum = 0
 	values = []
 
+	if not filter?
+		filter = ->
+			true
+
 	if type(data) == "array"
 		if type(data[0]) != "object" and type(data[0]) != "array"
 			for val in data
-				values.push Number(val) if not isNaN val
+				values.push Number(val) if not isNaN val and filter val
 		else
 			for row in data
-				values.push Number(row[prop])
+				values.push Number(row[prop]) if filter row
 	else if type(data) == "object"
 		for k,val of data
 			if type(val) == "object" and type(prop) == "string"
-				values.push Number(val[prop]) if not isNaN val[prop]
+				values.push Number(val[prop]) if not isNaN val[prop] and filter val
 			else if type(val) == "array" and type(prop) == "number"
-				values.push Number(val[prop]) if not isNaN val[prop]
+				values.push Number(val[prop]) if not isNaN val[prop] and filter val
 			else if type(val) == "number"
-				values.push Number(val) if not isNaN val
+				values.push Number(val) if not isNaN val and filter val
 
 	for val in values
 		if not not isNaN val

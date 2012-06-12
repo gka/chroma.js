@@ -158,8 +158,7 @@ var chroma = require('../dist/chroma.pack.js'),col;
 		
 	for (var h=0;h<360;h+=10) {
 		col = chroma.hsv(h,.5,.5);
-		
-		
+				
 		//console.log(h, col.lab()[1], col.lab()[2], col.hcl()[0]);
 	}
 //	colors = [];
