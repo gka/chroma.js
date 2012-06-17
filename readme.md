@@ -13,6 +13,7 @@ Chroma.js is a tiny JavaScript library for all kinds of color conversions.
 
 * [Chromatist](https://github.com/jrus/chromatist)
 * [GrapeFruit](http://code.google.com/p/grapefruit/) (Python)
+* [colors.py](https://github.com/mattrobenolt/colors.py) (Python)
 
 ### Author
 
