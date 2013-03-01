@@ -69,24 +69,28 @@
         }
       }
       if (m === 'rgb') {
-        me.rgb = [x, y, z];
+        me._rgb = [x, y, z];
       } else if (m === 'hsl') {
-        me.rgb = Color.hsl2rgb(x, y, z);
+        me._rgb = Color.hsl2rgb(x, y, z);
       } else if (m === 'hsv') {
-        me.rgb = Color.hsv2rgb(x, y, z);
+        me._rgb = Color.hsv2rgb(x, y, z);
       } else if (m === 'hex') {
-        me.rgb = Color.hex2rgb(x);
+        me._rgb = Color.hex2rgb(x);
       } else if (m === 'lab') {
-        me.rgb = Color.lab2rgb(x, y, z);
+        me._rgb = Color.lab2rgb(x, y, z);
       } else if (m === 'hcl') {
-        me.rgb = Color.hcl2rgb(x, y, z);
+        me._rgb = Color.hcl2rgb(x, y, z);
       } else if (m === 'hsi') {
-        me.rgb = Color.hsi2rgb(x, y, z);
+        me._rgb = Color.hsi2rgb(x, y, z);
       }
     }
 
+    Color.prototype.rgb = function() {
+      return this._rgb;
+    };
+
     Color.prototype.hex = function() {
-      return Color.rgb2hex(this.rgb);
+      return Color.rgb2hex(this._rgb);
     };
 
     Color.prototype.toString = function() {
@@ -94,23 +98,23 @@
     };
 
     Color.prototype.hsl = function() {
-      return Color.rgb2hsl(this.rgb);
+      return Color.rgb2hsl(this._rgb);
     };
 
     Color.prototype.hsv = function() {
-      return Color.rgb2hsv(this.rgb);
+      return Color.rgb2hsv(this._rgb);
     };
 
     Color.prototype.lab = function() {
-      return Color.rgb2lab(this.rgb);
+      return Color.rgb2lab(this._rgb);
     };
 
     Color.prototype.hcl = function() {
-      return Color.rgb2hcl(this.rgb);
+      return Color.rgb2hcl(this._rgb);
     };
 
     Color.prototype.hsi = function() {
-      return Color.rgb2hsi(this.rgb);
+      return Color.rgb2hsi(this._rgb);
     };
 
     Color.prototype.interpolate = function(f, col, m) {
@@ -170,8 +174,8 @@
         lbv = lbv0 + f * (lbv1 - lbv0);
         return new Color(hue, sat, lbv, m);
       } else if (m === 'rgb') {
-        xyz0 = me.rgb;
-        xyz1 = col.rgb;
+        xyz0 = me._rgb;
+        xyz1 = col._rgb;
         return new Color(xyz0[0] + f * (xyz1[0] - xyz0[0]), xyz0[1] + f * (xyz1[1] - xyz0[1]), xyz0[2] + f * (xyz1[2] - xyz0[2]), m);
       } else if (m === 'lab') {
         xyz0 = me.lab();
@@ -749,6 +753,9 @@
     if (num == null) {
       num = 7;
     }
+    if (!(data.values != null)) {
+      data = chroma.analyze(data);
+    }
     min = data.min;
     max = data.max;
     sum = data.sum;
@@ -922,6 +929,7 @@
       }
       me._mode = (_ref5 = opts.mode) != null ? _ref5 : 'hsv';
       me._nacol = chroma.hex((_ref6 = opts.nacol) != null ? _ref6 : chroma.hex('#ccc'));
+      me.domain([0, 1]);
       me;
 
     }
@@ -1168,20 +1176,50 @@
 
   chroma.CSSColors = CSSColors;
 
+  chroma.scale = function(colors, positions) {
+    var colscale, f, out, _ref2;
+    if (type(colors) === 'string' && (((_ref2 = chroma.brewer) != null ? _ref2[colors] : void 0) != null)) {
+      colors = chroma.brewer[colors];
+    }
+    colscale = new chroma.ColorScale({
+      colors: colors,
+      positions: positions
+    });
+    out = false;
+    f = function(v) {
+      var c;
+      c = colscale.get(v);
+      if (out && c[out]) {
+        return c[out]();
+      } else {
+        return c;
+      }
+    };
+    f.domain = function(_d) {
+      colscale.domain(_d);
+      return f;
+    };
+    f.mode = function(_m) {
+      colscale._mode = _m;
+      return f;
+    };
+    f.out = function(_o) {
+      out = _o;
+      return f;
+    };
+    return f;
+  };
+
   if ((_ref2 = chroma.scales) == null) {
     chroma.scales = {};
   }
 
   chroma.scales.cool = function() {
-    return new Ramp(chroma.hsl(180, 1, .9), chroma.hsl(250, .7, .4));
+    return chroma.scale([chroma.hsl(180, 1, .9), chroma.hsl(250, .7, .4)]);
   };
 
   chroma.scales.hot = function() {
-    return new ColorScale({
-      colors: ['#000000', '#ff0000', '#ffff00', '#ffffff'],
-      positions: [0, .25, .75, 1],
-      mode: 'rgb'
-    });
+    return chroma.scale(['#000', '#f00', '#ff0', '#fff'], [0, .25, .75, 1]).mode('rgb');
   };
 
   chroma.scales.BlWhOr = function() {
