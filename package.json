@@ -1,7 +1,7 @@
 {
     "name"         : "chroma-js",
     "description"  : "JavaScript library for color conversions",
-    "version"      : "0.3.1",
+    "version"      : "0.4.1",
     "author"       : "Gregor Aisch",
     "homepage"     : "https://github.com/gka/chroma.js",
     "keywords"     : ["color"],
@@ -17,7 +17,7 @@
         "compile": "./build.sh"
     },
     "devDependencies": {
-        "uglify-js"     : "1.x",
+        "uglify-js"     : "2.x",
         "coffee-script" : "1.2"
     }
 }
