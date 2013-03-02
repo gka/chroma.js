@@ -185,11 +185,7 @@ hex2rgb = (hex) ->
     b = u & 0xFF
     [r,g,b]
 
-_unpack = (args) ->
-    if args.length == 3
-        args
-    else
-        args[0]
+
 
 rgb2hex = () ->
     [r,g,b] = _unpack(arguments)
@@ -479,19 +475,18 @@ rgb2lch = () ->
     lab2lch l,a,b
 
 
-rgb2hsi = (r,g,b) ->
+rgb2hsi = () ->
     ###
     borrowed from here:
     http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/rgb2hsi.cpp
     ###
-    if type(r) == "array" and r.length == 3
-        [r,g,b] = r
+    [r,g,b] = _unpack arguments
     TWOPI = Math.PI*2
     r /= 255
     g /= 255
     b /= 255
     min = Math.min(r,g,b)
-    i = (r+g+b)/3
+    i = (r+g+b) * 0.333333
     s = 1 - min/i
     if s == 0
         h = 0
@@ -510,11 +505,7 @@ hsi2rgb = (h,s,i) ->
     borrowed from here:
     http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
     ###
-    if type(h) == "array" and h.length == 3
-        [h,s,i] = h
-    TWOPI = Math.PI*2
-    PITHIRD = Math.PI/3
-    cos = Math.cos
+    [h,s,i] = _unpack arguments
 
     # normalize hue
     h += 360 if h < 0

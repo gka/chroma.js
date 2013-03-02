@@ -55,3 +55,13 @@ Array.max = (array) ->
 Array.min = (array) ->
     Math.min.apply Math, array
 
+
+_unpack = (args) ->
+    if args.length == 3
+        args
+    else
+        args[0]
+
+TWOPI = Math.PI*2
+PITHIRD = Math.PI/3
+cos = Math.cos
