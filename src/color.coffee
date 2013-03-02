@@ -102,7 +102,7 @@ class Color
         m ?= 'rgb'
         col = new Color(col) if type(col) == "string"
 
-        if m == 'hsl' or m == 'hsv' or m == 'lch' or m == 'hsi' or m == 'lab'
+        if m == 'hsl' or m == 'hsv' or m == 'lch' or m == 'hsi'
             if m == 'hsl'
                 xyz0 = me.hsl()
                 xyz1 = col.hsl()
@@ -115,9 +115,6 @@ class Color
             else if m == 'lch'
                 xyz0 = me.lch()
                 xyz1 = col.lch()
-            else if m == 'lab'
-                xyz0 = me.lab()
-                xyz1 = col.lab()
 
             if m.substr(0, 1) == 'h'
                 [hue0, sat0, lbv0] = xyz0
@@ -147,7 +144,10 @@ class Color
             sat ?= sat0 + f*(sat1 - sat0)
             lbv = lbv0 + f*(lbv1-lbv0)
 
-            new Color hue, sat, lbv, m
+            if m.substr(0, 1) == 'h'
+                new Color hue, sat, lbv, m
+            else
+                new Color lbv, sat, hue, m
 
         else if m == 'rgb'
             xyz0 = me._rgb
@@ -188,14 +188,14 @@ hex2rgb = (hex) ->
 
 
 rgb2hex = () ->
-    [r,g,b] = _unpack(arguments)
+    [r,g,b] = unpack arguments
     u = r << 16 | g << 8 | b
     str = "000000" + u.toString(16).toUpperCase()
     "#" + str.substr(str.length - 6)
 
 
 hsv2rgb = () ->
-    [h,s,v] = _unpack(arguments)
+    [h,s,v] = unpack arguments
     v *= 255
     if s is 0 and isNaN(h)
         r = g = b = v
@@ -223,7 +223,7 @@ hsv2rgb = () ->
 
 
 rgb2hsv = () ->
-    [r,g,b] = _unpack(arguments)
+    [r,g,b] = unpack arguments
     min = Math.min(r, g, b)
     max = Math.max(r, g, b)
     delta = max - min
@@ -242,7 +242,7 @@ rgb2hsv = () ->
 
 
 hsl2rgb = () ->
-    [h,s,l] = _unpack(arguments)
+    [h,s,l] = unpack arguments
     if s == 0
         r = g = b = l*255
     else
@@ -317,15 +317,15 @@ lab2rgb = (l,a,b) ->
     x = lab_xyz(x) * X
     y = lab_xyz(y) * Y
     z = lab_xyz(z) * Z
-    [
-        xyz_rgb( 3.2404542 * x - 1.5371385 * y - 0.4985314 * z),
-        xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z),
-        xyz_rgb( 0.0556434 * x - 0.2040259 * y + 1.0572252 * z)
-    ]
+    r = xyz_rgb( 3.2404542 * x - 1.5371385 * y - 0.4985314 * z)
+    g = xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z)
+    b = xyz_rgb( 0.0556434 * x - 0.2040259 * y + 1.0572252 * z)
+    [limit(r,0,255), limit(g,0,255), limit(b,0,255)]
+
 
 
 rgb2lab = () ->
-    [r,g,b] = _unpack(arguments)
+    [r,g,b] = unpack arguments
     r = rgb_xyz r
     g = rgb_xyz g
     b = rgb_xyz b
@@ -340,22 +340,15 @@ lch2lab = () ->
     Convert from a qualitative parameter h and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
     A saturation multiplier was added by Gregor Aisch
     ###
-    [l,c,h] = _unpack arguments
+    [l,c,h] = unpack arguments
     h = h * Math.PI / 180
     [l, Math.cos(h) * c, Math.sin(h) * c]
-    # h /= 360.0
-    # TAU = 6.283185307179586476925287
-    # L = l*0.61+0.09 # L of L*a*b*
-    # angle = TAU/6.0-h*TAU
-    # r = (l*0.311+0.125)*c # ~chroma
-    # a = Math.sin(angle)*r
-    # b = Math.cos(angle)*r
-    # [L,a,b]
 
 
 lch2rgb = (l,c,h) ->
-    [L,a,b] = lch2lab(l,c,h)
-    lab2rgb(L,a,b)
+    [L,a,b] = lch2lab l,c,h
+    [r,g,b] = lab2rgb L,a,b
+    [limit(r,0,255), limit(g,0,255), limit(b,0,255)]
 
 lab_xyz = (x) ->
     if x > 0.206893034 then x * x * x else (x - 4 / 29) / 7.787037
@@ -370,76 +363,8 @@ rgb_xyz = (r) ->
     if (r /= 255) <= 0.04045 then r / 12.92 else Math.pow((r + 0.055) / 1.055, 2.4)
 
 
-
-# xyz2rgb = (x,y,z) ->
-#     ###
-#     Convert from XYZ doubles to sRGB bytes
-#     Formulas drawn from http://en.wikipedia.org/wiki/Srgb
-#     ###
-#     if type(x) == "array" and x.length == 3
-#         [x,y,z] = x
-
-#     rl =  3.2406*x - 1.5372*y - 0.4986*z
-#     gl = -0.9689*x + 1.8758*y + 0.0415*z
-#     bl =  0.0557*x - 0.2040*y + 1.0570*z
-#     clip = Math.min(rl,gl,bl) < -0.001 || Math.max(rl,gl,bl) > 1.001
-#     if clip
-#         rl = if rl<0.0 then 0.0 else if rl>1.0 then 1.0 else rl
-#         gl = if gl<0.0 then 0.0 else if gl>1.0 then 1.0 else gl
-#         bl = if bl<0.0 then 0.0 else if bl>1.0 then 1.0 else bl
-
-#     # Uncomment the below to detect clipping by making clipped zones red.
-#     if clip
-#         [rl,gl,bl] = [undefined,undefined,undefined]
-
-#     correct = (cl) ->
-#         a = 0.055
-#         if cl<=0.0031308 then 12.92*cl else (1+a)*Math.pow(cl,1/2.4)-a
-
-#     r = Math.round 255.0*correct(rl)
-#     g = Math.round 255.0*correct(gl)
-#     b = Math.round 255.0*correct(bl)
-
-#     [r,g,b]
-
-
-
-
-
-
-rgb2xyz = (r,g,b) ->
-    if r != undefined and r.length == 3
-        [r,g,b] = r
-
-    correct = (c) ->
-        a = 0.055
-        if c <= 0.04045 then c/12.92 else Math.pow((c+a)/(1+a), 2.4)
-
-    rl = correct(r/255.0)
-    gl = correct(g/255.0)
-    bl = correct(b/255.0)
-
-    x = 0.4124 * rl + 0.3576 * gl + 0.1805 * bl
-    y = 0.2126 * rl + 0.7152 * gl + 0.0722 * bl
-    z = 0.0193 * rl + 0.1192 * gl + 0.9505 * bl
-    [x,y,z]
-
-# xyz2lab = (x,y,z) ->
-#     # 6500K color templerature
-#     if x != undefined and x.length == 3
-#         [x,y,z] = x
-
-#     ill = [0.96421, 1.00000, 0.82519]
-#     f = (t) ->
-#         if t > Math.pow(6.0/29.0,3) then Math.pow(t, 1/3) else (1/3)*(29/6)*(29/6)*t+4.0/29.0
-#     l = 1.16 * f(y/ill[1]) - 0.16
-#     a = 5 * (f(x/ill[0]) - f(y/ill[1]))
-#     b = 2 * (f(y/ill[1]) - f(z/ill[2]))
-#     [l,a,b]
-
-
 lab2lch = () ->
-    [l, a, b] = _unpack arguments
+    [l, a, b] = unpack arguments
     c = Math.sqrt(a * a + b * b)
     h = Math.atan2(b, a) / Math.PI * 180
     [l, c, h]
@@ -470,7 +395,7 @@ lab2lch = () ->
 
 
 rgb2lch = () ->
-    [r,g,b] = _unpack arguments
+    [r,g,b] = unpack arguments
     [l,a,b] = rgb2lab r,g,b
     lab2lch l,a,b
 
@@ -480,13 +405,13 @@ rgb2hsi = () ->
     borrowed from here:
     http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/rgb2hsi.cpp
     ###
-    [r,g,b] = _unpack arguments
+    [r,g,b] = unpack arguments
     TWOPI = Math.PI*2
     r /= 255
     g /= 255
     b /= 255
     min = Math.min(r,g,b)
-    i = (r+g+b) * 0.333333
+    i = (r+g+b) * 0.33333333
     s = 1 - min/i
     if s == 0
         h = 0
@@ -505,12 +430,11 @@ hsi2rgb = (h,s,i) ->
     borrowed from here:
     http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
     ###
-    [h,s,i] = _unpack arguments
+    [h,s,i] = unpack arguments
 
     # normalize hue
-    h += 360 if h < 0
-    h -= 360 if h > 360
-
+    #h += 360 if h < 0
+    #h -= 360 if h > 360
     h /= 360
     if h < 1/3
         b = (1-s)/3
@@ -526,9 +450,9 @@ hsi2rgb = (h,s,i) ->
         g = (1-s)/3
         b = (1+s*cos(TWOPI*h)/cos(PITHIRD-TWOPI*h))/3
         r = 1 - (g+b)
-    r = i*r*3
-    g = i*g*3
-    b = i*b*3
+    r = limit i*r*3
+    g = limit i*g*3
+    b = limit i*b*3
     [r*255,g*255,b*255]
 
 
@@ -538,33 +462,36 @@ chroma.Color = Color
 # static constructors
 #
 
+chroma.color = (x,y,z,m) ->
+    new Color x,y,z,m
+
 chroma.hsl = (h,s,l) ->
-    new Color(h,s,l,'hsl')
+    new Color h,s,l,'hsl'
 
 chroma.hsv = (h,s,v) ->
-    new Color(h,s,v,'hsv')
+    new Color h,s,v,'hsv'
 
 chroma.rgb = (r,g,b) ->
-    new Color(r,g,b,'rgb')
+    new Color r,g,b,'rgb'
 
 chroma.hex = (x) ->
-    new Color(x)
+    new Color x
 
 chroma.lab = (l,a,b) ->
-    new Color(l,a,b,'lab')
+    new Color l,a,b,'lab'
 
 chroma.lch = (l,c,h) ->
-    new Color(l,c,h, 'lch')
+    new Color l,c,h, 'lch'
 
 chroma.hsi = (h,s,i) ->
-    new Color(h,s,i,'hsi')
+    new Color h,s,i,'hsi'
 
 chroma.interpolate = (a,b,f,m) ->
     if not a? or not b?
         return '#000'
-    a = new Color(a) if type(a) == 'string'
-    b = new Color(b) if type(b) == 'string'
-    a.interpolate(f,b,m)
+    a = new Color a if type(a) == 'string'
+    b = new Color b if type(b) == 'string'
+    a.interpolate f,b,m
 
 
 

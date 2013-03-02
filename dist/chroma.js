@@ -35,7 +35,7 @@
 
 
 (function() {
-  var Color, ColorScale, K, X, Y, Z, brewer, chroma, colors, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2xyz, rgb_xyz, root, type, xyz_lab, xyz_rgb, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _unpack;
+  var Color, ColorScale, K, PITHIRD, TWOPI, X, Y, Z, brewer, chroma, colors, cos, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, limit, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb_xyz, root, type, unpack, xyz_lab, xyz_rgb, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
@@ -45,19 +45,7 @@
     module.exports = chroma;
   }
 
-  chroma.version = "0.3.1";
-
   Color = (function() {
-    /*
-        data type for colors
-    
-        eg.
-        new Color() // white
-        new Color(120,.8,.5) // defaults to hsl color
-        new Color([120,.8,.5]) // this also works
-        new Color(255,100,50,'rgb') //  color using RGB
-        new Color('#ff0000') // or hex value
-    */
 
     function Color(x, y, z, m) {
       var me, _ref1;
@@ -147,15 +135,20 @@
         } else if (m === 'hsv') {
           xyz0 = me.hsv();
           xyz1 = col.hsv();
-        } else if (m === 'lch') {
-          xyz0 = me.lch();
-          xyz1 = col.lch();
         } else if (m === 'hsi') {
           xyz0 = me.hsi();
           xyz1 = col.hsi();
+        } else if (m === 'lch') {
+          xyz0 = me.lch();
+          xyz1 = col.lch();
         }
-        hue0 = xyz0[0], sat0 = xyz0[1], lbv0 = xyz0[2];
-        hue1 = xyz1[0], sat1 = xyz1[1], lbv1 = xyz1[2];
+        if (m.substr(0, 1) === 'h') {
+          hue0 = xyz0[0], sat0 = xyz0[1], lbv0 = xyz0[2];
+          hue1 = xyz1[0], sat1 = xyz1[1], lbv1 = xyz1[2];
+        } else {
+          lbv0 = xyz0[0], sat0 = xyz0[1], hue0 = xyz0[2];
+          lbv1 = xyz1[0], sat1 = xyz1[1], hue1 = xyz1[2];
+        }
         if (!isNaN(hue0) && !isNaN(hue1)) {
           if (hue1 > hue0 && hue1 - hue0 > 180) {
             dh = hue1 - (hue0 + 360);
@@ -182,7 +175,11 @@
           sat = sat0 + f * (sat1 - sat0);
         }
         lbv = lbv0 + f * (lbv1 - lbv0);
-        return new Color(hue, sat, lbv, m);
+        if (m.substr(0, 1) === 'h') {
+          return new Color(hue, sat, lbv, m);
+        } else {
+          return new Color(lbv, sat, hue, m);
+        }
       } else if (m === 'rgb') {
         xyz0 = me._rgb;
         xyz1 = col._rgb;
@@ -233,17 +230,9 @@
     return [r, g, b];
   };
 
-  _unpack = function(args) {
-    if (args.length === 3) {
-      return args;
-    } else {
-      return args[0];
-    }
-  };
-
   rgb2hex = function() {
     var b, g, r, str, u, _ref1;
-    _ref1 = _unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
+    _ref1 = unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
     u = r << 16 | g << 8 | b;
     str = "000000" + u.toString(16).toUpperCase();
     return "#" + str.substr(str.length - 6);
@@ -251,7 +240,7 @@
 
   hsv2rgb = function() {
     var b, f, g, h, i, p, q, r, s, t, v, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
-    _ref1 = _unpack(arguments), h = _ref1[0], s = _ref1[1], v = _ref1[2];
+    _ref1 = unpack(arguments), h = _ref1[0], s = _ref1[1], v = _ref1[2];
     v *= 255;
     if (s === 0 && isNaN(h)) {
       r = g = b = v;
@@ -299,7 +288,7 @@
 
   rgb2hsv = function() {
     var b, delta, g, h, max, min, r, s, v, _ref1;
-    _ref1 = _unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
+    _ref1 = unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
     min = Math.min(r, g, b);
     max = Math.max(r, g, b);
     delta = max - min;
@@ -328,7 +317,7 @@
 
   hsl2rgb = function() {
     var b, c, g, h, i, l, r, s, t1, t2, t3, _i, _ref1, _ref2;
-    _ref1 = _unpack(arguments), h = _ref1[0], s = _ref1[1], l = _ref1[2];
+    _ref1 = unpack(arguments), h = _ref1[0], s = _ref1[1], l = _ref1[2];
     if (s === 0) {
       r = g = b = l * 255;
     } else {
@@ -406,7 +395,7 @@
         adapted to match d3 implementation
     */
 
-    var x, y, z, _ref1, _ref2;
+    var g, r, x, y, z, _ref1, _ref2;
     if (l !== void 0 && l.length === 3) {
       _ref1 = l, l = _ref1[0], a = _ref1[1], b = _ref1[2];
     }
@@ -419,12 +408,15 @@
     x = lab_xyz(x) * X;
     y = lab_xyz(y) * Y;
     z = lab_xyz(z) * Z;
-    return [xyz_rgb(3.2404542 * x - 1.5371385 * y - 0.4985314 * z), xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z), xyz_rgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z)];
+    r = xyz_rgb(3.2404542 * x - 1.5371385 * y - 0.4985314 * z);
+    g = xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z);
+    b = xyz_rgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z);
+    return [limit(r, 0, 255), limit(g, 0, 255), limit(b, 0, 255)];
   };
 
   rgb2lab = function() {
     var b, g, r, x, y, z, _ref1;
-    _ref1 = _unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
+    _ref1 = unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
     r = rgb_xyz(r);
     g = rgb_xyz(g);
     b = rgb_xyz(b);
@@ -441,15 +433,16 @@
     */
 
     var c, h, l, _ref1;
-    _ref1 = _unpack(arguments), l = _ref1[0], c = _ref1[1], h = _ref1[2];
+    _ref1 = unpack(arguments), l = _ref1[0], c = _ref1[1], h = _ref1[2];
     h = h * Math.PI / 180;
     return [l, Math.cos(h) * c, Math.sin(h) * c];
   };
 
   lch2rgb = function(l, c, h) {
-    var L, a, b, _ref1;
+    var L, a, b, g, r, _ref1, _ref2;
     _ref1 = lch2lab(l, c, h), L = _ref1[0], a = _ref1[1], b = _ref1[2];
-    return lab2rgb(L, a, b);
+    _ref2 = lab2rgb(L, a, b), r = _ref2[0], g = _ref2[1], b = _ref2[2];
+    return [limit(r, 0, 255), limit(g, 0, 255), limit(b, 0, 255)];
   };
 
   lab_xyz = function(x) {
@@ -480,32 +473,9 @@
     }
   };
 
-  rgb2xyz = function(r, g, b) {
-    var bl, correct, gl, rl, x, y, z, _ref1;
-    if (r !== void 0 && r.length === 3) {
-      _ref1 = r, r = _ref1[0], g = _ref1[1], b = _ref1[2];
-    }
-    correct = function(c) {
-      var a;
-      a = 0.055;
-      if (c <= 0.04045) {
-        return c / 12.92;
-      } else {
-        return Math.pow((c + a) / (1 + a), 2.4);
-      }
-    };
-    rl = correct(r / 255.0);
-    gl = correct(g / 255.0);
-    bl = correct(b / 255.0);
-    x = 0.4124 * rl + 0.3576 * gl + 0.1805 * bl;
-    y = 0.2126 * rl + 0.7152 * gl + 0.0722 * bl;
-    z = 0.0193 * rl + 0.1192 * gl + 0.9505 * bl;
-    return [x, y, z];
-  };
-
   lab2lch = function() {
     var a, b, c, h, l, _ref1;
-    _ref1 = _unpack(arguments), l = _ref1[0], a = _ref1[1], b = _ref1[2];
+    _ref1 = unpack(arguments), l = _ref1[0], a = _ref1[1], b = _ref1[2];
     c = Math.sqrt(a * a + b * b);
     h = Math.atan2(b, a) / Math.PI * 180;
     return [l, c, h];
@@ -513,27 +483,25 @@
 
   rgb2lch = function() {
     var a, b, g, l, r, _ref1, _ref2;
-    _ref1 = _unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
+    _ref1 = unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
     _ref2 = rgb2lab(r, g, b), l = _ref2[0], a = _ref2[1], b = _ref2[2];
     return lab2lch(l, a, b);
   };
 
-  rgb2hsi = function(r, g, b) {
+  rgb2hsi = function() {
     /*
         borrowed from here:
         http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/rgb2hsi.cpp
     */
 
-    var TWOPI, h, i, min, s, _ref1;
-    if (type(r) === "array" && r.length === 3) {
-      _ref1 = r, r = _ref1[0], g = _ref1[1], b = _ref1[2];
-    }
+    var TWOPI, b, g, h, i, min, r, s, _ref1;
+    _ref1 = unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
     TWOPI = Math.PI * 2;
     r /= 255;
     g /= 255;
     b /= 255;
     min = Math.min(r, g, b);
-    i = (r + g + b) / 3;
+    i = (r + g + b) * 0.33333333;
     s = 1 - min / i;
     if (s === 0) {
       h = 0;
@@ -555,19 +523,8 @@
         http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
     */
 
-    var PITHIRD, TWOPI, b, cos, g, r, _ref1;
-    if (type(h) === "array" && h.length === 3) {
-      _ref1 = h, h = _ref1[0], s = _ref1[1], i = _ref1[2];
-    }
-    TWOPI = Math.PI * 2;
-    PITHIRD = Math.PI / 3;
-    cos = Math.cos;
-    if (h < 0) {
-      h += 360;
-    }
-    if (h > 360) {
-      h -= 360;
-    }
+    var b, g, r, _ref1;
+    _ref1 = unpack(arguments), h = _ref1[0], s = _ref1[1], i = _ref1[2];
     h /= 360;
     if (h < 1 / 3) {
       b = (1 - s) / 3;
@@ -584,13 +541,17 @@
       b = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
       r = 1 - (g + b);
     }
-    r = i * r * 3;
-    g = i * g * 3;
-    b = i * b * 3;
+    r = limit(i * r * 3);
+    g = limit(i * g * 3);
+    b = limit(i * b * 3);
     return [r * 255, g * 255, b * 255];
   };
 
   chroma.Color = Color;
+
+  chroma.color = function(x, y, z, m) {
+    return new Color(x, y, z, m);
+  };
 
   chroma.hsl = function(h, s, l) {
     return new Color(h, s, l, 'hsl');
@@ -1166,6 +1127,36 @@
   Array.min = function(array) {
     return Math.min.apply(Math, array);
   };
+
+  limit = function(x, min, max) {
+    if (min == null) {
+      min = 0;
+    }
+    if (max == null) {
+      max = 1;
+    }
+    if (x < min) {
+      x = min;
+    }
+    if (x > max) {
+      x = max;
+    }
+    return x;
+  };
+
+  unpack = function(args) {
+    if (args.length === 3) {
+      return args;
+    } else {
+      return args[0];
+    }
+  };
+
+  TWOPI = Math.PI * 2;
+
+  PITHIRD = Math.PI / 3;
+
+  cos = Math.cos;
 
   /**
   	ColorBrewer colors for chroma.js

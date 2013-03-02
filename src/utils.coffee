@@ -56,7 +56,12 @@ Array.min = (array) ->
     Math.min.apply Math, array
 
 
-_unpack = (args) ->
+limit = (x, min=0, max=1) ->
+    x = min if x < min
+    x = max if x > max
+    x
+
+unpack = (args) ->
     if args.length == 3
         args
     else
