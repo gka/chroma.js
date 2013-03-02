@@ -1,6 +1,6 @@
 # Chroma.js
 
-Chroma.js is a tiny JavaScript library for all kinds of color conversions.
+Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversions and color scales.
 
 ### Documentation
 
@@ -13,14 +13,18 @@ Chroma.js is a tiny JavaScript library for all kinds of color conversions.
 
 * [Chromatist](https://github.com/jrus/chromatist)
 * [GrapeFruit](http://code.google.com/p/grapefruit/) (Python)
+<<<<<<< HEAD
 * [colors.py](https://github.com/mattrobenolt/colors.py) (Python)
+=======
+* [d3.js](https://github.com/mbostock/d3)
+>>>>>>> updated readme
 
 ### Author
 
-Chroma.js is written by [Gregor Aisch](http://twitter.com/driven_by_data).
+Chroma.js is written by [Gregor Aisch](http://driven-by-data.net).
+
 
 ### License
 
-The JavaScript code in this page is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License (GNU GPL) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  The code is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you may distribute non-source (e.g., minimized or compacted) forms of that code without the copy of the GNU GPL normally required by section 4, provided you include this license notice and a URL through which recipients can access the Corresponding Source. 
+Released under [BSD license](http://opensource.org/licenses/BSD-3-Clause).
+Version prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-3.0).
