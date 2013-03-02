@@ -411,7 +411,7 @@ rgb2hsi = () ->
     g /= 255
     b /= 255
     min = Math.min(r,g,b)
-    i = (r+g+b) * 0.33333333
+    i = (r+g+b) / 3
     s = 1 - min/i
     if s == 0
         h = 0
