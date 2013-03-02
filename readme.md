@@ -23,8 +23,11 @@ Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversion
 
 Chroma.js is written by [Gregor Aisch](http://driven-by-data.net).
 
-
 ### License
 
 Released under [BSD license](http://opensource.org/licenses/BSD-3-Clause).
 Version prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-3.0).
+
+### Known bugs
+
+* HSI color conversion produces weird results sometimes
