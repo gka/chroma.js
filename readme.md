@@ -41,11 +41,9 @@ Choose from a [variety of nice color](https://github.com/gka/chroma.js/wiki/Pred
 
 * [Chromatist](https://github.com/jrus/chromatist)
 * [GrapeFruit](http://code.google.com/p/grapefruit/) (Python)
-<<<<<<< HEAD
 * [colors.py](https://github.com/mattrobenolt/colors.py) (Python)
-=======
 * [d3.js](https://github.com/mbostock/d3)
->>>>>>> updated readme
+
 
 ### Author
 
