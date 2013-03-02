@@ -4,7 +4,7 @@ Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversion
 
 ### Usage
 
-In most cases you want to use **chroma.js** to map data to decent color scales, so let's jump in there right away. Here's the basic API:
+In most cases you want to use **chroma.js** to map your data to decent colors, so let's jump to the color scales right away. Here's the basic API:
 
     // create a color scale, returns a function [0,1] --> color
     var f = chroma.scale(['white', 'red']);
