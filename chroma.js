@@ -242,7 +242,7 @@
     var b, f, g, h, i, p, q, r, s, t, v, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
     _ref1 = unpack(arguments), h = _ref1[0], s = _ref1[1], v = _ref1[2];
     v *= 255;
-    if (s === 0 && isNaN(h)) {
+    if (s === 0) {
       r = g = b = v;
     } else {
       if (h === 360) {
@@ -293,11 +293,11 @@
     max = Math.max(r, g, b);
     delta = max - min;
     v = max / 255.0;
-    s = delta / max;
-    if (s === 0) {
+    if (max === 0) {
       h = void 0;
       s = 0;
     } else {
+      s = delta / max;
       if (r === max) {
         h = (g - b) / delta;
       }

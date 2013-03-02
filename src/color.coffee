@@ -197,7 +197,7 @@ rgb2hex = () ->
 hsv2rgb = () ->
     [h,s,v] = unpack arguments
     v *= 255
-    if s is 0 and isNaN(h)
+    if s is 0
         r = g = b = v
     else
         h = 0 if h is 360
@@ -228,11 +228,11 @@ rgb2hsv = () ->
     max = Math.max(r, g, b)
     delta = max - min
     v = max / 255.0
-    s = delta / max
-    if s is 0
+    if max == 0
         h = undefined
         s = 0
     else
+        s = delta / max
         if r is max then h = (g - b) / delta
         if g is max then h = 2+(b - r) / delta
         if b is max then h = 4+(r - g) / delta
@@ -368,30 +368,6 @@ lab2lch = () ->
     c = Math.sqrt(a * a + b * b)
     h = Math.atan2(b, a) / Math.PI * 180
     [l, c, h]
-
-
-# lab2hcl = (l,a,b) ->
-#     ###
-#     Convert from a qualitative parameter c and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
-
-#     A saturation multiplier was added by Gregor Aisch
-#     ###
-#     if type(l) == "array" and l.length == 3
-#         [l,a,b] = l
-#     L = l
-#     l = (l-0.09) / 0.61
-
-#     r = Math.sqrt(a*a + b*b)
-#     s = r / (l*0.311+0.125)
-
-#     TAU = 6.283185307179586476925287
-
-#     angle = Math.atan2(a,b)
-
-#     c = (TAU/6 - angle) / TAU
-#     c *= 360
-#     c += 360 if c < 0
-#     [c,s,l]
 
 
 rgb2lch = () ->
