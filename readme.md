@@ -2,6 +2,34 @@
 
 Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversions and color scales.
 
+### Usage
+
+In most cases you want to use **chroma.js** to map data to decent color scales, so let's jump in there right away. Here's the basic API:
+
+    // create a color scale, returns a function [0,1] --> color
+    var f = chroma.scale(['white', 'red']);
+
+    // compute a color within that scale
+    f(0.5).hex();  // "#FF7F7F"
+
+You can specify as many colors as you want..
+
+    chroma.scale(['#A50026', '#FFFFBF', '#006837']);
+
+..and customize their positions in the gradient:
+
+    chroma.scale(['#A50026', '#FFFFBF', '#006837'], [0, 0.2, 1]);
+
+You can change input domain from [0,1] to your data:
+
+    var f = chroma.scale(['white', 'red']).domain([0, 1000]);
+
+Choose from a [variety of nice color](https://github.com/gka/chroma.js/wiki/Predefined-Colors) scales by [Cynthia Brewer](http://colorbrewer2.com) using:
+
+    chroma.scale('RdYlGn');
+
+
+
 ### Documentation
 
 * [Working with Colors](https://github.com/gka/chroma.js/wiki/Colors)
