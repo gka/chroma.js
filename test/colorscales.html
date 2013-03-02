@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chroma.js</title>
+    <script type="text/javascript" src="../dist/chroma.js"></script>
+</head>
+<body>
+
+    <script type="text/javascript">
+
+    function showScale(cs, outerdiv) {
+        cs.out('hex');
+        var c = document.createElement('div');
+        for (var i=0; i<= 1; i += 0.002) {
+            var d = document.createElement('div');
+            d.style.display = 'inline-block';
+            d.style.width = '2px';
+            d.style.height = '60px';
+            d.style.background = cs(i);
+            c.appendChild(d);
+        }
+        outerdiv.appendChild(c);
+    }
+
+    var scales = [
+        "scale(['lightyellow', 'navy'])",
+        "scale(['lightyellow', 'navy']).mode('lab')",
+        "scale(['lightyellow', 'navy']).mode('lch')",
+        "scale(['lightyellow', 'navy']).mode('hsv')",
+        "scale(['lightyellow', 'navy']).mode('hsl')",
+        "scale(['lightyellow', 'navy']).mode('hsi')",
+        "scale('RdYlGn').domain([0, 1], 9)",
+        "scale('RdYlGn')",
+        "scale(['#A50026', '#FFFFBF', '#006837']).mode('lab')",
+        "scale(['#A50026', '#FFFFBF', '#006837']).mode('lch')",
+        "scale(['#A50026', '#FFFFBF', '#006837']).mode('hsv')",
+        "scale(['#A50026', '#FFFFBF', '#006837']).mode('rgb')",
+        "scale(['#A50026', '#FFFFBF', '#006837']).mode('hsl')",
+        "scale(['#A50026', '#FFFFBF', '#006837']).mode('hsi')",
+    ];
+
+    for (var s in scales) {
+        s = scales[s];
+        d = document.createElement('div');
+        d.style.position = 'relative';
+        document.body.appendChild(d);
+        d.innerHTML = "<div style='position:absolute;top:5px;left:10px;opacity:0.9;color:#000;text-shadow:-1px -1px 0px rgba(255,255,255,0.3), 1px 1px 0px rgba(255,255,255,0.3), -1px 1px 0px rgba(255,255,255,0.3), 1px -1px 0px rgba(255,255,255,0.3)'><code>chroma." + s + "</code></div>";
+        showScale(eval("chroma." + s), d);
+    }
+
+    var c0 = chroma.color('A50026'),
+        c1 = chroma.color('006837'),
+        c;
+
+    console.log(c0.hsi(), c1.hsi());
+
+    for (var i=0; i<=1; i+= 0.05) {
+        c = c0.interpolate(i,c1,'hsi');
+        console.log(c.hsi()[0].toFixed(0), c.rgb()[1].toFixed(0));
+        document.write('<div style="width:20px;height:20px;display:inline-block;background:'+c+'"></div>');
+    }
+
+    </script>
+
+
+
+</body>
+</html>
