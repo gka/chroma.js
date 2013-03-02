@@ -6,7 +6,8 @@
     "homepage"     : "https://github.com/gka/chroma.js",
     "keywords"     : ["color"],
     "maintainers"  : [
-        { "name": "Klemen Slavič", "email": "klemen@celtra.com", "web": "http://about.me/klemen.slavic" }
+        { "name": "Klemen Slavič", "email": "klemen@celtra.com", "web": "http://about.me/klemen.slavic" },
+        { "name": "Gregor Aisch", "email": "mail@driven-by-data.net", "web": "http://driven-by-data.net" }
     ],
     "bugs"         : "https://github.com/gka/chroma.js/issues",
     "repositories" : [
