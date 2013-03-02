@@ -1,20 +1,32 @@
-###*
-    chroma.js - a neat JS lib for color conversions
-    Copyright (C) 2011  Gregor Aisch
+###
+    chroma.js
 
-    The JavaScript code in this page is free software: you can
-    redistribute it and/or modify it under the terms of the GNU
-    General Public License (GNU GPL) as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option)
-    any later version.  The code is distributed WITHOUT ANY WARRANTY;
-    without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+    Copyright (c) 2011-2013, Gregor Aisch
+    All rights reserved.
 
-    As additional permission under GNU GPL version 3 section 7, you
-    may distribute non-source (e.g., minimized or compacted) forms of
-    that code without the copy of the GNU GPL normally required by
-    section 4, provided you include this license notice and a URL
-    through which recipients can access the Corresponding Source.
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this
+      list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+
+    * The name Gregor Aisch may not be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL GREGOR AISCH OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+    OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+    EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     @source: https://github.com/gka/chroma.js
 ###
@@ -22,30 +34,38 @@
 root = (exports ? this)
 chroma = root.chroma ?= {}
 
-
 Color = chroma.Color
-
 
 class ColorScale
     ###
     base class for color scales
     ###
-    constructor: (opts) ->
+    constructor: (opts={}) ->
         me = @
-        me._colors = cols = opts.colors ? ['#ddd', '#222']
-        for c in [0..cols.length-1]
-            col = cols[c]
-            cols[c] = new Color(col) if type(col) == "string"
+        me.range opts.colors, opts.positions
+        me._mode = opts.mode ? 'rgb'
+        me._nacol = chroma.hex opts.nacol ? chroma.hex '#ccc'
+        me.domain [0, 1]
+        me
 
-        if opts.positions?
-            me._pos = opts.positions
+    range: (colors, positions) ->
+        me = @
+        if not colors?
+            colors = ['#ddd', '#222']
+        if colors? and type(colors) == 'string' and chroma.brewer?[colors]?
+            colors = chroma.brewer[colors].slice(0)
+        # convert to chroma classes
+        for c in [0..colors.length-1]
+            col = colors[c]
+            colors[c] = new Color(col) if type(col) == "string"
+        me._colors = colors
+        # auto-fill color position
+        if positions?
+            me._pos = positions
         else
             me._pos = []
-            for c in [0..cols.length-1]
-                me._pos.push c/(cols.length-1)
-
-        me._mode = opts.mode ? 'hsv'
-        me._nacol = chroma.hex opts.nacol ? chroma.hex '#ccc'
+            for c in [0..colors.length-1]
+                me._pos.push c/(colors.length-1)
         me
 
     domain: (domain = []) ->
@@ -88,7 +108,7 @@ class ColorScale
                 break
             if f > p and f < me._pos[i+1]
                 f = (f-p)/(me._pos[i+1]-p)
-                col = chroma.interpolate cols[i], cols[i+1], f, me.mode
+                col = chroma.interpolate cols[i], cols[i+1], f, me._mode
                 break
         col
 
@@ -124,101 +144,40 @@ class ColorScale
 chroma.ColorScale = ColorScale
 
 
-class Ramp extends ColorScale
-
-    constructor: (col0='#fe0000', col1='#feeeee', mode='hsl') ->
-        super
-            colors: [col0, col1]
-            positions: [0,1]
-            mode: mode
-
-chroma.Ramp = Ramp
-
-chroma.ramp = (col0, col1, mode) ->
-    s = new chroma.Ramp col0, col1, mode
-    s.getColor
-
-
-class Diverging extends ColorScale
-
-    constructor: (colors=['#d73027', '#ffffbf', '#1E6189'], center=0, mode='hsl') ->
-        me = @
-        me._center = center
-        super
-            colors: colors
-            positions: [0,.5,1]
-            mode: mode
-        me
-
-    domain: (domain = []) ->
-        me = @
-        super domain
-        me._pos[1] = (me._center - domain[0]) / (domain[domain.length-1] - domain[0])
-        me
-
-
-chroma.Diverging = Diverging
-
-chroma.diverging = (col0, col1, col2, center, mode) ->
-    s = new chroma.Diverging col0, col1, col2, center, mode
-    s.getColor
-
-
-class Categories extends ColorScale
-
-    constructor: (colors) ->
-        # colors: dictionary of id: colors
-        me = @
-        me.colors = colors
-
-    parseData: (data, data_col) ->
-        # nothing to do here..
-
-    getColor: (value) ->
-        me = @
-        if me.colors.hasOwnProperty value
-            return me.colors[value]
-        else
-            return '#cccccc'
-
-    validValue: (value) ->
-        @colors.hasOwnProperty value
-
-chroma.Categories = Categories
-
-
-class CSSColors extends ColorScale
-
-    constructor: (name) ->
-        me = @
-        me.name = name
-        me.setClasses(7)
-        me
-
-    getColor: (value) ->
-        me = @
-        c = me.getClass(value)
-        me.name + ' l'+me.numClasses+' c'+c
-
-chroma.CSSColors = CSSColors
-
+# minimal multi-purpose interface
+chroma.scale = (colors, positions) ->
+    colscale = new chroma.ColorScale()
+    colscale.range colors, positions
+    out = false
+    f = (v) ->
+        c = colscale.get v
+        if out and c[out] then c[out]() else c
+    f.domain = (domain, classes, mode='e') ->
+        if classes?
+            d = chroma.analyze domain
+            if classes == 0
+                domain = [d.min, d.max]
+            else
+                domain = chroma.limits d, mode, classes
+        colscale.domain domain
+        f
+    f.mode = (_m) ->
+        colscale._mode = _m
+        f
+    f.range = (_colors, _pos) ->
+        colscale.range _colors, _pos
+        f
+    f.out = (_o) ->
+        out = _o
+        f
+    f
 
 # some pre-defined color scales:
 chroma.scales ?= {}
 
 chroma.scales.cool = ->
-    new Ramp(chroma.hsl(180,1,.9), chroma.hsl(250,.7,.4))
+    chroma.scale [chroma.hsl(180,1,.9), chroma.hsl(250,.7,.4)]
 
 chroma.scales.hot = ->
-    new ColorScale
-        colors: ['#000000','#ff0000','#ffff00','#ffffff']
-        positions: [0,.25,.75,1]
-        mode: 'rgb'
-
-chroma.scales.BlWhOr = ->
-    new Diverging(chroma.hsl(30,1,.55),'#ffffff', new Color(220,1,.55))
-
-chroma.scales.GrWhPu = ->
-    new Diverging(chroma.hsl(120,.8,.4),'#ffffff', new Color(280,.8,.4))
-
+    chroma.scale(['#000','#f00','#ff0','#fff'], [0,.25,.75,1]).mode('rgb')
 
