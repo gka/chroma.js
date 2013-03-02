@@ -37,20 +37,9 @@ chroma = root.chroma ?= {}
 # Browserify-compatible export
 module.exports = chroma if module?
 
-chroma.version = "0.3.1"
 
 class Color
-    ###
-    data type for colors
 
-    eg.
-    new Color() // white
-    new Color(120,.8,.5) // defaults to hsl color
-    new Color([120,.8,.5]) // this also works
-    new Color(255,100,50,'rgb') //  color using RGB
-    new Color('#ff0000') // or hex value
-
-    ###
     constructor: (x,y,z,m) ->
         me = @
 
@@ -113,22 +102,30 @@ class Color
         m ?= 'rgb'
         col = new Color(col) if type(col) == "string"
 
-        if m == 'hsl' or m == 'hsv' or m == 'lch' or m == 'hsi'
+        if m == 'hsl' or m == 'hsv' or m == 'lch' or m == 'hsi' or m == 'lab'
             if m == 'hsl'
                 xyz0 = me.hsl()
                 xyz1 = col.hsl()
             else if m == 'hsv'
                 xyz0 = me.hsv()
                 xyz1 = col.hsv()
-            else if m == 'lch'
-                xyz0 = me.lch()
-                xyz1 = col.lch()
             else if m == 'hsi'
                 xyz0 = me.hsi()
                 xyz1 = col.hsi()
+            else if m == 'lch'
+                xyz0 = me.lch()
+                xyz1 = col.lch()
+            else if m == 'lab'
+                xyz0 = me.lab()
+                xyz1 = col.lab()
 
-            [hue0, sat0, lbv0] = xyz0
-            [hue1, sat1, lbv1] = xyz1
+            if m.substr(0, 1) == 'h'
+                [hue0, sat0, lbv0] = xyz0
+                [hue1, sat1, lbv1] = xyz1
+            else
+                [lbv0, sat0, hue0] = xyz0
+                [lbv1, sat1, hue1] = xyz1
+
 
             if not isNaN(hue0) and not isNaN(hue1)
                 if hue1 > hue0 and hue1 - hue0 > 180
@@ -148,10 +145,9 @@ class Color
                 hue = undefined
 
             sat ?= sat0 + f*(sat1 - sat0)
-
             lbv = lbv0 + f*(lbv1-lbv0)
 
-            new Color(hue, sat, lbv, m)
+            new Color hue, sat, lbv, m
 
         else if m == 'rgb'
             xyz0 = me._rgb
