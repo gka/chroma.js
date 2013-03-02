@@ -37,7 +37,8 @@ Choose from a [variety of nice color](https://github.com/gka/chroma.js/wiki/Pred
 * [Supported Color Spaces](https://github.com/gka/chroma.js/wiki/Color-Spaces)
 * [Named Colors and ColorBrewer Scales](https://github.com/gka/chroma.js/wiki/Predefined-Colors)
 
-### Similar Libraries
+
+### Similar Libraries / Prior Art
 
 * [Chromatist](https://github.com/jrus/chromatist)
 * [GrapeFruit](http://code.google.com/p/grapefruit/) (Python)
@@ -52,7 +53,7 @@ Chroma.js is written by [Gregor Aisch](http://driven-by-data.net).
 ### License
 
 Released under [BSD license](http://opensource.org/licenses/BSD-3-Clause).
-Version prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-3.0).
+Versions prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-3.0).
 
 ### Known bugs
 
