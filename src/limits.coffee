@@ -97,6 +97,16 @@ chroma.limits = (data, mode='equal', num=7) ->
             limits.push min+(i/num)*(max-min)
         limits.push max
 
+    else if mode.substr(0,1) == 'l' # log scale
+        if min <= 0
+            throw 'Logarithmic scales are only possible for values > 0'
+        min_log = Math.LOG10E * Math.log min
+        max_log = Math.LOG10E * Math.log max
+        limits.push min
+        for i in [1..num-1]
+            limits.push Math.pow 10, min_log + (i/num) * (max_log - min_log)
+        limits.push max
+
     else if mode.substr(0,1) == 'q' # quantile scale
         limits.push min
         for i in [1..num-1]
