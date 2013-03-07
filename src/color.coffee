@@ -94,6 +94,13 @@ class Color
     hsi: ->
         rgb2hsi @_rgb
 
+    name: ->
+        h = @hex()
+        for k of chroma.colors
+            if h == chroma.colors[k]
+                return k
+        h
+
     interpolate: (f, col, m) ->
         ###
         interpolates between colors
@@ -162,11 +169,24 @@ class Color
         else
             throw "color mode "+m+" is not supported"
 
-    darken: (amount=0.2) ->
+    darker: (amount=20) ->
         me = @
         lch = me.lch()
-        lch[2] -= amount
+        lch[0] -= amount
         chroma.lch lch
+
+    brighter: (amount=20) ->
+        @darker -amount
+
+    saturate: (amount=20) ->
+        me = @
+        lch = me.lch()
+        lch[1] += amount
+        chroma.lch lch
+
+    desaturate: (amount=20) ->
+        @saturate -amount
+
 
 
 hex2rgb = (hex) ->
@@ -174,7 +194,7 @@ hex2rgb = (hex) ->
         if chroma.colors? and chroma.colors[hex]
             hex = chroma.colors[hex]
         else
-            throw "unknown color format: "+hex
+            throw "unknown color: "+hex
     if hex.length == 4 or hex.length == 7
         hex = hex.substr(1)
     if hex.length == 3
@@ -190,7 +210,7 @@ hex2rgb = (hex) ->
 rgb2hex = () ->
     [r,g,b] = unpack arguments
     u = r << 16 | g << 8 | b
-    str = "000000" + u.toString(16).toUpperCase()
+    str = "000000" + u.toString(16) #.toUpperCase()
     "#" + str.substr(str.length - 6)
 
 
