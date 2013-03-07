@@ -115,6 +115,17 @@
       return rgb2hsi(this._rgb);
     };
 
+    Color.prototype.name = function() {
+      var h, k;
+      h = this.hex();
+      for (k in chroma.colors) {
+        if (h === chroma.colors[k]) {
+          return k;
+        }
+      }
+      return h;
+    };
+
     Color.prototype.interpolate = function(f, col, m) {
       /*
               interpolates between colors
@@ -193,15 +204,40 @@
       }
     };
 
-    Color.prototype.darken = function(amount) {
+    Color.prototype.darker = function(amount) {
       var lch, me;
       if (amount == null) {
-        amount = 0.2;
+        amount = 20;
       }
       me = this;
       lch = me.lch();
-      lch[2] -= amount;
+      lch[0] -= amount;
       return chroma.lch(lch);
+    };
+
+    Color.prototype.brighter = function(amount) {
+      if (amount == null) {
+        amount = 20;
+      }
+      return this.darker(-amount);
+    };
+
+    Color.prototype.saturate = function(amount) {
+      var lch, me;
+      if (amount == null) {
+        amount = 20;
+      }
+      me = this;
+      lch = me.lch();
+      lch[1] += amount;
+      return chroma.lch(lch);
+    };
+
+    Color.prototype.desaturate = function(amount) {
+      if (amount == null) {
+        amount = 20;
+      }
+      return this.saturate(-amount);
     };
 
     return Color;
@@ -214,7 +250,7 @@
       if ((chroma.colors != null) && chroma.colors[hex]) {
         hex = chroma.colors[hex];
       } else {
-        throw "unknown color format: " + hex;
+        throw "unknown color: " + hex;
       }
     }
     if (hex.length === 4 || hex.length === 7) {
@@ -234,7 +270,7 @@
     var b, g, r, str, u, _ref1;
     _ref1 = unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
     u = r << 16 | g << 8 | b;
-    str = "000000" + u.toString(16).toUpperCase();
+    str = "000000" + u.toString(16);
     return "#" + str.substr(str.length - 6);
   };
 
@@ -930,7 +966,7 @@
   };
 
   chroma.limits = function(data, mode, num) {
-    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, kClusters, limits, max, min, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, value, values, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _s, _t, _u, _v;
+    var assignments, best, centroids, cluster, clusterSizes, dist, i, j, kClusters, limits, max, max_log, min, min_log, mindist, n, nb_iters, newCentroids, p, pb, pr, repeat, sum, tmpKMeansBreaks, value, values, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _s, _t, _u, _v, _w;
     if (mode == null) {
       mode = 'equal';
     }
@@ -957,9 +993,20 @@
         limits.push(min + (i / num) * (max - min));
       }
       limits.push(max);
-    } else if (mode.substr(0, 1) === 'q') {
+    } else if (mode.substr(0, 1) === 'l') {
+      if (min <= 0) {
+        throw 'Logarithmic scales are only possible for values > 0';
+      }
+      min_log = Math.LOG10E * Math.log(min);
+      max_log = Math.LOG10E * Math.log(max);
       limits.push(min);
       for (i = _j = 1, _ref4 = num - 1; 1 <= _ref4 ? _j <= _ref4 : _j >= _ref4; i = 1 <= _ref4 ? ++_j : --_j) {
+        limits.push(Math.pow(10, min_log + (i / num) * (max_log - min_log)));
+      }
+      limits.push(max);
+    } else if (mode.substr(0, 1) === 'q') {
+      limits.push(min);
+      for (i = _k = 1, _ref5 = num - 1; 1 <= _ref5 ? _k <= _ref5 : _k >= _ref5; i = 1 <= _ref5 ? ++_k : --_k) {
         p = values.length * i / num;
         pb = Math.floor(p);
         if (pb === p) {
@@ -985,18 +1032,18 @@
       centroids = null;
       centroids = [];
       centroids.push(min);
-      for (i = _k = 1, _ref5 = num - 1; 1 <= _ref5 ? _k <= _ref5 : _k >= _ref5; i = 1 <= _ref5 ? ++_k : --_k) {
+      for (i = _l = 1, _ref6 = num - 1; 1 <= _ref6 ? _l <= _ref6 : _l >= _ref6; i = 1 <= _ref6 ? ++_l : --_l) {
         centroids.push(min + (i / num) * (max - min));
       }
       centroids.push(max);
       while (repeat) {
-        for (j = _l = 0, _ref6 = num - 1; 0 <= _ref6 ? _l <= _ref6 : _l >= _ref6; j = 0 <= _ref6 ? ++_l : --_l) {
+        for (j = _m = 0, _ref7 = num - 1; 0 <= _ref7 ? _m <= _ref7 : _m >= _ref7; j = 0 <= _ref7 ? ++_m : --_m) {
           clusterSizes[j] = 0;
         }
-        for (i = _m = 0, _ref7 = n - 1; 0 <= _ref7 ? _m <= _ref7 : _m >= _ref7; i = 0 <= _ref7 ? ++_m : --_m) {
+        for (i = _n = 0, _ref8 = n - 1; 0 <= _ref8 ? _n <= _ref8 : _n >= _ref8; i = 0 <= _ref8 ? ++_n : --_n) {
           value = values[i];
           mindist = Number.MAX_VALUE;
-          for (j = _n = 0, _ref8 = num - 1; 0 <= _ref8 ? _n <= _ref8 : _n >= _ref8; j = 0 <= _ref8 ? ++_n : --_n) {
+          for (j = _o = 0, _ref9 = num - 1; 0 <= _ref9 ? _o <= _ref9 : _o >= _ref9; j = 0 <= _ref9 ? ++_o : --_o) {
             dist = Math.abs(centroids[j] - value);
             if (dist < mindist) {
               mindist = dist;
@@ -1007,10 +1054,10 @@
           assignments[i] = best;
         }
         newCentroids = new Array(num);
-        for (j = _o = 0, _ref9 = num - 1; 0 <= _ref9 ? _o <= _ref9 : _o >= _ref9; j = 0 <= _ref9 ? ++_o : --_o) {
+        for (j = _p = 0, _ref10 = num - 1; 0 <= _ref10 ? _p <= _ref10 : _p >= _ref10; j = 0 <= _ref10 ? ++_p : --_p) {
           newCentroids[j] = null;
         }
-        for (i = _p = 0, _ref10 = n - 1; 0 <= _ref10 ? _p <= _ref10 : _p >= _ref10; i = 0 <= _ref10 ? ++_p : --_p) {
+        for (i = _q = 0, _ref11 = n - 1; 0 <= _ref11 ? _q <= _ref11 : _q >= _ref11; i = 0 <= _ref11 ? ++_q : --_q) {
           cluster = assignments[i];
           if (newCentroids[cluster] === null) {
             newCentroids[cluster] = values[i];
@@ -1018,11 +1065,11 @@
             newCentroids[cluster] += values[i];
           }
         }
-        for (j = _q = 0, _ref11 = num - 1; 0 <= _ref11 ? _q <= _ref11 : _q >= _ref11; j = 0 <= _ref11 ? ++_q : --_q) {
+        for (j = _r = 0, _ref12 = num - 1; 0 <= _ref12 ? _r <= _ref12 : _r >= _ref12; j = 0 <= _ref12 ? ++_r : --_r) {
           newCentroids[j] *= 1 / clusterSizes[j];
         }
         repeat = false;
-        for (j = _r = 0, _ref12 = num - 1; 0 <= _ref12 ? _r <= _ref12 : _r >= _ref12; j = 0 <= _ref12 ? ++_r : --_r) {
+        for (j = _s = 0, _ref13 = num - 1; 0 <= _ref13 ? _s <= _ref13 : _s >= _ref13; j = 0 <= _ref13 ? ++_s : --_s) {
           if (newCentroids[j] !== centroids[i]) {
             repeat = true;
             break;
@@ -1035,15 +1082,15 @@
         }
       }
       kClusters = {};
-      for (j = _s = 0, _ref13 = num - 1; 0 <= _ref13 ? _s <= _ref13 : _s >= _ref13; j = 0 <= _ref13 ? ++_s : --_s) {
+      for (j = _t = 0, _ref14 = num - 1; 0 <= _ref14 ? _t <= _ref14 : _t >= _ref14; j = 0 <= _ref14 ? ++_t : --_t) {
         kClusters[j] = [];
       }
-      for (i = _t = 0, _ref14 = n - 1; 0 <= _ref14 ? _t <= _ref14 : _t >= _ref14; i = 0 <= _ref14 ? ++_t : --_t) {
+      for (i = _u = 0, _ref15 = n - 1; 0 <= _ref15 ? _u <= _ref15 : _u >= _ref15; i = 0 <= _ref15 ? ++_u : --_u) {
         cluster = assignments[i];
         kClusters[cluster].push(values[i]);
       }
       tmpKMeansBreaks = [];
-      for (j = _u = 0, _ref15 = num - 1; 0 <= _ref15 ? _u <= _ref15 : _u >= _ref15; j = 0 <= _ref15 ? ++_u : --_u) {
+      for (j = _v = 0, _ref16 = num - 1; 0 <= _ref16 ? _v <= _ref16 : _v >= _ref16; j = 0 <= _ref16 ? ++_v : --_v) {
         tmpKMeansBreaks.push(kClusters[j][0]);
         tmpKMeansBreaks.push(kClusters[j][kClusters[j].length - 1]);
       }
@@ -1051,7 +1098,7 @@
         return a - b;
       });
       limits.push(tmpKMeansBreaks[0]);
-      for (i = _v = 1, _ref16 = tmpKMeansBreaks.length - 1; _v <= _ref16; i = _v += 2) {
+      for (i = _w = 1, _ref17 = tmpKMeansBreaks.length - 1; _w <= _ref17; i = _w += 2) {
         if (!isNaN(tmpKMeansBreaks[i])) {
           limits.push(tmpKMeansBreaks[i]);
         }
