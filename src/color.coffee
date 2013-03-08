@@ -70,6 +70,8 @@ class Color
         else if m == 'hsi'
             me._rgb = hsi2rgb x,y,z
 
+        me_rgb = clip_rgb me._rgb
+
     rgb: ->
         @_rgb
 
@@ -190,21 +192,42 @@ class Color
 
 
 hex2rgb = (hex) ->
-    if not hex.match /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
-        if chroma.colors? and chroma.colors[hex]
-            hex = chroma.colors[hex]
-        else
-            throw "unknown color: "+hex
-    if hex.length == 4 or hex.length == 7
-        hex = hex.substr(1)
-    if hex.length == 3
-        hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]
-    u = parseInt(hex, 16)
-    r = u >> 16
-    g = u >> 8 & 0xFF
-    b = u & 0xFF
-    [r,g,b]
+    if hex.match /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
+        if hex.length == 4 or hex.length == 7
+            hex = hex.substr(1)
+        if hex.length == 3
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]
+        u = parseInt(hex, 16)
+        r = u >> 16
+        g = u >> 8 & 0xFF
+        b = u & 0xFF
+        return [r,g,b]
 
+    # check for css colors, too
+    if rgb = css2rgb hex
+        return rgb
+
+    throw "unknown color: "+hex
+
+
+css2rgb = (css) ->
+    # named X11 colors
+    if chroma.colors? and chroma.colors[css]
+        return hex2rgb chroma.colors[css]
+    # rgb(250,20,0)
+    if m = css.match /rgb\(\s*(\-?\d+),\s*(\-?\d+)\s*,\s*(\-?\d+)\s*\)/
+        return m.slice 1,4
+    # rgb(100%,0%,0%)
+    if m = css.match /rgb\(\s*(\-?\d+)%,\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*\)/
+        rgb = m.slice 1,4
+        for i of rgb
+            rgb[i] = Math.round rgb[i] * 2.55
+        return rgb
+    if m = css.match /hsl\(\s*(\-?\d+),\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*\)/
+        hsl = m.slice 1,4
+        hsl[1] *= 0.01
+        hsl[2] *= 0.01
+        return hsl2rgb hsl
 
 
 rgb2hex = () ->
@@ -451,6 +474,11 @@ hsi2rgb = (h,s,i) ->
     b = limit i*b*3
     [r*255,g*255,b*255]
 
+clip_rgb = (rgb) ->
+    for i of rgb
+        rgb[i] = 0 if rgb[i] < 0
+        rgb[i] = 255 if rgb[i] > 255
+    rgb
 
 chroma.Color = Color
 

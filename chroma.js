@@ -35,7 +35,7 @@
 
 
 (function() {
-  var Color, ColorScale, K, PITHIRD, TWOPI, X, Y, Z, brewer, chroma, colors, cos, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, limit, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb_xyz, root, type, unpack, xyz_lab, xyz_rgb, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+  var Color, ColorScale, K, PITHIRD, TWOPI, X, Y, Z, brewer, chroma, clip_rgb, colors, cos, css2rgb, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, limit, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb_xyz, root, type, unpack, xyz_lab, xyz_rgb, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
@@ -48,7 +48,7 @@
   Color = (function() {
 
     function Color(x, y, z, m) {
-      var me, _ref1;
+      var me, me_rgb, _ref1;
       me = this;
       if (!(x != null) && !(y != null) && !(z != null) && !(m != null)) {
         x = [255, 0, 255];
@@ -81,6 +81,7 @@
       } else if (m === 'hsi') {
         me._rgb = hsi2rgb(x, y, z);
       }
+      me_rgb = clip_rgb(me._rgb);
     }
 
     Color.prototype.rgb = function() {
@@ -245,25 +246,47 @@
   })();
 
   hex2rgb = function(hex) {
-    var b, g, r, u;
-    if (!hex.match(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
-      if ((chroma.colors != null) && chroma.colors[hex]) {
-        hex = chroma.colors[hex];
-      } else {
-        throw "unknown color: " + hex;
+    var b, g, r, rgb, u;
+    if (hex.match(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
+      if (hex.length === 4 || hex.length === 7) {
+        hex = hex.substr(1);
       }
+      if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+      }
+      u = parseInt(hex, 16);
+      r = u >> 16;
+      g = u >> 8 & 0xFF;
+      b = u & 0xFF;
+      return [r, g, b];
     }
-    if (hex.length === 4 || hex.length === 7) {
-      hex = hex.substr(1);
+    if (rgb = css2rgb(hex)) {
+      return rgb;
     }
-    if (hex.length === 3) {
-      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    throw "unknown color: " + hex;
+  };
+
+  css2rgb = function(css) {
+    var hsl, i, m, rgb;
+    if ((chroma.colors != null) && chroma.colors[css]) {
+      return hex2rgb(chroma.colors[css]);
     }
-    u = parseInt(hex, 16);
-    r = u >> 16;
-    g = u >> 8 & 0xFF;
-    b = u & 0xFF;
-    return [r, g, b];
+    if (m = css.match(/rgb\(\s*(\-?\d+),\s*(\-?\d+)\s*,\s*(\-?\d+)\s*\)/)) {
+      return m.slice(1, 4);
+    }
+    if (m = css.match(/rgb\(\s*(\-?\d+)%,\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*\)/)) {
+      rgb = m.slice(1, 4);
+      for (i in rgb) {
+        rgb[i] = Math.round(rgb[i] * 2.55);
+      }
+      return rgb;
+    }
+    if (m = css.match(/hsl\(\s*(\-?\d+),\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*\)/)) {
+      hsl = m.slice(1, 4);
+      hsl[1] *= 0.01;
+      hsl[2] *= 0.01;
+      return hsl2rgb(hsl);
+    }
   };
 
   rgb2hex = function() {
@@ -581,6 +604,19 @@
     g = limit(i * g * 3);
     b = limit(i * b * 3);
     return [r * 255, g * 255, b * 255];
+  };
+
+  clip_rgb = function(rgb) {
+    var i;
+    for (i in rgb) {
+      if (rgb[i] < 0) {
+        rgb[i] = 0;
+      }
+      if (rgb[i] > 255) {
+        rgb[i] = 255;
+      }
+    }
+    return rgb;
   };
 
   chroma.Color = Color;
