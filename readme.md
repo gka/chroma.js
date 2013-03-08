@@ -4,30 +4,42 @@ Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversion
 
 ### Usage
 
-In most cases you want to use **chroma.js** to map your data to decent colors, so let's jump to the color scales right away. Here's the basic API:
 
-    // initiate and manipulate colors
+Initiate and manipulate colors:
+
+```javascript
     chroma.color('#D4F880').darker().hex();  // #9BC04B
-    
-    // create easy color scales
+```
+
+Working with color scales is easy, too:
+
+```javascript    
     scale = chroma.scale(['white', 'red']);
     scale(0.5).hex(); // #FF7F7F
-        
-    // Lab interpolation looks better than than RGB
+```
+
+Lab interpolation looks better than than RGB
+
+```javascript    
     chroma.scale(['white', 'red']).mode('lab');
+```
 
-    // custom domains, distinct set of colors
-    chroma.scale(['#f8f8f8', '#900']).domain([200, 1000], 7);
-    
-    // Color Brewer! Quantiles!
+Custom domains! Quantiles! Color Brewer!! 
+```javascript    
     chroma.scale('RdYlBu').domain(myValues, 7, 'quantiles');    
+```
 
-    // Even log scales
+And why not use logarithmic color scales once in your life?
+
+```javascript
     chroma.scale(['lightyellow', 'navy']).domain([1, 100000], 7, 'log');    
+```
 
-Like it? Why not dive into the [API docs](https://github.com/gka/chroma.js/blob/master/doc/api.md) (quite short actually).
+### Like it?
 
-Download [chroma.min.js](https://raw.github.com/gka/chroma.js/master/chroma.min.js) right away, or use in node.js via
+Why not dive into the [API docs](https://github.com/gka/chroma.js/blob/master/doc/api.md) (quite short actually), and download [chroma.min.js](https://raw.github.com/gka/chroma.js/master/chroma.min.js) right away.
+
+You can use it in node.js, too!
 
     npm install chroma-js
 
