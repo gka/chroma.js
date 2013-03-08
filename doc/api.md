@@ -133,7 +133,7 @@ If you don't want to pick the stops by hand, you can auto-generate a set of *N* 
 
 Don't like linear scales? How about logarithmic stops?
 
-    chroma.scale(['#eee', '#900']).domain([0, 400], 5, 'log');
+    chroma.scale(['#eee', '#900']).domain([1, 1000000], 7, 'log');
     
 For more advanced techniques you need the actual dataset 
 
