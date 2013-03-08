@@ -501,6 +501,9 @@ chroma.rgb = (r,g,b) ->
 chroma.hex = (x) ->
     new Color x
 
+chroma.css = (x) ->
+    new Color x
+
 chroma.lab = (l,a,b) ->
     new Color l,a,b,'lab'
 
