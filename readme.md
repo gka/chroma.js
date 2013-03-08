@@ -8,31 +8,32 @@ Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversion
 Initiate and manipulate colors:
 
 ```javascript
-    chroma.color('#D4F880').darker().hex();  // #9BC04B
+chroma.color('#D4F880').darker().hex();  // #9BC04B
 ```
 
 Working with color scales is easy, too:
 
 ```javascript    
-    scale = chroma.scale(['white', 'red']);
-    scale(0.5).hex(); // #FF7F7F
+scale = chroma.scale(['white', 'red']);
+scale(0.5).hex(); // #FF7F7F
 ```
 
-Lab interpolation looks better than than RGB
+Lab/Lch interpolation looks better than than RGB
 
 ```javascript    
-    chroma.scale(['white', 'red']).mode('lab');
+chroma.scale(['white', 'red']).mode('lab');
 ```
 
 Custom domains! Quantiles! Color Brewer!! 
+
 ```javascript    
-    chroma.scale('RdYlBu').domain(myValues, 7, 'quantiles');    
+chroma.scale('RdYlBu').domain(myValues, 7, 'quantiles');    
 ```
 
 And why not use logarithmic color scales once in your life?
 
 ```javascript
-    chroma.scale(['lightyellow', 'navy']).domain([1, 100000], 7, 'log');    
+chroma.scale(['lightyellow', 'navy']).domain([1, 100000], 7, 'log');    
 ```
 
 ### Like it?
