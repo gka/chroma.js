@@ -6,36 +6,30 @@ Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversion
 
 In most cases you want to use **chroma.js** to map your data to decent colors, so let's jump to the color scales right away. Here's the basic API:
 
-    // create a color scale, returns a function [0,1] --> color
-    var f = chroma.scale(['white', 'red']);
+    // initiate and manipulate colors
+    chroma.color('#D4F880').darker().hex();  // #9BC04B
+    
+    // create easy color scales
+    scale = chroma.scale(['white', 'red']);
+    scale(0.5).hex(); // #FF7F7F
+        
+    // Lab interpolation looks better than than RGB
+    chroma.scale(['white', 'red']).mode('lab');
 
-    // compute a color within that scale
-    f(0.5).hex();  // "#FF7F7F"
+    // custom domains, distinct set of colors
+    chroma.scale(['#f8f8f8', '#900']).domain([200, 1000], 7);
+    
+    // Color Brewer! Quantiles!
+    chroma.scale('RdYlBu').domain(myValues, 7, 'quantiles');    
 
-You can specify as many colors as you want..
+    // Even log scales
+    chroma.scale(['lightyellow', 'navy']).domain([1, 100000], 7, 'log');    
 
-    chroma.scale(['#A50026', '#FFFFBF', '#006837']);
+Like it? Why not dive into the [API docs](https://github.com/gka/chroma.js/blob/master/doc/api.md) (quite short actually).
 
-..and customize their positions in the gradient:
+Download [chroma.min.js](https://raw.github.com/gka/chroma.js/master/chroma.min.js) right away, or use in node.js via
 
-    chroma.scale(['#A50026', '#FFFFBF', '#006837'], [0, 0.2, 1]);
-
-You can change input domain from [0,1] to your data:
-
-    var f = chroma.scale(['white', 'red']).domain([0, 1000]);
-
-Choose from a [variety of nice color](https://github.com/gka/chroma.js/wiki/Predefined-Colors) scales by [Cynthia Brewer](http://colorbrewer2.com) using:
-
-    chroma.scale('RdYlGn');
-
-
-
-### Documentation
-
-* [Working with Colors](https://github.com/gka/chroma.js/wiki/Colors)
-* [Working with Color Scales](https://github.com/gka/chroma.js/wiki/Color-Scales)
-* [Supported Color Spaces](https://github.com/gka/chroma.js/wiki/Color-Spaces)
-* [Named Colors and ColorBrewer Scales](https://github.com/gka/chroma.js/wiki/Predefined-Colors)
+    npm install chroma-js
 
 
 ### Similar Libraries / Prior Art
@@ -55,6 +49,6 @@ Chroma.js is written by [Gregor Aisch](http://driven-by-data.net).
 Released under [BSD license](http://opensource.org/licenses/BSD-3-Clause).
 Versions prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-3.0).
 
-### Known bugs
+### Known issues
 
-* HSI color conversion produces weird results sometimes
+* HSI color conversion (experimental) produces weird results sometimes
