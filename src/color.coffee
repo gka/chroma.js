@@ -196,6 +196,7 @@ hex2rgb = (hex) ->
         if hex.length == 4 or hex.length == 7
             hex = hex.substr(1)
         if hex.length == 3
+            hex = hex.split("")
             hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]
         u = parseInt(hex, 16)
         r = u >> 16
