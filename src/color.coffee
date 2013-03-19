@@ -96,6 +96,9 @@ class Color
     hsi: ->
         rgb2hsi @_rgb
 
+    luminance: ->
+        luminance @_rgb
+
     name: ->
         h = @hex()
         for k of chroma.colors
@@ -367,7 +370,6 @@ lab2rgb = (l,a,b) ->
     [limit(r,0,255), limit(g,0,255), limit(b,0,255)]
 
 
-
 rgb2lab = () ->
     [r,g,b] = unpack arguments
     r = rgb_xyz r
@@ -475,11 +477,28 @@ hsi2rgb = (h,s,i) ->
     b = limit i*b*3
     [r*255,g*255,b*255]
 
+
 clip_rgb = (rgb) ->
     for i of rgb
         rgb[i] = 0 if rgb[i] < 0
         rgb[i] = 255 if rgb[i] > 255
     rgb
+
+
+luminance = (r,g,b) ->
+    # relative luminance
+    # see http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+    [r,g,b] = unpack arguments
+    r = luminance_x r
+    g = luminance_x g
+    b = luminance_x b
+    0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+luminance_x = (x) ->
+    x /= 255
+    if x <= 0.03928 then x/12.92 else Math.pow((x+0.055)/1.055, 2.4)
+
 
 chroma.Color = Color
 
@@ -521,5 +540,12 @@ chroma.interpolate = (a,b,f,m) ->
     b = new Color b if type(b) == 'string'
     a.interpolate f,b,m
 
-
+chroma.contrast = (a, b) ->
+    # WCAG contrast ratio
+    # see http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
+    a = new Color a if type(a) == 'string'
+    b = new Color b if type(b) == 'string'
+    l1 = a.luminance()
+    l2 = b.luminance()
+    if l1 > l2 then (l1 + 0.05) / (l2 + 0.05) else (l2 + 0.05) / (l1 + 0.05)
 

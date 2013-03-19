@@ -71,6 +71,20 @@ Returns the color components for a specific color space:
     chroma.color('red').lab()  // [53.2407, 80.0924, 67.2031]
     chroma.color('red').lch()  // [53.2407, 104.5517, 39.9990]
     
+## color.luminance()
+
+Returns the [relative luminance](http://www.w3.org/TR/WCAG20/#relativeluminancedef) of the color, which is a value between 0 (black) and 1 (white).
+
+    chroma.color('black').luminance() // 0
+    chroma.color('white').luminance() // 1
+    chroma.color('red').luminance() // 0.2126
+
+## chroma.contrast(a, b)
+
+Returns the [contrast ratio](http://www.w3.org/TR/WCAG20/#contrast-ratiodef) between two given colors. According to the [Web Content Accessibility Guidelines](http://www.w3.org/TR/WCAG20) the contrast between background and small text [should be at least](http://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast) 4.5 : 1.
+
+    chroma.contrast('white', 'navy')  // 16.00 – ok
+    chroma.contrast('white', 'yellow')  // 1.07 – not ok!
 
 
 # Working with color scales

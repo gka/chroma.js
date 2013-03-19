@@ -35,7 +35,7 @@
 
 
 (function() {
-  var Color, ColorScale, K, PITHIRD, TWOPI, X, Y, Z, brewer, chroma, clip_rgb, colors, cos, css2rgb, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, limit, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb_xyz, root, type, unpack, xyz_lab, xyz_rgb, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+  var Color, ColorScale, K, PITHIRD, TWOPI, X, Y, Z, brewer, chroma, clip_rgb, colors, cos, css2rgb, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, limit, luminance, luminance_x, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb_xyz, root, type, unpack, xyz_lab, xyz_rgb, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
@@ -114,6 +114,10 @@
 
     Color.prototype.hsi = function() {
       return rgb2hsi(this._rgb);
+    };
+
+    Color.prototype.luminance = function() {
+      return luminance(this._rgb);
     };
 
     Color.prototype.name = function() {
@@ -620,6 +624,24 @@
     return rgb;
   };
 
+  luminance = function(r, g, b) {
+    var _ref1;
+    _ref1 = unpack(arguments), r = _ref1[0], g = _ref1[1], b = _ref1[2];
+    r = luminance_x(r);
+    g = luminance_x(g);
+    b = luminance_x(b);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+
+  luminance_x = function(x) {
+    x /= 255;
+    if (x <= 0.03928) {
+      return x / 12.92;
+    } else {
+      return Math.pow((x + 0.055) / 1.055, 2.4);
+    }
+  };
+
   chroma.Color = Color;
 
   chroma.color = function(x, y, z, m) {
@@ -669,6 +691,23 @@
       b = new Color(b);
     }
     return a.interpolate(f, b, m);
+  };
+
+  chroma.contrast = function(a, b) {
+    var l1, l2;
+    if (type(a) === 'string') {
+      a = new Color(a);
+    }
+    if (type(b) === 'string') {
+      b = new Color(b);
+    }
+    l1 = a.luminance();
+    l2 = b.luminance();
+    if (l1 > l2) {
+      return (l1 + 0.05) / (l2 + 0.05);
+    } else {
+      return (l2 + 0.05) / (l1 + 0.05);
+    }
   };
 
   /*

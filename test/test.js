@@ -154,7 +154,7 @@ colors.push( ['oldlace', '#fdf5e6', [253, 245, 230], [39.130434782608695, 0.0909
 try {
 
 
-var chroma = require('../dist/chroma.pack.js'),col;
+var chroma = require('../chroma.min.js'),col;
 		
 	for (var h=0;h<360;h+=10) {
 		col = chroma.hsv(h,.5,.5);
