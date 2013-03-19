@@ -252,6 +252,7 @@
         hex = hex.substr(1);
       }
       if (hex.length === 3) {
+        hex = hex.split("");
         hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
       }
       u = parseInt(hex, 16);
@@ -638,6 +639,10 @@
   };
 
   chroma.hex = function(x) {
+    return new Color(x);
+  };
+
+  chroma.css = function(x) {
     return new Color(x);
   };
 
