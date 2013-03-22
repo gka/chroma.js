@@ -19,6 +19,7 @@
     },
     "devDependencies": {
         "uglify-js"     : "2.x",
-        "coffee-script" : "1.2"
+        "coffee-script" : "1.2",
+        "vows": "0.7.x"
     }
 }
