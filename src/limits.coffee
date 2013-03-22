@@ -58,7 +58,7 @@ chroma.analyze = (data, key, filter) ->
         if filter val, k
             if key? and type(key) == 'function'
                 add key val
-            else if key? and type(key) == 'str' or type(key) == 'number'
+            else if key? and type(key) == 'string' or type(key) == 'number'
                 add val[key]
             else
                 add val
