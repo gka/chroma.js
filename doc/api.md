@@ -1,4 +1,3 @@
-
 # Initializing colors
 
 ## chroma.color(a, b, c, mode)
@@ -57,7 +56,7 @@ Decreases the lightness of the color in *Lch* color space.
 chroma.color('red').darker().hex()  // #BC0000
 ```
 
-## color.brigter(*amount*)
+## color.brighter(*amount*)
 
 ```javascript
 chroma.color('red').brighter().hex()  // #FF603B
