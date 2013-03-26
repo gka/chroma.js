@@ -50,21 +50,33 @@ However you initialized the color, here's what you can do with it:
 
 ## color.darker(*amount*)
 
-Decreases the lightness of the color in *Lch* color space.
+Decreases the lightness of the color in *Lab* color space.
 
 ```javascript
-chroma.color('red').darker().hex()  // #BC0000
+chroma.color('red').darken().hex()  // #BC0000
 ```
 
-## color.brighter(*amount*)
+## color.brighten(*amount*)
 
 ```javascript
-chroma.color('red').brighter().hex()  // #FF603B
+chroma.color('red').brighten().hex()  // #FF603B
 ```
 
 ## color.saturate(*amount*)
 
+Returns a more saturated variation of the color.
+
+```javascript
+chroma.color('#eecc99').saturate().hex() // #fcc973
+```
+
 ## color.desaturate(*amount*)
+
+Returns a less saturated variation of the color.
+
+```javascript
+chroma.color('red').desaturate().hex() // #ec3d23
+```
 
 ## color.*xyz*()
 

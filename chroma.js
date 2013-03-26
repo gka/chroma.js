@@ -210,7 +210,7 @@
       }
     };
 
-    Color.prototype.darker = function(amount) {
+    Color.prototype.darken = function(amount) {
       var lch, me;
 
       if (amount == null) {
@@ -222,7 +222,7 @@
       return chroma.lch(lch);
     };
 
-    Color.prototype.brighter = function(amount) {
+    Color.prototype.brighten = function(amount) {
       if (amount == null) {
         amount = 20;
       }

@@ -174,13 +174,13 @@ class Color
         else
             throw "color mode "+m+" is not supported"
 
-    darker: (amount=20) ->
+    darken: (amount=20) ->
         me = @
         lch = me.lch()
         lch[0] -= amount
         chroma.lch lch
 
-    brighter: (amount=20) ->
+    brighten: (amount=20) ->
         @darker -amount
 
     saturate: (amount=20) ->
