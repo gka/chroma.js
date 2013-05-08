@@ -180,8 +180,14 @@ class Color
         lch[0] -= amount
         chroma.lch lch
 
+    darker: (amount) ->
+        @darken amount
+
     brighten: (amount=20) ->
         @darken -amount
+
+    brighter: (amount) ->
+        @brighten amount
 
     saturate: (amount=20) ->
         me = @
