@@ -181,7 +181,7 @@ class Color
         chroma.lch lch
 
     brighten: (amount=20) ->
-        @darker -amount
+        @darken -amount
 
     saturate: (amount=20) ->
         me = @
