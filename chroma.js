@@ -226,7 +226,7 @@
       if (amount == null) {
         amount = 20;
       }
-      return this.darker(-amount);
+      return this.darken(-amount);
     };
 
     Color.prototype.saturate = function(amount) {
