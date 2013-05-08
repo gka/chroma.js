@@ -45,6 +45,15 @@ You can use it in node.js, too!
     npm install chroma-js
 
 
+### Build instructions
+
+To compile the coffee-script source files you have to run ``build.sh``.
+
+To run the tests simply run
+
+    vows test/*.coffee
+
+
 ### Similar Libraries / Prior Art
 
 * [Chromatist](https://github.com/jrus/chromatist)
