@@ -222,11 +222,19 @@
       return chroma.lch(lch);
     };
 
+    Color.prototype.darker = function(amount) {
+      return this.darken(amount);
+    };
+
     Color.prototype.brighten = function(amount) {
       if (amount == null) {
         amount = 20;
       }
       return this.darken(-amount);
+    };
+
+    Color.prototype.brighter = function(amount) {
+      return this.brighten(amount);
     };
 
     Color.prototype.saturate = function(amount) {
