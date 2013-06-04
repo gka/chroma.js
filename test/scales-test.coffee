@@ -47,5 +47,8 @@ vows
             'mid gray': (topic) -> assert.equal topic(50).hex(), '#ffffbf'
             'ends black': (topic) -> assert.equal topic(100).hex(), '#006837'
 
+        'calling domain with no arguments':
+            topic: -> chroma.scale('RdYlGn').domain([0, 100], 5)
+            'returns domain': (topic) -> assert.deepEqual topic.domain(), [0, 20, 40, 60, 80, 100]
 
     .export(module)

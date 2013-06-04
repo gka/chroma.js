@@ -954,6 +954,9 @@
       if (mode == null) {
         mode = 'e';
       }
+      if (domain == null) {
+        return colscale._domain;
+      }
       if (classes != null) {
         d = chroma.analyze(domain, key);
         if (classes === 0) {

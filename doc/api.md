@@ -195,6 +195,12 @@ chroma.scale(['#eee', '#900']).domain(values, 5, 'quantiles');
 chroma.scale(['#eee', '#900']).domain(values, 5, 'k-means');
 ```
 
+Calling .domain() with no arguments will return the current domain.
+
+```
+chroma.scale(['white', 'red']).domain([0, 100], 4).domain() // [0, 25, 50, 75, 100]
+```
+
 ### scale.range()
 
 If you need to change the color range after initializing the color scale.

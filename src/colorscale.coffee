@@ -153,6 +153,8 @@ chroma.scale = (colors, positions) ->
         c = colscale.get v
         if out and c[out] then c[out]() else c
     f.domain = (domain, classes, mode='e', key) ->
+        if not domain?
+            return colscale._domain
         if classes?
             d = chroma.analyze domain, key
             if classes == 0
