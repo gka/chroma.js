@@ -13,7 +13,7 @@
     "repositories" : [
         { "type": "git", "url" : "git://github.com/gka/chroma.js.git" }
     ],
-    "main"         : "dist/chroma.js",
+    "main"         : "chroma.js",
     "scripts"      : {
         "compile": "./build.sh"
     },
