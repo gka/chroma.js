@@ -152,8 +152,9 @@ chroma.scale = (colors, positions) ->
     f = (v) ->
         c = colscale.get v
         if out and c[out] then c[out]() else c
+
     f.domain = (domain, classes, mode='e', key) ->
-        if not domain?
+        if not arguments.length
             return colscale._domain
         if classes?
             d = chroma.analyze domain, key
@@ -163,15 +164,21 @@ chroma.scale = (colors, positions) ->
                 domain = chroma.limits d, mode, classes
         colscale.domain domain
         f
+
     f.mode = (_m) ->
+        if not arguments.length
+            return colscale._mode
         colscale._mode = _m
         f
+
     f.range = (_colors, _pos) ->
         colscale.range _colors, _pos
         f
+
     f.out = (_o) ->
         out = _o
         f
+
     f.getColor = (val) ->
         # introduced for backward compatiblity
         f val

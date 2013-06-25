@@ -954,7 +954,7 @@
       if (mode == null) {
         mode = 'e';
       }
-      if (domain == null) {
+      if (!arguments.length) {
         return colscale._domain;
       }
       if (classes != null) {
@@ -969,6 +969,9 @@
       return f;
     };
     f.mode = function(_m) {
+      if (!arguments.length) {
+        return colscale._mode;
+      }
       colscale._mode = _m;
       return f;
     };
