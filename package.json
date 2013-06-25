@@ -1,7 +1,7 @@
 {
     "name"         : "chroma-js",
     "description"  : "JavaScript library for color conversions",
-    "version"      : "0.4.10",
+    "version"      : "0.4.11",
     "author"       : "Gregor Aisch",
     "homepage"     : "https://github.com/gka/chroma.js",
     "keywords"     : ["color"],
@@ -10,9 +10,9 @@
         { "name": "Gregor Aisch", "email": "mail@driven-by-data.net", "web": "http://driven-by-data.net" }
     ],
     "bugs"         : "https://github.com/gka/chroma.js/issues",
-    "repositories" : [
-        { "type": "git", "url" : "git://github.com/gka/chroma.js.git" }
-    ],
+    "repository" : 
+       { "type": "git", "url" : "git://github.com/gka/chroma.js.git" }
+    ,
     "main"         : "chroma.js",
     "scripts"      : {
         "compile": "./build.sh"
