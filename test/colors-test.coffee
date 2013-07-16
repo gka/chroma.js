@@ -35,4 +35,8 @@ vows
             'saturate': (topic) -> assert.equal topic.saturate().hex(), '#ff0000'
             'desaturate': (topic) -> assert.equal topic.desaturate().hex(), '#ec3d23'
 
+        'css colors':
+            topic: -> chroma.color('rgb(255,0,0)')
+            'hex': (topic) -> assert.equal topic.hex(), '#ff0000'
+
     .export(module)

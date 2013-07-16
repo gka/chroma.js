@@ -51,4 +51,27 @@ vows
             topic: -> chroma.scale('RdYlGn').domain([0, 100], 5)
             'returns domain': (topic) -> assert.deepEqual topic.domain(), [0, 20, 40, 60, 80, 100]
 
+        'check spread':
+            topic: ->
+                cs = new chroma.ColorScale()
+                cs.domain [0, 0.5, 1]
+                cs
+            'spread zero': (cs) ->
+                assert.equal cs.classifyValue(0.25), 0.25
+                assert.equal cs.classifyValue(0.75), 0.75
+            'spread one': (cs) ->
+                cs._spread = 1
+                assert.equal cs.classifyValue(0.25), 0
+                assert.equal cs.classifyValue(0.75), 1
+
+                #assert.deepEqual res, [0.33, 0.33, 0.33, 0.33, 0.80, 100]
+
+        # 'fixed color scale':
+        #     topic: ->
+        #         cs = new chroma.ColorScale()
+        #         cs.range ['white', 'black']
+        #         cs.domain [0, 0.5, 0.75, 1]
+        #         cs
+        #     'returns domain': (topic) -> assert.deepEqual topic.domain(), [0, 20, 40, 60, 80, 100]
+
     .export(module)

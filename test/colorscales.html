@@ -47,6 +47,10 @@
         "scale(['#ffffff', '#000000']).domain([0,1], 9).mode('rgb')",
         "scale(['#ffffff', '#000000']).domain([0,1], 9).mode('hsv')",
         "scale(['#ffffff', '#000000']).domain([1,1000], 9, 'log').mode('hsl')",
+        "scale('RdYlGn').domain([0,1], 7).mode('lab')",
+        "scale(['a01','F7F7F7','25a']).domain([0, 0.14285714285714285, 0.2857142857142857, 0.42857142857142855, 0.5714285714285714, 0.7142857142857143, 0.8571428571428571, 1]).mode('lab')",
+        "scale(['a01','F7F7F7','25a']).domain([0,.05,.13,.2,.4,.6,.8,1]).mode('lab')",
+        "scale(['a01','F7F7F7','25a']).domain([0,.05,.13,.2,.4,.6,.8,1]).fixed(true).mode('lab')",
     ];
 
     for (var s in scales) {

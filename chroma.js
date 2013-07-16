@@ -793,6 +793,8 @@
       me.range(opts.colors, opts.positions);
       me._mode = (_ref2 = opts.mode) != null ? _ref2 : 'rgb';
       me._nacol = chroma.hex((_ref3 = opts.nacol) != null ? _ref3 : chroma.hex('#ccc'));
+      me._spread = 0;
+      me._fixed = false;
       me.domain([0, 1]);
       me;
     }
@@ -898,10 +900,9 @@
       if (domain.length > 2) {
         n = domain.length - 1;
         i = me.getClass(value);
-        val = domain[i] + (domain[i + 1] - domain[i]) * 0.5;
-        minc = domain[0];
-        maxc = domain[n - 1];
-        val = me._min + ((val - minc) / (maxc - minc)) * (me._max - me._min);
+        minc = domain[0] + (domain[1] - domain[0]) * (0 + me._spread * 0.5);
+        maxc = domain[n - 1] + (domain[n] - domain[n - 1]) * (1 - me._spread * 0.5);
+        val = me._min + ((domain[i] + (domain[i + 1] - domain[i]) * 0.5 - minc) / (maxc - minc)) * (me._max - me._min);
       }
       return val;
     };
@@ -985,6 +986,13 @@
     };
     f.getColor = function(val) {
       return f(val);
+    };
+    f.spread = function(val) {
+      if (!arguments.length) {
+        return colscale._spread;
+      }
+      colscale._spread = val;
+      return f;
     };
     return f;
   };

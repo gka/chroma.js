@@ -45,6 +45,8 @@ class ColorScale
         me.range opts.colors, opts.positions
         me._mode = opts.mode ? 'rgb'
         me._nacol = chroma.hex opts.nacol ? chroma.hex '#ccc'
+        me._spread = 0
+        me._fixed = false
         me.domain [0, 1]
         me
 
@@ -119,11 +121,9 @@ class ColorScale
         if domain.length > 2
             n = domain.length-1
             i = me.getClass(value)
-            val = domain[i] + (domain[i+1] - domain[i]) * 0.5
-            #console.log '-', val
-            minc = domain[0] # + (domain[1]-domain[0])*0.3
-            maxc = domain[n-1] # + (domain[n]-domain[n-1])*0.7
-            val = me._min + ((val - minc) / (maxc-minc)) * (me._max - me._min)
+            minc = domain[0] + (domain[1]-domain[0]) * (0 + me._spread * 0.5)  # center of 1st class
+            maxc = domain[n-1] + (domain[n]-domain[n-1]) * (1 - me._spread * 0.5)  # center of last class
+            val = me._min + ((domain[i] + (domain[i+1] - domain[i]) * 0.5 - minc) / (maxc-minc)) * (me._max - me._min)
         val
 
     getClass: (value) ->
@@ -182,6 +182,13 @@ chroma.scale = (colors, positions) ->
     f.getColor = (val) ->
         # introduced for backward compatiblity
         f val
+
+    f.spread = (val) ->
+        if not arguments.length
+            return colscale._spread
+        colscale._spread = val
+        f
+
     f
 
 # some pre-defined color scales:
