@@ -27,7 +27,7 @@ vows
             'rgb': (topic) -> assert.deepEqual topic.rgb(), [255,0,0]
 
         'modify colors':
-            topic: -> chroma.color('F00')
+            topic: -> chroma.color 'F00'
             'darken': (topic) -> assert.equal topic.darken(10).hex(), '#dd0000'
             'darker': (topic) -> assert.equal topic.darker(10).hex(), '#dd0000'
             'brighten': (topic) -> assert.equal topic.brighten(10).hex(), '#ff3e20'
@@ -38,5 +38,6 @@ vows
         'css colors':
             topic: -> chroma.color('rgb(255,0,0)')
             'hex': (topic) -> assert.equal topic.hex(), '#ff0000'
+            'css output': (topic) -> assert.equal topic.css(), 'rgb(255,0,0)'
 
     .export(module)

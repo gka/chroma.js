@@ -62,7 +62,7 @@ limit = (x, min=0, max=1) ->
     x
 
 unpack = (args) ->
-    if args.length == 3
+    if args.length >= 3
         args
     else
         args[0]

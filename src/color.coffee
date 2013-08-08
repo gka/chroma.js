@@ -40,39 +40,80 @@ module.exports = chroma if module?
 
 class Color
 
-    constructor: (x,y,z,m) ->
+    constructor: () ->
         me = @
 
-        if not x? and not y? and not z? and not m?
-            x = [255,0,255]
+        if arguments.length == 0
+            [x,y,z,a,m] = [255,0,255,1,'rgb']
 
-        if type(x) == "array" and x.length == 3
-            m ?= y
-            [x,y,z] = x
+        else if type(arguments[0]) == "array"
+            # unpack array args
+            if arguments[0].length == 3
+                [x,y,z] = arguments[0]
+                a = 1
+            else if arguments[0].length == 4
+                [x,y,z,a] = arguments[0]
+            else
+                throw 'unknown input argument'
+            m = arguments[1]
 
-        if type(x) == "string"
+        else if type(arguments[0]) == "string"
+            # named color, hex color, css color
+            x = arguments[0]
             m = 'hex'
-        else
-            m ?= 'rgb'
 
+        else if type(arguments[0]) == "object"
+            [x,y,z,a] = arguments[0]._rgb
+            m = 'rgb'
+
+        else if arguments.length >= 3
+            x = arguments[0]
+            y = arguments[1]
+            z = arguments[2]
+
+        if arguments.length == 3
+            m = 'rgb'
+            a = 1
+
+        else if arguments.length == 4
+            if type(arguments[3]) == "string"
+                m = arguments[3]
+                a = 1
+            else if type(arguments[3]) == "number"
+                m = 'rgb'
+                a = arguments[3]
+
+        else if arguments.length == 5
+            a = arguments[3]
+            m = arguments[4]
+
+        # create color
         if m == 'rgb'
-            me._rgb = [x,y,z]
+            me._rgb = [x,y,z,a]
         else if m == 'hsl'
             me._rgb = hsl2rgb x,y,z
+            me._rgb[3] = a
         else if m == 'hsv'
             me._rgb = hsv2rgb x,y,z
+            me._rgb[3] = a
         else if m == 'hex'
             me._rgb = hex2rgb x
         else if m == 'lab'
             me._rgb = lab2rgb x,y,z
+            me._rgb[3] = a
         else if m == 'lch'
             me._rgb = lch2rgb x,y,z
+            me._rgb[3] = a
         else if m == 'hsi'
             me._rgb = hsi2rgb x,y,z
+            me._rgb[3] = a
 
         me_rgb = clip_rgb me._rgb
 
     rgb: ->
+        @_rgb.slice 0,3
+
+    rgba: ->
         @_rgb
 
     hex: ->
@@ -106,9 +147,23 @@ class Color
                 return k
         h
 
+    alpha: (alpha) ->
+        if arguments.length
+            @_rgb[3] = alpha
+            return @
+        @_rgb[3]
+
+    css: () ->
+        if @_rgb[3] < 1
+            'rgba('+@_rgb.join(',')+')'
+        else
+            'rgb('+@_rgb.slice(0,3).join(',')+')'
+
     interpolate: (f, col, m) ->
         ###
         interpolates between colors
+        f = 0 --> me
+        f = 1 --> col
         ###
         me = @
         m ?= 'rgb'
@@ -157,28 +212,31 @@ class Color
             lbv = lbv0 + f*(lbv1-lbv0)
 
             if m.substr(0, 1) == 'h'
-                new Color hue, sat, lbv, m
+                res = new Color hue, sat, lbv, m
             else
-                new Color lbv, sat, hue, m
+                res = new Color lbv, sat, hue, m
 
         else if m == 'rgb'
             xyz0 = me._rgb
             xyz1 = col._rgb
-            new Color(xyz0[0]+f*(xyz1[0]-xyz0[0]), xyz0[1] + f*(xyz1[1]-xyz0[1]), xyz0[2] + f*(xyz1[2]-xyz0[2]), m)
+            res = new Color(xyz0[0]+f*(xyz1[0]-xyz0[0]), xyz0[1] + f*(xyz1[1]-xyz0[1]), xyz0[2] + f*(xyz1[2]-xyz0[2]), m)
 
         else if m == 'lab'
             xyz0 = me.lab()
             xyz1 = col.lab()
-            new Color(xyz0[0]+f*(xyz1[0]-xyz0[0]), xyz0[1] + f*(xyz1[1]-xyz0[1]), xyz0[2] + f*(xyz1[2]-xyz0[2]), m)
-
+            res = new Color(xyz0[0]+f*(xyz1[0]-xyz0[0]), xyz0[1] + f*(xyz1[1]-xyz0[1]), xyz0[2] + f*(xyz1[2]-xyz0[2]), m)
         else
             throw "color mode "+m+" is not supported"
+        # interpolate alpha at last
+        res.alpha me.alpha() + f * (col.alpha() - me.alpha())
+        res
+
 
     darken: (amount=20) ->
         me = @
         lch = me.lch()
         lch[0] -= amount
-        chroma.lch lch
+        chroma.lch(lch).alpha(me.alpha())
 
     darker: (amount) ->
         @darken amount
@@ -193,7 +251,7 @@ class Color
         me = @
         lch = me.lch()
         lch[1] += amount
-        chroma.lch lch
+        chroma.lch(lch).alpha(me.alpha())
 
     desaturate: (amount=20) ->
         @saturate -amount
@@ -211,7 +269,18 @@ hex2rgb = (hex) ->
         r = u >> 16
         g = u >> 8 & 0xFF
         b = u & 0xFF
-        return [r,g,b]
+        return [r,g,b,1]
+
+    # match rgba hex format, eg #FF000077
+    if hex.match /^#?([A-Fa-f0-9]{8})$/
+        if hex.length == 9
+            hex = hex.substr(1)
+        u = parseInt(hex, 16)
+        r = u >> 24 & 0xFF
+        g = u >> 16 & 0xFF
+        b = u >> 8 & 0xFF
+        a = u & 0xFF
+        return [r,g,b,a]
 
     # check for css colors, too
     if rgb = css2rgb hex
@@ -226,18 +295,53 @@ css2rgb = (css) ->
         return hex2rgb chroma.colors[css]
     # rgb(250,20,0)
     if m = css.match /rgb\(\s*(\-?\d+),\s*(\-?\d+)\s*,\s*(\-?\d+)\s*\)/
-        return m.slice 1,4
+        rgb = m.slice 1,4
+        for i in [0..2]
+            rgb[i] = +rgb[i]
+        rgb[3] = 1  # default alpha = 1
+        return rgb
+
+    # rgba(250,20,0,0.4)
+    if m = css.match /rgba\(\s*(\-?\d+),\s*(\-?\d+)\s*,\s*(\-?\d+)\s*,\s*([01]|[01]?\.\d+)\)/
+        rgb = m.slice 1,5
+        for i in [0..3]
+            rgb[i] = +rgb[i]
+        return rgb
+
     # rgb(100%,0%,0%)
     if m = css.match /rgb\(\s*(\-?\d+)%,\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*\)/
         rgb = m.slice 1,4
         for i of rgb
             rgb[i] = Math.round rgb[i] * 2.55
+        rgb[3] = 1  # default alpha = 1
         return rgb
+
+    # rgba(100%,0%,0%,0.4)
+    if m = css.match /rgba\(\s*(\-?\d+)%,\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*,\s*([01]|[01]?\.\d+)\)/
+        rgb = m.slice 1,5
+        for i in [0..2]
+            rgb[i] = Math.round rgb[i] * 2.55
+        rgb[3] = +rgb[3]
+        return rgb
+
+    # hsl(0,100%,50%)
     if m = css.match /hsl\(\s*(\-?\d+),\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*\)/
         hsl = m.slice 1,4
         hsl[1] *= 0.01
         hsl[2] *= 0.01
-        return hsl2rgb hsl
+        rgb = hsl2rgb hsl
+        rgb[3] = 1  # default alpha = 1
+        return rgb
+
+    # hsla(0,100%,50%,0.5)
+    if m = css.match /hsla\(\s*(\-?\d+),\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*,\s*([01]|[01]?\.\d+)\)/
+        hsl = m.slice 1,4
+        hsl[1] *= 0.01
+        hsl[2] *= 0.01
+        rgb = hsl2rgb hsl
+        rgb[3] = +m[4]  # default alpha = 1
+        return rgb
+
 
 
 rgb2hex = () ->
@@ -400,7 +504,7 @@ lch2lab = () ->
 lch2rgb = (l,c,h) ->
     [L,a,b] = lch2lab l,c,h
     [r,g,b] = lab2rgb L,a,b
-    [limit(r,0,255), limit(g,0,255), limit(b,0,255)]
+    [limit(r,0,255), limit(g,0,255), limit(b,0,255), 1]
 
 lab_xyz = (x) ->
     if x > 0.206893034 then x * x * x else (x - 4 / 29) / 7.787037
@@ -486,8 +590,12 @@ hsi2rgb = (h,s,i) ->
 
 clip_rgb = (rgb) ->
     for i of rgb
-        rgb[i] = 0 if rgb[i] < 0
-        rgb[i] = 255 if rgb[i] > 255
+        if i < 3
+            rgb[i] = 0 if rgb[i] < 0
+            rgb[i] = 255 if rgb[i] > 255
+        else if i == 3
+            rgb[i] = 0 if rgb[i] < 0
+            rgb[i] = 1 if rgb[i] > 1
     rgb
 
 
@@ -545,6 +653,9 @@ chroma.interpolate = (a,b,f,m) ->
     a = new Color a if type(a) == 'string'
     b = new Color b if type(b) == 'string'
     a.interpolate f,b,m
+
+# nicer alias for interpolate
+chroma.mix = chroma.interpolate
 
 chroma.contrast = (a, b) ->
     # WCAG contrast ratio
