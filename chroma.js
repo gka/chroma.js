@@ -87,6 +87,9 @@
         a = arguments[3];
         m = arguments[4];
       }
+      if (a == null) {
+        a = 1;
+      }
       if (m === 'rgb') {
         me._rgb = [x, y, z, a];
       } else if (m === 'hsl') {
@@ -778,16 +781,16 @@
     return new Color(x, y, z, m);
   };
 
-  chroma.hsl = function(h, s, l) {
-    return new Color(h, s, l, 'hsl');
+  chroma.hsl = function(h, s, l, a) {
+    return new Color(h, s, l, a, 'hsl');
   };
 
-  chroma.hsv = function(h, s, v) {
-    return new Color(h, s, v, 'hsv');
+  chroma.hsv = function(h, s, v, a) {
+    return new Color(h, s, v, a, 'hsv');
   };
 
-  chroma.rgb = function(r, g, b) {
-    return new Color(r, g, b, 'rgb');
+  chroma.rgb = function(r, g, b, a) {
+    return new Color(r, g, b, a, 'rgb');
   };
 
   chroma.hex = function(x) {

@@ -87,6 +87,8 @@ class Color
             a = arguments[3]
             m = arguments[4]
 
+        a ?= 1
+
         # create color
         if m == 'rgb'
             me._rgb = [x,y,z,a]
@@ -623,14 +625,14 @@ chroma.Color = Color
 chroma.color = (x,y,z,m) ->
     new Color x,y,z,m
 
-chroma.hsl = (h,s,l) ->
-    new Color h,s,l,'hsl'
+chroma.hsl = (h,s,l,a) ->
+    new Color h,s,l,a,'hsl'
 
-chroma.hsv = (h,s,v) ->
-    new Color h,s,v,'hsv'
+chroma.hsv = (h,s,v,a) ->
+    new Color h,s,v,a,'hsv'
 
-chroma.rgb = (r,g,b) ->
-    new Color r,g,b,'rgb'
+chroma.rgb = (r,g,b,a) ->
+    new Color r,g,b,a,'rgb'
 
 chroma.hex = (x) ->
     new Color x
