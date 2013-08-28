@@ -555,3 +555,5 @@ chroma.contrast = (a, b) ->
     l2 = b.luminance()
     if l1 > l2 then (l1 + 0.05) / (l2 + 0.05) else (l2 + 0.05) / (l1 + 0.05)
 
+chroma.luminance = (color) ->
+    chroma.color(color).luminance()
