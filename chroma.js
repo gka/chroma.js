@@ -739,6 +739,10 @@
     }
   };
 
+  chroma.luminance = function(color) {
+    return chroma.color(color).luminance();
+  };
+
   /*
       chroma.js
   
