@@ -66,6 +66,18 @@ vows
 
                 #assert.deepEqual res, [0.33, 0.33, 0.33, 0.33, 0.80, 100]
 
+        'source array keeps untouched':
+            topic: chroma.brewer.Blues.slice(0)
+            'colors are an array': (colors) ->
+                assert.equal colors.length, 9
+            'colors are strings': (colors) ->
+                assert.equal typeof colors[0], 'string'
+            'creating a color scale': (colors) ->
+                chroma.scale(colors)
+                assert true
+            'colors are still strings': (colors) ->
+                assert.equal typeof colors[0], 'string'
+
         # 'fixed color scale':
         #     topic: ->
         #         cs = new chroma.ColorScale()

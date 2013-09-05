@@ -55,7 +55,9 @@ class ColorScale
         if not colors?
             colors = ['#ddd', '#222']
         if colors? and type(colors) == 'string' and chroma.brewer?[colors]?
-            colors = chroma.brewer[colors].slice(0)
+            colors = chroma.brewer[colors]
+        # make a copy of the colors
+        colors = colors.slice(0)
         # convert to chroma classes
         for c in [0..colors.length-1]
             col = colors[c]

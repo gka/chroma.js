@@ -811,8 +811,9 @@
         colors = ['#ddd', '#222'];
       }
       if ((colors != null) && type(colors) === 'string' && (((_ref2 = chroma.brewer) != null ? _ref2[colors] : void 0) != null)) {
-        colors = chroma.brewer[colors].slice(0);
+        colors = chroma.brewer[colors];
       }
+      colors = colors.slice(0);
       for (c = _i = 0, _ref3 = colors.length - 1; 0 <= _ref3 ? _i <= _ref3 : _i >= _ref3; c = 0 <= _ref3 ? ++_i : --_i) {
         col = colors[c];
         if (type(col) === "string") {
