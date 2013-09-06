@@ -1,4 +1,4 @@
 #!/bin/sh
-coffee -o . -j chroma.js src/color.coffee src/colorscale.coffee src/limits.coffee src/utils.coffee src/colors/*.coffee
+coffee -o . -j chroma.js src/api.coffee src/color.coffee src/conversions/*.coffee  src/colorscale.coffee src/limits.coffee src/colors/*.coffee src/utils.coffee
 uglifyjs chroma.js > chroma.min.js
 
