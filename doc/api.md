@@ -18,7 +18,7 @@ chroma([0, 1, 0.5], 'hsl');
 chroma(0, 1, 1, 'hsv');
 chroma("rgb(255,0,0)");
 chroma("rgb(100%,0%,0%)");
-chroma("hsl(0,100%,50%)");   
+chroma("hsl(0,100%,50%)");
 chroma(53.24, 80.09, 67.20, 'lab')
 chroma(53.24, 104.55, 40, 'lch')
 ```
@@ -45,6 +45,24 @@ chroma.lab(53.24, 80.09, 67.20);
 chroma.lch(53.24, 104.55, 40);
 ```
 
+
+## chroma.interpolate(color1, color2, f, mode)
+
+Colors can be also be interpolates between two other colors in a given mode.
+
+```
+chroma.interpolate('white', 'black', 0)  // #ffffff
+chroma.interpolate('white', 'black', 1)  // #000000
+chroma.interpolate('white', 'black', 0.5)  // #7f7f7f
+chroma.interpolate('white', 'black', 0.5, 'hsv')  // #808080
+chroma.interpolate('white', 'black', 0.5, 'lab')  // #777777
+```
+
+This also works with colors with alpha channel:
+
+```
+chroma.interpolate('rgba(0,0,0,0)', 'rgba(255,0,0,1)', 0.5).css()  //"rgba(127.5,0,0,0.5)"
+```
 
 # Working with colors
 
@@ -91,6 +109,7 @@ chroma('red').hsv()  // [0, 1, 1]
 chroma('red').hsl()  // [0, 1, 0.5]
 chroma('red').lab()  // [53.2407, 80.0924, 67.2031]
 chroma('red').lch()  // [53.2407, 104.5517, 39.9990]
+chroma('red').rgba()  // [255, 0, 0, 1]
 ```
 
 ## color.luminance()
@@ -103,9 +122,21 @@ chroma('white').luminance() // 1
 chroma('red').luminance() // 0.2126
 ```
 
+## color.alpha()
+
+Returns or sets the colors alpha value.
+
+```
+var red = chroma('red');
+red.alpha(0.5);
+red.css();  // rgba(255,0,0,0.5);
+```
+
+# Useful methods
+
 ## chroma.luminance
 
-Shortcut for the above
+Shortcut for the color.luminance()
 
 ```javascript
 chroma.luminance('black') // 0
@@ -120,18 +151,6 @@ Returns the [contrast ratio](http://www.w3.org/TR/WCAG20/#contrast-ratiodef) bet
 ```javascript
 chroma.contrast('white', 'navy')  // 16.00 – ok
 chroma.contrast('white', 'yellow')  // 1.07 – not ok!
-```
-
-## chroma.interpolate(color1, color2, f, mode)
-
-Interpolates between two colors in the given mode.
-
-```
-chroma.interpolate('white', 'black', 0)  // #ffffff
-chroma.interpolate('white', 'black', 1)  // #000000
-chroma.interpolate('white', 'black', 0.5)  // #7f7f7f
-chroma.interpolate('white', 'black', 0.5, 'hsv')  // #808080
-chroma.interpolate('white', 'black', 0.5, 'lab')  // #777777
 ```
 
 # Working with color scales
