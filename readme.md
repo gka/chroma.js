@@ -8,7 +8,7 @@ Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversion
 Initiate and manipulate colors:
 
 ```javascript
-chroma.color('#D4F880').darken().hex();  // #9BC04B
+chroma('#D4F880').darken().hex();  // #9BC04B
 ```
 
 Working with color scales is easy, too:
