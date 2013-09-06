@@ -31,8 +31,6 @@
     @source: https://github.com/gka/chroma.js
 ###
 
-root = (exports ? this)
-
 type = do ->
     ###
     for browser-safe type checking+
@@ -46,15 +44,6 @@ type = do ->
         strType = Object::toString.call(obj)
         classToType[strType] or "object"
 
-root.type ?= type
-
-
-Array.max = (array) ->
-    Math.max.apply Math, array
-
-Array.min = (array) ->
-    Math.min.apply Math, array
-
 
 limit = (x, min=0, max=1) ->
     x = min if x < min
@@ -62,7 +51,7 @@ limit = (x, min=0, max=1) ->
     x
 
 unpack = (args) ->
-    if args.length == 3
+    if args.length >= 3
         args
     else
         args[0]

@@ -31,27 +31,26 @@
     @source: https://github.com/gka/chroma.js
 ###
 
-root = (exports ? this)
-chroma = root.chroma ?= {}
+# minimal multi-purpose interface
+chroma.scale = (colors, positions) ->
 
-Color = chroma.Color
+    # constructor
 
-class ColorScale
-    ###
-    base class for color scales
-    ###
-    constructor: (opts={}) ->
-        me = @
-        me.range opts.colors, opts.positions
-        me._mode = opts.mode ? 'rgb'
-        me._nacol = chroma.hex opts.nacol ? chroma.hex '#ccc'
-        me._spread = 0
-        me._fixed = false
-        me.domain [0, 1]
-        me
+    _mode = 'rgb'
+    _nacol = chroma '#ccc'
+    _spread = 0
+    _fixed = false
+    _domain = [0, 1]
+    _colors = []
+    _out = false
+    _pos = []
+    _min = 0
+    _max = 1
+    _numClasses = 0
 
-    range: (colors, positions) ->
-        me = @
+    # private methods
+
+    setColors = (colors, positions) ->
         if not colors?
             colors = ['#ddd', '#222']
         if colors? and type(colors) == 'string' and chroma.brewer?[colors]?
@@ -61,134 +60,109 @@ class ColorScale
         # convert to chroma classes
         for c in [0..colors.length-1]
             col = colors[c]
-            colors[c] = new Color(col) if type(col) == "string"
-        me._colors = colors
+            colors[c] = chroma(col) if type(col) == "string"
         # auto-fill color position
         if positions?
-            me._pos = positions
+            _pos = positions
         else
-            me._pos = []
+            _pos = []
             for c in [0..colors.length-1]
-                me._pos.push c/(colors.length-1)
-        me
+                _pos.push c/(colors.length-1)
+        _colors = colors
 
-    domain: (domain = []) ->
+    setDomain = (domain = []) ->
         ###
         # use this if you want to display a limited number of data classes
         # possible methods are "equalinterval", "quantiles", "custom"
         ###
-        me = @
-        me._domain = domain
-        me._min = domain[0]
-        me._max = domain[domain.length-1]
+        _domain = domain
+        _min = domain[0]
+        _max = domain[domain.length-1]
         if domain.length == 2
-            me._numClasses = 0
+            _numClasses = 0
         else
-            me._numClasses = domain.length-1
-        me
+            _numClasses = domain.length-1
 
-    get: (value) ->
-        me = @
-        if isNaN(value) then return me._nacol
-        if me._domain.length > 2
-            c = me.getClass value
-            f = c/(me._numClasses-1)
-        else
-            f = f0 = (value - me._min) / (me._max - me._min)
-            f = Math.min(1, Math.max(0, f))
-
-        me.fColor f
-
-    fColor: (f) ->
-        me = @
-        cols = me._colors
-        for i in [0..me._pos.length-1]
-            p = me._pos[i]
-            if f <= p
-                col = cols[i]
-                break
-            if f >= p and i == me._pos.length-1
-                col = cols[i]
-                break
-            if f > p and f < me._pos[i+1]
-                f = (f-p)/(me._pos[i+1]-p)
-                col = chroma.interpolate cols[i], cols[i+1], f, me._mode
-                break
-        col
-
-    classifyValue: (value) ->
-        me = @
-        domain = me._domain
-        val = value
-        if domain.length > 2
-            n = domain.length-1
-            i = me.getClass(value)
-            minc = domain[0] + (domain[1]-domain[0]) * (0 + me._spread * 0.5)  # center of 1st class
-            maxc = domain[n-1] + (domain[n]-domain[n-1]) * (1 - me._spread * 0.5)  # center of last class
-            val = me._min + ((domain[i] + (domain[i+1] - domain[i]) * 0.5 - minc) / (maxc-minc)) * (me._max - me._min)
-        val
-
-    getClass: (value) ->
-        self = @
-        domain = self._domain
-        if domain?
-            n = domain.length-1
+    getClass = (value) ->
+        if _domain?
+            n = _domain.length-1
             i = 0
-            while i < n and value >= domain[i]
+            while i < n and value >= _domain[i]
                 i++
             return i-1
         return 0
 
-    validValue: (value) ->
-        not isNaN(value)
+    classifyValue = (value) ->
+        val = value
+        if _domain.length > 2
+            n = _domain.length-1
+            i = getClass(value)
+            minc = _domain[0] + (_domain[1]-_domain[0]) * (0 + _spread * 0.5)  # center of 1st class
+            maxc = _domain[n-1] + (_domain[n]-_domain[n-1]) * (1 - _spread * 0.5)  # center of last class
+            val = _min + ((_domain[i] + (_domain[i+1] - _domain[i]) * 0.5 - minc) / (maxc-minc)) * (_max - _min)
+        val
 
+    getColor = (val) ->
+        if isNaN(val) then return _nacol
+        if _domain.length > 2
+            c = getClass val
+            f = c / (_numClasses-1)
+        else
+            f = f0 = (val - _min) / (_max - _min)
+            f = Math.min(1, Math.max(0, f))
 
-chroma.ColorScale = ColorScale
+        for i in [0.._pos.length-1]
+            p = _pos[i]
+            if f <= p
+                col = _colors[i]
+                break
+            if f >= p and i == _pos.length-1
+                col = _colors[i]
+                break
+            if f > p and f < _pos[i+1]
+                f = (f-p)/(_pos[i+1]-p)
+                col = chroma.interpolate _colors[i], _colors[i+1], f, _mode
+                break
+        col
 
+    setColors colors, positions
 
-# minimal multi-purpose interface
-chroma.scale = (colors, positions) ->
-    colscale = new chroma.ColorScale()
-    colscale.range colors, positions
-    out = false
+    # public interface
+
     f = (v) ->
-        c = colscale.get v
-        if out and c[out] then c[out]() else c
+        c = getColor v
+        if _out and c[_out] then c[_out]() else c
 
     f.domain = (domain, classes, mode='e', key) ->
         if not arguments.length
-            return colscale._domain
+            return _domain
         if classes?
             d = chroma.analyze domain, key
             if classes == 0
                 domain = [d.min, d.max]
             else
                 domain = chroma.limits d, mode, classes
-        colscale.domain domain
+        setDomain domain
         f
 
     f.mode = (_m) ->
         if not arguments.length
-            return colscale._mode
-        colscale._mode = _m
+            return _mode
+        _mode = _m
         f
 
-    f.range = (_colors, _pos) ->
-        colscale.range _colors, _pos
+    f.range = (colors, _pos) ->
+        setColors colors, _pos
         f
 
     f.out = (_o) ->
-        out = _o
+        _out = _o
         f
-
-    f.getColor = (val) ->
-        # introduced for backward compatiblity
-        f val
 
     f.spread = (val) ->
         if not arguments.length
-            return colscale._spread
-        colscale._spread = val
+            return _spread
+        _spread = val
         f
 
     f

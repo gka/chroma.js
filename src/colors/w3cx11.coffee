@@ -6,7 +6,6 @@
 
 
 root = (exports ? this)
-chroma = root.chroma ?= {}
 
 chroma.colors = colors =
     indigo: "#4b0082"

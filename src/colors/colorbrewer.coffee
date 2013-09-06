@@ -18,7 +18,6 @@
 ###
 
 root = (exports ? this)	
-chroma = root.chroma ?= {}
 
 chroma.brewer = brewer =
 	# sequential
