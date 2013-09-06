@@ -1,27 +1,29 @@
 # Initializing colors
 
-## chroma.color(a, b, c, mode)
+## chroma(a, b, c, [a], [mode])
 
 Generic color factory. Returns an instance of chroma.Color. mode defaults to "rgb".
 
 The following calls all return the same color (red #ff0000):
 
 ```javascript
-chroma.color("red");
-chroma.color("#ff0000");
-chroma.color("#f00");
-chroma.color("FF0000");
-chroma.color(255, 0, 0);
-chroma.color([255, 0, 0]);
-chroma.color(0, 1, 0.5, 'hsl');
-chroma.color([0, 1, 0.5], 'hsl');
-chroma.color(0, 1, 1, 'hsv');
-chroma.color("rgb(255,0,0)");
-chroma.color("rgb(100%,0%,0%)");
-chroma.color("hsl(0,100%,50%)");   
-chroma.color(53.24, 80.09, 67.20, 'lab')
-chroma.color(53.24, 104.55, 40, 'lch')
+chroma("red");
+chroma("#ff0000");
+chroma("#f00");
+chroma("FF0000");
+chroma(255, 0, 0);
+chroma([255, 0, 0]);
+chroma(0, 1, 0.5, 'hsl');
+chroma([0, 1, 0.5], 'hsl');
+chroma(0, 1, 1, 'hsv');
+chroma("rgb(255,0,0)");
+chroma("rgb(100%,0%,0%)");
+chroma("hsl(0,100%,50%)");   
+chroma(53.24, 80.09, 67.20, 'lab')
+chroma(53.24, 104.55, 40, 'lch')
 ```
+
+
 ## chroma.hex() / chroma.css()
 
 Returns a color from a hex code or css color. Alias: **chroma.css()**
@@ -33,7 +35,7 @@ chroma.hex("rgb(255, 0, 0)");
 ```
 ## chroma.*xyz*()
 
-Creates a chroma.Color instance from a specific color space. Shortcut to *chroma.color(…, mode)*.
+Creates a chroma.Color instance from a specific color space. Shortcut to *chroma(…, mode)*.
 
 ```javascript
 chroma.rgb(255, 0, 0);
@@ -53,13 +55,13 @@ However you initialized the color, here's what you can do with it:
 Decreases the lightness of the color in *Lab* color space.
 
 ```javascript
-chroma.color('red').darken().hex()  // #BC0000
+chroma('red').darken().hex()  // #BC0000
 ```
 
 ## color.brighten(*amount*)
 
 ```javascript
-chroma.color('red').brighten().hex()  // #FF603B
+chroma('red').brighten().hex()  // #FF603B
 ```
 
 ## color.saturate(*amount*)
@@ -67,7 +69,7 @@ chroma.color('red').brighten().hex()  // #FF603B
 Returns a more saturated variation of the color.
 
 ```javascript
-chroma.color('#eecc99').saturate().hex() // #fcc973
+chroma('#eecc99').saturate().hex() // #fcc973
 ```
 
 ## color.desaturate(*amount*)
@@ -75,7 +77,7 @@ chroma.color('#eecc99').saturate().hex() // #fcc973
 Returns a less saturated variation of the color.
 
 ```javascript
-chroma.color('red').desaturate().hex() // #ec3d23
+chroma('red').desaturate().hex() // #ec3d23
 ```
 
 ## color.*xyz*()
@@ -83,12 +85,12 @@ chroma.color('red').desaturate().hex() // #ec3d23
 Returns the color components for a specific color space:
 
 ```javascript
-chroma.color('red').hex()  // "#FF0000""
-chroma.color('red').rgb()  // [255, 0, 0]
-chroma.color('red').hsv()  // [0, 1, 1]
-chroma.color('red').hsl()  // [0, 1, 0.5]
-chroma.color('red').lab()  // [53.2407, 80.0924, 67.2031]
-chroma.color('red').lch()  // [53.2407, 104.5517, 39.9990]
+chroma('red').hex()  // "#FF0000""
+chroma('red').rgb()  // [255, 0, 0]
+chroma('red').hsv()  // [0, 1, 1]
+chroma('red').hsl()  // [0, 1, 0.5]
+chroma('red').lab()  // [53.2407, 80.0924, 67.2031]
+chroma('red').lch()  // [53.2407, 104.5517, 39.9990]
 ```
 
 ## color.luminance()
@@ -96,9 +98,19 @@ chroma.color('red').lch()  // [53.2407, 104.5517, 39.9990]
 Returns the [relative luminance](http://www.w3.org/TR/WCAG20/#relativeluminancedef) of the color, which is a value between 0 (black) and 1 (white).
 
 ```javascript
-chroma.color('black').luminance() // 0
-chroma.color('white').luminance() // 1
-chroma.color('red').luminance() // 0.2126
+chroma('black').luminance() // 0
+chroma('white').luminance() // 1
+chroma('red').luminance() // 0.2126
+```
+
+## chroma.luminance
+
+Shortcut for the above
+
+```javascript
+chroma.luminance('black') // 0
+chroma.luminance('white') // 1
+chroma.luminance('#ff0000') // 0.2126
 ```
 
 ## chroma.contrast(a, b)
@@ -108,6 +120,18 @@ Returns the [contrast ratio](http://www.w3.org/TR/WCAG20/#contrast-ratiodef) bet
 ```javascript
 chroma.contrast('white', 'navy')  // 16.00 – ok
 chroma.contrast('white', 'yellow')  // 1.07 – not ok!
+```
+
+## chroma.interpolate(color1, color2, f, mode)
+
+Interpolates between two colors in the given mode.
+
+```
+chroma.interpolate('white', 'black', 0)  // #ffffff
+chroma.interpolate('white', 'black', 1)  // #000000
+chroma.interpolate('white', 'black', 0.5)  // #7f7f7f
+chroma.interpolate('white', 'black', 0.5, 'hsv')  // #808080
+chroma.interpolate('white', 'black', 0.5, 'lab')  // #777777
 ```
 
 # Working with color scales
