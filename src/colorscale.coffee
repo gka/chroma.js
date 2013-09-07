@@ -55,19 +55,20 @@ chroma.scale = (colors, positions) ->
             colors = ['#ddd', '#222']
         if colors? and type(colors) == 'string' and chroma.brewer?[colors]?
             colors = chroma.brewer[colors]
-        # make a copy of the colors
-        colors = colors.slice(0)
-        # convert to chroma classes
-        for c in [0..colors.length-1]
-            col = colors[c]
-            colors[c] = chroma(col) if type(col) == "string"
-        # auto-fill color position
-        if positions?
-            _pos = positions
-        else
-            _pos = []
+        if type(colors) == 'array'
+            # make a copy of the colors
+            colors = colors.slice(0)
+            # convert to chroma classes
             for c in [0..colors.length-1]
-                _pos.push c/(colors.length-1)
+                col = colors[c]
+                colors[c] = chroma(col) if type(col) == "string"
+            # auto-fill color position
+            if positions?
+                _pos = positions
+            else
+                _pos = []
+                for c in [0..colors.length-1]
+                    _pos.push c/(colors.length-1)
         _colors = colors
 
     setDomain = (domain = []) ->
@@ -111,18 +112,21 @@ chroma.scale = (colors, positions) ->
             f = f0 = (val - _min) / (_max - _min)
             f = Math.min(1, Math.max(0, f))
 
-        for i in [0.._pos.length-1]
-            p = _pos[i]
-            if f <= p
-                col = _colors[i]
-                break
-            if f >= p and i == _pos.length-1
-                col = _colors[i]
-                break
-            if f > p and f < _pos[i+1]
-                f = (f-p)/(_pos[i+1]-p)
-                col = chroma.interpolate _colors[i], _colors[i+1], f, _mode
-                break
+        if type(_colors) == 'array'
+            for i in [0.._pos.length-1]
+                p = _pos[i]
+                if f <= p
+                    col = _colors[i]
+                    break
+                if f >= p and i == _pos.length-1
+                    col = _colors[i]
+                    break
+                if f > p and f < _pos[i+1]
+                    f = (f-p)/(_pos[i+1]-p)
+                    col = chroma.interpolate _colors[i], _colors[i+1], f, _mode
+                    break
+        else if type(_colors) == 'function'
+            col = _colors f
         col
 
     setColors colors, positions
