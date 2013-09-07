@@ -29,6 +29,9 @@
         "scale(['lightyellow', 'navy']).mode('hsv')",
         "scale(['lightyellow', 'navy']).mode('hsl')",
         "scale(['lightyellow', 'navy']).mode('hsi')",
+        "scale(['white', 'darkred']).mode('lab')",
+        "scale(['white', 'yellow', 'orange', 'darkred']).mode('lab')",
+        "scale(['darkred', 'orange', 'snow', 'lightgreen', 'royalblue']).mode('lab')",
         "scale('RdYlGn').domain([0, 1], 9)",
         "scale('RdYlGn')",
         "scale(['#A50026', '#FFFFBF', '#006837']).mode('lab')",
@@ -62,21 +65,9 @@
         showScale(eval("chroma." + s), d, s.indexOf("log") > 0);
     }
 
-    // var c0 = chroma.color('A50026'),
-    //     c1 = chroma.color('006837'),
-    //     c;
 
-    // console.log(c0.hsi(), c1.hsi());
-
-    // for (var i=0; i<=1; i+= 0.05) {
-    //     c = c0.interpolate(i,c1,'hsi');
-    //     console.log(c.hsi()[0].toFixed(0), c.rgb()[1].toFixed(0));
-    //     document.write('<div style="width:20px;height:20px;display:inline-block;background:'+c+'"></div>');
-    // }
 
     </script>
-
-
 
 </body>
 </html>
