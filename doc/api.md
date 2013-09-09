@@ -64,9 +64,53 @@ This also works with colors with alpha channel:
 chroma.interpolate('rgba(0,0,0,0)', 'rgba(255,0,0,1)', 0.5).css()  //"rgba(127.5,0,0,0.5)"
 ```
 
-# Working with colors
+## chroma.interpolate.bezier(colors)
 
-However you initialized the color, here's what you can do with it:
+Colors can be also be interpolates between two other colors in a given mode.
+
+```
+bezInterpolator = chroma.interpolate.bezier(['white', 'yellow', 'red', 'black']);
+bezInterpolator(0).hex()  // #ffffff
+bezInterpolator(0.33).hex()  // #ffcc67
+bezInterpolator(0.66).hex()  // #b65f1a
+bezInterpolator(1).hex()  // #000000
+```
+
+# Working with chroma.colors
+
+Here's what you can do with it:
+
+* [color.hex|css|rgb|hsv|hsl|lab|lch()](#colorxxx)
+* [color.alpha()](#coloralpha)
+* [color.darker()](#colordarkeramount)
+* [color.brighter()](#colorbrighteramount)
+* [color.saturate()](#colorsaturateamount)
+* [color.desaturate()](#colordesaturateamount)
+* [color.luminance()](#colorluminance)
+
+## color.*xxx*()
+
+Returns the color components for a specific color space:
+
+```javascript
+chroma('red').hex()  // "#FF0000""
+chroma('red').rgb()  // [255, 0, 0]
+chroma('red').hsv()  // [0, 1, 1]
+chroma('red').hsl()  // [0, 1, 0.5]
+chroma('red').lab()  // [53.2407, 80.0924, 67.2031]
+chroma('red').lch()  // [53.2407, 104.5517, 39.9990]
+chroma('red').rgba()  // [255, 0, 0, 1]
+```
+
+## color.alpha()
+
+Returns or sets the colors alpha value.
+
+```
+var red = chroma('red');
+red.alpha(0.5);
+red.css();  // rgba(255,0,0,0.5);
+```
 
 ## color.darker(*amount*)
 
@@ -76,7 +120,7 @@ Decreases the lightness of the color in *Lab* color space.
 chroma('red').darken().hex()  // #BC0000
 ```
 
-## color.brighten(*amount*)
+## color.brighter(*amount*)
 
 ```javascript
 chroma('red').brighten().hex()  // #FF603B
@@ -98,20 +142,6 @@ Returns a less saturated variation of the color.
 chroma('red').desaturate().hex() // #ec3d23
 ```
 
-## color.*xyz*()
-
-Returns the color components for a specific color space:
-
-```javascript
-chroma('red').hex()  // "#FF0000""
-chroma('red').rgb()  // [255, 0, 0]
-chroma('red').hsv()  // [0, 1, 1]
-chroma('red').hsl()  // [0, 1, 0.5]
-chroma('red').lab()  // [53.2407, 80.0924, 67.2031]
-chroma('red').lch()  // [53.2407, 104.5517, 39.9990]
-chroma('red').rgba()  // [255, 0, 0, 1]
-```
-
 ## color.luminance()
 
 Returns the [relative luminance](http://www.w3.org/TR/WCAG20/#relativeluminancedef) of the color, which is a value between 0 (black) and 1 (white).
@@ -122,36 +152,6 @@ chroma('white').luminance() // 1
 chroma('red').luminance() // 0.2126
 ```
 
-## color.alpha()
-
-Returns or sets the colors alpha value.
-
-```
-var red = chroma('red');
-red.alpha(0.5);
-red.css();  // rgba(255,0,0,0.5);
-```
-
-# Useful methods
-
-## chroma.luminance
-
-Shortcut for the color.luminance()
-
-```javascript
-chroma.luminance('black') // 0
-chroma.luminance('white') // 1
-chroma.luminance('#ff0000') // 0.2126
-```
-
-## chroma.contrast(a, b)
-
-Returns the [contrast ratio](http://www.w3.org/TR/WCAG20/#contrast-ratiodef) between two given colors. According to the [Web Content Accessibility Guidelines](http://www.w3.org/TR/WCAG20) the contrast between background and small text [should be at least](http://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast) 4.5 : 1.
-
-```javascript
-chroma.contrast('white', 'navy')  // 16.00 – ok
-chroma.contrast('white', 'yellow')  // 1.07 – not ok!
-```
 
 # Working with color scales
 
@@ -250,4 +250,35 @@ If you need to change the color range after initializing the color scale.
 
 ```javascript
 chroma.scale().range(['lightyellow', 'navy']);
+```
+
+### scale.correctLightness()
+
+As of version 0.5.2 chroma.scale supports automatic lightness correction of color scales.
+
+**Important note:** The lightness correction only works for sequential color scales, where the input colors are ordered by lightness. So this won’t work for diverging color scales, yet.
+
+```javascript
+chroma.scale(['lightyellow', 'navy']).correctLightness(true);
+```
+
+# Useful methods
+
+## chroma.luminance
+
+Shortcut for the color.luminance()
+
+```javascript
+chroma.luminance('black') // 0
+chroma.luminance('white') // 1
+chroma.luminance('#ff0000') // 0.2126
+```
+
+## chroma.contrast(a, b)
+
+Returns the [contrast ratio](http://www.w3.org/TR/WCAG20/#contrast-ratiodef) between two given colors. According to the [Web Content Accessibility Guidelines](http://www.w3.org/TR/WCAG20) the contrast between background and small text [should be at least](http://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast) 4.5 : 1.
+
+```javascript
+chroma.contrast('white', 'navy')  // 16.00 – ok
+chroma.contrast('white', 'yellow')  // 1.07 – not ok!
 ```
