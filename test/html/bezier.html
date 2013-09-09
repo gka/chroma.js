@@ -8,10 +8,10 @@
 
     <script type="text/javascript">
 
-    function showInterpolator(I, outerdiv) {
-        var c = document.createElement('div'),
-            totalW = 800,
-            steps = 13;
+    function showGradient(I, outerdiv, steps) {
+        var I = chroma.interpolate.bezier(c),
+            c = document.createElement('div'),
+            totalW = 800;
         for (var i=0; i < steps; i++) {
             var d = document.createElement('div');
             d.style.display = 'inline-block';
@@ -40,7 +40,7 @@
         d.style.position = 'relative';
         document.body.appendChild(d);
         d.innerHTML = "<div style='position:absolute;top:5px;left:10px;opacity:0.9;color:#000;text-shadow:-1px -1px 0px rgba(255,255,255,0.3), 1px 1px 0px rgba(255,255,255,0.3), -1px 1px 0px rgba(255,255,255,0.3), 1px -1px 0px rgba(255,255,255,0.3)'><code>" + c + "</code></div>";
-        showInterpolator(chroma.interpolate.bezier(c), d);
+        showGradient(colors, d, 13);
     }
 
 
