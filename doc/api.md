@@ -88,7 +88,7 @@ Here's what you can do with it:
 * [color.desaturate()](#colordesaturateamount)
 * [color.luminance()](#colorluminance)
 
-## color.*xxx*()
+### color.*xxx*()
 
 Returns the color components for a specific color space:
 
@@ -102,7 +102,7 @@ chroma('red').lch()  // [53.2407, 104.5517, 39.9990]
 chroma('red').rgba()  // [255, 0, 0, 1]
 ```
 
-## color.alpha()
+### color.alpha()
 
 Returns or sets the colors alpha value.
 
@@ -112,7 +112,7 @@ red.alpha(0.5);
 red.css();  // rgba(255,0,0,0.5);
 ```
 
-## color.darker(*amount*)
+### color.darker(*amount*)
 
 Decreases the lightness of the color in *Lab* color space.
 
@@ -120,13 +120,13 @@ Decreases the lightness of the color in *Lab* color space.
 chroma('red').darken().hex()  // #BC0000
 ```
 
-## color.brighter(*amount*)
+### color.brighter(*amount*)
 
 ```javascript
 chroma('red').brighten().hex()  // #FF603B
 ```
 
-## color.saturate(*amount*)
+### color.saturate(*amount*)
 
 Returns a more saturated variation of the color.
 
@@ -134,7 +134,7 @@ Returns a more saturated variation of the color.
 chroma('#eecc99').saturate().hex() // #fcc973
 ```
 
-## color.desaturate(*amount*)
+### color.desaturate(*amount*)
 
 Returns a less saturated variation of the color.
 
@@ -142,7 +142,7 @@ Returns a less saturated variation of the color.
 chroma('red').desaturate().hex() // #ec3d23
 ```
 
-## color.luminance()
+### color.luminance()
 
 Returns the [relative luminance](http://www.w3.org/TR/WCAG20/#relativeluminancedef) of the color, which is a value between 0 (black) and 1 (white).
 
