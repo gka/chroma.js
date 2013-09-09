@@ -625,6 +625,33 @@
 
   Z = 1.088830;
 
+  chroma.cie = {
+    K: function(k) {
+      if (arguments.length) {
+        K = k;
+      }
+      return K;
+    },
+    X: function(x) {
+      if (arguments.length) {
+        X = x;
+      }
+      return X;
+    },
+    Y: function(y) {
+      if (arguments.length) {
+        Y = y;
+      }
+      return Y;
+    },
+    Z: function(z) {
+      if (arguments.length) {
+        Z = z;
+      }
+      return Z;
+    }
+  };
+
   lab2lch = function() {
     var a, b, c, h, l, _ref;
 
@@ -884,7 +911,7 @@
 
 
   chroma.scale = function(colors, positions) {
-    var classifyValue, f, getClass, getColor, setColors, setDomain, _colors, _domain, _fixed, _max, _min, _mode, _nacol, _numClasses, _out, _pos, _spread;
+    var classifyValue, f, getClass, getColor, setColors, setDomain, tmap, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _numClasses, _out, _pos, _spread;
 
     _mode = 'rgb';
     _nacol = chroma('#ccc');
@@ -896,6 +923,7 @@
     _pos = [];
     _min = 0;
     _max = 1;
+    _correctLightness = false;
     _numClasses = 0;
     setColors = function(colors, positions) {
       var c, col, _i, _j, _ref, _ref1, _ref2;
@@ -956,6 +984,9 @@
       }
       return 0;
     };
+    tmap = function(t) {
+      return t;
+    };
     classifyValue = function(value) {
       var i, maxc, minc, n, val;
 
@@ -969,38 +1000,44 @@
       }
       return val;
     };
-    getColor = function(val) {
-      var c, col, f, f0, i, p, _i, _ref;
+    getColor = function(val, bypassMap) {
+      var c, col, f0, i, p, t, _i, _ref;
 
+      if (bypassMap == null) {
+        bypassMap = false;
+      }
       if (isNaN(val)) {
         return _nacol;
       }
       if (_domain.length > 2) {
         c = getClass(val);
-        f = c / (_numClasses - 1);
+        t = c / (_numClasses - 1);
       } else {
-        f = f0 = (val - _min) / (_max - _min);
-        f = Math.min(1, Math.max(0, f));
+        t = f0 = (val - _min) / (_max - _min);
+        t = Math.min(1, Math.max(0, t));
+      }
+      if (!bypassMap) {
+        t = tmap(t);
       }
       if (type(_colors) === 'array') {
         for (i = _i = 0, _ref = _pos.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
           p = _pos[i];
-          if (f <= p) {
+          if (t <= p) {
             col = _colors[i];
             break;
           }
-          if (f >= p && i === _pos.length - 1) {
+          if (t >= p && i === _pos.length - 1) {
             col = _colors[i];
             break;
           }
-          if (f > p && f < _pos[i + 1]) {
-            f = (f - p) / (_pos[i + 1] - p);
-            col = chroma.interpolate(_colors[i], _colors[i + 1], f, _mode);
+          if (t > p && t < _pos[i + 1]) {
+            t = (t - p) / (_pos[i + 1] - p);
+            col = chroma.interpolate(_colors[i], _colors[i + 1], t, _mode);
             break;
           }
         }
       } else if (type(_colors) === 'function') {
-        col = _colors(f);
+        col = _colors(t);
       }
       return col;
     };
@@ -1055,6 +1092,49 @@
         return _spread;
       }
       _spread = val;
+      return f;
+    };
+    f.correctLightness = function(v) {
+      if (!arguments.length) {
+        return _correctLightness;
+      }
+      _correctLightness = v;
+      if (_correctLightness) {
+        tmap = function(t) {
+          var L0, L1, L_actual, L_diff, L_ideal, max_iter, pol, t0, t1;
+
+          L0 = getColor(0, true).lab()[0];
+          L1 = getColor(1, true).lab()[0];
+          pol = L0 > L1;
+          L_actual = getColor(t, true).lab()[0];
+          L_ideal = L0 + (L1 - L0) * t;
+          L_diff = L_actual - L_ideal;
+          t0 = 0;
+          t1 = 1;
+          max_iter = 20;
+          while (Math.abs(L_diff) > 1e-2 && max_iter-- > 0) {
+            (function() {
+              if (pol) {
+                L_diff *= -1;
+              }
+              if (L_diff < 0) {
+                t0 = t;
+                t += (t1 - t) * 0.5;
+              } else {
+                t1 = t;
+                t += (t0 - t) * 0.5;
+              }
+              L_actual = getColor(t, true).lab()[0];
+              return L_diff = L_actual - L_ideal;
+            })();
+          }
+          return t;
+        };
+      } else {
+        tmap = function(t) {
+          return t;
+        };
+      }
       return f;
     };
     return f;
