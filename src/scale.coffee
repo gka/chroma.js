@@ -46,6 +46,7 @@ chroma.scale = (colors, positions) ->
     _pos = []
     _min = 0
     _max = 1
+    _correctLightness = false
     _numClasses = 0
 
     # private methods
@@ -93,6 +94,8 @@ chroma.scale = (colors, positions) ->
             return i-1
         return 0
 
+    tmap = (t) -> t
+
     classifyValue = (value) ->
         val = value
         if _domain.length > 2
@@ -103,30 +106,33 @@ chroma.scale = (colors, positions) ->
             val = _min + ((_domain[i] + (_domain[i+1] - _domain[i]) * 0.5 - minc) / (maxc-minc)) * (_max - _min)
         val
 
-    getColor = (val) ->
+    getColor = (val, bypassMap=false) ->
         if isNaN(val) then return _nacol
         if _domain.length > 2
             c = getClass val
-            f = c / (_numClasses-1)
+            t = c / (_numClasses-1)
         else
-            f = f0 = (val - _min) / (_max - _min)
-            f = Math.min(1, Math.max(0, f))
+            t = f0 = (val - _min) / (_max - _min)
+            t = Math.min(1, Math.max(0, t))
+
+        if not bypassMap
+            t = tmap t  # lightness correction
 
         if type(_colors) == 'array'
             for i in [0.._pos.length-1]
                 p = _pos[i]
-                if f <= p
+                if t <= p
                     col = _colors[i]
                     break
-                if f >= p and i == _pos.length-1
+                if t >= p and i == _pos.length-1
                     col = _colors[i]
                     break
-                if f > p and f < _pos[i+1]
-                    f = (f-p)/(_pos[i+1]-p)
-                    col = chroma.interpolate _colors[i], _colors[i+1], f, _mode
+                if t > p and t < _pos[i+1]
+                    t = (t-p)/(_pos[i+1]-p)
+                    col = chroma.interpolate _colors[i], _colors[i+1], t, _mode
                     break
         else if type(_colors) == 'function'
-            col = _colors f
+            col = _colors t
         col
 
     setColors colors, positions
@@ -169,6 +175,36 @@ chroma.scale = (colors, positions) ->
         _spread = val
         f
 
+    f.correctLightness = (v) ->
+        if not arguments.length
+            return _correctLightness
+        _correctLightness = v
+        if _correctLightness
+            tmap = (t) ->
+                L0 = getColor(0, true).lab()[0]
+                L1 = getColor(1, true).lab()[0]
+                pol = L0 > L1
+                L_actual = getColor(t, true).lab()[0]
+                L_ideal = L0 + (L1 - L0) * t
+                L_diff = L_actual - L_ideal
+                t0 = 0
+                t1 = 1
+                max_iter = 20
+                while Math.abs(L_diff) > 1e-2 and max_iter-- > 0
+                    do () ->
+                        L_diff *= -1 if pol
+                        if L_diff < 0
+                            t0 = t
+                            t += (t1 - t) * 0.5
+                        else
+                            t1 = t
+                            t += (t0 - t) * 0.5
+                        L_actual = getColor(t, true).lab()[0]
+                        L_diff = L_actual - L_ideal
+                t
+        else
+            tmap = (t) -> t
+        f
     f
 
 # some pre-defined color scales:
