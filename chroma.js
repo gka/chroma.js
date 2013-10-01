@@ -625,33 +625,6 @@
 
   Z = 1.088830;
 
-  chroma.cie = {
-    K: function(k) {
-      if (arguments.length) {
-        K = k;
-      }
-      return K;
-    },
-    X: function(x) {
-      if (arguments.length) {
-        X = x;
-      }
-      return X;
-    },
-    Y: function(y) {
-      if (arguments.length) {
-        Y = y;
-      }
-      return Y;
-    },
-    Z: function(z) {
-      if (arguments.length) {
-        Z = z;
-      }
-      return Z;
-    }
-  };
-
   lab2lch = function() {
     var a, b, c, h, l, _ref;
 
@@ -1009,12 +982,16 @@
       if (isNaN(val)) {
         return _nacol;
       }
-      if (_domain.length > 2) {
-        c = getClass(val);
-        t = c / (_numClasses - 1);
+      if (!bypassMap) {
+        if (_domain.length > 2) {
+          c = getClass(val);
+          t = c / (_numClasses - 1);
+        } else {
+          t = f0 = (val - _min) / (_max - _min);
+          t = Math.min(1, Math.max(0, t));
+        }
       } else {
-        t = f0 = (val - _min) / (_max - _min);
-        t = Math.min(1, Math.max(0, t));
+        t = val;
       }
       if (!bypassMap) {
         t = tmap(t);

@@ -108,12 +108,15 @@ chroma.scale = (colors, positions) ->
 
     getColor = (val, bypassMap=false) ->
         if isNaN(val) then return _nacol
-        if _domain.length > 2
-            c = getClass val
-            t = c / (_numClasses-1)
+        if not bypassMap
+            if _domain.length > 2
+                c = getClass val
+                t = c / (_numClasses-1)
+            else
+                t = f0 = (val - _min) / (_max - _min)
+                t = Math.min(1, Math.max(0, t))
         else
-            t = f0 = (val - _min) / (_max - _min)
-            t = Math.min(1, Math.max(0, t))
+            t = val
 
         if not bypassMap
             t = tmap t  # lightness correction
