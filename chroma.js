@@ -884,7 +884,7 @@
 
 
   chroma.scale = function(colors, positions) {
-    var classifyValue, f, getClass, getColor, setColors, setDomain, tmap, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _numClasses, _out, _pos, _spread;
+    var classifyValue, f, getClass, getColor, resetCache, setColors, setDomain, tmap, _colorCache, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _numClasses, _out, _pos, _spread;
 
     _mode = 'rgb';
     _nacol = chroma('#ccc');
@@ -898,6 +898,7 @@
     _max = 1;
     _correctLightness = false;
     _numClasses = 0;
+    _colorCache = {};
     setColors = function(colors, positions) {
       var c, col, _i, _j, _ref, _ref1, _ref2;
 
@@ -924,6 +925,7 @@
           }
         }
       }
+      resetCache();
       return _colors = colors;
     };
     setDomain = function(domain) {
@@ -938,6 +940,7 @@
       _domain = domain;
       _min = domain[0];
       _max = domain[domain.length - 1];
+      resetCache();
       if (domain.length === 2) {
         return _numClasses = 0;
       } else {
@@ -974,7 +977,7 @@
       return val;
     };
     getColor = function(val, bypassMap) {
-      var c, col, f0, i, p, t, _i, _ref;
+      var c, col, f0, i, k, p, t, _i, _ref;
 
       if (bypassMap == null) {
         bypassMap = false;
@@ -996,27 +999,36 @@
       if (!bypassMap) {
         t = tmap(t);
       }
-      if (type(_colors) === 'array') {
-        for (i = _i = 0, _ref = _pos.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-          p = _pos[i];
-          if (t <= p) {
-            col = _colors[i];
-            break;
+      k = Math.floor(t * 10000);
+      if (_colorCache[k]) {
+        col = _colorCache[k];
+      } else {
+        if (type(_colors) === 'array') {
+          for (i = _i = 0, _ref = _pos.length - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+            p = _pos[i];
+            if (t <= p) {
+              col = _colors[i];
+              break;
+            }
+            if (t >= p && i === _pos.length - 1) {
+              col = _colors[i];
+              break;
+            }
+            if (t > p && t < _pos[i + 1]) {
+              t = (t - p) / (_pos[i + 1] - p);
+              col = chroma.interpolate(_colors[i], _colors[i + 1], t, _mode);
+              break;
+            }
           }
-          if (t >= p && i === _pos.length - 1) {
-            col = _colors[i];
-            break;
-          }
-          if (t > p && t < _pos[i + 1]) {
-            t = (t - p) / (_pos[i + 1] - p);
-            col = chroma.interpolate(_colors[i], _colors[i + 1], t, _mode);
-            break;
-          }
+        } else if (type(_colors) === 'function') {
+          col = _colors(t);
         }
-      } else if (type(_colors) === 'function') {
-        col = _colors(t);
+        _colorCache[k] = col;
       }
       return col;
+    };
+    resetCache = function() {
+      return _colorCache = {};
     };
     setColors(colors, positions);
     f = function(v) {
@@ -1054,6 +1066,7 @@
         return _mode;
       }
       _mode = _m;
+      resetCache();
       return f;
     };
     f.range = function(colors, _pos) {
@@ -1076,6 +1089,7 @@
         return _correctLightness;
       }
       _correctLightness = v;
+      resetCache();
       if (_correctLightness) {
         tmap = function(t) {
           var L0, L1, L_actual, L_diff, L_ideal, max_iter, pol, t0, t1;

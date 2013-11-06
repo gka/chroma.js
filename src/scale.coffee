@@ -48,6 +48,7 @@ chroma.scale = (colors, positions) ->
     _max = 1
     _correctLightness = false
     _numClasses = 0
+    _colorCache = {}
 
     # private methods
 
@@ -70,6 +71,7 @@ chroma.scale = (colors, positions) ->
                 _pos = []
                 for c in [0..colors.length-1]
                     _pos.push c/(colors.length-1)
+        resetCache()
         _colors = colors
 
     setDomain = (domain = []) ->
@@ -80,6 +82,7 @@ chroma.scale = (colors, positions) ->
         _domain = domain
         _min = domain[0]
         _max = domain[domain.length-1]
+        resetCache()
         if domain.length == 2
             _numClasses = 0
         else
@@ -121,22 +124,31 @@ chroma.scale = (colors, positions) ->
         if not bypassMap
             t = tmap t  # lightness correction
 
-        if type(_colors) == 'array'
-            for i in [0.._pos.length-1]
-                p = _pos[i]
-                if t <= p
-                    col = _colors[i]
-                    break
-                if t >= p and i == _pos.length-1
-                    col = _colors[i]
-                    break
-                if t > p and t < _pos[i+1]
-                    t = (t-p)/(_pos[i+1]-p)
-                    col = chroma.interpolate _colors[i], _colors[i+1], t, _mode
-                    break
-        else if type(_colors) == 'function'
-            col = _colors t
+        k = Math.floor(t * 10000)
+
+        if _colorCache[k]
+            col = _colorCache[k]
+        else
+            if type(_colors) == 'array'
+                for i in [0.._pos.length-1]
+                    p = _pos[i]
+                    if t <= p
+                        col = _colors[i]
+                        break
+                    if t >= p and i == _pos.length-1
+                        col = _colors[i]
+                        break
+                    if t > p and t < _pos[i+1]
+                        t = (t-p)/(_pos[i+1]-p)
+                        col = chroma.interpolate _colors[i], _colors[i+1], t, _mode
+                        break
+            else if type(_colors) == 'function'
+                col = _colors t
+            _colorCache[k] = col
         col
+
+    resetCache = () ->
+        _colorCache = {}
 
     setColors colors, positions
 
@@ -162,6 +174,7 @@ chroma.scale = (colors, positions) ->
         if not arguments.length
             return _mode
         _mode = _m
+        resetCache()
         f
 
     f.range = (colors, _pos) ->
@@ -182,6 +195,7 @@ chroma.scale = (colors, positions) ->
         if not arguments.length
             return _correctLightness
         _correctLightness = v
+        resetCache()
         if _correctLightness
             tmap = (t) ->
                 L0 = getColor(0, true).lab()[0]
@@ -208,6 +222,7 @@ chroma.scale = (colors, positions) ->
         else
             tmap = (t) -> t
         f
+
     f
 
 # some pre-defined color scales:
