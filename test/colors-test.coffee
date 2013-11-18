@@ -63,4 +63,8 @@ vows
             topic: chroma.interpolate 'lightyellow', 'navy', 0.5, 'hsl'
             'hex': (topic) -> assert.equal topic.hex(), '#31ff98'
 
+        'premultiply':
+            topic: chroma 'rgba(32, 48, 96, 0.5)'
+            'premultiply': (topic) -> assert.deepEqual topic.premultiply().rgba(), [16, 24, 48, 0.5]
+
     .export(module)
