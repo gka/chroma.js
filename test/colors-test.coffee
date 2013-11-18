@@ -65,6 +65,7 @@ vows
 
         'premultiply':
             topic: chroma 'rgba(32, 48, 96, 0.5)'
-            'premultiply': (topic) -> assert.deepEqual topic.premultiply().rgba(), [16, 24, 48, 0.5]
+            'premultiply rgba': (topic) -> assert.deepEqual topic.premultiply().rgba(), [16, 24, 48, 0.5]
+            'premultiply hex': (topic) -> assert.equal topic.premultiply().hex(), '#101830'
 
     .export(module)
