@@ -48,6 +48,10 @@
     return new Color(h, s, i, 'hsi');
   };
 
+  chroma.gl = function(r, g, b, a) {
+    return new Color(r * 255, g * 255, b * 255, a, 'gl');
+  };
+
   chroma.interpolate = function(a, b, f, m) {
     if ((a == null) || (b == null)) {
       return '#000';
@@ -176,6 +180,8 @@
       }
       if (m === 'rgb') {
         me._rgb = [x, y, z, a];
+      } else if (m === 'gl') {
+        me._rgb = [x * 255, y * 255, z * 255, a];
       } else if (m === 'hsl') {
         me._rgb = hsl2rgb(x, y, z);
         me._rgb[3] = a;
@@ -231,6 +237,10 @@
 
     Color.prototype.hsi = function() {
       return rgb2hsi(this._rgb);
+    };
+
+    Color.prototype.gl = function() {
+      return [this._rgb[0] / 255, this._rgb[1] / 255, this._rgb[2] / 255, this._rgb[3]];
     };
 
     Color.prototype.luminance = function() {

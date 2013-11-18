@@ -19,8 +19,9 @@ chroma(0, 1, 1, 'hsv');
 chroma("rgb(255,0,0)");
 chroma("rgb(100%,0%,0%)");
 chroma("hsl(0,100%,50%)");
-chroma(53.24, 80.09, 67.20, 'lab')
-chroma(53.24, 104.55, 40, 'lch')
+chroma(53.24, 80.09, 67.20, 'lab');
+chroma(53.24, 104.55, 40, 'lch');
+chroma(1, 0, 0, 'gl');
 ```
 
 
@@ -43,8 +44,8 @@ chroma.hsl(0, 1, 0.5);
 chroma.hsv(120, 0.5, 0.5);
 chroma.lab(53.24, 80.09, 67.20);
 chroma.lch(53.24, 104.55, 40);
+chroma.gl(1, 0, 0);
 ```
-
 
 ## chroma.interpolate(color1, color2, f, mode)
 
