@@ -53,6 +53,10 @@ vows
             'rgb output': (topic) -> assert.deepEqual topic.rgb(), [255,0,0]
             'rgba output': (topic) -> assert.deepEqual topic.rgba(), [255,0,0,0.25]
 
+        'gl output':
+            topic: -> chroma.gl 1, 0, 0, 0.25
+            'gloutput': (topic) -> assert.deepEqual topic.gl(), [1, 0, 0, 0.25]
+
         'rgba css output':
             topic: -> chroma.css 'hsla(0,100%,50%,0.25)'
             'cssoutput': -> (topic) -> assert.equal topic.css(), 'rgba(255,0,0,0.25)'
