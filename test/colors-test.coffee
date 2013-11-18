@@ -26,6 +26,16 @@ vows
             'hex': (topic) -> assert.equal topic.hex(), '#ff0000'
             'rgb': (topic) -> assert.deepEqual topic.rgb(), [255,0,0]
 
+        'gl color':
+            topic: chroma.gl 1,0,0
+            'name': (topic) -> assert.equal topic.name(), 'red'
+            'hex': (topic) -> assert.equal topic.hex(), '#ff0000'
+            'rgb': (topic) -> assert.deepEqual topic.rgb(), [255,0,0]
+
+        'gl color w/ alpha':
+            topic: chroma.gl 0,0,1,0.5
+            'rgba': (topic) -> assert.deepEqual topic.rgba(), [0,0,255,0.5]
+
         'modify colors':
             topic: chroma 'F00'
             'darken': (topic) -> assert.equal topic.darken(10).hex(), '#dd0000'
