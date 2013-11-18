@@ -90,6 +90,8 @@ class Color
         # create color
         if m == 'rgb'
             me._rgb = [x,y,z,a]
+        else if m == 'gl'
+            me._rgb = [x*255,y*255,z*255,a]
         else if m == 'hsl'
             me._rgb = hsl2rgb x,y,z
             me._rgb[3] = a
@@ -136,6 +138,9 @@ class Color
 
     hsi: ->
         rgb2hsi @_rgb
+
+    gl: ->
+        [@_rgb[0]/255, @_rgb[1]/255, @_rgb[2]/255, @_rgb[3]]
 
     luminance: ->
         luminance @_rgb

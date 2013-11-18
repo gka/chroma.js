@@ -39,6 +39,9 @@ chroma.lch = (l,c,h) ->
 chroma.hsi = (h,s,i) ->
     new Color h,s,i,'hsi'
 
+chroma.gl = (r,g,b,a) ->
+    new Color r*255,g*255,b*255,a,'gl'
+
 chroma.interpolate = (a,b,f,m) ->
     if not a? or not b?
         return '#000'
