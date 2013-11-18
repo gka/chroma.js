@@ -392,6 +392,14 @@
       return res;
     };
 
+    Color.prototype.premultiply = function() {
+      var a, rgb;
+
+      rgb = this.rgb();
+      a = this.alpha();
+      return chroma(rgb[0] * a, rgb[1] * a, rgb[2] * a, a);
+    };
+
     Color.prototype.darken = function(amount) {
       var lch, me;
 
