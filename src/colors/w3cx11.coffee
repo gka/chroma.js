@@ -5,8 +5,6 @@
 ###
 
 
-root = (exports ? this)
-
 chroma.colors = colors =
     indigo: "#4b0082"
     gold: "#ffd700"

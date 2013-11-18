@@ -1477,8 +1477,6 @@
   */
 
 
-  root = typeof exports !== "undefined" && exports !== null ? exports : this;
-
   chroma.brewer = brewer = {
     OrRd: ['#fff7ec', '#fee8c8', '#fdd49e', '#fdbb84', '#fc8d59', '#ef6548', '#d7301f', '#b30000', '#7f0000'],
     PuBu: ['#fff7fb', '#ece7f2', '#d0d1e6', '#a6bddb', '#74a9cf', '#3690c0', '#0570b0', '#045a8d', '#023858'],
@@ -1523,8 +1521,6 @@
   	http://www.w3.org/TR/css3-color/#svg-color
   */
 
-
-  root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
   chroma.colors = colors = {
     indigo: "#4b0082",

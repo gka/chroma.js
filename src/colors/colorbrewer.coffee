@@ -17,7 +17,6 @@
     @preserve
 ###
 
-root = (exports ? this)	
 
 chroma.brewer = brewer =
 	# sequential
