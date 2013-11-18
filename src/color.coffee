@@ -246,6 +246,11 @@ class Color
         res.alpha me.alpha() + f * (col.alpha() - me.alpha())
         res
 
+    premultiply: ->
+        rgb = @rgb()
+        a = @alpha()
+        chroma(rgb[0]*a, rgb[1]*a, rgb[2]*a, a)
+
     darken: (amount=20) ->
         me = @
         lch = me.lch()
