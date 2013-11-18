@@ -223,6 +223,19 @@ chroma.scale = (colors, positions) ->
             tmap = (t) -> t
         f
 
+    f.colors = (out='hex') ->
+        # returns all colors based on the defined classes
+        colors = []
+        samples = []
+        if _domain.length > 2
+            for i in [1..._domain.length]
+                samples.push (_domain[i-1]+_domain[i])*0.5
+        else
+            samples = _domain
+        for i in samples
+            colors.push f(i)[out]()
+        colors
+
     f
 
 # some pre-defined color scales:

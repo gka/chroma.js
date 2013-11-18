@@ -1187,6 +1187,27 @@
       }
       return f;
     };
+    f.colors = function(out) {
+      var i, samples, _i, _j, _len, _ref;
+
+      if (out == null) {
+        out = 'hex';
+      }
+      colors = [];
+      samples = [];
+      if (_domain.length > 2) {
+        for (i = _i = 1, _ref = _domain.length; 1 <= _ref ? _i < _ref : _i > _ref; i = 1 <= _ref ? ++_i : --_i) {
+          samples.push((_domain[i - 1] + _domain[i]) * 0.5);
+        }
+      } else {
+        samples = _domain;
+      }
+      for (_j = 0, _len = samples.length; _j < _len; _j++) {
+        i = samples[_j];
+        colors.push(f(i)[out]());
+      }
+      return colors;
+    };
     return f;
   };
 

@@ -20,6 +20,14 @@ vows
             'starts white': (topic) -> assert.equal topic(0).hex(), '#ffffff'
             'mid gray': (topic) -> assert.equal topic(0.5).hex(), '#808080'
             'ends black': (topic) -> assert.equal topic(1).hex(), '#000000'
+            'colors': (topic) -> assert.deepEqual topic.colors(), ['#ffffff', '#000000']
+
+        'simple hsv scale (white-->black), classified':
+            topic: -> chroma.scale(['white','black']).domain([0, 1], 7).mode('hsv')
+            'starts white': (topic) -> assert.equal topic(0).hex(), '#ffffff'
+            'mid gray': (topic) -> assert.equal topic(0.5).hex(), '#808080'
+            'ends black': (topic) -> assert.equal topic(1).hex(), '#000000'
+            'colors': (topic) -> assert.deepEqual topic.colors(), ['#ffffff', '#d5d5d5', '#aaaaaa', '#808080', '#555555', '#2a2a2a', '#000000']
 
         'simple lab scale (white-->black)':
             topic: -> chroma.scale(['white','black']).mode('lab')
@@ -46,6 +54,7 @@ vows
             '10': (topic) -> assert.equal topic(10).hex(), '#a50026'
             'mid gray': (topic) -> assert.equal topic(50).hex(), '#ffffbf'
             'ends black': (topic) -> assert.equal topic(100).hex(), '#006837'
+            'get colors': (topic) -> assert.deepEqual topic.colors(), ['#a50026', '#f88d52', '#ffffbf', '#86cb66', '#006837']
 
         'calling domain with no arguments':
             topic: -> chroma.scale('RdYlGn').domain([0, 100], 5)
