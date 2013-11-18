@@ -1,12 +1,15 @@
 
-root = (exports ? this)
-
-chroma = root.chroma = (x,y,z,m)->
+chroma = (x,y,z,m) ->
     new Color x,y,z,m
 
-# Browserify-compatible export
-module.exports = chroma if module?
+# CommonJS module is defined
+module.exports = chroma if module? and module.exports?
 
+if typeof define == 'function' and define.amd
+    define [], () -> chroma
+else
+    root = (exports ? this)
+    root.chroma = chroma
 
 #
 # static constructors
