@@ -45,9 +45,28 @@ vows
             'saturate': (topic) -> assert.equal topic.saturate().hex(), '#ff0000'
             'desaturate': (topic) -> assert.equal topic.desaturate().hex(), '#ec3d23'
 
-        'css colors':
+        'parsing css color rgb':
             topic: chroma 'rgb(255,0,0)'
             'hex': (topic) -> assert.equal topic.hex(), '#ff0000'
+
+        'parsing rgba css color':
+            topic: chroma 'rgba(128,0,128,0.5)'
+            'hex': (topic) -> assert.equal topic.hex(), '#800080'
+            'alpha': (topic) -> assert.equal topic.alpha(), 0.5
+            'css': (topic) -> assert.equal topic.css(), 'rgba(128,0,128,0.5)'
+
+        'parsing hsla css color':
+            topic: chroma 'hsla(240,100%,50%,0.5)'
+            'hex': (topic) -> assert.equal topic.hex(), '#0000ff'
+            'alpha': (topic) -> assert.equal topic.alpha(), 0.5
+            'css': (topic) -> assert.equal topic.css(), 'rgba(0,0,255,0.5)'
+
+        'hsla color':
+            topic: chroma 'lightsalmon'
+            'css (default)': (topic) -> assert.equal topic.css(), 'rgb(255,160,122)'
+            'css (rgb)': (topic) -> assert.equal topic.css('rgb'), 'rgb(255,160,122)'
+            'css (hsl)': (topic) -> assert.equal chroma(topic.css('hsl')).name(), 'lightsalmon'
+            'css (rgb-css)': (topic) -> assert.equal chroma(topic.css('rgb')).name(), 'lightsalmon'
 
         'rgb color':
             topic: chroma 255,0,0
@@ -77,5 +96,11 @@ vows
             topic: chroma 'rgba(32, 48, 96, 0.5)'
             'premultiply rgba': (topic) -> assert.deepEqual topic.premultiply().rgba(), [16, 24, 48, 0.5]
             'premultiply hex': (topic) -> assert.equal topic.premultiply().hex(), '#101830'
+
+        'toString':
+            topic: chroma '#adff2f'
+            'explicit': (topic) -> assert.equal topic.toString(), 'greenyellow'
+            'implicit': (topic) -> assert.equal ''+topic, 'greenyellow'
+            'implicit2': (topic) -> assert.equal String(topic), 'greenyellow'
 
     .export(module)
