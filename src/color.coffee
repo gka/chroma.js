@@ -122,7 +122,7 @@ class Color
         rgb2hex @_rgb
 
     toString: ->
-        @hex()
+        @name()
 
     hsl: ->
         rgb2hsl @_rgb
