@@ -100,7 +100,12 @@ chroma('red').hsv()  // [0, 1, 1]
 chroma('red').hsl()  // [0, 1, 0.5]
 chroma('red').lab()  // [53.2407, 80.0924, 67.2031]
 chroma('red').lch()  // [53.2407, 104.5517, 39.9990]
-chroma('red').rgba()  // [255, 0, 0, 1]
+chroma('red').rgba() // [255, 0, 0, 1]
+chroma('red').css()  // "rgb(255,0,0)"
+chroma('red').alpha(0.7).css()  // "rgba(255,0,0,0.7)"
+chroma('red').css('hsl')        // "hsl(0,100%,50%)"
+chroma('red').alpha(0.7).css('hsl')  // "hsla(0,100%,50%,0.7)"
+chroma('blue').css('hsla') // "hsla(240,100%,50%,1)"
 ```
 
 ### color.alpha()
