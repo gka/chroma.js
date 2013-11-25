@@ -257,7 +257,7 @@
     };
 
     Color.prototype.toString = function() {
-      return this.hex();
+      return this.name();
     };
 
     Color.prototype.hsl = function() {
@@ -308,11 +308,33 @@
       return this._rgb[3];
     };
 
-    Color.prototype.css = function() {
-      if (this._rgb[3] < 1) {
-        return 'rgba(' + this._rgb.join(',') + ')';
-      } else {
-        return 'rgb(' + this._rgb.slice(0, 3).join(',') + ')';
+    Color.prototype.css = function(mode) {
+      var hsl, me, rgb, rnd;
+
+      if (mode == null) {
+        mode = 'rgb';
+      }
+      me = this;
+      rgb = me._rgb;
+      if (mode.length === 3 && rgb[3] < 1) {
+        mode += 'a';
+      }
+      if (mode === 'rgb') {
+        return mode + '(' + rgb.slice(0, 3).join(',') + ')';
+      } else if (mode === 'rgba') {
+        return mode + '(' + rgb.join(',') + ')';
+      } else if (mode === 'hsl' || mode === 'hsla') {
+        hsl = me.hsl();
+        rnd = function(a) {
+          return Math.round(a * 100) / 100;
+        };
+        hsl[0] = rnd(hsl[0]);
+        hsl[1] = rnd(hsl[1] * 100) + '%';
+        hsl[2] = rnd(hsl[2] * 100) + '%';
+        if (mode.length === 4) {
+          hsl[3] = rgb[3];
+        }
+        return mode + '(' + hsl.join(',') + ')';
       }
     };
 
@@ -497,25 +519,25 @@
       for (i = _j = 0; _j <= 3; i = ++_j) {
         rgb[i] = +rgb[i];
       }
-    } else if (m = css.match(/rgb\(\s*(\-?\d+)%,\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*\)/)) {
+    } else if (m = css.match(/rgb\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/)) {
       rgb = m.slice(1, 4);
       for (i = _k = 0; _k <= 2; i = ++_k) {
         rgb[i] = Math.round(rgb[i] * 2.55);
       }
       rgb[3] = 1;
-    } else if (m = css.match(/rgba\(\s*(\-?\d+)%,\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
+    } else if (m = css.match(/rgba\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
       rgb = m.slice(1, 5);
       for (i = _l = 0; _l <= 2; i = ++_l) {
         rgb[i] = Math.round(rgb[i] * 2.55);
       }
       rgb[3] = +rgb[3];
-    } else if (m = css.match(/hsl\(\s*(\-?\d+),\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*\)/)) {
+    } else if (m = css.match(/hsl\(\s*(\-?\d+(?:\.\d+)?),\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/)) {
       hsl = m.slice(1, 4);
       hsl[1] *= 0.01;
       hsl[2] *= 0.01;
       rgb = hsl2rgb(hsl);
       rgb[3] = 1;
-    } else if (m = css.match(/hsla\(\s*(\-?\d+),\s*(\-?\d+)%\s*,\s*(\-?\d+)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
+    } else if (m = css.match(/hsla\(\s*(\-?\d+(?:\.\d+)?),\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
       hsl = m.slice(1, 4);
       hsl[1] *= 0.01;
       hsl[2] *= 0.01;
