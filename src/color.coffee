@@ -158,11 +158,24 @@ class Color
             return @
         @_rgb[3]
 
-    css: () ->
-        if @_rgb[3] < 1
-            'rgba('+@_rgb.join(',')+')'
-        else
-            'rgb('+@_rgb.slice(0,3).join(',')+')'
+    css: (mode='rgb') ->
+        me = @
+        rgb = me._rgb
+        if mode.length == 3 and rgb[3] < 1
+            mode += 'a'
+        if mode == 'rgb'
+            mode+'('+rgb.slice(0,3).join(',')+')'
+        else if mode == 'rgba'
+            mode+'('+rgb.join(',')+')'
+        else if mode == 'hsl' or mode == 'hsla'
+            hsl = me.hsl()
+            rnd = (a) -> Math.round(a*100)/100
+            hsl[0] = rnd(hsl[0])
+            hsl[1] = rnd(hsl[1]*100) + '%'
+            hsl[2] = rnd(hsl[2]*100) + '%'
+            if mode.length == 4
+                hsl[3] = rgb[3]
+            mode + '(' + hsl.join(',') + ')'
 
     interpolate: (f, col, m) ->
         ###
