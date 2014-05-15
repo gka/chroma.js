@@ -73,4 +73,9 @@ Versions prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-
 
 ### Known issues
 
-* HSI color conversion (experimental) produces weird results sometimes
+* HSI color conversion is experimental and produces weird results sometimes
+
+### Further reading
+
+* [How To Avoid Equidistant HSV Colors](https://vis4.net/blog/posts/avoid-equidistant-hsv-colors/)
+* [Mastering Multi-hued Color Scales with Chroma.js](https://vis4.net/blog/posts/mastering-multi-hued-color-scales/)

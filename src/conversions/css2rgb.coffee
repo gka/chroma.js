@@ -1,5 +1,6 @@
 
 css2rgb = (css) ->
+    css = css.toLowerCase()
     # named X11 colors
     if chroma.colors? and chroma.colors[css]
         return hex2rgb chroma.colors[css]
