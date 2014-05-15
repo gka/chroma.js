@@ -19,3 +19,6 @@ chroma.js: license.coffee src/api.coffee src/color.coffee src/conversions/*.coff
 
 chroma.min.js: chroma.js
 	@uglifyjs --comments "@license" chroma.js > $@
+
+test: chroma.js
+	@npm test
