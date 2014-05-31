@@ -57,7 +57,7 @@ To run the tests simply run
 ### Similar Libraries / Prior Art
 
 * [Chromatist](https://github.com/jrus/chromatist)
-* [GrapeFruit](http://code.google.com/p/grapefruit/) (Python)
+* [GrapeFruit](https://github.com/xav/Grapefruit) (Python)
 * [colors.py](https://github.com/mattrobenolt/colors.py) (Python)
 * [d3.js](https://github.com/mbostock/d3)
 
