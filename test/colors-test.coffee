@@ -103,4 +103,8 @@ vows
             'implicit': (topic) -> assert.equal ''+topic, 'greenyellow'
             'implicit2': (topic) -> assert.equal String(topic), 'greenyellow'
 
+        'constructing with array, but no mode':
+            topic: chroma [255, 0, 0]
+            'falls back to rgb': (topic) -> assert.equal topic.hex(), chroma([255, 0, 0],'rgb').hex()
+
     .export(module)

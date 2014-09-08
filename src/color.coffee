@@ -53,7 +53,7 @@ class Color
                 [x,y,z,a] = args[0]
             else
                 throw 'unknown input argument'
-            m = args[1]
+            m = args[1] ? 'rgb'
 
         else if type(args[0]) == "string"  # Color('#ff0000')
             # named color, hex color, css color

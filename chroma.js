@@ -138,7 +138,7 @@
 
   Color = (function() {
     function Color() {
-      var a, arg, args, m, me, me_rgb, x, y, z, _i, _len, _ref, _ref1, _ref2, _ref3;
+      var a, arg, args, m, me, me_rgb, x, y, z, _i, _len, _ref, _ref1, _ref2, _ref3, _ref4;
 
       me = this;
       args = [];
@@ -159,12 +159,12 @@
         } else {
           throw 'unknown input argument';
         }
-        m = args[1];
+        m = (_ref3 = args[1]) != null ? _ref3 : 'rgb';
       } else if (type(args[0]) === "string") {
         x = args[0];
         m = 'hex';
       } else if (type(args[0]) === "object") {
-        _ref3 = args[0]._rgb, x = _ref3[0], y = _ref3[1], z = _ref3[2], a = _ref3[3];
+        _ref4 = args[0]._rgb, x = _ref4[0], y = _ref4[1], z = _ref4[2], a = _ref4[3];
         m = 'rgb';
       } else if (args.length >= 3) {
         x = args[0];
