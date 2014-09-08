@@ -103,4 +103,11 @@ vows
             'implicit': (topic) -> assert.equal ''+topic, 'greenyellow'
             'implicit2': (topic) -> assert.equal String(topic), 'greenyellow'
 
+        'white interpolation in hsv':
+            topic: () ->
+                (t) -> chroma.interpolate('#ff0000', '#ffffff', t, 'hsv').hex()
+            'starts at red': (topic) -> assert.equal topic(0), '#ff0000'
+            'goes over light red': (topic) -> assert.equal topic(0.5), '#ff9999'
+            'ends at white': (topic) -> assert.equal topic(1), '#ffffff'
+
     .export(module)
