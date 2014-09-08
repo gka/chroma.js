@@ -356,12 +356,12 @@
           hue = hue0 + f * dh;
         } else if (!isNaN(hue0)) {
           hue = hue0;
-          if (lbv1 === 1 || lbv1 === 0) {
+          if ((lbv1 === 1 || lbv1 === 0) && m !== 'hsv') {
             sat = sat0;
           }
         } else if (!isNaN(hue1)) {
           hue = hue1;
-          if (lbv0 === 1 || lbv0 === 0) {
+          if ((lbv0 === 1 || lbv0 === 0) && m !== 'hsv') {
             sat = sat1;
           }
         } else {

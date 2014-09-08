@@ -219,10 +219,10 @@ class Color
                 hue = hue0+f*dh
             else if not isNaN(hue0)
                 hue = hue0
-                sat = sat0 if lbv1 == 1 or lbv1 == 0
+                sat = sat0 if (lbv1 == 1 or lbv1 == 0) and m != 'hsv'
             else if not isNaN(hue1)
                 hue = hue1
-                sat = sat1 if lbv0 == 1 or lbv0 == 0
+                sat = sat1 if (lbv0 == 1 or lbv0 == 0) and m != 'hsv'
             else
                 hue = Number.NaN
 
