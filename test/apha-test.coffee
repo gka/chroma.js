@@ -33,6 +33,11 @@ vows
             'color is red': (topic) -> assert.equal topic.name(), 'red'
             'alpha is 50%': (topic) -> assert.equal topic.alpha(), 0.5
 
+        'constructing numeric color':
+            topic: -> chroma.num 0xff0000
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 100%': (topic) -> assert.equal topic.alpha(), 1
+
         'parsing rgba colors':
             topic: -> chroma.css 'rgba(255,0,0,.3)'
             'color is red': (topic) -> assert.equal topic.name(), 'red'
@@ -60,5 +65,9 @@ vows
         'rgba css output':
             topic: -> chroma.css 'hsla(0,100%,50%,0.25)'
             'cssoutput': -> (topic) -> assert.equal topic.css(), 'rgba(255,0,0,0.25)'
+
+        'number output':
+            topic: -> chroma.hsl 0,1,0.5,0.5
+            'numoutput': -> (topic) -> assert.equal topic.num(), 0xff0000
 
     .export(module)

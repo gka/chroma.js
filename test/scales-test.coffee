@@ -35,6 +35,12 @@ vows
             'mid gray': (topic) -> assert.equal topic(0.5).hex(), '#777777'
             'ends black': (topic) -> assert.equal topic(1).hex(), '#000000'
 
+        'simple num scale (white-->black)':
+            topic: -> chroma.scale(['white','black']).mode('num')
+            'starts white': (topic) -> assert.equal topic(0).hex(), '#ffffff'
+            'mid gray': (topic) -> assert.equal topic(0.5).hex(), '#7f7f7f'
+            'ends black': (topic) -> assert.equal topic(1).hex(), '#000000'
+
         'colorbrewer scale':
             topic: -> chroma.scale 'RdYlGn'
             'starts white': (topic) -> assert.equal topic(0).hex(), '#a50026'
