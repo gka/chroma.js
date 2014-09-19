@@ -45,11 +45,14 @@ chroma.hsi = (h,s,i) ->
 chroma.gl = (r,g,b,a) ->
     new Color r*255,g*255,b*255,a,'gl'
 
+chroma.num = (n) ->
+    new Color n, 'num'
+
 chroma.interpolate = (a,b,f,m) ->
     if not a? or not b?
         return '#000'
-    a = new Color a if type(a) == 'string'
-    b = new Color b if type(b) == 'string'
+    a = new Color a if type(a) in ['string', 'number']
+    b = new Color b if type(b) in ['string', 'number']
     a.interpolate f,b,m
 
 chroma.mix = chroma.interpolate
