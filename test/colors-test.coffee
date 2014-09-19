@@ -92,10 +92,26 @@ vows
             topic: chroma.interpolate 'lightyellow', 'navy', 0.5, 'hsl'
             'hex': (topic) -> assert.equal topic.hex(), '#31ff98'
 
+        'num color':
+            topic: [chroma(0xff0000), chroma(0x000000), chroma(0xffffff), chroma(0x31ff98)]
+            'hex': (topic) -> assert.equal topic[0].hex(), '#ff0000'
+            'num': (topic) -> assert.equal topic[0].num(), 0xff0000
+            'hex-black': (topic) -> assert.equal topic[1].hex(), '#000000'
+            'num-black': (topic) -> assert.equal topic[1].num(), 0x000000
+            'hex-white': (topic) -> assert.equal topic[2].hex(), '#ffffff'
+            'num-white': (topic) -> assert.equal topic[2].num(), 0xffffff
+            'hex-rand': (topic) -> assert.equal topic[3].hex(), '#31ff98'
+            'num-rand': (topic) -> assert.equal topic[3].num(), 0x31ff98
+
+        'interpolate in num':
+            topic: chroma.interpolate chroma.num(0xffffe0), chroma.num(0x102180), 0.5, 'num'
+            'num': (topic) -> assert.equal topic.num(), 0x8790b0
+
         'premultiply':
             topic: chroma 'rgba(32, 48, 96, 0.5)'
             'premultiply rgba': (topic) -> assert.deepEqual topic.premultiply().rgba(), [16, 24, 48, 0.5]
             'premultiply hex': (topic) -> assert.equal topic.premultiply().hex(), '#101830'
+            'premultiply num': (topic) -> assert.equal topic.premultiply().num(), 0x101830
 
         'toString':
             topic: chroma '#adff2f'
