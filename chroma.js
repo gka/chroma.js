@@ -4,7 +4,7 @@
 
 
 (function() {
-  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, brewer, chroma, clip_rgb, colors, cos, css2rgb, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, limit, luminance, luminance_x, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb_xyz, root, type, unpack, xyz_lab, xyz_rgb, _ref;
+  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, brewer, chroma, clip_rgb, colors, cos, css2rgb, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, limit, luminance, luminance_x, num2rgb, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb_xyz, root, type, unpack, xyz_lab, xyz_rgb, _ref;
 
   chroma = function(x, y, z, m) {
     return new Color(x, y, z, m);
@@ -63,14 +63,20 @@
     return new Color(r * 255, g * 255, b * 255, a, 'gl');
   };
 
+  chroma.num = function(n) {
+    return new Color(n, 'num');
+  };
+
   chroma.interpolate = function(a, b, f, m) {
+    var _ref, _ref1;
+
     if ((a == null) || (b == null)) {
       return '#000';
     }
-    if (type(a) === 'string') {
+    if ((_ref = type(a)) === 'string' || _ref === 'number') {
       a = new Color(a);
     }
-    if (type(b) === 'string') {
+    if ((_ref1 = type(b)) === 'string' || _ref1 === 'number') {
       b = new Color(b);
     }
     return a.interpolate(f, b, m);
@@ -166,6 +172,9 @@
       } else if (type(args[0]) === "object") {
         _ref4 = args[0]._rgb, x = _ref4[0], y = _ref4[1], z = _ref4[2], a = _ref4[3];
         m = 'rgb';
+      } else if (args.length <= 2 && type(args[0]) === "number") {
+        x = args[0];
+        m = 'num';
       } else if (args.length >= 3) {
         x = args[0];
         y = args[1];
@@ -210,6 +219,8 @@
       } else if (m === 'hsi') {
         me._rgb = hsi2rgb(x, y, z);
         me._rgb[3] = a;
+      } else if (m === 'num') {
+        me._rgb = num2rgb(x);
       }
       me_rgb = clip_rgb(me._rgb);
     }
@@ -252,6 +263,10 @@
 
     Color.prototype.gl = function() {
       return [this._rgb[0] / 255, this._rgb[1] / 255, this._rgb[2] / 255, this._rgb[3]];
+    };
+
+    Color.prototype.num = function() {
+      return rgb2num(this._rgb);
     };
 
     Color.prototype.luminance = function() {
@@ -380,6 +395,13 @@
         xyz0 = me._rgb;
         xyz1 = col._rgb;
         res = new Color(xyz0[0] + f * (xyz1[0] - xyz0[0]), xyz0[1] + f * (xyz1[1] - xyz0[1]), xyz0[2] + f * (xyz1[2] - xyz0[2]), m);
+      } else if (m === 'num') {
+        if (!(col instanceof Color)) {
+          col = new Color(col, m);
+        }
+        xyz0 = me._rgb;
+        xyz1 = col._rgb;
+        res = new Color(((xyz0[0] + f * (xyz1[0] - xyz0[0])) << 16) + ((xyz0[1] + f * (xyz1[1] - xyz0[1])) << 8) + ((xyz0[2] + f * (xyz1[2] - xyz0[2])) & 0xff), m);
       } else if (m === 'lab') {
         xyz0 = me.lab();
         xyz1 = col.lab();
@@ -763,6 +785,18 @@
     }
   };
 
+  num2rgb = function(num) {
+    var b, g, r;
+
+    if (type(num) === "number" && num >= 0 && num <= 0xFFFFFF) {
+      r = num >> 16;
+      g = (num >> 8) & 0xFF;
+      b = num & 0xFF;
+      return [r, g, b, 1];
+    }
+    throw "unknown num color: " + num;
+  };
+
   rgb2hex = function() {
     var b, g, r, str, u, _ref;
 
@@ -899,6 +933,13 @@
     _ref = unpack(arguments), r = _ref[0], g = _ref[1], b = _ref[2];
     _ref1 = rgb2lab(r, g, b), l = _ref1[0], a = _ref1[1], b = _ref1[2];
     return lab2lch(l, a, b);
+  };
+
+  rgb2num = function() {
+    var b, g, r, _ref;
+
+    _ref = unpack(arguments), r = _ref[0], g = _ref[1], b = _ref[2];
+    return (r << 16) + (g << 8) + b;
   };
 
   /*
