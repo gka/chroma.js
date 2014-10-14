@@ -21,5 +21,13 @@
         "uglify-js"     : "2.x",
         "coffee-script" : "1.2",
         "vows": "0.7.x"
+    },
+    "spm": {
+        "main": "chroma.js",
+        "ignore": [
+            "src",
+            "doc",
+            "test"
+        ]
     }
 }
