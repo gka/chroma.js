@@ -77,7 +77,7 @@ chroma.analyze = (data, key, filter) ->
 
 
 chroma.limits = (data, mode='equal', num=7) ->
-    if not data.values?
+    if type(data) == 'array'
         data = chroma.analyze data
     min = data.min
     max = data.max

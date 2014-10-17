@@ -1316,7 +1316,7 @@
     if (num == null) {
       num = 7;
     }
-    if (data.values == null) {
+    if (type(data) === 'array') {
       data = chroma.analyze(data);
     }
     min = data.min;
