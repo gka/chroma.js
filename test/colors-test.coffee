@@ -107,4 +107,12 @@ vows
             topic: chroma [255, 0, 0]
             'falls back to rgb': (topic) -> assert.equal topic.hex(), chroma([255, 0, 0],'rgb').hex()
 
+        'css rgb colors':
+            topic: chroma.scale("YlGnBu")(0.3).css()
+            'have rounded rgb() values': (topic) -> assert.equal topic, 'rgb(170,222,183)'
+
+        'css rgba colors':
+            topic: chroma.scale("YlGnBu")(0.3).alpha(0.675).css()
+            'dont round alpha value': (topic) -> assert.equal topic, 'rgba(170,222,183,0.675)'
+
     .export(module)
