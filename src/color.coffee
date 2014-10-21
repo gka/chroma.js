@@ -164,9 +164,9 @@ class Color
         if mode.length == 3 and rgb[3] < 1
             mode += 'a'
         if mode == 'rgb'
-            mode+'('+rgb.slice(0,3).join(',')+')'
+            mode+'('+rgb.slice(0,3).map(Math.round).join(',')+')'
         else if mode == 'rgba'
-            mode+'('+rgb.join(',')+')'
+            mode+'('+rgb.slice(0,3).map(Math.round).join(',')+','+rgb[3]+')'
         else if mode == 'hsl' or mode == 'hsla'
             hsl = me.hsl()
             rnd = (a) -> Math.round(a*100)/100
