@@ -33,5 +33,13 @@
     "es6-shim": "^0.18.0",
     "uglify-js": "2.x",
     "vows": "0.7.x"
+  },
+  "spm": {
+    "main": "chroma.js",
+    "ignore": [
+      "src",
+      "doc",
+      "test"
+    ]
   }
 }
