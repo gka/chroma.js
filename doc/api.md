@@ -128,6 +128,8 @@ chroma('red').darken().hex()  // #BC0000
 
 ### color.brighten(*amount*)
 
+Increases the lightness of the color in *Lab* color space.
+
 ```javascript
 chroma('red').brighten().hex()  // #FF603B
 ```
