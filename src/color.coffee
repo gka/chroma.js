@@ -109,6 +109,9 @@ class Color
         else if m == 'hsi'
             me._rgb = hsi2rgb x,y,z
             me._rgb[3] = a
+        else if m == 'hsp'
+            me._rgb = hsp2rgb x,y,z
+            me._rgb[3] = a
 
         me_rgb = clip_rgb me._rgb
 
@@ -139,11 +142,17 @@ class Color
     hsi: ->
         rgb2hsi @_rgb
 
+    hsp: ->
+        rgb2hsp @_rgb
+
     gl: ->
         [@_rgb[0]/255, @_rgb[1]/255, @_rgb[2]/255, @_rgb[3]]
 
     luminance: ->
         luminance @_rgb
+
+    brightness: ->
+        brightness @_rgb
 
     name: ->
         h = @hex()

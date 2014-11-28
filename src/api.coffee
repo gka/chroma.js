@@ -42,6 +42,9 @@ chroma.lch = (l,c,h) ->
 chroma.hsi = (h,s,i) ->
     new Color h,s,i,'hsi'
 
+chroma.hsp = (h,s,p,a) ->
+    new Color h,s,p,a,'hsp'
+
 chroma.gl = (r,g,b,a) ->
     new Color r*255,g*255,b*255,a,'gl'
 
@@ -65,6 +68,9 @@ chroma.contrast = (a, b) ->
 
 chroma.luminance = (color) ->
     chroma(color).luminance()
+
+chroma.brightness = (color) ->
+    chroma(color).brightness()
 
 
 # exposing raw classes for testing purposes

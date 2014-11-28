@@ -16,6 +16,7 @@ chroma([255, 0, 0]);
 chroma(0, 1, 0.5, 'hsl');
 chroma([0, 1, 0.5], 'hsl');
 chroma(0, 1, 1, 'hsv');
+chroma(0, 1, 0.55, 'hsp')
 chroma("rgb(255,0,0)");
 chroma("rgb(100%,0%,0%)");
 chroma("hsl(0,100%,50%)");
@@ -42,6 +43,7 @@ Creates a chroma.Color instance from a specific color space. Shortcut to *chroma
 chroma.rgb(255, 0, 0);
 chroma.hsl(0, 1, 0.5);
 chroma.hsv(120, 0.5, 0.5);
+chroma.hsp(120, 0.5, 0.417);
 chroma.lab(53.24, 80.09, 67.20);
 chroma.lch(53.24, 104.55, 40);
 chroma.gl(1, 0, 0);
@@ -81,13 +83,14 @@ bezInterpolator(1).hex()  // #000000
 
 Here's what you can do with it:
 
-* [color.hex|css|rgb|hsv|hsl|lab|lch()](#colorxxx)
+* [color.hex|css|rgb|hsv|hsl|hsp|lab|lch()](#colorxxx)
 * [color.alpha()](#coloralpha)
 * [color.darker()](#colordarkeramount)
 * [color.brighter()](#colorbrighteramount)
 * [color.saturate()](#colorsaturateamount)
 * [color.desaturate()](#colordesaturateamount)
 * [color.luminance()](#colorluminance)
+* [color.brightness()](#colorbrightness)
 
 ### color.*xxx*()
 
@@ -98,6 +101,7 @@ chroma('red').hex()  // "#FF0000""
 chroma('red').rgb()  // [255, 0, 0]
 chroma('red').hsv()  // [0, 1, 1]
 chroma('red').hsl()  // [0, 1, 0.5]
+chroma('red').hsp()  // [0, 1, 0.5468089245796927]
 chroma('red').lab()  // [53.2407, 80.0924, 67.2031]
 chroma('red').lch()  // [53.2407, 104.5517, 39.9990]
 chroma('red').rgba() // [255, 0, 0, 1]
@@ -158,6 +162,16 @@ chroma('white').luminance() // 1
 chroma('red').luminance() // 0.2126
 ```
 
+### color.brightness()
+
+Returns the [perceived brightness](http://alienryderflex.com/hsp.html) of the color, which is a value between 0 (black) and 0.9999999999999999 (white).
+
+```javascript
+chroma('black').brightness() // 0
+chroma('white').brightness() // 0.9999999999999999
+chroma('red').brightness() // 0.5468089245796927
+```
+
 
 # Working with color scales
 
@@ -201,6 +215,7 @@ Specify in which color space the colors should be interpolated. Defaults to "rgb
 var scale = chroma.scale(['lightyellow', 'navy']);
 scale.mode('hsv')(0.5);  // #54C08A
 scale.mode('hsl')(0.5);  // #31FF98
+scale.mode('hsp')(0.5);  // #4db07e
 scale.mode('lab')(0.5);  // #967CB2
 scale.mode('lch')(0.5);  // #D26662
 ```
@@ -287,6 +302,16 @@ Shortcut for the color.luminance()
 chroma.luminance('black') // 0
 chroma.luminance('white') // 1
 chroma.luminance('#ff0000') // 0.2126
+```
+
+## chroma.brightness
+
+Shortcut for the color.brightness()
+
+```javascript
+chroma.brightness('black') // 0
+chroma.brightness('white') // 0.9999999999999999
+chroma.brightness('#ff0000') // 0.5468089245796927
 ```
 
 ## chroma.contrast(a, b)
