@@ -54,7 +54,7 @@ To compile the coffee-script source files you have to run
 
 To run the tests simply run
 
-    vows test/*.coffee
+    make test
 
 
 ### Similar Libraries / Prior Art
