@@ -158,12 +158,17 @@ chroma('white').luminance() // 1
 chroma('red').luminance() // 0.2126
 ```
 
+As of version 0.6.2 you can also set the luminance directly:
+
+```javascript
+chroma('#ff0000').luminance(0.4).hex() // #ff8585"
+```
 
 # Working with color scales
 
 ## chroma.scale()
 
-Creates a color scale function from the given set of colors. 
+Creates a color scale function from the given set of colors.
 
 ```javascript
 var scale = chroma.scale(['lightyellow', 'navy']);
@@ -237,7 +242,7 @@ Don't like linear scales? How about logarithmic stops?
 chroma.scale(['#eee', '#900']).domain([1, 1000000], 7, 'log');
 ```
 
-For more advanced techniques you need the actual dataset 
+For more advanced techniques you need the actual dataset
 
 ```javascript
 chroma.scale(['#eee', '#900']).domain(values, 5, 'quantiles');

@@ -142,8 +142,24 @@ class Color
     gl: ->
         [@_rgb[0]/255, @_rgb[1]/255, @_rgb[2]/255, @_rgb[3]]
 
-    luminance: ->
-        luminance @_rgb
+    luminance: (lum, mode='rgb') ->
+        return luminance @_rgb if !arguments.length
+        # set luminance
+        if lum == 0 then @_rgb = [0,0,0,@_rgb[3]]
+        if lum == 1 then @_rgb = [255,255,255,@_rgb[3]]
+        cur_lum = luminance @_rgb
+        eps = 1e-7
+        max_iter = 20
+        test = (l,h) ->
+            m = l.interpolate(0.5, h, mode)
+            lm = m.luminance()
+            if Math.abs(lum - lm) < eps or not max_iter--
+                return m
+            if lm > lum
+                return test(l, m)
+            return test(m, h)
+        @_rgb = (if cur_lum > lum then test(new Color('black'), @) else test(@, new Color('white'))).rgba()
+        @
 
     name: ->
         h = @hex()
