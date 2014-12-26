@@ -116,6 +116,7 @@ chroma.scale = (colors, positions) ->
                 c = getClass val
                 t = c / (_numClasses-1)
             else
+                t = f0 = if _min != _max then (val - _min) / (_max - _min) else 0
                 t = f0 = (val - _min) / (_max - _min)
                 t = Math.min(1, Math.max(0, t))
         else

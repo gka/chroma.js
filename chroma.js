@@ -1073,6 +1073,7 @@
           c = getClass(val);
           t = c / (_numClasses - 1);
         } else {
+          t = f0 = _min !== _max ? (val - _min) / (_max - _min) : 0;
           t = f0 = (val - _min) / (_max - _min);
           t = Math.min(1, Math.max(0, t));
         }

@@ -86,6 +86,11 @@ vows
             'colors are still strings': (colors) ->
                 assert.equal typeof colors[0], 'string'
 
+
+        'domain with same min and max':
+            topic: -> chroma.scale(['white','black']).domain([1, 1], 5)
+            'returns color': (topic) -> assert.deepEqual topic(1).hex(), '#000000'
+
         # 'fixed color scale':
         #     topic: ->
         #         cs = new chroma.ColorScale()
