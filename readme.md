@@ -18,7 +18,7 @@ scale = chroma.scale(['white', 'red']);
 scale(0.5).hex(); // #FF7F7F
 ```
 
-Lab/Lch interpolation looks better than than RGB
+Lab/Lch interpolation looks better than RGB
 
 ```javascript    
 chroma.scale(['white', 'red']).mode('lab');
