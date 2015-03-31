@@ -89,8 +89,8 @@ Here's what you can do with it:
 
 * [color.hex|css|rgb|hsv|hsl|lab|lch()](#colorxxx)
 * [color.alpha()](#coloralpha)
-* [color.darker()](#colordarkeramount)
-* [color.brighter()](#colorbrighteramount)
+* [color.darken()](#colordarkenamount)
+* [color.brighten()](#colorbrightenamount)
 * [color.saturate()](#colorsaturateamount)
 * [color.desaturate()](#colordesaturateamount)
 * [color.luminance()](#colorluminance)
@@ -124,7 +124,7 @@ red.alpha(0.5);
 red.css();  // rgba(255,0,0,0.5);
 ```
 
-### color.darker(*amount*)
+### color.darken(*amount*)
 
 Decreases the lightness of the color in *Lab* color space.
 
@@ -132,7 +132,9 @@ Decreases the lightness of the color in *Lab* color space.
 chroma('red').darken().hex()  // #BC0000
 ```
 
-### color.brighter(*amount*)
+### color.brighten(*amount*)
+
+Increases the lightness of the color in *Lab* color space.
 
 ```javascript
 chroma('red').brighten().hex()  // #FF603B
