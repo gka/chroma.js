@@ -47,6 +47,12 @@ chroma.lch(53.24, 104.55, 40);
 chroma.gl(1, 0, 0);
 ```
 
+Generates a random chroma.Color.
+
+```javascript
+chroma.random(); // color in range #000000 - #ffffff
+```
+
 ## chroma.interpolate(color1, color2, f, mode)
 
 Colors can be also be interpolates between two other colors in a given mode.

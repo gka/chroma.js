@@ -115,4 +115,8 @@ vows
             topic: chroma.scale("YlGnBu")(0.3).alpha(0.675).css()
             'dont round alpha value': (topic) -> assert.equal topic, 'rgba(170,222,183,0.675)'
 
+        'random colors':
+            topic: chroma.random()
+            'valid hex code': (topic) -> assert /^#[0-9a-f]{6}$/i.test(topic.hex())
+
     .export(module)

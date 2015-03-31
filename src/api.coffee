@@ -45,6 +45,12 @@ chroma.hsi = (h,s,i) ->
 chroma.gl = (r,g,b,a) ->
     new Color r*255,g*255,b*255,a,'gl'
 
+chroma.random = ->
+    digits = '0123456789abcdef'
+    code = '#'
+    code += digits.charAt(Math.floor(Math.random() * 16)) for i in [0...6]
+    new Color code
+
 chroma.interpolate = (a,b,f,m) ->
     if not a? or not b?
         return '#000'
