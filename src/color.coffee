@@ -64,6 +64,10 @@ class Color
             [x,y,z,a] = args[0]._rgb
             m = 'rgb'
 
+        else if args.length <= 2 and type(args[0]) == "number" # Color(0xff0000)
+            x = args[0]
+            m = 'num'
+
         else if args.length >= 3
             x = args[0]
             y = args[1]
@@ -109,7 +113,8 @@ class Color
         else if m == 'hsi'
             me._rgb = hsi2rgb x,y,z
             me._rgb[3] = a
-
+        else if m == 'num'
+            me._rgb = num2rgb x
         me_rgb = clip_rgb me._rgb
 
     rgb: ->
@@ -141,6 +146,9 @@ class Color
 
     gl: ->
         [@_rgb[0]/255, @_rgb[1]/255, @_rgb[2]/255, @_rgb[3]]
+
+    num: ->
+        rgb2num @_rgb
 
     luminance: (lum, mode='rgb') ->
         return luminance @_rgb if !arguments.length
@@ -257,6 +265,17 @@ class Color
                 xyz0[0]+f*(xyz1[0]-xyz0[0]),
                 xyz0[1] + f*(xyz1[1]-xyz0[1]),
                 xyz0[2] + f*(xyz1[2]-xyz0[2]),
+                m
+            )
+
+        else if m == 'num'
+            col = new Color(col, m) unless col instanceof Color
+            xyz0 = me._rgb
+            xyz1 = col._rgb
+            res = new Color(
+                ((xyz0[0] + f*(xyz1[0]-xyz0[0])) << 16) +
+                ((xyz0[1] + f*(xyz1[1]-xyz0[1])) << 8) +
+                ((xyz0[2] + f*(xyz1[2]-xyz0[2])) & 0xff),
                 m
             )
 

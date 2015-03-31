@@ -22,6 +22,8 @@ chroma("hsl(0,100%,50%)");
 chroma(53.24, 80.09, 67.20, 'lab');
 chroma(53.24, 104.55, 40, 'lch');
 chroma(1, 0, 0, 'gl');
+chroma(0xff0000);
+chroma(0xff0000, 'num');
 ```
 
 
@@ -45,6 +47,7 @@ chroma.hsv(120, 0.5, 0.5);
 chroma.lab(53.24, 80.09, 67.20);
 chroma.lch(53.24, 104.55, 40);
 chroma.gl(1, 0, 0);
+chroma.num(0xff0000);
 ```
 
 Generates a random chroma.Color.
@@ -87,7 +90,7 @@ bezInterpolator(1).hex()  // #000000
 
 Here's what you can do with it:
 
-* [color.hex|css|rgb|hsv|hsl|lab|lch()](#colorxxx)
+* [color.hex|css|rgb|hsv|hsl|lab|lch|num()](#colorxxx)
 * [color.alpha()](#coloralpha)
 * [color.darker()](#colordarkeramount)
 * [color.brighter()](#colorbrighteramount)
@@ -104,6 +107,7 @@ chroma('red').hex()  // "#FF0000""
 chroma('red').rgb()  // [255, 0, 0]
 chroma('red').hsv()  // [0, 1, 1]
 chroma('red').hsl()  // [0, 1, 0.5]
+chroma('red').num()  // 16711680 === 0xff0000
 chroma('red').lab()  // [53.2407, 80.0924, 67.2031]
 chroma('red').lch()  // [53.2407, 104.5517, 39.9990]
 chroma('red').rgba() // [255, 0, 0, 1]
@@ -212,6 +216,7 @@ Specify in which color space the colors should be interpolated. Defaults to "rgb
 var scale = chroma.scale(['lightyellow', 'navy']);
 scale.mode('hsv')(0.5);  // #54C08A
 scale.mode('hsl')(0.5);  // #31FF98
+scale.mode('num')(0.5);  // #54C08A
 scale.mode('lab')(0.5);  // #967CB2
 scale.mode('lch')(0.5);  // #D26662
 ```

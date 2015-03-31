@@ -96,6 +96,7 @@ vows
             topic: chroma 'rgba(32, 48, 96, 0.5)'
             'premultiply rgba': (topic) -> assert.deepEqual topic.premultiply().rgba(), [16, 24, 48, 0.5]
             'premultiply hex': (topic) -> assert.equal topic.premultiply().hex(), '#101830'
+            'premultiply num': (topic) -> assert.equal topic.premultiply().num(), 0x101830
 
         'toString':
             topic: chroma '#adff2f'
@@ -118,5 +119,30 @@ vows
         'random colors':
             topic: chroma.random()
             'valid hex code': (topic) -> assert /^#[0-9a-f]{6}$/i.test(topic.hex())
+
+        'constructing numeric color':
+            topic: chroma.num 0xff0000
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 100%': (topic) -> assert.equal topic.alpha(), 1
+
+        'number output':
+            topic: chroma.hsl 0,1,0.5,0.5
+            'numoutput': -> (topic) -> assert.equal topic.num(), 0xff0000
+
+        'num color':
+            topic: [chroma(0xff0000), chroma(0x000000), chroma(0xffffff), chroma(0x31ff98)]
+            'hex': (topic) -> assert.equal topic[0].hex(), '#ff0000'
+            'num': (topic) -> assert.equal topic[0].num(), 0xff0000
+            'hex-black': (topic) -> assert.equal topic[1].hex(), '#000000'
+            'num-black': (topic) -> assert.equal topic[1].num(), 0x000000
+            'hex-white': (topic) -> assert.equal topic[2].hex(), '#ffffff'
+            'num-white': (topic) -> assert.equal topic[2].num(), 0xffffff
+            'hex-rand': (topic) -> assert.equal topic[3].hex(), '#31ff98'
+            'num-rand': (topic) -> assert.equal topic[3].num(), 0x31ff98
+
+        'interpolate in num':
+            topic: chroma.interpolate chroma.num(0xffffe0), chroma.num(0x102180), 0.5, 'num'
+            'hex': (topic) -> assert.equal topic.hex(), '#8790b0'
+            'num': (topic) -> assert.equal topic.num(), 8884400
 
     .export(module)
