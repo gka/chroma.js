@@ -746,7 +746,7 @@
 
     _ref = unpack(arguments), l = _ref[0], a = _ref[1], b = _ref[2];
     c = Math.sqrt(a * a + b * b);
-    h = Math.atan2(b, a) / Math.PI * 180;
+    h = (Math.atan2(b, a) / Math.PI * 180 + 360) % 360;
     return [l, c, h];
   };
 

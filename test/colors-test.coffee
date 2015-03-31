@@ -145,4 +145,9 @@ vows
             'hex': (topic) -> assert.equal topic.hex(), '#8790b0'
             'num': (topic) -> assert.equal topic.num(), 8884400
 
+        'normalize hue':
+            topic: chroma.rgb(0,255,255).lch()
+            'hue > 0': (topic) -> assert topic[2] >= 0
+            'hue < 360': (topic) -> assert topic[2] <= 360
+
     .export(module)
