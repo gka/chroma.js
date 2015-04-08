@@ -20,7 +20,7 @@ hex2rgb = (hex) ->
         r = u >> 24 & 0xFF
         g = u >> 16 & 0xFF
         b = u >> 8 & 0xFF
-        a = u & 0xFF
+        a = Math.round((u & 0xFF) / 0xFF * 100) / 100
         return [r,g,b,a]
 
     # check for css colors, too
