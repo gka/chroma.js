@@ -123,8 +123,8 @@ class Color
     rgba: ->
         @_rgb
 
-    hex: ->
-        rgb2hex @_rgb
+    hex: (mode='rgb') ->
+        rgb2hex @_rgb, mode
 
     toString: ->
         @name()
@@ -322,6 +322,3 @@ class Color
 
     desaturate: (amount=20) ->
         @saturate -amount
-
-
-
