@@ -45,6 +45,43 @@ vows
             'saturate': (topic) -> assert.equal topic.saturate().hex(), '#ff0000'
             'desaturate': (topic) -> assert.equal topic.desaturate().hex(), '#ec3d23'
 
+        'modify colors via rgb':
+            topic: chroma 'F00'
+            'darken': (topic) -> assert.equal topic.darkenRgb(10).hex(), '#cc0000'
+            'brighten': (topic) -> assert.equal topic.brightenRgb(10).hex(), '#ff3333'
+            'saturate': (topic) -> assert.equal topic.saturateRgb().hex(), '#ff0000'
+            'desaturate': (topic) -> assert.equal topic.desaturateRgb().hex(), '#e61919'
+
+        'mix colors':
+            topic: chroma '123'
+            'mix via lch': (topic) -> assert.equal topic.mix(chroma '456').hex(), '#825952'
+            'mix via rgb': (topic) -> assert.equal topic.mixRgb(chroma '456').hex(), '#2a3b4c'
+
+        'multiply colors':
+            topic: chroma '123'
+            'multiply via lch': (topic) -> assert.equal topic.multiply(chroma '456').hex(), '#427d68'
+            'multiply via rgb': (topic) -> assert.equal topic.multiplyRgb(chroma '456').hex(), '#040b14'
+
+        'screen colors':
+            topic: chroma '123'
+            # 'screen via lch': (topic) -> assert.equal topic.screen(chroma '456').hex(), '#427d68'
+            'screen via rgb': (topic) -> assert.equal topic.screenRgb(chroma '456').hex(), '#506b84'
+
+        'overlay colors':
+            topic: chroma '123'
+            # 'overlay via lch': (topic) -> assert.equal topic.overlay(chroma '456').hex(), '#427d68'
+            'overlay via rgb': (topic) -> assert.equal topic.overlayRgb(chroma '456').hex(), '#091628'
+
+        'dodge colors':
+            topic: chroma '123'
+            # 'dodge via lch': (topic) -> assert.equal topic.dodge(chroma '456').hex(), '#427d68'
+            'dodge via rgb': (topic) -> assert.equal topic.dodgeRgb(chroma '456').hex(), '#48627f'
+
+        'burn colors':
+            topic: chroma '789'
+            # 'burn via lch': (topic) -> assert.equal topic.burn(topic).hex(), '#427d68'
+            'burn via rgb': (topic) -> assert.equal topic.burnRgb(topic).hex(), '#001f54'
+
         'parsing css color rgb':
             topic: chroma 'rgb(255,0,0)'
             'hex': (topic) -> assert.equal topic.hex(), '#ff0000'

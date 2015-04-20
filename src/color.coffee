@@ -52,7 +52,7 @@ class Color
             else if args[0].length == 4
                 [x,y,z,a] = args[0]
             else
-                throw 'unknown input argument'
+                throw "unknown input argument: #{args} (length #{args.length})"
             m = args[1] ? 'rgb'
 
         else if type(args[0]) == "string"  # Color('#ff0000')
@@ -299,6 +299,24 @@ class Color
         a = @alpha()
         chroma(rgb[0]*a, rgb[1]*a, rgb[2]*a, a)
 
+    mix: (color, amount=50) ->
+        me = @
+        meLch = me.lch()
+        colorLch = color.lch()
+        meAmount = amount / 100
+        colorAmount = 1 - amount / 100
+        lch = [meLch[i] * meAmount + colorLch[i] + colorAmount for i in [0..2]]
+        alpha = me.alpha() * meAmount + color.alpha() * colorAmount
+        chroma.lch(lch...).alpha(alpha)
+
+    multiply: (color) ->
+        me = @
+        meLch = me.lch()
+        colorLch = color.lch()
+        lch = [meLch[i] + colorLch[i] for i in [0..2]]
+        alpha = Math.max(me.alpha() * color.alpha(), 1)
+        chroma.lch(lch...).alpha(alpha)
+
     darken: (amount=20) ->
         me = @
         lch = me.lch()
@@ -323,5 +341,65 @@ class Color
     desaturate: (amount=20) ->
         @saturate -amount
 
+    mixRgb: (color, amount=50) ->
+        me = @
+        meRgb = me.rgb()
+        colorRgb = color.rgb()
+        meAmount = amount / 100
+        colorAmount = 1 - amount / 100
+        rgb = [meRgb[i] * meAmount + colorRgb[i] * colorAmount for i in [0..2]]
+        alpha = me.alpha() * meAmount + color.alpha() * colorAmount
+        chroma.rgb(rgb...).alpha(alpha)
 
+    multiplyRgb: (color) ->
+        me = @
+        meGl = me.gl()
+        colorGl = color.gl()
+        gl = [meGl[i] * colorGl[i] for i in [0..3]]
+        chroma.gl(gl...)
 
+    screenRgb: (color) ->
+        me = @
+        meGl = me.gl()
+        colorGl = color.gl()
+        gl = [1 - (1 - meGl[i]) * (1 - colorGl[i]) for i in [0..3]]
+        chroma.gl(gl...)
+
+    overlayRgb: (color) ->
+        me = @
+        meGl = me.gl()
+        colorGl = color.gl()
+        gl = [(if meGl[i] < 0.5 then 2 * meGl[i] * colorGl[i] else 1 - 2 * (1 - meGl[i]) * (1 - colorGl[i])) for i in [0..3]]
+        chroma.gl(gl...)
+
+    dodgeRgb: (color) ->
+        me = @
+        meGl = me.gl()
+        colorGl = color.gl()
+        gl = [Math.min(colorGl[i] / (1 - meGl[i]), 1) for i in [0..3]]
+        chroma.gl(gl...)
+
+    burnRgb: (color) ->
+        me = @
+        meGl = me.gl()
+        colorGl = color.gl()
+        gl = [Math.min(1 - (1 - colorGl[i]) / meGl[i], 1) for i in [0..3]]
+        chroma.gl(gl...)
+
+    darkenRgb: (amount=20) ->
+        me = @
+        hsl = me.hsl()
+        hsl[2] -= amount / 100
+        chroma.hsl(hsl).alpha(me.alpha())
+
+    brightenRgb: (amount=20) ->
+        @darkenRgb -amount
+
+    saturateRgb: (amount=20) ->
+        me = @
+        hsl = me.hsl()
+        hsl[1] = Math.min(hsl[1] * (1 + amount / 100), 1);
+        chroma.hsl(hsl).alpha(me.alpha())
+
+    desaturateRgb: (amount=20) ->
+        @saturateRgb -amount
