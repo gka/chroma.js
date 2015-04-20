@@ -5,3 +5,5 @@ m.txt
 
 .DS_Store
 license.coffee
+
+/node_modules
