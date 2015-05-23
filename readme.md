@@ -13,27 +13,27 @@ chroma('#D4F880').darken().hex();  // #9BC04B
 
 Working with color scales is easy, too:
 
-```javascript    
+```javascript
 scale = chroma.scale(['white', 'red']);
 scale(0.5).hex(); // #FF7F7F
 ```
 
 Lab/Lch interpolation looks better than RGB
 
-```javascript    
+```javascript
 chroma.scale(['white', 'red']).mode('lab');
 ```
 
-Custom domains! Quantiles! Color Brewer!! 
+Custom domains! Quantiles! Color Brewer!!
 
-```javascript    
-chroma.scale('RdYlBu').domain(myValues, 7, 'quantiles');    
+```javascript
+chroma.scale('RdYlBu').domain(myValues, 7, 'quantiles');
 ```
 
 And why not use logarithmic color scales once in your life?
 
 ```javascript
-chroma.scale(['lightyellow', 'navy']).domain([1, 100000], 7, 'log');    
+chroma.scale(['lightyellow', 'navy']).domain([1, 100000], 7, 'log');
 ```
 
 ### Like it?
@@ -47,14 +47,13 @@ You can use it in node.js, too!
 
 ### Build instructions
 
-To compile the coffee-script source files you have to run
+To compile the coffee-script source files you have to run (might have to ``npm install`` first)
 
-    make clean
-    make
+    grunt
 
 To run the tests simply run
 
-    make test
+    npm test
 
 
 ### Similar Libraries / Prior Art
