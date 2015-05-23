@@ -47,7 +47,7 @@ You can use it in node.js, too!
 
 ### Build instructions
 
-To compile the coffee-script source files you have to run (might have to ``npm install`` first)
+To compile the coffee-script source files you have to run (might have to ``npm install` first)
 
     grunt
 

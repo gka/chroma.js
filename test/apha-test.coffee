@@ -67,4 +67,10 @@ vows
             topic: chroma.css 'hsla(0,100%,50%,0.25)'
             'cssoutput': -> (topic) -> assert.equal topic.css(), 'rgba(255,0,0,0.25)'
 
+        'hex output':
+            topic: chroma.gl 1, 0, 0, 0
+            'hex': (topic) -> assert.equal topic.hex(), '#ff0000'
+            'rgba': (topic) -> assert.equal topic.hex('rgba'), '#ff000000'
+            'argb': (topic) -> assert.equal topic.hex('argb'), '#00ff0000'
+
     .export(module)

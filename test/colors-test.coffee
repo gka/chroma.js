@@ -18,6 +18,8 @@ vows
             topic: chroma '#f00'
             'name': (topic) -> assert.equal topic.name(), 'red'
             'hex': (topic) -> assert.equal topic.hex(), '#ff0000'
+            'hex rgba': (topic) -> assert.equal topic.hex('rgba'), '#ff0000ff'
+            'hex argb': (topic) -> assert.equal topic.hex('argb'), '#ffff0000'
             'rgb': (topic) -> assert.deepEqual topic.rgb(), [255,0,0]
 
         'hex color, no #':
