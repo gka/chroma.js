@@ -33,6 +33,12 @@ vows
             'color is red': (topic) -> assert.equal topic.name(), 'red'
             'alpha is 50%': (topic) -> assert.equal topic.alpha(), 0.5
 
+        'parsing hex rgba colors':
+            topic: chroma '#ff00004d'
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 30%': (topic) -> assert.equal topic.alpha(), 0.3
+            'rgba output': (topic) -> assert.deepEqual topic.rgba(), [255,0,0,0.3]
+
         'parsing rgba colors':
             topic: chroma.css 'rgba(255,0,0,.3)'
             'color is red': (topic) -> assert.equal topic.name(), 'red'
