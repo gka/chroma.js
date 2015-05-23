@@ -270,8 +270,11 @@
       return this._rgb;
     };
 
-    Color.prototype.hex = function() {
-      return rgb2hex(this._rgb);
+    Color.prototype.hex = function(mode) {
+      if (mode == null) {
+        mode = 'rgb';
+      }
+      return rgb2hex(this._rgb, mode);
     };
 
     Color.prototype.toString = function() {
@@ -622,7 +625,7 @@
       r = u >> 24 & 0xFF;
       g = u >> 16 & 0xFF;
       b = u >> 8 & 0xFF;
-      a = u & 0xFF;
+      a = Math.round((u & 0xFF) / 0xFF * 100) / 100;
       return [r, g, b, a];
     }
     if (rgb = css2rgb(hex)) {
@@ -845,12 +848,27 @@
     throw "unknown num color: " + num;
   };
 
-  rgb2hex = function() {
-    var b, g, r, ref, str, u;
-    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+  rgb2hex = function(channels, mode) {
+    var a, b, g, hxa, r, str, u;
+    if (mode == null) {
+      mode = 'rgb';
+    }
+    r = channels[0], g = channels[1], b = channels[2], a = channels[3];
     u = r << 16 | g << 8 | b;
     str = "000000" + u.toString(16);
-    return "#" + str.substr(str.length - 6);
+    str = str.substr(str.length - 6);
+    hxa = '0' + Math.round(a * 255).toString(16);
+    hxa = hxa.substr(hxa.length - 2);
+    return "#" + (function() {
+      switch (mode.toLowerCase()) {
+        case 'rgba':
+          return str + hxa;
+        case 'argb':
+          return hxa + str;
+        default:
+          return str;
+      }
+    })();
   };
 
   rgb2hsi = function() {
