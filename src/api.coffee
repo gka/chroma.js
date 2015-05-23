@@ -43,7 +43,7 @@ chroma.hsi = (h,s,i) ->
     new Color h,s,i,'hsi'
 
 chroma.gl = (r,g,b,a) ->
-    new Color r*255,g*255,b*255,a,'gl'
+    new Color r,g,b,a,'gl'
 
 chroma.num = (n) ->
     new Color n, 'num'
