@@ -153,4 +153,5 @@ chroma.colors = colors =
     azure: "#f0ffff"
     lightsteelblue: "#b0c4de"
     oldlace: "#fdf5e6"
+    rebeccapurple: "#663399"
 

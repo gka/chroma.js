@@ -1752,7 +1752,8 @@
     blueviolet: "#8a2be2",
     azure: "#f0ffff",
     lightsteelblue: "#b0c4de",
-    oldlace: "#fdf5e6"
+    oldlace: "#fdf5e6",
+    rebeccapurple: "#663399"
   };
 
 
