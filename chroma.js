@@ -34,7 +34,7 @@
  */
 
 (function() {
-  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, brewer, chroma, clip_rgb, colors, cos, css2rgb, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, limit, luminance, luminance_x, num2rgb, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb_xyz, root, type, unpack, xyz_lab, xyz_rgb;
+  var Color, K, PITHIRD, TWOPI, X, Y, Z, add, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, colors, cos, css2rgb, darken, dodge, each, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, luminance, luminance_x, multiply, normal, num2rgb, overlay, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb_xyz, root, screen, type, unpack, xyz_lab, xyz_rgb;
 
   chroma = function(x, y, z, m) {
     return new Color(x, y, z, m);
@@ -528,6 +528,10 @@
         amount = 20;
       }
       return this.saturate(-amount);
+    };
+
+    Color.prototype.blend = function(col, mode) {
+      return chroma.blend(this, col, mode);
     };
 
     return Color;
@@ -1937,5 +1941,119 @@
   };
 
   chroma.interpolate.bezier = bezier;
+
+
+  /*
+  interpolates between a set of colors uzing a bezier spline
+  
+  blend mode formulas taken from:
+  http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
+   */
+
+  blend = function(c0, c1, mode) {
+    if (!blend[mode]) {
+      throw 'unknown blend mode ' + mode;
+    }
+    return blend[mode](c0, c1);
+  };
+
+  blend_f = function(f) {
+    return function(c0, c1) {
+      c0 = chroma(c0).rgb();
+      c1 = chroma(c1).rgb();
+      return chroma(f(c0, c1), 'rgb');
+    };
+  };
+
+  each = function(f) {
+    return function(c0, c1) {
+      var i, o, out;
+      out = [];
+      for (i = o = 0; o <= 3; i = ++o) {
+        out[i] = f(c0[i], c1[i]);
+      }
+      return out;
+    };
+  };
+
+  normal = function(a, b) {
+    return a;
+  };
+
+  multiply = function(a, b) {
+    return a * b / 255;
+  };
+
+  darken = function(a, b) {
+    if (a > b) {
+      return b;
+    } else {
+      return a;
+    }
+  };
+
+  lighten = function(a, b) {
+    if (a > b) {
+      return a;
+    } else {
+      return b;
+    }
+  };
+
+  screen = function(a, b) {
+    return 255 * (1 - (1 - a / 255) * (1 - b / 255));
+  };
+
+  overlay = function(a, b) {
+    if (b < 128) {
+      return 2 * a * b / 255;
+    } else {
+      return 255 * (1 - 2 * (1 - a / 255) * (1 - b / 255));
+    }
+  };
+
+  burn = function(a, b) {
+    return 255 * (1 - (1 - b / 255) / (a / 255));
+  };
+
+  dodge = function(a, b) {
+    if (a === 255) {
+      return 255;
+    }
+    a = 255 * (b / 255) / (1 - a / 255);
+    if (a > 255) {
+      return 255;
+    } else {
+      return a;
+    }
+  };
+
+  add = function(a, b) {
+    if (a + b > 255) {
+      return 255;
+    } else {
+      return a + b;
+    }
+  };
+
+  blend.normal = blend_f(each(normal));
+
+  blend.multiply = blend_f(each(multiply));
+
+  blend.screen = blend_f(each(screen));
+
+  blend.overlay = blend_f(each(overlay));
+
+  blend.darken = blend_f(each(darken));
+
+  blend.lighten = blend_f(each(lighten));
+
+  blend.dodge = blend_f(each(dodge));
+
+  blend.burn = blend_f(each(burn));
+
+  blend.add = blend_f(each(add));
+
+  chroma.blend = blend;
 
 }).call(this);
