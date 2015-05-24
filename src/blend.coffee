@@ -8,15 +8,15 @@ http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
 ###
 
 
-blend = (c0, c1, mode) ->
+blend = (bottom, top, mode) ->
     if !blend[mode]
         throw 'unknown blend mode ' + mode
-    blend[mode](c0, c1)
+    blend[mode](bottom, top)
 
 blend_f = (f) ->
-    (c0,c1) ->
-        c0 = chroma(c0).rgb()
-        c1 = chroma(c1).rgb()
+    (bottom,top) ->
+        c0 = chroma(top).rgb()
+        c1 = chroma(bottom).rgb()
         chroma(f(c0,c1), 'rgb')
 
 each = (f) ->
@@ -55,8 +55,8 @@ dodge = (a,b) ->
     a = 255 * (b / 255) / (1 - a / 255)
     if a > 255 then 255 else a
 
-add = (a,b) ->
-    if (a + b > 255) then 255 else a + b
+# add = (a,b) ->
+#     if (a + b > 255) then 255 else a + b
 
 
 blend.normal = blend_f each normal
@@ -67,6 +67,6 @@ blend.darken = blend_f each darken
 blend.lighten = blend_f each lighten
 blend.dodge = blend_f each dodge
 blend.burn = blend_f each burn
-blend.add = blend_f each add
+# blend.add = blend_f each add
 
 chroma.blend = blend

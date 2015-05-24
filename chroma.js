@@ -34,7 +34,7 @@
  */
 
 (function() {
-  var Color, K, PITHIRD, TWOPI, X, Y, Z, add, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, colors, cos, css2rgb, darken, dodge, each, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, luminance, luminance_x, multiply, normal, num2rgb, overlay, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb_xyz, root, screen, type, unpack, xyz_lab, xyz_rgb;
+  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, colors, cos, css2rgb, darken, dodge, each, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, luminance, luminance_x, multiply, normal, num2rgb, overlay, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb_xyz, root, screen, type, unpack, xyz_lab, xyz_rgb;
 
   chroma = function(x, y, z, m) {
     return new Color(x, y, z, m);
@@ -1950,17 +1950,18 @@
   http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
    */
 
-  blend = function(c0, c1, mode) {
+  blend = function(bottom, top, mode) {
     if (!blend[mode]) {
       throw 'unknown blend mode ' + mode;
     }
-    return blend[mode](c0, c1);
+    return blend[mode](bottom, top);
   };
 
   blend_f = function(f) {
-    return function(c0, c1) {
-      c0 = chroma(c0).rgb();
-      c1 = chroma(c1).rgb();
+    return function(bottom, top) {
+      var c0, c1;
+      c0 = chroma(top).rgb();
+      c1 = chroma(bottom).rgb();
       return chroma(f(c0, c1), 'rgb');
     };
   };
@@ -2028,14 +2029,6 @@
     }
   };
 
-  add = function(a, b) {
-    if (a + b > 255) {
-      return 255;
-    } else {
-      return a + b;
-    }
-  };
-
   blend.normal = blend_f(each(normal));
 
   blend.multiply = blend_f(each(multiply));
@@ -2051,8 +2044,6 @@
   blend.dodge = blend_f(each(dodge));
 
   blend.burn = blend_f(each(burn));
-
-  blend.add = blend_f(each(add));
 
   chroma.blend = blend;
 

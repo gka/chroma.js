@@ -32,19 +32,19 @@
                 left = el('div.left'),
                 right = el('div.right');
 
-            var c0 = names[Math.floor(Math.random()*l)],
-                c1 = names[Math.floor(Math.random()*l)];
+            var bottom = names[Math.floor(Math.random()*l)],
+                top = names[Math.floor(Math.random()*l)];
 
-            swatch(c0, left);
-            swatch(chroma.blend(c0, c1, mode).hex(), left);
-            swatch(c1, left);
+            swatch(bottom, left);
+            swatch(chroma.blend(bottom, top, mode).hex(), left);
+            swatch(top, left);
 
-            swatch(c0, right);
-            swatch(c0, right);
-            var s = swatch(c1, right);
+            swatch(bottom, right);
+            swatch(bottom, right);
+            var s = swatch(top, right);
             s.className = 'swatch overlay';
             s.style.mixBlendMode = cssMap[mode] || mode;
-            swatch(c1, right);
+            swatch(top, right);
         }
 
     });
