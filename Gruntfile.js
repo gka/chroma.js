@@ -26,6 +26,7 @@ module.exports = function(grunt) {
             'src/colors/*.coffee',
             'src/utils.coffee',
             'src/interpolate.coffee',
+            'src/blend.coffee',
           ],
         },
       }

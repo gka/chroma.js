@@ -322,3 +322,6 @@ class Color
 
     desaturate: (amount=20) ->
         @saturate -amount
+
+    blend: (col, mode) ->
+        chroma.blend(@, col, mode)
