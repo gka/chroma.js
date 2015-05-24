@@ -315,3 +315,16 @@ Returns the [contrast ratio](http://www.w3.org/TR/WCAG20/#contrast-ratiodef) bet
 chroma.contrast('white', 'navy')  // 16.00 – ok
 chroma.contrast('white', 'yellow')  // 1.07 – not ok!
 ```
+
+## chroma.blend.MODE(bottom, top)
+
+Blends two colors using one of the following blend modes: normal, multiply, screen, overlay, darken, lighten, dodge, burn
+
+```javascript
+chroma.blend.multiply('pink', 'cyan').name()  // '#00c0cb'
+chroma.blend.screen('pink', 'cyan').name()  // 'white'
+
+// alternative syntax
+chroma.blend('pink', 'cyan', 'multiply')
+chroma('pink').blend('cyan', 'multiply')
+```
