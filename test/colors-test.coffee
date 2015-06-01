@@ -182,4 +182,10 @@ vows
             topic: chroma('magenta').lab().map(round(3))
             'is right': (topic) -> assert.deepEqual topic, [60.324, 98.234, -60.825]
 
+        'hueless css hsl colors':
+            topic: [chroma('black'), chroma('gray'), chroma('white')]
+            'black': (topic) -> assert.equal topic[0].css('hsl'), 'hsl(0,0%,0%)'
+            'gray': (topic) -> assert.equal topic[1].css('hsl'), 'hsl(0,0%,50.2%)'
+            'white': (topic) -> assert.equal topic[2].css('hsl'), 'hsl(0,0%,100%)'
+
     .export(module)

@@ -194,7 +194,7 @@ class Color
         else if mode == 'hsl' or mode == 'hsla'
             hsl = me.hsl()
             rnd = (a) -> Math.round(a*100)/100
-            hsl[0] = rnd(hsl[0])
+            hsl[0] = rnd(hsl[0] || 0)
             hsl[1] = rnd(hsl[1]*100) + '%'
             hsl[2] = rnd(hsl[2]*100) + '%'
             if mode.length == 4
