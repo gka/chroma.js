@@ -13,6 +13,14 @@ vows
             topic: chroma('white').interpolate(0.5, 'red', 'hsv')
             'works': (topic) -> assert.deepEqual topic.hex(), '#ff8080'
 
+        'use mix as alias':
+            topic: chroma('white').mix(0.5, 'red', 'hsv')
+            'works': (topic) -> assert.deepEqual topic.hex(), '#ff8080'
+
+        'alternative mix syntax':
+            topic: chroma.mix('red', 'blue', 0.25)
+            'works': (topic) -> assert.deepEqual topic.hex(), '#bf003f'
+
         'hsl interpolation white <-> red':
             topic: chroma('white').interpolate(0.5, 'red', 'hsl')
             'works': (topic) -> assert.deepEqual topic.hex(), '#ff8080'

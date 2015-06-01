@@ -74,6 +74,11 @@ This also works with colors with alpha channel:
 chroma.interpolate('rgba(0,0,0,0)', 'rgba(255,0,0,1)', 0.5).css()  //"rgba(127.5,0,0,0.5)"
 ```
 
+## chroma.mix(color1, color2, f, mode)
+
+Alias for interpolate.
+
+
 ## chroma.interpolate.bezier(colors)
 
 Colors can be also be interpolates between two other colors in a given mode.

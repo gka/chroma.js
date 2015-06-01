@@ -144,7 +144,7 @@
     return chroma(color).luminance();
   };
 
-  chroma.version = '0.7.5';
+  chroma.version = '0.7.6';
 
   chroma._Color = Color;
 
@@ -479,6 +479,10 @@
       }
       res.alpha(me.alpha() + f * (col.alpha() - me.alpha()));
       return res;
+    };
+
+    Color.prototype.mix = function(f, col, m) {
+      return this.interpolate(f, col, m);
     };
 
     Color.prototype.premultiply = function() {

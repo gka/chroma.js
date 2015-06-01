@@ -294,6 +294,9 @@ class Color
         res.alpha me.alpha() + f * (col.alpha() - me.alpha())
         res
 
+    mix: (f, col, m) ->
+        @interpolate f, col, m
+
     premultiply: ->
         rgb = @rgb()
         a = @alpha()
