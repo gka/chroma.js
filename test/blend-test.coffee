@@ -3,9 +3,6 @@ vows = require 'vows'
 assert = require 'assert'
 chroma = require '../chroma'
 
-
-console.log 'blendmodes'
-
 vows
     .describe('Testing blend modes')
     .addBatch

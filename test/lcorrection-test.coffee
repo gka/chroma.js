@@ -49,7 +49,6 @@ vows
             topic:
                 f: chroma.scale(['white', 'yellow', 'red', 'black']).domain([0,20,40,60,80,100]).mode('lab').correctLightness(true)
             'center L is 50': (topic) ->
-                console.log '---'
                 assert.equal Math.round(topic.f(50).lab()[0]), 50
 
     .export(module)
