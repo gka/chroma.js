@@ -4,7 +4,7 @@
  *
  * chroma.js - JavaScript library for color conversions
  * 
- * Copyright (c) 2011-2013, Gregor Aisch
+ * Copyright (c) 2011-2015, Gregor Aisch
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -143,6 +143,8 @@
   chroma.luminance = function(color) {
     return chroma(color).luminance();
   };
+
+  chroma.version = '0.7.5';
 
   chroma._Color = Color;
 
@@ -380,7 +382,7 @@
         rnd = function(a) {
           return Math.round(a * 100) / 100;
         };
-        hsl[0] = rnd(hsl[0]);
+        hsl[0] = rnd(hsl[0] || 0);
         hsl[1] = rnd(hsl[1] * 100) + '%';
         hsl[2] = rnd(hsl[2] * 100) + '%';
         if (mode.length === 4) {

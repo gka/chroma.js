@@ -1,6 +1,7 @@
 "use strict";
 
-var fs = require('fs');
+var fs = require('fs'),
+  pkgInfo = JSON.parse(fs.readFileSync(__dirname + '/package.json'));
 
 module.exports = function(grunt) {
 
@@ -31,6 +32,12 @@ module.exports = function(grunt) {
         },
       }
     },
+    replace: {
+      dist: {
+        options: { patterns: [{ match: 'version', replacement: pkgInfo.version }] },
+        files: [{expand: true, flatten: true, src: ['chroma.js'], dest: '.'}]
+      }
+    },
     uglify: {
       options: {
         banner: "/*\n" + fs.readFileSync("LICENSE", {encoding: "utf8"}) + "\n*/\n",
@@ -45,6 +52,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-coffee');
+  grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('license', function() {
@@ -59,6 +67,6 @@ module.exports = function(grunt) {
     fs.writeFileSync('license.coffee', license.join("\n"));
   });
 
-  grunt.registerTask('default', ['clean', 'license', 'coffee', 'uglify']);
+  grunt.registerTask('default', ['clean', 'license', 'coffee', 'replace', 'uglify']);
 };
 
