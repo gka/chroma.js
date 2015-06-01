@@ -75,6 +75,7 @@ chroma.contrast = (a, b) ->
 chroma.luminance = (color) ->
     chroma(color).luminance()
 
+chroma.version = '@@version'
 
 # exposing raw classes for testing purposes
 
