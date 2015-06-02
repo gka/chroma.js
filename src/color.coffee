@@ -188,12 +188,12 @@ class Color
         if mode.length == 3 and rgb[3] < 1
             mode += 'a'
         if mode == 'rgb'
-            mode+'('+rgb.slice(0,3).map(Math.round).join(',')+')'
+            mode+'('+rgb.slice(0,3).map(round).join(',')+')'
         else if mode == 'rgba'
-            mode+'('+rgb.slice(0,3).map(Math.round).join(',')+','+rgb[3]+')'
+            mode+'('+rgb.slice(0,3).map(round).join(',')+','+rgb[3]+')'
         else if mode == 'hsl' or mode == 'hsla'
             hsl = me.hsl()
-            rnd = (a) -> Math.round(a*100)/100
+            rnd = (a) -> round(a*100)/100
             hsl[0] = rnd(hsl[0] || 0)
             hsl[1] = rnd(hsl[1]*100) + '%'
             hsl[2] = rnd(hsl[2]*100) + '%'
@@ -328,3 +328,6 @@ class Color
 
     blend: (col, mode) ->
         chroma.blend(@, col, mode)
+
+    kelvin: () ->
+        rgb2temp @rgb()

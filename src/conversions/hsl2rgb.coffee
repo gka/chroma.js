@@ -23,6 +23,6 @@ hsl2rgb = () ->
                 c[i] = t1 + (t2 - t1) * ((2 / 3) - t3[i]) * 6
             else
                 c[i] = t1
-        [r,g,b] = [Math.round(c[0]*255),Math.round(c[1]*255),Math.round(c[2]*255)]
+        [r,g,b] = [round(c[0]*255),round(c[1]*255),round(c[2]*255)]
     [r,g,b]
 

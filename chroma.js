@@ -34,7 +34,7 @@
  */
 
 (function() {
-  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, colors, cos, css2rgb, darken, dodge, each, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, luminance, luminance_x, multiply, normal, num2rgb, overlay, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb_xyz, root, screen, type, unpack, xyz_lab, xyz_rgb;
+  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance, luminance_x, multiply, normal, num2rgb, overlay, pow, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb2temp, rgb2xyz, rgb_xyz, root, round, screen, temp2rgb, type, unpack, xyz_lab, xyz_rgb;
 
   chroma = function(x, y, z, m) {
     return new Color(x, y, z, m);
@@ -102,7 +102,7 @@
     digits = '0123456789abcdef';
     code = '#';
     for (i = o = 0; o < 6; i = ++o) {
-      code += digits.charAt(Math.floor(Math.random() * 16));
+      code += digits.charAt(floor(Math.random() * 16));
     }
     return new Color(code);
   };
@@ -142,6 +142,10 @@
 
   chroma.luminance = function(color) {
     return chroma(color).luminance();
+  };
+
+  chroma.kelvin = function(k) {
+    return chroma(temp2rgb(k), 'rgb');
   };
 
   chroma.version = '0.7.6';
@@ -374,13 +378,13 @@
         mode += 'a';
       }
       if (mode === 'rgb') {
-        return mode + '(' + rgb.slice(0, 3).map(Math.round).join(',') + ')';
+        return mode + '(' + rgb.slice(0, 3).map(round).join(',') + ')';
       } else if (mode === 'rgba') {
-        return mode + '(' + rgb.slice(0, 3).map(Math.round).join(',') + ',' + rgb[3] + ')';
+        return mode + '(' + rgb.slice(0, 3).map(round).join(',') + ',' + rgb[3] + ')';
       } else if (mode === 'hsl' || mode === 'hsla') {
         hsl = me.hsl();
         rnd = function(a) {
-          return Math.round(a * 100) / 100;
+          return round(a * 100) / 100;
         };
         hsl[0] = rnd(hsl[0] || 0);
         hsl[1] = rnd(hsl[1] * 100) + '%';
@@ -540,6 +544,10 @@
       return chroma.blend(this, col, mode);
     };
 
+    Color.prototype.kelvin = function() {
+      return rgb2temp(this.rgb());
+    };
+
     return Color;
 
   })();
@@ -586,13 +594,13 @@
     } else if (m = css.match(/rgb\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/)) {
       rgb = m.slice(1, 4);
       for (i = aa = 0; aa <= 2; i = ++aa) {
-        rgb[i] = Math.round(rgb[i] * 2.55);
+        rgb[i] = round(rgb[i] * 2.55);
       }
       rgb[3] = 1;
     } else if (m = css.match(/rgba\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
       rgb = m.slice(1, 5);
       for (i = ab = 0; ab <= 2; i = ++ab) {
-        rgb[i] = Math.round(rgb[i] * 2.55);
+        rgb[i] = round(rgb[i] * 2.55);
       }
       rgb[3] = +rgb[3];
     } else if (m = css.match(/hsl\(\s*(\-?\d+(?:\.\d+)?),\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/)) {
@@ -635,7 +643,7 @@
       r = u >> 24 & 0xFF;
       g = u >> 16 & 0xFF;
       b = u >> 8 & 0xFF;
-      a = Math.round((u & 0xFF) / 0xFF * 100) / 100;
+      a = round((u & 0xFF) / 0xFF * 100) / 100;
       return [r, g, b, a];
     }
     if (rgb = css2rgb(hex)) {
@@ -705,7 +713,7 @@
           c[i] = t1;
         }
       }
-      ref1 = [Math.round(c[0] * 255), Math.round(c[1] * 255), Math.round(c[2] * 255)], r = ref1[0], g = ref1[1], b = ref1[2];
+      ref1 = [round(c[0] * 255), round(c[1] * 255), round(c[2] * 255)], r = ref1[0], g = ref1[1], b = ref1[2];
     }
     return [r, g, b];
   };
@@ -727,7 +735,7 @@
         h += 360;
       }
       h /= 60;
-      i = Math.floor(h);
+      i = floor(h);
       f = h - i;
       p = v * (1 - s);
       q = v * (1 - s * f);
@@ -752,9 +760,9 @@
           ref6 = [v, p, q], r = ref6[0], g = ref6[1], b = ref6[2];
       }
     }
-    r = Math.round(r);
-    g = Math.round(g);
-    b = Math.round(b);
+    r = round(r);
+    g = round(g);
+    b = round(b);
     return [r, g, b];
   };
 
@@ -807,7 +815,7 @@
   };
 
   xyz_rgb = function(r) {
-    return Math.round(255 * (r <= 0.00304 ? 12.92 * r : 1.055 * Math.pow(r, 1 / 2.4) - 0.055));
+    return round(255 * (r <= 0.00304 ? 12.92 * r : 1.055 * pow(r, 1 / 2.4) - 0.055));
   };
 
   lch2lab = function() {
@@ -867,7 +875,7 @@
     u = r << 16 | g << 8 | b;
     str = "000000" + u.toString(16);
     str = str.substr(str.length - 6);
-    hxa = '0' + Math.round(a * 255).toString(16);
+    hxa = '0' + round(a * 255).toString(16);
     hxa = hxa.substr(hxa.length - 2);
     return "#" + (function() {
       switch (mode.toLowerCase()) {
@@ -971,14 +979,9 @@
   };
 
   rgb2lab = function() {
-    var b, g, r, ref, x, y, z;
+    var b, g, r, ref, ref1, x, y, z;
     ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
-    r = rgb_xyz(r);
-    g = rgb_xyz(g);
-    b = rgb_xyz(b);
-    x = xyz_lab((0.4124564 * r + 0.3575761 * g + 0.1804375 * b) / X);
-    y = xyz_lab((0.2126729 * r + 0.7151522 * g + 0.0721750 * b) / Y);
-    z = xyz_lab((0.0193339 * r + 0.1191920 * g + 0.9503041 * b) / Z);
+    ref1 = rgb2xyz(r, g, b), x = ref1[0], y = ref1[1], z = ref1[2];
     return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
   };
 
@@ -998,6 +1001,18 @@
     }
   };
 
+  rgb2xyz = function() {
+    var b, g, r, ref, x, y, z;
+    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+    r = rgb_xyz(r);
+    g = rgb_xyz(g);
+    b = rgb_xyz(b);
+    x = xyz_lab((0.4124564 * r + 0.3575761 * g + 0.1804375 * b) / X);
+    y = xyz_lab((0.2126729 * r + 0.7151522 * g + 0.0721750 * b) / Y);
+    z = xyz_lab((0.0193339 * r + 0.1191920 * g + 0.9503041 * b) / Z);
+    return [x, y, z];
+  };
+
   rgb2lch = function() {
     var a, b, g, l, r, ref, ref1;
     ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
@@ -1009,6 +1024,39 @@
     var b, g, r, ref;
     ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
     return (r << 16) + (g << 8) + b;
+  };
+
+  temp2rgb = function(kelvin) {
+    var b, g, r, temp;
+    temp = kelvin / 100;
+    if (temp < 66) {
+      r = 255;
+      g = -155.25485562709179 - 0.44596950469579133 * (g = temp - 2) + 104.49216199393888 * log(g);
+      b = temp < 20 ? 0 : -254.76935184120902 + 0.8274096064007395 * (b = temp - 10) + 115.67994401066147 * log(b);
+    } else {
+      r = 351.97690566805693 + 0.114206453784165 * (r = temp - 55) - 40.25366309332127 * log(r);
+      g = 325.4494125711974 + 0.07943456536662342 * (g = temp - 50) - 28.0852963507957 * log(g);
+      b = 255;
+    }
+    return clip_rgb([r, g, b]);
+  };
+
+  rgb2temp = function() {
+    var b, eps, g, maxTemp, minTemp, r, ref, rgb, temp;
+    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+    minTemp = 1000;
+    maxTemp = 40000;
+    eps = 0.4;
+    while (maxTemp - minTemp > eps) {
+      temp = (maxTemp + minTemp) * 0.5;
+      rgb = temp2rgb(temp);
+      if ((rgb[2] / rgb[0]) >= (b / r)) {
+        maxTemp = temp;
+      } else {
+        minTemp = temp;
+      }
+    }
+    return round(temp);
   };
 
 
@@ -1440,18 +1488,18 @@
       if (min <= 0) {
         throw 'Logarithmic scales are only possible for values > 0';
       }
-      min_log = Math.LOG10E * Math.log(min);
-      max_log = Math.LOG10E * Math.log(max);
+      min_log = Math.LOG10E * log(min);
+      max_log = Math.LOG10E * log(max);
       limits.push(min);
       for (i = w = 1, ref1 = num - 1; 1 <= ref1 ? w <= ref1 : w >= ref1; i = 1 <= ref1 ? ++w : --w) {
-        limits.push(Math.pow(10, min_log + (i / num) * (max_log - min_log)));
+        limits.push(pow(10, min_log + (i / num) * (max_log - min_log)));
       }
       limits.push(max);
     } else if (mode.substr(0, 1) === 'q') {
       limits.push(min);
       for (i = aa = 1, ref2 = num - 1; 1 <= ref2 ? aa <= ref2 : aa >= ref2; i = 1 <= ref2 ? ++aa : --aa) {
         p = values.length * i / num;
-        pb = Math.floor(p);
+        pb = floor(p);
         if (pb === p) {
           limits.push(values[pb]);
         } else {
@@ -1487,7 +1535,7 @@
           value = values[i];
           mindist = Number.MAX_VALUE;
           for (j = ae = 0, ref6 = num - 1; 0 <= ref6 ? ae <= ref6 : ae >= ref6; j = 0 <= ref6 ? ++ae : --ae) {
-            dist = Math.abs(centroids[j] - value);
+            dist = abs(centroids[j] - value);
             if (dist < mindist) {
               mindist = dist;
               best = j;
@@ -1848,7 +1896,7 @@
 
   PITHIRD = Math.PI / 3;
 
-  cos = Math.cos;
+  round = Math.round, cos = Math.cos, floor = Math.floor, pow = Math.pow, log = Math.log;
 
 
   /*

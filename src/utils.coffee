@@ -58,4 +58,4 @@ unpack = (args) ->
 
 TWOPI = Math.PI*2
 PITHIRD = Math.PI/3
-cos = Math.cos
+{round, cos, floor, pow, log} = Math

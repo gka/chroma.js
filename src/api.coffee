@@ -51,7 +51,7 @@ chroma.num = (n) ->
 chroma.random = ->
     digits = '0123456789abcdef'
     code = '#'
-    code += digits.charAt(Math.floor(Math.random() * 16)) for i in [0...6]
+    code += digits.charAt(floor(Math.random() * 16)) for i in [0...6]
     new Color code
 
 chroma.interpolate = (a,b,f,m) ->
@@ -74,6 +74,9 @@ chroma.contrast = (a, b) ->
 
 chroma.luminance = (color) ->
     chroma(color).luminance()
+
+chroma.kelvin = (k) ->
+    chroma temp2rgb(k), 'rgb'
 
 chroma.version = '@@version'
 

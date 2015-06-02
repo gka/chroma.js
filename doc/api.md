@@ -48,6 +48,8 @@ chroma.lab(53.24, 80.09, 67.20);
 chroma.lch(53.24, 104.55, 40);
 chroma.gl(1, 0, 0);
 chroma.num(0xff0000);
+chroma.random();
+chroma.kelvin(6000);
 ```
 
 Generates a random chroma.Color.

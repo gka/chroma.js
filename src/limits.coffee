@@ -100,18 +100,18 @@ chroma.limits = (data, mode='equal', num=7) ->
     else if mode.substr(0,1) == 'l' # log scale
         if min <= 0
             throw 'Logarithmic scales are only possible for values > 0'
-        min_log = Math.LOG10E * Math.log min
-        max_log = Math.LOG10E * Math.log max
+        min_log = Math.LOG10E * log min
+        max_log = Math.LOG10E * log max
         limits.push min
         for i in [1..num-1]
-            limits.push Math.pow 10, min_log + (i/num) * (max_log - min_log)
+            limits.push pow 10, min_log + (i/num) * (max_log - min_log)
         limits.push max
 
     else if mode.substr(0,1) == 'q' # quantile scale
         limits.push min
         for i in [1..num-1]
             p = values.length * i/num
-            pb = Math.floor p
+            pb = floor p
             if pb == p
                 limits.push values[pb]
             else # p > pb
@@ -147,7 +147,7 @@ chroma.limits = (data, mode='equal', num=7) ->
                 value = values[i]
                 mindist = Number.MAX_VALUE
                 for j in [0..num-1]
-                    dist = Math.abs centroids[j]-value
+                    dist = abs centroids[j]-value
                     if dist < mindist
                         mindist = dist
                         best = j

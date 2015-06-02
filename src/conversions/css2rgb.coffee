@@ -19,13 +19,13 @@ css2rgb = (css) ->
     else if m = css.match /rgb\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/
         rgb = m.slice 1,4
         for i in [0..2]
-            rgb[i] = Math.round rgb[i] * 2.55
+            rgb[i] = round rgb[i] * 2.55
         rgb[3] = 1  # default alpha
     # rgba(100%,0%,0%,0.4)
     else if m = css.match /rgba\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)/
         rgb = m.slice 1,5
         for i in [0..2]
-            rgb[i] = Math.round rgb[i] * 2.55
+            rgb[i] = round rgb[i] * 2.55
         rgb[3] = +rgb[3]
     # hsl(0,100%,50%)
     else if m = css.match /hsl\(\s*(\-?\d+(?:\.\d+)?),\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/

@@ -22,4 +22,4 @@ lab_xyz = (x) ->
     if x > 0.206893034 then x * x * x else (x - 4 / 29) / 7.787037
 
 xyz_rgb = (r) ->
-    Math.round(255 * (if r <= 0.00304 then 12.92 * r else 1.055 * Math.pow(r, 1 / 2.4) - 0.055))
+    round(255 * (if r <= 0.00304 then 12.92 * r else 1.055 * pow(r, 1 / 2.4) - 0.055))
