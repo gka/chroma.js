@@ -34,7 +34,7 @@
  */
 
 (function() {
-  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance, luminance_x, multiply, normal, num2rgb, overlay, pow, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb2temp, rgb2xyz, rgb_xyz, root, round, screen, temp2rgb, type, unpack, xyz_lab, xyz_rgb;
+  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance, luminance_x, multiply, normal, num2rgb, overlay, pow, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb2temp, rgb2xyz, rgb_xyz, root, round, screen, sin, temp2rgb, type, unpack, xyz_lab, xyz_rgb;
 
   chroma = function(x, y, z, m) {
     return new Color(x, y, z, m);
@@ -148,7 +148,7 @@
     return chroma(temp2rgb(k), 'rgb');
   };
 
-  chroma.version = '0.7.7';
+  chroma.version = '0.7.8';
 
   chroma._Color = Color;
 
@@ -1896,7 +1896,7 @@
 
   PITHIRD = Math.PI / 3;
 
-  round = Math.round, cos = Math.cos, floor = Math.floor, pow = Math.pow, log = Math.log;
+  round = Math.round, cos = Math.cos, floor = Math.floor, pow = Math.pow, log = Math.log, sin = Math.sin;
 
 
   /*
@@ -2100,5 +2100,80 @@
   blend.burn = blend_f(each(burn));
 
   chroma.blend = blend;
+
+
+  /*
+      chroma.js
+  
+      Copyright (c) 2011-2013, Gregor Aisch
+      All rights reserved.
+  
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+  
+      * Redistributions of source code must retain the above copyright notice, this
+        list of conditions and the following disclaimer.
+  
+      * Redistributions in binary form must reproduce the above copyright notice,
+        this list of conditions and the following disclaimer in the documentation
+        and/or other materials provided with the distribution.
+  
+      * The name Gregor Aisch may not be used to endorse or promote products
+        derived from this software without specific prior written permission.
+  
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+      DISCLAIMED. IN NO EVENT SHALL GREGOR AISCH OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+      INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+      OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+      NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+      EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  
+      @source: https://github.com/gka/chroma.js
+   */
+
+  chroma.cubehelix = function(start, rotations, hue, gamma, lightness) {
+    var dh, dl;
+    if (start == null) {
+      start = 300;
+    }
+    if (rotations == null) {
+      rotations = -1.5;
+    }
+    if (hue == null) {
+      hue = 1;
+    }
+    if (gamma == null) {
+      gamma = 1;
+    }
+    if (lightness == null) {
+      lightness = [0, 1];
+    }
+    dl = lightness[1] - lightness[0];
+    if (type(hue) === 'array') {
+      dh = hue[1] - hue[0];
+      if (dh === 0) {
+        hue = hue[1];
+      }
+    } else {
+      dh = 0;
+    }
+    return function(fract) {
+      var a, amp, b, cos_a, g, h, l, r, sin_a;
+      a = TWOPI * ((start + 120) / 360 + rotations * fract);
+      l = pow(lightness[0] + dl * fract, gamma);
+      h = dh !== 0 ? hue[0] + fract * dh : hue;
+      amp = h * l * (1 - l) / 2;
+      cos_a = cos(a);
+      sin_a = sin(a);
+      r = l + amp * (-0.14861 * cos_a + 1.78277 * sin_a);
+      g = l + amp * (-0.29227 * cos_a - 0.90649 * sin_a);
+      b = l + amp * (+1.97294 * cos_a);
+      return chroma(clip_rgb([r * 255, g * 255, b * 255]));
+    };
+  };
 
 }).call(this);

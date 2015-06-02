@@ -28,6 +28,7 @@ module.exports = function(grunt) {
             'src/utils.coffee',
             'src/interpolate.coffee',
             'src/blend.coffee',
+            'src/cubehelix.coffee',
           ],
         },
       }

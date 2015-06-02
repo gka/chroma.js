@@ -302,6 +302,24 @@ chroma.scale('RdYlGn').domain([0,1], 5).colors()
 // returns ['#a50026', '#f88d52', '#ffffbf', '#86cb66', '#006837']
 ```
 
+### chroma.cubehelix(start=0, rotations=-1.5, hue=1, gamma=1, lightness=[0,1])
+
+Dave Green's [cubehelix color scheme](http://www.mrao.cam.ac.uk/~dag/CUBEHELIX/)!!
+
+Parameters (description copied from Dave Green):
+
+* **start** color for [hue rotation](http://en.wikipedia.org/wiki/Hue#/media/File:HueScale.svg) (0=red)
+* **rotation**: number of rotations (e.g. 1=360°, 1.5=540°)
+* **hue**: controls how saturated the colour of all hues are. either single value or range
+* **gamma factor**: can be used to emphasise low or high intensity values
+* **lightness** range: defaults to black -> white [0,1]
+
+```javascript
+helix = chroma.cubehelix(300, -1.5)
+helix(0).hex() // '#000000'
+helix(1).hex() // '#ffffff'
+```
+
 # Useful methods
 
 ## chroma.luminance
