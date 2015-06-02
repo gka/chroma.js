@@ -89,7 +89,7 @@ class Color
             a = args[3]
             m = args[4]
 
-        a ?= 1
+        a ?= 1 if m != 'cmyk'
 
         # create color
         if m == 'rgb'
@@ -115,6 +115,8 @@ class Color
             me._rgb[3] = a
         else if m == 'num'
             me._rgb = num2rgb x
+        else if m == 'cmyk'
+            me._rgb = cmyk2rgb x,y,z,a
         me_rgb = clip_rgb me._rgb
 
     rgb: ->
@@ -330,4 +332,7 @@ class Color
         chroma.blend(@, col, mode)
 
     kelvin: () ->
-        rgb2temp @rgb()
+        rgb2temp @_rgb
+
+    cmyk: () ->
+        rgb2cmyk @_rgb

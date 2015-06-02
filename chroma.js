@@ -34,10 +34,15 @@
  */
 
 (function() {
-  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance, luminance_x, multiply, normal, num2rgb, overlay, pow, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb2temp, rgb2xyz, rgb_xyz, root, round, screen, sin, temp2rgb, type, unpack, xyz_lab, xyz_rgb;
+  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance, luminance_x, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb2temp, rgb2xyz, rgb_xyz, root, round, screen, sin, temp2rgb, type, unpack, xyz_lab, xyz_rgb,
+    slice = [].slice;
 
-  chroma = function(x, y, z, m) {
-    return new Color(x, y, z, m);
+  chroma = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, arguments, function(){});
   };
 
   if ((typeof module !== "undefined" && module !== null) && (module.exports != null)) {
@@ -97,6 +102,14 @@
     return new Color(n, 'num');
   };
 
+  chroma.cmyk = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['cmyk']), function(){});
+  };
+
   chroma.random = function() {
     var code, digits, i, o;
     digits = '0123456789abcdef';
@@ -148,7 +161,7 @@
     return chroma(temp2rgb(k), 'rgb');
   };
 
-  chroma.version = '0.7.8';
+  chroma.version = '0.8.0';
 
   chroma._Color = Color;
 
@@ -238,8 +251,10 @@
         a = args[3];
         m = args[4];
       }
-      if (a == null) {
-        a = 1;
+      if (m !== 'cmyk') {
+        if (a == null) {
+          a = 1;
+        }
       }
       if (m === 'rgb') {
         me._rgb = [x, y, z, a];
@@ -264,6 +279,8 @@
         me._rgb[3] = a;
       } else if (m === 'num') {
         me._rgb = num2rgb(x);
+      } else if (m === 'cmyk') {
+        me._rgb = cmyk2rgb(x, y, z, a);
       }
       me_rgb = clip_rgb(me._rgb);
     }
@@ -545,7 +562,11 @@
     };
 
     Color.prototype.kelvin = function() {
-      return rgb2temp(this.rgb());
+      return rgb2temp(this._rgb);
+    };
+
+    Color.prototype.cmyk = function() {
+      return rgb2cmyk(this._rgb);
     };
 
     return Color;
@@ -572,6 +593,32 @@
       }
     }
     return rgb;
+  };
+
+  rgb2cmyk = function() {
+    var b, c, f, g, k, m, r, ref, y;
+    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+    r = r / 255;
+    g = g / 255;
+    b = b / 255;
+    k = 1 - Math.max(r, Math.max(g, b));
+    f = k < 1 ? 1 / (1 - k) : 0;
+    c = (1 - r - k) * f;
+    m = (1 - g - k) * f;
+    y = (1 - b - k) * f;
+    return [c, m, y, k];
+  };
+
+  cmyk2rgb = function() {
+    var b, c, g, k, m, r, ref, y;
+    ref = unpack(arguments), c = ref[0], m = ref[1], y = ref[2], k = ref[3];
+    if (k === 1) {
+      return [0, 0, 0];
+    }
+    r = c >= 1 ? 0 : round(255 * (1 - c) * (1 - k));
+    g = m >= 1 ? 0 : round(255 * (1 - m) * (1 - k));
+    b = y >= 1 ? 0 : round(255 * (1 - y) * (1 - k));
+    return [r, g, b];
   };
 
   css2rgb = function(css) {

@@ -1,6 +1,6 @@
 
-chroma = (x,y,z,m) ->
-    new Color x,y,z,m
+chroma = () ->
+    new Color arguments...
 
 # CommonJS module is defined
 module.exports = chroma if module? and module.exports?
@@ -47,6 +47,9 @@ chroma.gl = (r,g,b,a) ->
 
 chroma.num = (n) ->
     new Color n, 'num'
+
+chroma.cmyk = () ->
+    new Color arguments..., 'cmyk'
 
 chroma.random = ->
     digits = '0123456789abcdef'

@@ -24,6 +24,7 @@ chroma(53.24, 104.55, 40, 'lch');
 chroma(1, 0, 0, 'gl');
 chroma(0xff0000);
 chroma(0xff0000, 'num');
+chroma(0,1,0,0, 'cmyk');
 ```
 
 
@@ -48,9 +49,17 @@ chroma.lab(53.24, 80.09, 67.20);
 chroma.lch(53.24, 104.55, 40);
 chroma.gl(1, 0, 0);
 chroma.num(0xff0000);
-chroma.random();
-chroma.kelvin(6000);
+chroma.cmyk(0,1,0,0);
 ```
+
+## chroma.kelvin()
+
+Generates a color from Kelvin temperature scale
+
+chroma.kelvin(6000);
+
+
+## chroma.random()
 
 Generates a random chroma.Color.
 
