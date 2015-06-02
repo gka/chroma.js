@@ -148,7 +148,7 @@
     return chroma(temp2rgb(k), 'rgb');
   };
 
-  chroma.version = '0.7.6';
+  chroma.version = '0.7.7';
 
   chroma._Color = Color;
 
