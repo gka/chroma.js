@@ -147,7 +147,7 @@ chroma.limits = (data, mode='equal', num=7) ->
                 value = values[i]
                 mindist = Number.MAX_VALUE
                 for j in [0..num-1]
-                    dist = abs centroids[j]-value
+                    dist = Math.abs (centroids[j]-value)
                     if dist < mindist
                         mindist = dist
                         best = j
