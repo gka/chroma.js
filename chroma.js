@@ -1582,7 +1582,7 @@
           value = values[i];
           mindist = Number.MAX_VALUE;
           for (j = ae = 0, ref6 = num - 1; 0 <= ref6 ? ae <= ref6 : ae >= ref6; j = 0 <= ref6 ? ++ae : --ae) {
-            dist = abs(centroids[j] - value);
+            dist = Math.abs(centroids[j] - value);
             if (dist < mindist) {
               mindist = dist;
               best = j;
