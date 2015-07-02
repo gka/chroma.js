@@ -1,5 +1,6 @@
 
 # 1.0.1
+
 * added simple color output to chroma.scale().colors()
 
 # 1.0.0
