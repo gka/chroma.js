@@ -1,0 +1,6 @@
+
+# 1.0.0
+
+* numeric interpolation does what it should
+* refactored and modularized code base
+* changed argument order of Color::interpolate 

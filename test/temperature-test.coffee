@@ -4,11 +4,6 @@ assert = require 'assert'
 chroma = require '../chroma'
 
 
-rnd = (f,d) ->
-    d = Math.pow(10,d)
-    Math.round(f*d) / d
-
-
 vows
     .describe('Testing color temperature')
 

@@ -32,10 +32,12 @@
 ###
 
 # minimal multi-purpose interface
+
+# @requires utils color
+
 chroma.scale = (colors, positions) ->
 
     # constructor
-
     _mode = 'rgb'
     _nacol = chroma '#ccc'
     _spread = 0

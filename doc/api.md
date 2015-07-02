@@ -186,6 +186,14 @@ chroma('white').luminance() // 1
 chroma('red').luminance() // 0.2126
 ```
 
+### color.mix(other, f, [mode])
+
+Mixes the color with another color. 
+
+```javascript
+chroma.mix(color, other, f, mode)
+```
+
 As of version 0.6.2 you can also set the luminance directly:
 
 ```javascript

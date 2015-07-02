@@ -52,10 +52,21 @@ limit = (x, min=0, max=1) ->
 
 unpack = (args) ->
     if args.length >= 3
-        args
+        [].slice.call args
     else
         args[0]
 
-TWOPI = Math.PI*2
-PITHIRD = Math.PI/3
-{round, cos, floor, pow, log, sin} = Math
+clip_rgb = (rgb) ->
+    for i of rgb
+        if i < 3
+            rgb[i] = 0 if rgb[i] < 0
+            rgb[i] = 255 if rgb[i] > 255
+        else if i == 3
+            rgb[i] = 0 if rgb[i] < 0
+            rgb[i] = 1 if rgb[i] > 1
+    rgb
+
+{PI, round, cos, floor, pow, log, sin, sqrt, atan2, max} = Math
+TWOPI = PI*2
+PITHIRD = PI/3
+

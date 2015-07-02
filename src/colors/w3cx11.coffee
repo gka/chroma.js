@@ -4,8 +4,7 @@
 	http://www.w3.org/TR/css3-color/#svg-color
 ###
 
-
-chroma.colors = colors =
+w3cx11 =
     indigo: "#4b0082"
     gold: "#ffd700"
     hotpink: "#ff69b4"
@@ -155,3 +154,4 @@ chroma.colors = colors =
     oldlace: "#fdf5e6"
     rebeccapurple: "#663399"
 
+chroma.colors = colors = w3cx11

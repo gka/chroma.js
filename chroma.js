@@ -33,17 +33,128 @@
  *
  */
 
+
+/*
+    chroma.js
+
+    Copyright (c) 2011-2013, Gregor Aisch
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this
+      list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+
+    * The name Gregor Aisch may not be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL GREGOR AISCH OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+    OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+    EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+    @source: https://github.com/gka/chroma.js
+ */
+
 (function() {
-  var Color, K, PITHIRD, TWOPI, X, Y, Z, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2rgb, hsv2rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance, luminance_x, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2num, rgb2temp, rgb2xyz, rgb_xyz, root, round, screen, sin, temp2rgb, type, unpack, xyz_lab, xyz_rgb,
+  var Color, LAB_CONSTANTS, PI, PITHIRD, TWOPI, _guess_formats, _guess_formats_sorted, _input, _interpolators, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
     slice = [].slice;
 
+  type = (function() {
+
+    /*
+    for browser-safe type checking+
+    ported from jQuery's $.type
+     */
+    var classToType, len, name, o, ref;
+    classToType = {};
+    ref = "Boolean Number String Function Array Date RegExp Undefined Null".split(" ");
+    for (o = 0, len = ref.length; o < len; o++) {
+      name = ref[o];
+      classToType["[object " + name + "]"] = name.toLowerCase();
+    }
+    return function(obj) {
+      var strType;
+      strType = Object.prototype.toString.call(obj);
+      return classToType[strType] || "object";
+    };
+  })();
+
+  limit = function(x, min, max) {
+    if (min == null) {
+      min = 0;
+    }
+    if (max == null) {
+      max = 1;
+    }
+    if (x < min) {
+      x = min;
+    }
+    if (x > max) {
+      x = max;
+    }
+    return x;
+  };
+
+  unpack = function(args) {
+    if (args.length >= 3) {
+      return [].slice.call(args);
+    } else {
+      return args[0];
+    }
+  };
+
+  clip_rgb = function(rgb) {
+    var i;
+    for (i in rgb) {
+      if (i < 3) {
+        if (rgb[i] < 0) {
+          rgb[i] = 0;
+        }
+        if (rgb[i] > 255) {
+          rgb[i] = 255;
+        }
+      } else if (i === 3) {
+        if (rgb[i] < 0) {
+          rgb[i] = 0;
+        }
+        if (rgb[i] > 1) {
+          rgb[i] = 1;
+        }
+      }
+    }
+    return rgb;
+  };
+
+  PI = Math.PI, round = Math.round, cos = Math.cos, floor = Math.floor, pow = Math.pow, log = Math.log, sin = Math.sin, sqrt = Math.sqrt, atan2 = Math.atan2, max = Math.max;
+
+  TWOPI = PI * 2;
+
+  PITHIRD = PI / 3;
+
   chroma = function() {
+    if (arguments[0] instanceof Color) {
+      return arguments[0];
+    }
     return (function(func, args, ctor) {
       ctor.prototype = func.prototype;
       var child = new ctor, result = func.apply(child, args);
       return Object(result) === result ? result : child;
     })(Color, arguments, function(){});
   };
+
+  _interpolators = [];
 
   if ((typeof module !== "undefined" && module !== null) && (module.exports != null)) {
     module.exports = chroma;
@@ -58,112 +169,7 @@
     root.chroma = chroma;
   }
 
-  chroma.color = function(x, y, z, m) {
-    return new Color(x, y, z, m);
-  };
-
-  chroma.hsl = function(h, s, l, a) {
-    return new Color(h, s, l, a, 'hsl');
-  };
-
-  chroma.hsv = function(h, s, v, a) {
-    return new Color(h, s, v, a, 'hsv');
-  };
-
-  chroma.rgb = function(r, g, b, a) {
-    return new Color(r, g, b, a, 'rgb');
-  };
-
-  chroma.hex = function(x) {
-    return new Color(x);
-  };
-
-  chroma.css = function(x) {
-    return new Color(x);
-  };
-
-  chroma.lab = function(l, a, b) {
-    return new Color(l, a, b, 'lab');
-  };
-
-  chroma.lch = function(l, c, h) {
-    return new Color(l, c, h, 'lch');
-  };
-
-  chroma.hsi = function(h, s, i) {
-    return new Color(h, s, i, 'hsi');
-  };
-
-  chroma.gl = function(r, g, b, a) {
-    return new Color(r, g, b, a, 'gl');
-  };
-
-  chroma.num = function(n) {
-    return new Color(n, 'num');
-  };
-
-  chroma.cmyk = function() {
-    return (function(func, args, ctor) {
-      ctor.prototype = func.prototype;
-      var child = new ctor, result = func.apply(child, args);
-      return Object(result) === result ? result : child;
-    })(Color, slice.call(arguments).concat(['cmyk']), function(){});
-  };
-
-  chroma.random = function() {
-    var code, digits, i, o;
-    digits = '0123456789abcdef';
-    code = '#';
-    for (i = o = 0; o < 6; i = ++o) {
-      code += digits.charAt(floor(Math.random() * 16));
-    }
-    return new Color(code);
-  };
-
-  chroma.interpolate = function(a, b, f, m) {
-    var ref, ref1;
-    if ((a == null) || (b == null)) {
-      return '#000';
-    }
-    if ((ref = type(a)) === 'string' || ref === 'number') {
-      a = new Color(a);
-    }
-    if ((ref1 = type(b)) === 'string' || ref1 === 'number') {
-      b = new Color(b);
-    }
-    return a.interpolate(f, b, m);
-  };
-
-  chroma.mix = chroma.interpolate;
-
-  chroma.contrast = function(a, b) {
-    var l1, l2, ref, ref1;
-    if ((ref = type(a)) === 'string' || ref === 'number') {
-      a = new Color(a);
-    }
-    if ((ref1 = type(b)) === 'string' || ref1 === 'number') {
-      b = new Color(b);
-    }
-    l1 = a.luminance();
-    l2 = b.luminance();
-    if (l1 > l2) {
-      return (l1 + 0.05) / (l2 + 0.05);
-    } else {
-      return (l2 + 0.05) / (l1 + 0.05);
-    }
-  };
-
-  chroma.luminance = function(color) {
-    return chroma(color).luminance();
-  };
-
-  chroma.kelvin = function(k) {
-    return chroma(temp2rgb(k), 'rgb');
-  };
-
-  chroma.version = '0.8.0';
-
-  chroma._Color = Color;
+  chroma.version = '1.0.0';
 
 
   /**
@@ -199,9 +205,15 @@
       @source: https://github.com/gka/chroma.js
    */
 
+  _input = {};
+
+  _guess_formats = [];
+
+  _guess_formats_sorted = false;
+
   Color = (function() {
     function Color() {
-      var a, arg, args, len, m, me, me_rgb, o, ref, ref1, ref2, ref3, ref4, x, y, z;
+      var arg, args, chk, len, len1, me, mode, o, w;
       me = this;
       args = [];
       for (o = 0, len = arguments.length; o < len; o++) {
@@ -210,171 +222,37 @@
           args.push(arg);
         }
       }
-      if (args.length === 0) {
-        ref = [255, 0, 255, 1, 'rgb'], x = ref[0], y = ref[1], z = ref[2], a = ref[3], m = ref[4];
-      } else if (type(args[0]) === "array") {
-        if (args[0].length === 3) {
-          ref1 = args[0], x = ref1[0], y = ref1[1], z = ref1[2];
-          a = 1;
-        } else if (args[0].length === 4) {
-          ref2 = args[0], x = ref2[0], y = ref2[1], z = ref2[2], a = ref2[3];
-        } else {
-          throw 'unknown input argument';
+      mode = args[args.length - 1];
+      if (_input[mode] != null) {
+        me._rgb = clip_rgb(_input[mode](unpack(args.slice(0, -1))));
+      } else {
+        if (!_guess_formats_sorted) {
+          _guess_formats = _guess_formats.sort(function(a, b) {
+            return b.p - a.p;
+          });
+          _guess_formats_sorted = true;
         }
-        m = (ref3 = args[1]) != null ? ref3 : 'rgb';
-      } else if (type(args[0]) === "string") {
-        x = args[0];
-        m = 'hex';
-      } else if (type(args[0]) === "object") {
-        ref4 = args[0]._rgb, x = ref4[0], y = ref4[1], z = ref4[2], a = ref4[3];
-        m = 'rgb';
-      } else if (args.length <= 2 && type(args[0]) === "number") {
-        x = args[0];
-        m = 'num';
-      } else if (args.length >= 3) {
-        x = args[0];
-        y = args[1];
-        z = args[2];
-      }
-      if (args.length === 3) {
-        m = 'rgb';
-        a = 1;
-      } else if (args.length === 4) {
-        if (type(args[3]) === "string") {
-          m = args[3];
-          a = 1;
-        } else if (type(args[3]) === "number") {
-          m = 'rgb';
-          a = args[3];
+        for (w = 0, len1 = _guess_formats.length; w < len1; w++) {
+          chk = _guess_formats[w];
+          mode = chk.test.apply(chk, args);
+          if (mode) {
+            break;
+          }
         }
-      } else if (args.length === 5) {
-        a = args[3];
-        m = args[4];
-      }
-      if (m !== 'cmyk') {
-        if (a == null) {
-          a = 1;
+        if (mode) {
+          me._rgb = clip_rgb(_input[mode].apply(_input, args));
         }
       }
-      if (m === 'rgb') {
-        me._rgb = [x, y, z, a];
-      } else if (m === 'gl') {
-        me._rgb = [x * 255, y * 255, z * 255, a];
-      } else if (m === 'hsl') {
-        me._rgb = hsl2rgb(x, y, z);
-        me._rgb[3] = a;
-      } else if (m === 'hsv') {
-        me._rgb = hsv2rgb(x, y, z);
-        me._rgb[3] = a;
-      } else if (m === 'hex') {
-        me._rgb = hex2rgb(x);
-      } else if (m === 'lab') {
-        me._rgb = lab2rgb(x, y, z);
-        me._rgb[3] = a;
-      } else if (m === 'lch') {
-        me._rgb = lch2rgb(x, y, z);
-        me._rgb[3] = a;
-      } else if (m === 'hsi') {
-        me._rgb = hsi2rgb(x, y, z);
-        me._rgb[3] = a;
-      } else if (m === 'num') {
-        me._rgb = num2rgb(x);
-      } else if (m === 'cmyk') {
-        me._rgb = cmyk2rgb(x, y, z, a);
+      if (me._rgb == null) {
+        console.warn('unknown format: ' + args);
       }
-      me_rgb = clip_rgb(me._rgb);
+      if (me._rgb == null) {
+        me._rgb = [0, 0, 0];
+      }
+      if (me._rgb.length === 3) {
+        me._rgb.push(1);
+      }
     }
-
-    Color.prototype.rgb = function() {
-      return this._rgb.slice(0, 3);
-    };
-
-    Color.prototype.rgba = function() {
-      return this._rgb;
-    };
-
-    Color.prototype.hex = function(mode) {
-      if (mode == null) {
-        mode = 'rgb';
-      }
-      return rgb2hex(this._rgb, mode);
-    };
-
-    Color.prototype.toString = function() {
-      return this.name();
-    };
-
-    Color.prototype.hsl = function() {
-      return rgb2hsl(this._rgb);
-    };
-
-    Color.prototype.hsv = function() {
-      return rgb2hsv(this._rgb);
-    };
-
-    Color.prototype.lab = function() {
-      return rgb2lab(this._rgb);
-    };
-
-    Color.prototype.lch = function() {
-      return rgb2lch(this._rgb);
-    };
-
-    Color.prototype.hsi = function() {
-      return rgb2hsi(this._rgb);
-    };
-
-    Color.prototype.gl = function() {
-      return [this._rgb[0] / 255, this._rgb[1] / 255, this._rgb[2] / 255, this._rgb[3]];
-    };
-
-    Color.prototype.num = function() {
-      return rgb2num(this._rgb);
-    };
-
-    Color.prototype.luminance = function(lum, mode) {
-      var cur_lum, eps, max_iter, test;
-      if (mode == null) {
-        mode = 'rgb';
-      }
-      if (!arguments.length) {
-        return luminance(this._rgb);
-      }
-      if (lum === 0) {
-        this._rgb = [0, 0, 0, this._rgb[3]];
-      }
-      if (lum === 1) {
-        this._rgb = [255, 255, 255, this._rgb[3]];
-      }
-      cur_lum = luminance(this._rgb);
-      eps = 1e-7;
-      max_iter = 20;
-      test = function(l, h) {
-        var lm, m;
-        m = l.interpolate(0.5, h, mode);
-        lm = m.luminance();
-        if (Math.abs(lum - lm) < eps || !max_iter--) {
-          return m;
-        }
-        if (lm > lum) {
-          return test(l, m);
-        }
-        return test(m, h);
-      };
-      this._rgb = (cur_lum > lum ? test(new Color('black'), this) : test(this, new Color('white'))).rgba();
-      return this;
-    };
-
-    Color.prototype.name = function() {
-      var h, k;
-      h = this.hex();
-      for (k in chroma.colors) {
-        if (h === chroma.colors[k]) {
-          return k;
-        }
-      }
-      return h;
-    };
 
     Color.prototype.alpha = function(alpha) {
       if (arguments.length) {
@@ -384,287 +262,543 @@
       return this._rgb[3];
     };
 
-    Color.prototype.css = function(mode) {
-      var hsl, me, rgb, rnd;
-      if (mode == null) {
-        mode = 'rgb';
-      }
-      me = this;
-      rgb = me._rgb;
-      if (mode.length === 3 && rgb[3] < 1) {
-        mode += 'a';
-      }
-      if (mode === 'rgb') {
-        return mode + '(' + rgb.slice(0, 3).map(round).join(',') + ')';
-      } else if (mode === 'rgba') {
-        return mode + '(' + rgb.slice(0, 3).map(round).join(',') + ',' + rgb[3] + ')';
-      } else if (mode === 'hsl' || mode === 'hsla') {
-        hsl = me.hsl();
-        rnd = function(a) {
-          return round(a * 100) / 100;
-        };
-        hsl[0] = rnd(hsl[0] || 0);
-        hsl[1] = rnd(hsl[1] * 100) + '%';
-        hsl[2] = rnd(hsl[2] * 100) + '%';
-        if (mode.length === 4) {
-          hsl[3] = rgb[3];
-        }
-        return mode + '(' + hsl.join(',') + ')';
-      }
-    };
-
-    Color.prototype.interpolate = function(f, col, m) {
-
-      /*
-      interpolates between colors
-      f = 0 --> me
-      f = 1 --> col
-       */
-      var dh, hue, hue0, hue1, lbv, lbv0, lbv1, me, res, sat, sat0, sat1, xyz0, xyz1;
-      me = this;
-      if (m == null) {
-        m = 'rgb';
-      }
-      if (type(col) === "string") {
-        col = new Color(col);
-      }
-      if (m === 'hsl' || m === 'hsv' || m === 'lch' || m === 'hsi') {
-        if (m === 'hsl') {
-          xyz0 = me.hsl();
-          xyz1 = col.hsl();
-        } else if (m === 'hsv') {
-          xyz0 = me.hsv();
-          xyz1 = col.hsv();
-        } else if (m === 'hsi') {
-          xyz0 = me.hsi();
-          xyz1 = col.hsi();
-        } else if (m === 'lch') {
-          xyz0 = me.lch();
-          xyz1 = col.lch();
-        }
-        if (m.substr(0, 1) === 'h') {
-          hue0 = xyz0[0], sat0 = xyz0[1], lbv0 = xyz0[2];
-          hue1 = xyz1[0], sat1 = xyz1[1], lbv1 = xyz1[2];
-        } else {
-          lbv0 = xyz0[0], sat0 = xyz0[1], hue0 = xyz0[2];
-          lbv1 = xyz1[0], sat1 = xyz1[1], hue1 = xyz1[2];
-        }
-        if (!isNaN(hue0) && !isNaN(hue1)) {
-          if (hue1 > hue0 && hue1 - hue0 > 180) {
-            dh = hue1 - (hue0 + 360);
-          } else if (hue1 < hue0 && hue0 - hue1 > 180) {
-            dh = hue1 + 360 - hue0;
-          } else {
-            dh = hue1 - hue0;
-          }
-          hue = hue0 + f * dh;
-        } else if (!isNaN(hue0)) {
-          hue = hue0;
-          if ((lbv1 === 1 || lbv1 === 0) && m !== 'hsv') {
-            sat = sat0;
-          }
-        } else if (!isNaN(hue1)) {
-          hue = hue1;
-          if ((lbv0 === 1 || lbv0 === 0) && m !== 'hsv') {
-            sat = sat1;
-          }
-        } else {
-          hue = Number.NaN;
-        }
-        if (sat == null) {
-          sat = sat0 + f * (sat1 - sat0);
-        }
-        lbv = lbv0 + f * (lbv1 - lbv0);
-        if (m.substr(0, 1) === 'h') {
-          res = new Color(hue, sat, lbv, m);
-        } else {
-          res = new Color(lbv, sat, hue, m);
-        }
-      } else if (m === 'rgb') {
-        xyz0 = me._rgb;
-        xyz1 = col._rgb;
-        res = new Color(xyz0[0] + f * (xyz1[0] - xyz0[0]), xyz0[1] + f * (xyz1[1] - xyz0[1]), xyz0[2] + f * (xyz1[2] - xyz0[2]), m);
-      } else if (m === 'num') {
-        if (!(col instanceof Color)) {
-          col = new Color(col, m);
-        }
-        xyz0 = me._rgb;
-        xyz1 = col._rgb;
-        res = new Color(((xyz0[0] + f * (xyz1[0] - xyz0[0])) << 16) + ((xyz0[1] + f * (xyz1[1] - xyz0[1])) << 8) + ((xyz0[2] + f * (xyz1[2] - xyz0[2])) & 0xff), m);
-      } else if (m === 'lab') {
-        xyz0 = me.lab();
-        xyz1 = col.lab();
-        res = new Color(xyz0[0] + f * (xyz1[0] - xyz0[0]), xyz0[1] + f * (xyz1[1] - xyz0[1]), xyz0[2] + f * (xyz1[2] - xyz0[2]), m);
-      } else {
-        throw "color mode " + m + " is not supported";
-      }
-      res.alpha(me.alpha() + f * (col.alpha() - me.alpha()));
-      return res;
-    };
-
-    Color.prototype.mix = function(f, col, m) {
-      return this.interpolate(f, col, m);
-    };
-
-    Color.prototype.premultiply = function() {
-      var a, rgb;
-      rgb = this.rgb();
-      a = this.alpha();
-      return chroma(rgb[0] * a, rgb[1] * a, rgb[2] * a, a);
-    };
-
-    Color.prototype.darken = function(amount) {
-      var lch, me;
-      if (amount == null) {
-        amount = 20;
-      }
-      me = this;
-      lch = me.lch();
-      lch[0] -= amount;
-      return chroma.lch(lch).alpha(me.alpha());
-    };
-
-    Color.prototype.darker = function(amount) {
-      return this.darken(amount);
-    };
-
-    Color.prototype.brighten = function(amount) {
-      if (amount == null) {
-        amount = 20;
-      }
-      return this.darken(-amount);
-    };
-
-    Color.prototype.brighter = function(amount) {
-      return this.brighten(amount);
-    };
-
-    Color.prototype.saturate = function(amount) {
-      var lch, me;
-      if (amount == null) {
-        amount = 20;
-      }
-      me = this;
-      lch = me.lch();
-      lch[1] += amount;
-      return chroma.lch(lch).alpha(me.alpha());
-    };
-
-    Color.prototype.desaturate = function(amount) {
-      if (amount == null) {
-        amount = 20;
-      }
-      return this.saturate(-amount);
-    };
-
-    Color.prototype.blend = function(col, mode) {
-      return chroma.blend(this, col, mode);
-    };
-
-    Color.prototype.kelvin = function() {
-      return rgb2temp(this._rgb);
-    };
-
-    Color.prototype.cmyk = function() {
-      return rgb2cmyk(this._rgb);
+    Color.prototype.toString = function() {
+      return this.name();
     };
 
     return Color;
 
   })();
 
-  clip_rgb = function(rgb) {
-    var i;
-    for (i in rgb) {
-      if (i < 3) {
-        if (rgb[i] < 0) {
-          rgb[i] = 0;
-        }
-        if (rgb[i] > 255) {
-          rgb[i] = 255;
-        }
-      } else if (i === 3) {
-        if (rgb[i] < 0) {
-          rgb[i] = 0;
-        }
-        if (rgb[i] > 1) {
-          rgb[i] = 1;
-        }
-      }
-    }
-    return rgb;
+
+  /**
+  	ColorBrewer colors for chroma.js
+  
+  	Copyright (c) 2002 Cynthia Brewer, Mark Harrower, and The 
+  	Pennsylvania State University.
+  
+  	Licensed under the Apache License, Version 2.0 (the "License"); 
+  	you may not use this file except in compliance with the License.
+  	You may obtain a copy of the License at	
+  	http://www.apache.org/licenses/LICENSE-2.0
+  
+  	Unless required by applicable law or agreed to in writing, software distributed
+  	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  	CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  	specific language governing permissions and limitations under the License.
+  
+      @preserve
+   */
+
+  chroma.brewer = brewer = {
+    OrRd: ['#fff7ec', '#fee8c8', '#fdd49e', '#fdbb84', '#fc8d59', '#ef6548', '#d7301f', '#b30000', '#7f0000'],
+    PuBu: ['#fff7fb', '#ece7f2', '#d0d1e6', '#a6bddb', '#74a9cf', '#3690c0', '#0570b0', '#045a8d', '#023858'],
+    BuPu: ['#f7fcfd', '#e0ecf4', '#bfd3e6', '#9ebcda', '#8c96c6', '#8c6bb1', '#88419d', '#810f7c', '#4d004b'],
+    Oranges: ['#fff5eb', '#fee6ce', '#fdd0a2', '#fdae6b', '#fd8d3c', '#f16913', '#d94801', '#a63603', '#7f2704'],
+    BuGn: ['#f7fcfd', '#e5f5f9', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b'],
+    YlOrBr: ['#ffffe5', '#fff7bc', '#fee391', '#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#993404', '#662506'],
+    YlGn: ['#ffffe5', '#f7fcb9', '#d9f0a3', '#addd8e', '#78c679', '#41ab5d', '#238443', '#006837', '#004529'],
+    Reds: ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d'],
+    RdPu: ['#fff7f3', '#fde0dd', '#fcc5c0', '#fa9fb5', '#f768a1', '#dd3497', '#ae017e', '#7a0177', '#49006a'],
+    Greens: ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#006d2c', '#00441b'],
+    YlGnBu: ['#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#081d58'],
+    Purples: ['#fcfbfd', '#efedf5', '#dadaeb', '#bcbddc', '#9e9ac8', '#807dba', '#6a51a3', '#54278f', '#3f007d'],
+    GnBu: ['#f7fcf0', '#e0f3db', '#ccebc5', '#a8ddb5', '#7bccc4', '#4eb3d3', '#2b8cbe', '#0868ac', '#084081'],
+    Greys: ['#ffffff', '#f0f0f0', '#d9d9d9', '#bdbdbd', '#969696', '#737373', '#525252', '#252525', '#000000'],
+    YlOrRd: ['#ffffcc', '#ffeda0', '#fed976', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#bd0026', '#800026'],
+    PuRd: ['#f7f4f9', '#e7e1ef', '#d4b9da', '#c994c7', '#df65b0', '#e7298a', '#ce1256', '#980043', '#67001f'],
+    Blues: ['#f7fbff', '#deebf7', '#c6dbef', '#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#08519c', '#08306b'],
+    PuBuGn: ['#fff7fb', '#ece2f0', '#d0d1e6', '#a6bddb', '#67a9cf', '#3690c0', '#02818a', '#016c59', '#014636'],
+    Spectral: ['#9e0142', '#d53e4f', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#e6f598', '#abdda4', '#66c2a5', '#3288bd', '#5e4fa2'],
+    RdYlGn: ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850', '#006837'],
+    RdBu: ['#67001f', '#b2182b', '#d6604d', '#f4a582', '#fddbc7', '#f7f7f7', '#d1e5f0', '#92c5de', '#4393c3', '#2166ac', '#053061'],
+    PiYG: ['#8e0152', '#c51b7d', '#de77ae', '#f1b6da', '#fde0ef', '#f7f7f7', '#e6f5d0', '#b8e186', '#7fbc41', '#4d9221', '#276419'],
+    PRGn: ['#40004b', '#762a83', '#9970ab', '#c2a5cf', '#e7d4e8', '#f7f7f7', '#d9f0d3', '#a6dba0', '#5aae61', '#1b7837', '#00441b'],
+    RdYlBu: ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695'],
+    BrBG: ['#543005', '#8c510a', '#bf812d', '#dfc27d', '#f6e8c3', '#f5f5f5', '#c7eae5', '#80cdc1', '#35978f', '#01665e', '#003c30'],
+    RdGy: ['#67001f', '#b2182b', '#d6604d', '#f4a582', '#fddbc7', '#ffffff', '#e0e0e0', '#bababa', '#878787', '#4d4d4d', '#1a1a1a'],
+    PuOr: ['#7f3b08', '#b35806', '#e08214', '#fdb863', '#fee0b6', '#f7f7f7', '#d8daeb', '#b2abd2', '#8073ac', '#542788', '#2d004b'],
+    Set2: ['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f', '#e5c494', '#b3b3b3'],
+    Accent: ['#7fc97f', '#beaed4', '#fdc086', '#ffff99', '#386cb0', '#f0027f', '#bf5b17', '#666666'],
+    Set1: ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf', '#999999'],
+    Set3: ['#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3', '#fdb462', '#b3de69', '#fccde5', '#d9d9d9', '#bc80bd', '#ccebc5', '#ffed6f'],
+    Dark2: ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666'],
+    Paired: ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928'],
+    Pastel2: ['#b3e2cd', '#fdcdac', '#cbd5e8', '#f4cae4', '#e6f5c9', '#fff2ae', '#f1e2cc', '#cccccc'],
+    Pastel1: ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2']
   };
 
-  rgb2cmyk = function() {
-    var b, c, f, g, k, m, r, ref, y;
+
+  /**
+  	X11 color names
+  
+  	http://www.w3.org/TR/css3-color/#svg-color
+   */
+
+  w3cx11 = {
+    indigo: "#4b0082",
+    gold: "#ffd700",
+    hotpink: "#ff69b4",
+    firebrick: "#b22222",
+    indianred: "#cd5c5c",
+    yellow: "#ffff00",
+    mistyrose: "#ffe4e1",
+    darkolivegreen: "#556b2f",
+    olive: "#808000",
+    darkseagreen: "#8fbc8f",
+    pink: "#ffc0cb",
+    tomato: "#ff6347",
+    lightcoral: "#f08080",
+    orangered: "#ff4500",
+    navajowhite: "#ffdead",
+    lime: "#00ff00",
+    palegreen: "#98fb98",
+    darkslategrey: "#2f4f4f",
+    greenyellow: "#adff2f",
+    burlywood: "#deb887",
+    seashell: "#fff5ee",
+    mediumspringgreen: "#00fa9a",
+    fuchsia: "#ff00ff",
+    papayawhip: "#ffefd5",
+    blanchedalmond: "#ffebcd",
+    chartreuse: "#7fff00",
+    dimgray: "#696969",
+    black: "#000000",
+    peachpuff: "#ffdab9",
+    springgreen: "#00ff7f",
+    aquamarine: "#7fffd4",
+    white: "#ffffff",
+    orange: "#ffa500",
+    lightsalmon: "#ffa07a",
+    darkslategray: "#2f4f4f",
+    brown: "#a52a2a",
+    ivory: "#fffff0",
+    dodgerblue: "#1e90ff",
+    peru: "#cd853f",
+    lawngreen: "#7cfc00",
+    chocolate: "#d2691e",
+    crimson: "#dc143c",
+    forestgreen: "#228b22",
+    darkgrey: "#a9a9a9",
+    lightseagreen: "#20b2aa",
+    cyan: "#00ffff",
+    mintcream: "#f5fffa",
+    silver: "#c0c0c0",
+    antiquewhite: "#faebd7",
+    mediumorchid: "#ba55d3",
+    skyblue: "#87ceeb",
+    gray: "#808080",
+    darkturquoise: "#00ced1",
+    goldenrod: "#daa520",
+    darkgreen: "#006400",
+    floralwhite: "#fffaf0",
+    darkviolet: "#9400d3",
+    darkgray: "#a9a9a9",
+    moccasin: "#ffe4b5",
+    saddlebrown: "#8b4513",
+    grey: "#808080",
+    darkslateblue: "#483d8b",
+    lightskyblue: "#87cefa",
+    lightpink: "#ffb6c1",
+    mediumvioletred: "#c71585",
+    slategrey: "#708090",
+    red: "#ff0000",
+    deeppink: "#ff1493",
+    limegreen: "#32cd32",
+    darkmagenta: "#8b008b",
+    palegoldenrod: "#eee8aa",
+    plum: "#dda0dd",
+    turquoise: "#40e0d0",
+    lightgrey: "#d3d3d3",
+    lightgoldenrodyellow: "#fafad2",
+    darkgoldenrod: "#b8860b",
+    lavender: "#e6e6fa",
+    maroon: "#800000",
+    yellowgreen: "#9acd32",
+    sandybrown: "#f4a460",
+    thistle: "#d8bfd8",
+    violet: "#ee82ee",
+    navy: "#000080",
+    magenta: "#ff00ff",
+    dimgrey: "#696969",
+    tan: "#d2b48c",
+    rosybrown: "#bc8f8f",
+    olivedrab: "#6b8e23",
+    blue: "#0000ff",
+    lightblue: "#add8e6",
+    ghostwhite: "#f8f8ff",
+    honeydew: "#f0fff0",
+    cornflowerblue: "#6495ed",
+    slateblue: "#6a5acd",
+    linen: "#faf0e6",
+    darkblue: "#00008b",
+    powderblue: "#b0e0e6",
+    seagreen: "#2e8b57",
+    darkkhaki: "#bdb76b",
+    snow: "#fffafa",
+    sienna: "#a0522d",
+    mediumblue: "#0000cd",
+    royalblue: "#4169e1",
+    lightcyan: "#e0ffff",
+    green: "#008000",
+    mediumpurple: "#9370db",
+    midnightblue: "#191970",
+    cornsilk: "#fff8dc",
+    paleturquoise: "#afeeee",
+    bisque: "#ffe4c4",
+    slategray: "#708090",
+    darkcyan: "#008b8b",
+    khaki: "#f0e68c",
+    wheat: "#f5deb3",
+    teal: "#008080",
+    darkorchid: "#9932cc",
+    deepskyblue: "#00bfff",
+    salmon: "#fa8072",
+    darkred: "#8b0000",
+    steelblue: "#4682b4",
+    palevioletred: "#db7093",
+    lightslategray: "#778899",
+    aliceblue: "#f0f8ff",
+    lightslategrey: "#778899",
+    lightgreen: "#90ee90",
+    orchid: "#da70d6",
+    gainsboro: "#dcdcdc",
+    mediumseagreen: "#3cb371",
+    lightgray: "#d3d3d3",
+    mediumturquoise: "#48d1cc",
+    lemonchiffon: "#fffacd",
+    cadetblue: "#5f9ea0",
+    lightyellow: "#ffffe0",
+    lavenderblush: "#fff0f5",
+    coral: "#ff7f50",
+    purple: "#800080",
+    aqua: "#00ffff",
+    whitesmoke: "#f5f5f5",
+    mediumslateblue: "#7b68ee",
+    darkorange: "#ff8c00",
+    mediumaquamarine: "#66cdaa",
+    darksalmon: "#e9967a",
+    beige: "#f5f5dc",
+    blueviolet: "#8a2be2",
+    azure: "#f0ffff",
+    lightsteelblue: "#b0c4de",
+    oldlace: "#fdf5e6",
+    rebeccapurple: "#663399"
+  };
+
+  chroma.colors = colors = w3cx11;
+
+  lab2rgb = function() {
+    var a, b, g, l, r, ref, ref1, ref2, x, y, z;
+    ref = unpack(arguments), l = ref[0], a = ref[1], b = ref[2];
+
+    /*
+    adapted to match d3 implementation
+     */
+    if (l !== void 0 && l.length === 3) {
+      ref1 = l, l = ref1[0], a = ref1[1], b = ref1[2];
+    }
+    if (l !== void 0 && l.length === 3) {
+      ref2 = l, l = ref2[0], a = ref2[1], b = ref2[2];
+    }
+    y = (l + 16) / 116;
+    x = y + a / 500;
+    z = y - b / 200;
+    x = lab_xyz(x) * LAB_CONSTANTS.X;
+    y = lab_xyz(y) * LAB_CONSTANTS.Y;
+    z = lab_xyz(z) * LAB_CONSTANTS.Z;
+    r = xyz_rgb(3.2404542 * x - 1.5371385 * y - 0.4985314 * z);
+    g = xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z);
+    b = xyz_rgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z);
+    return [limit(r, 0, 255), limit(g, 0, 255), limit(b, 0, 255), 1];
+  };
+
+  lab_xyz = function(x) {
+    if (x > 0.206893034) {
+      return x * x * x;
+    } else {
+      return (x - 4 / 29) / 7.787037;
+    }
+  };
+
+  xyz_rgb = function(r) {
+    return round(255 * (r <= 0.00304 ? 12.92 * r : 1.055 * pow(r, 1 / 2.4) - 0.055));
+  };
+
+  LAB_CONSTANTS = {
+    K: 18,
+    X: 0.950470,
+    Y: 1,
+    Z: 1.088830
+  };
+
+  rgb2lab = function() {
+    var b, g, r, ref, ref1, x, y, z;
     ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
-    r = r / 255;
-    g = g / 255;
-    b = b / 255;
-    k = 1 - Math.max(r, Math.max(g, b));
-    f = k < 1 ? 1 / (1 - k) : 0;
-    c = (1 - r - k) * f;
-    m = (1 - g - k) * f;
-    y = (1 - b - k) * f;
-    return [c, m, y, k];
+    ref1 = rgb2xyz(r, g, b), x = ref1[0], y = ref1[1], z = ref1[2];
+    return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
   };
 
-  cmyk2rgb = function() {
-    var b, c, g, k, m, r, ref, y;
-    ref = unpack(arguments), c = ref[0], m = ref[1], y = ref[2], k = ref[3];
-    if (k === 1) {
-      return [0, 0, 0];
+  rgb_xyz = function(r) {
+    if ((r /= 255) <= 0.04045) {
+      return r / 12.92;
+    } else {
+      return pow((r + 0.055) / 1.055, 2.4);
     }
-    r = c >= 1 ? 0 : round(255 * (1 - c) * (1 - k));
-    g = m >= 1 ? 0 : round(255 * (1 - m) * (1 - k));
-    b = y >= 1 ? 0 : round(255 * (1 - y) * (1 - k));
-    return [r, g, b];
   };
 
-  css2rgb = function(css) {
-    var aa, ab, hsl, i, m, o, rgb, w;
-    css = css.toLowerCase();
-    if ((chroma.colors != null) && chroma.colors[css]) {
-      return hex2rgb(chroma.colors[css]);
+  xyz_lab = function(x) {
+    if (x > 0.008856) {
+      return pow(x, 1 / 3);
+    } else {
+      return 7.787037 * x + 4 / 29;
     }
-    if (m = css.match(/rgb\(\s*(\-?\d+),\s*(\-?\d+)\s*,\s*(\-?\d+)\s*\)/)) {
-      rgb = m.slice(1, 4);
-      for (i = o = 0; o <= 2; i = ++o) {
-        rgb[i] = +rgb[i];
-      }
-      rgb[3] = 1;
-    } else if (m = css.match(/rgba\(\s*(\-?\d+),\s*(\-?\d+)\s*,\s*(\-?\d+)\s*,\s*([01]|[01]?\.\d+)\)/)) {
-      rgb = m.slice(1, 5);
-      for (i = w = 0; w <= 3; i = ++w) {
-        rgb[i] = +rgb[i];
-      }
-    } else if (m = css.match(/rgb\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/)) {
-      rgb = m.slice(1, 4);
-      for (i = aa = 0; aa <= 2; i = ++aa) {
-        rgb[i] = round(rgb[i] * 2.55);
-      }
-      rgb[3] = 1;
-    } else if (m = css.match(/rgba\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
-      rgb = m.slice(1, 5);
-      for (i = ab = 0; ab <= 2; i = ++ab) {
-        rgb[i] = round(rgb[i] * 2.55);
-      }
-      rgb[3] = +rgb[3];
-    } else if (m = css.match(/hsl\(\s*(\-?\d+(?:\.\d+)?),\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/)) {
-      hsl = m.slice(1, 4);
-      hsl[1] *= 0.01;
-      hsl[2] *= 0.01;
-      rgb = hsl2rgb(hsl);
-      rgb[3] = 1;
-    } else if (m = css.match(/hsla\(\s*(\-?\d+(?:\.\d+)?),\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
-      hsl = m.slice(1, 4);
-      hsl[1] *= 0.01;
-      hsl[2] *= 0.01;
-      rgb = hsl2rgb(hsl);
-      rgb[3] = +m[4];
-    }
-    return rgb;
   };
+
+  rgb2xyz = function() {
+    var b, g, r, ref, x, y, z;
+    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+    r = rgb_xyz(r);
+    g = rgb_xyz(g);
+    b = rgb_xyz(b);
+    x = xyz_lab((0.4124564 * r + 0.3575761 * g + 0.1804375 * b) / LAB_CONSTANTS.X);
+    y = xyz_lab((0.2126729 * r + 0.7151522 * g + 0.0721750 * b) / LAB_CONSTANTS.Y);
+    z = xyz_lab((0.0193339 * r + 0.1191920 * g + 0.9503041 * b) / LAB_CONSTANTS.Z);
+    return [x, y, z];
+  };
+
+  chroma.lab = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['lab']), function(){});
+  };
+
+  _input.lab = lab2rgb;
+
+  Color.prototype.lab = function() {
+    return rgb2lab(this._rgb);
+  };
+
+  bezier = function(colors) {
+    var I, I0, I1, c, lab0, lab1, lab2, lab3, ref, ref1, ref2;
+    colors = (function() {
+      var len, o, results;
+      results = [];
+      for (o = 0, len = colors.length; o < len; o++) {
+        c = colors[o];
+        results.push(chroma(c));
+      }
+      return results;
+    })();
+    if (colors.length === 2) {
+      ref = (function() {
+        var len, o, results;
+        results = [];
+        for (o = 0, len = colors.length; o < len; o++) {
+          c = colors[o];
+          results.push(c.lab());
+        }
+        return results;
+      })(), lab0 = ref[0], lab1 = ref[1];
+      I = function(t) {
+        var i, lab;
+        lab = (function() {
+          var o, results;
+          results = [];
+          for (i = o = 0; o <= 2; i = ++o) {
+            results.push(lab0[i] + t * (lab1[i] - lab0[i]));
+          }
+          return results;
+        })();
+        return chroma.lab.apply(chroma, lab);
+      };
+    } else if (colors.length === 3) {
+      ref1 = (function() {
+        var len, o, results;
+        results = [];
+        for (o = 0, len = colors.length; o < len; o++) {
+          c = colors[o];
+          results.push(c.lab());
+        }
+        return results;
+      })(), lab0 = ref1[0], lab1 = ref1[1], lab2 = ref1[2];
+      I = function(t) {
+        var i, lab;
+        lab = (function() {
+          var o, results;
+          results = [];
+          for (i = o = 0; o <= 2; i = ++o) {
+            results.push((1 - t) * (1 - t) * lab0[i] + 2 * (1 - t) * t * lab1[i] + t * t * lab2[i]);
+          }
+          return results;
+        })();
+        return chroma.lab.apply(chroma, lab);
+      };
+    } else if (colors.length === 4) {
+      ref2 = (function() {
+        var len, o, results;
+        results = [];
+        for (o = 0, len = colors.length; o < len; o++) {
+          c = colors[o];
+          results.push(c.lab());
+        }
+        return results;
+      })(), lab0 = ref2[0], lab1 = ref2[1], lab2 = ref2[2], lab3 = ref2[3];
+      I = function(t) {
+        var i, lab;
+        lab = (function() {
+          var o, results;
+          results = [];
+          for (i = o = 0; o <= 2; i = ++o) {
+            results.push((1 - t) * (1 - t) * (1 - t) * lab0[i] + 3 * (1 - t) * (1 - t) * t * lab1[i] + 3 * (1 - t) * t * t * lab2[i] + t * t * t * lab3[i]);
+          }
+          return results;
+        })();
+        return chroma.lab.apply(chroma, lab);
+      };
+    } else if (colors.length === 5) {
+      I0 = bezier(colors.slice(0, 3));
+      I1 = bezier(colors.slice(2, 5));
+      I = function(t) {
+        if (t < 0.5) {
+          return I0(t * 2);
+        } else {
+          return I1((t - 0.5) * 2);
+        }
+      };
+    }
+    return I;
+  };
+
+  chroma.bezier = bezier;
+
+
+  /*
+      chroma.js
+  
+      Copyright (c) 2011-2013, Gregor Aisch
+      All rights reserved.
+  
+      Redistribution and use in source and binary forms, with or without
+      modification, are permitted provided that the following conditions are met:
+  
+      * Redistributions of source code must retain the above copyright notice, this
+        list of conditions and the following disclaimer.
+  
+      * Redistributions in binary form must reproduce the above copyright notice,
+        this list of conditions and the following disclaimer in the documentation
+        and/or other materials provided with the distribution.
+  
+      * The name Gregor Aisch may not be used to endorse or promote products
+        derived from this software without specific prior written permission.
+  
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+      DISCLAIMED. IN NO EVENT SHALL GREGOR AISCH OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+      INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+      OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+      NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+      EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  
+      @source: https://github.com/gka/chroma.js
+   */
+
+  chroma.cubehelix = function(start, rotations, hue, gamma, lightness) {
+    var dh, dl;
+    if (start == null) {
+      start = 300;
+    }
+    if (rotations == null) {
+      rotations = -1.5;
+    }
+    if (hue == null) {
+      hue = 1;
+    }
+    if (gamma == null) {
+      gamma = 1;
+    }
+    if (lightness == null) {
+      lightness = [0, 1];
+    }
+    dl = lightness[1] - lightness[0];
+    if (type(hue) === 'array') {
+      dh = hue[1] - hue[0];
+      if (dh === 0) {
+        hue = hue[1];
+      }
+    } else {
+      dh = 0;
+    }
+    return function(fract) {
+      var a, amp, b, cos_a, g, h, l, r, sin_a;
+      a = TWOPI * ((start + 120) / 360 + rotations * fract);
+      l = pow(lightness[0] + dl * fract, gamma);
+      h = dh !== 0 ? hue[0] + fract * dh : hue;
+      amp = h * l * (1 - l) / 2;
+      cos_a = cos(a);
+      sin_a = sin(a);
+      r = l + amp * (-0.14861 * cos_a + 1.78277 * sin_a);
+      g = l + amp * (-0.29227 * cos_a - 0.90649 * sin_a);
+      b = l + amp * (+1.97294 * cos_a);
+      return chroma(clip_rgb([r * 255, g * 255, b * 255]));
+    };
+  };
+
+  chroma.random = function() {
+    var code, digits, i, o;
+    digits = '0123456789abcdef';
+    code = '#';
+    for (i = o = 0; o < 6; i = ++o) {
+      code += digits.charAt(floor(Math.random() * 16));
+    }
+    return new Color(code);
+  };
+
+  _input.rgb = function() {
+    var k, ref, results, v;
+    ref = unpack(arguments);
+    results = [];
+    for (k in ref) {
+      v = ref[k];
+      results.push(v);
+    }
+    return results;
+  };
+
+  chroma.rgb = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['rgb']), function(){});
+  };
+
+  Color.prototype.rgb = function() {
+    return this._rgb.slice(0, 3);
+  };
+
+  Color.prototype.rgba = function() {
+    return this._rgb;
+  };
+
+  _guess_formats.push({
+    p: 15,
+    test: function(n) {
+      var a;
+      a = unpack(arguments);
+      if (type(a) === 'array' && a.length === 3) {
+        return 'rgb';
+      }
+      if (a.length === 4 && type(a[3]) === "number" && a[3] >= 0 && a[3] <= 1) {
+        return 'rgb';
+      }
+    }
+  });
 
   hex2rgb = function(hex) {
     var a, b, g, r, rgb, u;
@@ -693,41 +827,62 @@
       a = round((u & 0xFF) / 0xFF * 100) / 100;
       return [r, g, b, a];
     }
-    if (rgb = css2rgb(hex)) {
+    if ((_input.css != null) && (rgb = _input.css(hex))) {
       return rgb;
     }
     throw "unknown color: " + hex;
   };
 
-  hsi2rgb = function(h, s, i) {
-
-    /*
-    borrowed from here:
-    http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
-     */
-    var b, g, r, ref;
-    ref = unpack(arguments), h = ref[0], s = ref[1], i = ref[2];
-    h /= 360;
-    if (h < 1 / 3) {
-      b = (1 - s) / 3;
-      r = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
-      g = 1 - (b + r);
-    } else if (h < 2 / 3) {
-      h -= 1 / 3;
-      r = (1 - s) / 3;
-      g = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
-      b = 1 - (r + g);
-    } else {
-      h -= 2 / 3;
-      g = (1 - s) / 3;
-      b = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
-      r = 1 - (g + b);
+  rgb2hex = function(channels, mode) {
+    var a, b, g, hxa, r, str, u;
+    if (mode == null) {
+      mode = 'rgb';
     }
-    r = limit(i * r * 3);
-    g = limit(i * g * 3);
-    b = limit(i * b * 3);
-    return [r * 255, g * 255, b * 255];
+    r = channels[0], g = channels[1], b = channels[2], a = channels[3];
+    u = r << 16 | g << 8 | b;
+    str = "000000" + u.toString(16);
+    str = str.substr(str.length - 6);
+    hxa = '0' + round(a * 255).toString(16);
+    hxa = hxa.substr(hxa.length - 2);
+    return "#" + (function() {
+      switch (mode.toLowerCase()) {
+        case 'rgba':
+          return str + hxa;
+        case 'argb':
+          return hxa + str;
+        default:
+          return str;
+      }
+    })();
   };
+
+  _input.hex = function(h) {
+    return hex2rgb(h);
+  };
+
+  chroma.hex = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['hex']), function(){});
+  };
+
+  Color.prototype.hex = function(mode) {
+    if (mode == null) {
+      mode = 'rgb';
+    }
+    return rgb2hex(this._rgb, mode);
+  };
+
+  _guess_formats.push({
+    p: 10,
+    test: function(n) {
+      if (arguments.length === 1 && type(n) === "string") {
+        return 'hex';
+      }
+    }
+  });
 
   hsl2rgb = function() {
     var b, c, g, h, i, l, o, r, ref, ref1, s, t1, t2, t3;
@@ -762,7 +917,56 @@
       }
       ref1 = [round(c[0] * 255), round(c[1] * 255), round(c[2] * 255)], r = ref1[0], g = ref1[1], b = ref1[2];
     }
-    return [r, g, b];
+    if (arguments.length === 4) {
+      return [r, g, b, arguments[3]];
+    } else {
+      return [r, g, b];
+    }
+  };
+
+  rgb2hsl = function(r, g, b) {
+    var h, l, min, ref, s;
+    if (r !== void 0 && r.length >= 3) {
+      ref = r, r = ref[0], g = ref[1], b = ref[2];
+    }
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    min = Math.min(r, g, b);
+    max = Math.max(r, g, b);
+    l = (max + min) / 2;
+    if (max === min) {
+      s = 0;
+      h = Number.NaN;
+    } else {
+      s = l < 0.5 ? (max - min) / (max + min) : (max - min) / (2 - max - min);
+    }
+    if (r === max) {
+      h = (g - b) / (max - min);
+    } else if (g === max) {
+      h = 2 + (b - r) / (max - min);
+    } else if (b === max) {
+      h = 4 + (r - g) / (max - min);
+    }
+    h *= 60;
+    if (h < 0) {
+      h += 360;
+    }
+    return [h, s, l];
+  };
+
+  chroma.hsl = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['hsl']), function(){});
+  };
+
+  _input.hsl = hsl2rgb;
+
+  Color.prototype.hsl = function() {
+    return rgb2hsl(this._rgb);
   };
 
   hsv2rgb = function() {
@@ -813,191 +1017,8 @@
     return [r, g, b];
   };
 
-  K = 18;
-
-  X = 0.950470;
-
-  Y = 1;
-
-  Z = 1.088830;
-
-  lab2lch = function() {
-    var a, b, c, h, l, ref;
-    ref = unpack(arguments), l = ref[0], a = ref[1], b = ref[2];
-    c = Math.sqrt(a * a + b * b);
-    h = (Math.atan2(b, a) / Math.PI * 180 + 360) % 360;
-    return [l, c, h];
-  };
-
-  lab2rgb = function(l, a, b) {
-
-    /*
-    adapted to match d3 implementation
-     */
-    var g, r, ref, ref1, x, y, z;
-    if (l !== void 0 && l.length === 3) {
-      ref = l, l = ref[0], a = ref[1], b = ref[2];
-    }
-    if (l !== void 0 && l.length === 3) {
-      ref1 = l, l = ref1[0], a = ref1[1], b = ref1[2];
-    }
-    y = (l + 16) / 116;
-    x = y + a / 500;
-    z = y - b / 200;
-    x = lab_xyz(x) * X;
-    y = lab_xyz(y) * Y;
-    z = lab_xyz(z) * Z;
-    r = xyz_rgb(3.2404542 * x - 1.5371385 * y - 0.4985314 * z);
-    g = xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z);
-    b = xyz_rgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z);
-    return [limit(r, 0, 255), limit(g, 0, 255), limit(b, 0, 255), 1];
-  };
-
-  lab_xyz = function(x) {
-    if (x > 0.206893034) {
-      return x * x * x;
-    } else {
-      return (x - 4 / 29) / 7.787037;
-    }
-  };
-
-  xyz_rgb = function(r) {
-    return round(255 * (r <= 0.00304 ? 12.92 * r : 1.055 * pow(r, 1 / 2.4) - 0.055));
-  };
-
-  lch2lab = function() {
-
-    /*
-    Convert from a qualitative parameter h and a quantitative parameter l to a 24-bit pixel. These formulas were invented by David Dalrymple to obtain maximum contrast without going out of gamut if the parameters are in the range 0-1.
-    A saturation multiplier was added by Gregor Aisch
-     */
-    var c, h, l, ref;
-    ref = unpack(arguments), l = ref[0], c = ref[1], h = ref[2];
-    h = h * Math.PI / 180;
-    return [l, Math.cos(h) * c, Math.sin(h) * c];
-  };
-
-  lch2rgb = function(l, c, h) {
-    var L, a, b, g, r, ref, ref1;
-    ref = lch2lab(l, c, h), L = ref[0], a = ref[1], b = ref[2];
-    ref1 = lab2rgb(L, a, b), r = ref1[0], g = ref1[1], b = ref1[2];
-    return [limit(r, 0, 255), limit(g, 0, 255), limit(b, 0, 255)];
-  };
-
-  luminance = function(r, g, b) {
-    var ref;
-    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
-    r = luminance_x(r);
-    g = luminance_x(g);
-    b = luminance_x(b);
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  };
-
-  luminance_x = function(x) {
-    x /= 255;
-    if (x <= 0.03928) {
-      return x / 12.92;
-    } else {
-      return Math.pow((x + 0.055) / 1.055, 2.4);
-    }
-  };
-
-  num2rgb = function(num) {
-    var b, g, r;
-    if (type(num) === "number" && num >= 0 && num <= 0xFFFFFF) {
-      r = num >> 16;
-      g = (num >> 8) & 0xFF;
-      b = num & 0xFF;
-      return [r, g, b, 1];
-    }
-    throw "unknown num color: " + num;
-  };
-
-  rgb2hex = function(channels, mode) {
-    var a, b, g, hxa, r, str, u;
-    if (mode == null) {
-      mode = 'rgb';
-    }
-    r = channels[0], g = channels[1], b = channels[2], a = channels[3];
-    u = r << 16 | g << 8 | b;
-    str = "000000" + u.toString(16);
-    str = str.substr(str.length - 6);
-    hxa = '0' + round(a * 255).toString(16);
-    hxa = hxa.substr(hxa.length - 2);
-    return "#" + (function() {
-      switch (mode.toLowerCase()) {
-        case 'rgba':
-          return str + hxa;
-        case 'argb':
-          return hxa + str;
-        default:
-          return str;
-      }
-    })();
-  };
-
-  rgb2hsi = function() {
-
-    /*
-    borrowed from here:
-    http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/rgb2hsi.cpp
-     */
-    var TWOPI, b, g, h, i, min, r, ref, s;
-    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
-    TWOPI = Math.PI * 2;
-    r /= 255;
-    g /= 255;
-    b /= 255;
-    min = Math.min(r, g, b);
-    i = (r + g + b) / 3;
-    s = 1 - min / i;
-    if (s === 0) {
-      h = 0;
-    } else {
-      h = ((r - g) + (r - b)) / 2;
-      h /= Math.sqrt((r - g) * (r - g) + (r - b) * (g - b));
-      h = Math.acos(h);
-      if (b > g) {
-        h = TWOPI - h;
-      }
-      h /= TWOPI;
-    }
-    return [h * 360, s, i];
-  };
-
-  rgb2hsl = function(r, g, b) {
-    var h, l, max, min, ref, s;
-    if (r !== void 0 && r.length >= 3) {
-      ref = r, r = ref[0], g = ref[1], b = ref[2];
-    }
-    r /= 255;
-    g /= 255;
-    b /= 255;
-    min = Math.min(r, g, b);
-    max = Math.max(r, g, b);
-    l = (max + min) / 2;
-    if (max === min) {
-      s = 0;
-      h = Number.NaN;
-    } else {
-      s = l < 0.5 ? (max - min) / (max + min) : (max - min) / (2 - max - min);
-    }
-    if (r === max) {
-      h = (g - b) / (max - min);
-    } else if (g === max) {
-      h = 2 + (b - r) / (max - min);
-    } else if (b === max) {
-      h = 4 + (r - g) / (max - min);
-    }
-    h *= 60;
-    if (h < 0) {
-      h += 360;
-    }
-    return [h, s, l];
-  };
-
   rgb2hsv = function() {
-    var b, delta, g, h, max, min, r, ref, s, v;
+    var b, delta, g, h, min, r, ref, s, v;
     ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
     min = Math.min(r, g, b);
     max = Math.max(r, g, b);
@@ -1025,39 +1046,213 @@
     return [h, s, v];
   };
 
-  rgb2lab = function() {
-    var b, g, r, ref, ref1, x, y, z;
-    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
-    ref1 = rgb2xyz(r, g, b), x = ref1[0], y = ref1[1], z = ref1[2];
-    return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
+  chroma.hsv = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['hsv']), function(){});
   };
 
-  rgb_xyz = function(r) {
-    if ((r /= 255) <= 0.04045) {
-      return r / 12.92;
+  _input.hsv = hsv2rgb;
+
+  Color.prototype.hsv = function() {
+    return rgb2hsv(this._rgb);
+  };
+
+  num2rgb = function(num) {
+    var b, g, r;
+    if (type(num) === "number" && num >= 0 && num <= 0xFFFFFF) {
+      r = num >> 16;
+      g = (num >> 8) & 0xFF;
+      b = num & 0xFF;
+      return [r, g, b, 1];
+    }
+    console.warn("unknown num color: " + num);
+    return [0, 0, 0, 1];
+  };
+
+  rgb2num = function() {
+    var b, g, r, ref;
+    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+    return (r << 16) + (g << 8) + b;
+  };
+
+  chroma.num = function(num) {
+    return new Color(num, 'num');
+  };
+
+  Color.prototype.num = function() {
+    return rgb2num(this._rgb);
+  };
+
+  _input.num = num2rgb;
+
+  _guess_formats.push({
+    p: 10,
+    test: function(n) {
+      if (arguments.length === 1 && type(n) === "number" && n >= 0 && n <= 0xFFFFFF) {
+        return 'num';
+      }
+    }
+  });
+
+  css2rgb = function(css) {
+    var aa, ab, hsl, i, m, o, rgb, w;
+    css = css.toLowerCase();
+    if ((chroma.colors != null) && chroma.colors[css]) {
+      return hex2rgb(chroma.colors[css]);
+    }
+    if (m = css.match(/rgb\(\s*(\-?\d+),\s*(\-?\d+)\s*,\s*(\-?\d+)\s*\)/)) {
+      rgb = m.slice(1, 4);
+      for (i = o = 0; o <= 2; i = ++o) {
+        rgb[i] = +rgb[i];
+      }
+      rgb[3] = 1;
+    } else if (m = css.match(/rgba\(\s*(\-?\d+),\s*(\-?\d+)\s*,\s*(\-?\d+)\s*,\s*([01]|[01]?\.\d+)\)/)) {
+      rgb = m.slice(1, 5);
+      for (i = w = 0; w <= 3; i = ++w) {
+        rgb[i] = +rgb[i];
+      }
+    } else if (m = css.match(/rgb\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/)) {
+      rgb = m.slice(1, 4);
+      for (i = aa = 0; aa <= 2; i = ++aa) {
+        rgb[i] = round(rgb[i] * 2.55);
+      }
+      rgb[3] = 1;
+    } else if (m = css.match(/rgba\(\s*(\-?\d+(?:\.\d+)?)%,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
+      rgb = m.slice(1, 5);
+      for (i = ab = 0; ab <= 2; i = ++ab) {
+        rgb[i] = round(rgb[i] * 2.55);
+      }
+      rgb[3] = +rgb[3];
+    } else if (m = css.match(/hsl\(\s*(\-?\d+(?:\.\d+)?),\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*\)/)) {
+      hsl = m.slice(1, 4);
+      hsl[1] *= 0.01;
+      hsl[2] *= 0.01;
+      rgb = hsl2rgb(hsl);
+      rgb[3] = 1;
+    } else if (m = css.match(/hsla\(\s*(\-?\d+(?:\.\d+)?),\s*(\-?\d+(?:\.\d+)?)%\s*,\s*(\-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)/)) {
+      hsl = m.slice(1, 4);
+      hsl[1] *= 0.01;
+      hsl[2] *= 0.01;
+      rgb = hsl2rgb(hsl);
+      rgb[3] = +m[4];
+    }
+    return rgb;
+  };
+
+  rgb2css = function(rgba) {
+    var mode;
+    mode = rgba[3] < 1 ? 'rgba' : 'rgb';
+    if (mode === 'rgb') {
+      return mode + '(' + rgba.slice(0, 3).map(round).join(',') + ')';
+    } else if (mode === 'rgba') {
+      return mode + '(' + rgba.slice(0, 3).map(round).join(',') + ',' + rgba[3] + ')';
     } else {
-      return Math.pow((r + 0.055) / 1.055, 2.4);
+
     }
   };
 
-  xyz_lab = function(x) {
-    if (x > 0.008856) {
-      return Math.pow(x, 1 / 3);
-    } else {
-      return 7.787037 * x + 4 / 29;
+  rnd = function(a) {
+    return round(a * 100) / 100;
+  };
+
+  hsl2css = function(hsl, alpha) {
+    var mode;
+    mode = alpha < 1 ? 'hsla' : 'hsl';
+    hsl[0] = rnd(hsl[0] || 0);
+    hsl[1] = rnd(hsl[1] * 100) + '%';
+    hsl[2] = rnd(hsl[2] * 100) + '%';
+    if (mode === 'hsla') {
+      hsl[3] = alpha;
+    }
+    return mode + '(' + hsl.join(',') + ')';
+  };
+
+  _input.css = function(h) {
+    return css2rgb(h);
+  };
+
+  chroma.css = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['css']), function(){});
+  };
+
+  Color.prototype.css = function(mode) {
+    if (mode == null) {
+      mode = 'rgb';
+    }
+    if (mode.slice(0, 3) === 'rgb') {
+      return rgb2css(this._rgb);
+    } else if (mode.slice(0, 3) === 'hsl') {
+      return hsl2css(this.hsl(), this.alpha());
     }
   };
 
-  rgb2xyz = function() {
-    var b, g, r, ref, x, y, z;
-    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
-    r = rgb_xyz(r);
-    g = rgb_xyz(g);
-    b = rgb_xyz(b);
-    x = xyz_lab((0.4124564 * r + 0.3575761 * g + 0.1804375 * b) / X);
-    y = xyz_lab((0.2126729 * r + 0.7151522 * g + 0.0721750 * b) / Y);
-    z = xyz_lab((0.0193339 * r + 0.1191920 * g + 0.9503041 * b) / Z);
-    return [x, y, z];
+  _input.named = function(name) {
+    return hex2rgb(w3cx11[name]);
+  };
+
+  _guess_formats.push({
+    p: 20,
+    test: function(n) {
+      if (arguments.length === 1 && (w3cx11[n] != null)) {
+        return 'named';
+      }
+    }
+  });
+
+  Color.prototype.name = function(n) {
+    var h, k;
+    if (arguments.length) {
+      if (w3cx11[n]) {
+        this._rgb = hex2rgb(w3cx11[n]);
+      }
+      this._rgb[3] = 1;
+      this;
+    }
+    h = this.hex();
+    for (k in w3cx11) {
+      if (h === w3cx11[k]) {
+        return k;
+      }
+    }
+    return h;
+  };
+
+  lch2lab = function() {
+
+    /*
+    Convert from a qualitative parameter h and a quantitative parameter l to a 24-bit pixel.
+    These formulas were invented by David Dalrymple to obtain maximum contrast without going
+    out of gamut if the parameters are in the range 0-1.
+    
+    A saturation multiplier was added by Gregor Aisch
+     */
+    var c, h, l, ref;
+    ref = unpack(arguments), l = ref[0], c = ref[1], h = ref[2];
+    h = h * PI / 180;
+    return [l, cos(h) * c, sin(h) * c];
+  };
+
+  lch2rgb = function() {
+    var L, a, b, c, g, h, l, r, ref, ref1, ref2;
+    ref = unpack(arguments), l = ref[0], c = ref[1], h = ref[2];
+    ref1 = lch2lab(l, c, h), L = ref1[0], a = ref1[1], b = ref1[2];
+    ref2 = lab2rgb(L, a, b), r = ref2[0], g = ref2[1], b = ref2[2];
+    return [limit(r, 0, 255), limit(g, 0, 255), limit(b, 0, 255)];
+  };
+
+  lab2lch = function() {
+    var a, b, c, h, l, ref;
+    ref = unpack(arguments), l = ref[0], a = ref[1], b = ref[2];
+    c = sqrt(a * a + b * b);
+    h = (atan2(b, a) / PI * 180 + 360) % 360;
+    return [l, c, h];
   };
 
   rgb2lch = function() {
@@ -1067,13 +1262,220 @@
     return lab2lch(l, a, b);
   };
 
-  rgb2num = function() {
-    var b, g, r, ref;
-    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
-    return (r << 16) + (g << 8) + b;
+  chroma.lch = function() {
+    var args;
+    args = unpack(arguments);
+    return new Color(args, 'lch');
   };
 
-  temp2rgb = function(kelvin) {
+  chroma.hcl = function() {
+    var args;
+    args = unpack(arguments);
+    return new Color(args, 'hcl');
+  };
+
+  _input.lch = lch2rgb;
+
+  _input.hcl = function() {
+    var c, h, l, ref;
+    ref = unpack(arguments), h = ref[0], c = ref[1], l = ref[2];
+    return lch2rgb([l, c, h]);
+  };
+
+  Color.prototype.lch = function() {
+    return rgb2lch(this._rgb);
+  };
+
+  Color.prototype.hcl = function() {
+    return rgb2lch(this._rgb).reverse();
+  };
+
+  rgb2cmyk = function(mode) {
+    var b, c, f, g, k, m, r, ref, y;
+    if (mode == null) {
+      mode = 'rgb';
+    }
+    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+    r = r / 255;
+    g = g / 255;
+    b = b / 255;
+    k = 1 - Math.max(r, Math.max(g, b));
+    f = k < 1 ? 1 / (1 - k) : 0;
+    c = (1 - r - k) * f;
+    m = (1 - g - k) * f;
+    y = (1 - b - k) * f;
+    return [c, m, y, k];
+  };
+
+  cmyk2rgb = function() {
+    var b, c, g, k, m, r, ref, y;
+    ref = unpack(arguments), c = ref[0], m = ref[1], y = ref[2], k = ref[3];
+    if (k === 1) {
+      return [0, 0, 0];
+    }
+    r = c >= 1 ? 0 : round(255 * (1 - c) * (1 - k));
+    g = m >= 1 ? 0 : round(255 * (1 - m) * (1 - k));
+    b = y >= 1 ? 0 : round(255 * (1 - y) * (1 - k));
+    return [r, g, b];
+  };
+
+  _input.cmyk = function() {
+    var c, k, m, ref, y;
+    ref = unpack(arguments), c = ref[0], m = ref[1], y = ref[2], k = ref[3];
+    return cmyk2rgb(c, m, y, k);
+  };
+
+  chroma.cmyk = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['cmyk']), function(){});
+  };
+
+  Color.prototype.cmyk = function() {
+    return rgb2cmyk(this._rgb);
+  };
+
+  _input.gl = function() {
+    var i, k, o, rgb, v;
+    rgb = (function() {
+      var ref, results;
+      ref = unpack(arguments);
+      results = [];
+      for (k in ref) {
+        v = ref[k];
+        results.push(v);
+      }
+      return results;
+    }).apply(this, arguments);
+    for (i = o = 0; o <= 2; i = ++o) {
+      rgb[i] *= 255;
+    }
+    return rgb;
+  };
+
+  chroma.gl = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['gl']), function(){});
+  };
+
+  Color.prototype.gl = function() {
+    var rgb;
+    rgb = this._rgb;
+    return [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, rgb[3]];
+  };
+
+  rgb2luminance = function(r, g, b) {
+    var ref;
+    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+    r = luminance_x(r);
+    g = luminance_x(g);
+    b = luminance_x(b);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+
+  luminance_x = function(x) {
+    x /= 255;
+    if (x <= 0.03928) {
+      return x / 12.92;
+    } else {
+      return pow((x + 0.055) / 1.055, 2.4);
+    }
+  };
+
+  _interpolators = [];
+
+  interpolate = function(col1, col2, f, m) {
+    var interpol, len, o, res;
+    if (f == null) {
+      f = 0.5;
+    }
+    if (m == null) {
+      m = 'rgb';
+    }
+
+    /*
+    interpolates between colors
+    f = 0 --> me
+    f = 1 --> col
+     */
+    if (type(col1) !== 'object') {
+      col1 = chroma(col1);
+    }
+    if (type(col2) !== 'object') {
+      col2 = chroma(col2);
+    }
+    for (o = 0, len = _interpolators.length; o < len; o++) {
+      interpol = _interpolators[o];
+      if (m === interpol[0]) {
+        res = interpol[1](col1, col2, f, m);
+        break;
+      }
+    }
+    if (res == null) {
+      throw "color mode " + m + " is not supported";
+    }
+    res.alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
+    return res;
+  };
+
+  chroma.interpolate = interpolate;
+
+  Color.prototype.interpolate = function(col2, f, m) {
+    return interpolate(this, col2, f, m);
+  };
+
+  chroma.mix = interpolate;
+
+  Color.prototype.mix = Color.prototype.interpolate;
+
+  interpolate_rgb = function(col1, col2, f, m) {
+    var xyz0, xyz1;
+    xyz0 = col1._rgb;
+    xyz1 = col2._rgb;
+    return new Color(xyz0[0] + f * (xyz1[0] - xyz0[0]), xyz0[1] + f * (xyz1[1] - xyz0[1]), xyz0[2] + f * (xyz1[2] - xyz0[2]), m);
+  };
+
+  _interpolators.push(['rgb', interpolate_rgb]);
+
+  Color.prototype.luminance = function(lum, mode) {
+    var cur_lum, eps, max_iter, test;
+    if (mode == null) {
+      mode = 'rgb';
+    }
+    if (!arguments.length) {
+      return rgb2luminance(this._rgb);
+    }
+    if (lum === 0) {
+      this._rgb = [0, 0, 0, this._rgb[3]];
+    } else if (lum === 1) {
+      this._rgb = [255, 255, 255, this._rgb[3]];
+    } else {
+      eps = 1e-7;
+      max_iter = 20;
+      test = function(l, h) {
+        var lm, m;
+        m = l.interpolate(h, 0.5, mode);
+        lm = m.luminance();
+        if (Math.abs(lum - lm) < eps || !max_iter--) {
+          return m;
+        }
+        if (lm > lum) {
+          return test(l, m);
+        }
+        return test(m, h);
+      };
+      cur_lum = rgb2luminance(this._rgb);
+      this._rgb = (cur_lum > lum ? test(chroma('black'), this) : test(this, chroma('white'))).rgba();
+    }
+    return this;
+  };
+
+  temperature2rgb = function(kelvin) {
     var b, g, r, temp;
     temp = kelvin / 100;
     if (temp < 66) {
@@ -1088,7 +1490,7 @@
     return clip_rgb([r, g, b]);
   };
 
-  rgb2temp = function() {
+  rgb2temperature = function() {
     var b, eps, g, maxTemp, minTemp, r, ref, rgb, temp;
     ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
     minTemp = 1000;
@@ -1096,7 +1498,7 @@
     eps = 0.4;
     while (maxTemp - minTemp > eps) {
       temp = (maxTemp + minTemp) * 0.5;
-      rgb = temp2rgb(temp);
+      rgb = temperature2rgb(temp);
       if ((rgb[2] / rgb[0]) >= (b / r)) {
         maxTemp = temp;
       } else {
@@ -1105,6 +1507,186 @@
     }
     return round(temp);
   };
+
+  chroma.temperature = chroma.kelvin = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['temperature']), function(){});
+  };
+
+  _input.temperature = _input.kelvin = _input.K = temperature2rgb;
+
+  Color.prototype.temperature = function() {
+    return rgb2temperature(this._rgb);
+  };
+
+  Color.prototype.kelvin = Color.prototype.temperature;
+
+  chroma.contrast = function(a, b) {
+    var l1, l2, ref, ref1;
+    if ((ref = type(a)) === 'string' || ref === 'number') {
+      a = new Color(a);
+    }
+    if ((ref1 = type(b)) === 'string' || ref1 === 'number') {
+      b = new Color(b);
+    }
+    l1 = a.luminance();
+    l2 = b.luminance();
+    if (l1 > l2) {
+      return (l1 + 0.05) / (l2 + 0.05);
+    } else {
+      return (l2 + 0.05) / (l1 + 0.05);
+    }
+  };
+
+  Color.prototype.darken = function(amount) {
+    var lch, me;
+    if (amount == null) {
+      amount = 20;
+    }
+    me = this;
+    lch = me.lch();
+    lch[0] -= amount;
+    return chroma.lch(lch).alpha(me.alpha());
+  };
+
+  Color.prototype.darker = Color.prototype.darken;
+
+  Color.prototype.brighten = function(amount) {
+    if (amount == null) {
+      amount = 20;
+    }
+    return this.darken(-amount);
+  };
+
+  Color.prototype.brighter = Color.prototype.brighten;
+
+  Color.prototype.saturate = function(amount) {
+    var lch, me;
+    if (amount == null) {
+      amount = 20;
+    }
+    me = this;
+    lch = me.lch();
+    lch[1] += amount;
+    if (lch[1] < 0) {
+      lch[1] = 0;
+    }
+    return chroma.lch(lch).alpha(me.alpha());
+  };
+
+  Color.prototype.desaturate = function(amount) {
+    if (amount == null) {
+      amount = 20;
+    }
+    return this.saturate(-amount);
+  };
+
+  Color.prototype.premultiply = function() {
+    var a, rgb;
+    rgb = this.rgb();
+    a = this.alpha();
+    return chroma(rgb[0] * a, rgb[1] * a, rgb[2] * a, a);
+  };
+
+  blend = function(bottom, top, mode) {
+    if (!blend[mode]) {
+      throw 'unknown blend mode ' + mode;
+    }
+    return blend[mode](bottom, top);
+  };
+
+  blend_f = function(f) {
+    return function(bottom, top) {
+      var c0, c1;
+      c0 = chroma(top).rgb();
+      c1 = chroma(bottom).rgb();
+      return chroma(f(c0, c1), 'rgb');
+    };
+  };
+
+  each = function(f) {
+    return function(c0, c1) {
+      var i, o, out;
+      out = [];
+      for (i = o = 0; o <= 3; i = ++o) {
+        out[i] = f(c0[i], c1[i]);
+      }
+      return out;
+    };
+  };
+
+  normal = function(a, b) {
+    return a;
+  };
+
+  multiply = function(a, b) {
+    return a * b / 255;
+  };
+
+  darken = function(a, b) {
+    if (a > b) {
+      return b;
+    } else {
+      return a;
+    }
+  };
+
+  lighten = function(a, b) {
+    if (a > b) {
+      return a;
+    } else {
+      return b;
+    }
+  };
+
+  screen = function(a, b) {
+    return 255 * (1 - (1 - a / 255) * (1 - b / 255));
+  };
+
+  overlay = function(a, b) {
+    if (b < 128) {
+      return 2 * a * b / 255;
+    } else {
+      return 255 * (1 - 2 * (1 - a / 255) * (1 - b / 255));
+    }
+  };
+
+  burn = function(a, b) {
+    return 255 * (1 - (1 - b / 255) / (a / 255));
+  };
+
+  dodge = function(a, b) {
+    if (a === 255) {
+      return 255;
+    }
+    a = 255 * (b / 255) / (1 - a / 255);
+    if (a > 255) {
+      return 255;
+    } else {
+      return a;
+    }
+  };
+
+  blend.normal = blend_f(each(normal));
+
+  blend.multiply = blend_f(each(multiply));
+
+  blend.screen = blend_f(each(screen));
+
+  blend.overlay = blend_f(each(overlay));
+
+  blend.darken = blend_f(each(darken));
+
+  blend.lighten = blend_f(each(lighten));
+
+  blend.dodge = blend_f(each(dodge));
+
+  blend.burn = blend_f(each(burn));
+
+  chroma.blend = blend;
 
 
   /*
@@ -1504,7 +2086,7 @@
   };
 
   chroma.limits = function(data, mode, num) {
-    var aa, ab, ac, ad, ae, af, ag, ah, ai, aj, ak, al, am, assignments, best, centroids, cluster, clusterSizes, dist, i, j, kClusters, limits, max, max_log, min, min_log, mindist, n, nb_iters, newCentroids, o, p, pb, pr, ref, ref1, ref10, ref11, ref12, ref13, ref14, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9, repeat, sum, tmpKMeansBreaks, value, values, w;
+    var aa, ab, ac, ad, ae, af, ag, ah, ai, aj, ak, al, am, assignments, best, centroids, cluster, clusterSizes, dist, i, j, kClusters, limits, max_log, min, min_log, mindist, n, nb_iters, newCentroids, o, p, pb, pr, ref, ref1, ref10, ref11, ref12, ref13, ref14, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9, repeat, sum, tmpKMeansBreaks, value, values, w;
     if (mode == null) {
       mode = 'equal';
     }
@@ -1645,582 +2227,161 @@
     return limits;
   };
 
-
-  /**
-  	ColorBrewer colors for chroma.js
-  
-  	Copyright (c) 2002 Cynthia Brewer, Mark Harrower, and The 
-  	Pennsylvania State University.
-  
-  	Licensed under the Apache License, Version 2.0 (the "License"); 
-  	you may not use this file except in compliance with the License.
-  	You may obtain a copy of the License at	
-  	http://www.apache.org/licenses/LICENSE-2.0
-  
-  	Unless required by applicable law or agreed to in writing, software distributed
-  	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  	CONDITIONS OF ANY KIND, either express or implied. See the License for the
-  	specific language governing permissions and limitations under the License.
-  
-      @preserve
-   */
-
-  chroma.brewer = brewer = {
-    OrRd: ['#fff7ec', '#fee8c8', '#fdd49e', '#fdbb84', '#fc8d59', '#ef6548', '#d7301f', '#b30000', '#7f0000'],
-    PuBu: ['#fff7fb', '#ece7f2', '#d0d1e6', '#a6bddb', '#74a9cf', '#3690c0', '#0570b0', '#045a8d', '#023858'],
-    BuPu: ['#f7fcfd', '#e0ecf4', '#bfd3e6', '#9ebcda', '#8c96c6', '#8c6bb1', '#88419d', '#810f7c', '#4d004b'],
-    Oranges: ['#fff5eb', '#fee6ce', '#fdd0a2', '#fdae6b', '#fd8d3c', '#f16913', '#d94801', '#a63603', '#7f2704'],
-    BuGn: ['#f7fcfd', '#e5f5f9', '#ccece6', '#99d8c9', '#66c2a4', '#41ae76', '#238b45', '#006d2c', '#00441b'],
-    YlOrBr: ['#ffffe5', '#fff7bc', '#fee391', '#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#993404', '#662506'],
-    YlGn: ['#ffffe5', '#f7fcb9', '#d9f0a3', '#addd8e', '#78c679', '#41ab5d', '#238443', '#006837', '#004529'],
-    Reds: ['#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d'],
-    RdPu: ['#fff7f3', '#fde0dd', '#fcc5c0', '#fa9fb5', '#f768a1', '#dd3497', '#ae017e', '#7a0177', '#49006a'],
-    Greens: ['#f7fcf5', '#e5f5e0', '#c7e9c0', '#a1d99b', '#74c476', '#41ab5d', '#238b45', '#006d2c', '#00441b'],
-    YlGnBu: ['#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#081d58'],
-    Purples: ['#fcfbfd', '#efedf5', '#dadaeb', '#bcbddc', '#9e9ac8', '#807dba', '#6a51a3', '#54278f', '#3f007d'],
-    GnBu: ['#f7fcf0', '#e0f3db', '#ccebc5', '#a8ddb5', '#7bccc4', '#4eb3d3', '#2b8cbe', '#0868ac', '#084081'],
-    Greys: ['#ffffff', '#f0f0f0', '#d9d9d9', '#bdbdbd', '#969696', '#737373', '#525252', '#252525', '#000000'],
-    YlOrRd: ['#ffffcc', '#ffeda0', '#fed976', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#bd0026', '#800026'],
-    PuRd: ['#f7f4f9', '#e7e1ef', '#d4b9da', '#c994c7', '#df65b0', '#e7298a', '#ce1256', '#980043', '#67001f'],
-    Blues: ['#f7fbff', '#deebf7', '#c6dbef', '#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#08519c', '#08306b'],
-    PuBuGn: ['#fff7fb', '#ece2f0', '#d0d1e6', '#a6bddb', '#67a9cf', '#3690c0', '#02818a', '#016c59', '#014636'],
-    Spectral: ['#9e0142', '#d53e4f', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#e6f598', '#abdda4', '#66c2a5', '#3288bd', '#5e4fa2'],
-    RdYlGn: ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850', '#006837'],
-    RdBu: ['#67001f', '#b2182b', '#d6604d', '#f4a582', '#fddbc7', '#f7f7f7', '#d1e5f0', '#92c5de', '#4393c3', '#2166ac', '#053061'],
-    PiYG: ['#8e0152', '#c51b7d', '#de77ae', '#f1b6da', '#fde0ef', '#f7f7f7', '#e6f5d0', '#b8e186', '#7fbc41', '#4d9221', '#276419'],
-    PRGn: ['#40004b', '#762a83', '#9970ab', '#c2a5cf', '#e7d4e8', '#f7f7f7', '#d9f0d3', '#a6dba0', '#5aae61', '#1b7837', '#00441b'],
-    RdYlBu: ['#a50026', '#d73027', '#f46d43', '#fdae61', '#fee090', '#ffffbf', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4', '#313695'],
-    BrBG: ['#543005', '#8c510a', '#bf812d', '#dfc27d', '#f6e8c3', '#f5f5f5', '#c7eae5', '#80cdc1', '#35978f', '#01665e', '#003c30'],
-    RdGy: ['#67001f', '#b2182b', '#d6604d', '#f4a582', '#fddbc7', '#ffffff', '#e0e0e0', '#bababa', '#878787', '#4d4d4d', '#1a1a1a'],
-    PuOr: ['#7f3b08', '#b35806', '#e08214', '#fdb863', '#fee0b6', '#f7f7f7', '#d8daeb', '#b2abd2', '#8073ac', '#542788', '#2d004b'],
-    Set2: ['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f', '#e5c494', '#b3b3b3'],
-    Accent: ['#7fc97f', '#beaed4', '#fdc086', '#ffff99', '#386cb0', '#f0027f', '#bf5b17', '#666666'],
-    Set1: ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf', '#999999'],
-    Set3: ['#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3', '#fdb462', '#b3de69', '#fccde5', '#d9d9d9', '#bc80bd', '#ccebc5', '#ffed6f'],
-    Dark2: ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666'],
-    Paired: ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928'],
-    Pastel2: ['#b3e2cd', '#fdcdac', '#cbd5e8', '#f4cae4', '#e6f5c9', '#fff2ae', '#f1e2cc', '#cccccc'],
-    Pastel1: ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2']
-  };
-
-
-  /**
-  	X11 color names
-  
-  	http://www.w3.org/TR/css3-color/#svg-color
-   */
-
-  chroma.colors = colors = {
-    indigo: "#4b0082",
-    gold: "#ffd700",
-    hotpink: "#ff69b4",
-    firebrick: "#b22222",
-    indianred: "#cd5c5c",
-    yellow: "#ffff00",
-    mistyrose: "#ffe4e1",
-    darkolivegreen: "#556b2f",
-    olive: "#808000",
-    darkseagreen: "#8fbc8f",
-    pink: "#ffc0cb",
-    tomato: "#ff6347",
-    lightcoral: "#f08080",
-    orangered: "#ff4500",
-    navajowhite: "#ffdead",
-    lime: "#00ff00",
-    palegreen: "#98fb98",
-    darkslategrey: "#2f4f4f",
-    greenyellow: "#adff2f",
-    burlywood: "#deb887",
-    seashell: "#fff5ee",
-    mediumspringgreen: "#00fa9a",
-    fuchsia: "#ff00ff",
-    papayawhip: "#ffefd5",
-    blanchedalmond: "#ffebcd",
-    chartreuse: "#7fff00",
-    dimgray: "#696969",
-    black: "#000000",
-    peachpuff: "#ffdab9",
-    springgreen: "#00ff7f",
-    aquamarine: "#7fffd4",
-    white: "#ffffff",
-    orange: "#ffa500",
-    lightsalmon: "#ffa07a",
-    darkslategray: "#2f4f4f",
-    brown: "#a52a2a",
-    ivory: "#fffff0",
-    dodgerblue: "#1e90ff",
-    peru: "#cd853f",
-    lawngreen: "#7cfc00",
-    chocolate: "#d2691e",
-    crimson: "#dc143c",
-    forestgreen: "#228b22",
-    darkgrey: "#a9a9a9",
-    lightseagreen: "#20b2aa",
-    cyan: "#00ffff",
-    mintcream: "#f5fffa",
-    silver: "#c0c0c0",
-    antiquewhite: "#faebd7",
-    mediumorchid: "#ba55d3",
-    skyblue: "#87ceeb",
-    gray: "#808080",
-    darkturquoise: "#00ced1",
-    goldenrod: "#daa520",
-    darkgreen: "#006400",
-    floralwhite: "#fffaf0",
-    darkviolet: "#9400d3",
-    darkgray: "#a9a9a9",
-    moccasin: "#ffe4b5",
-    saddlebrown: "#8b4513",
-    grey: "#808080",
-    darkslateblue: "#483d8b",
-    lightskyblue: "#87cefa",
-    lightpink: "#ffb6c1",
-    mediumvioletred: "#c71585",
-    slategrey: "#708090",
-    red: "#ff0000",
-    deeppink: "#ff1493",
-    limegreen: "#32cd32",
-    darkmagenta: "#8b008b",
-    palegoldenrod: "#eee8aa",
-    plum: "#dda0dd",
-    turquoise: "#40e0d0",
-    lightgrey: "#d3d3d3",
-    lightgoldenrodyellow: "#fafad2",
-    darkgoldenrod: "#b8860b",
-    lavender: "#e6e6fa",
-    maroon: "#800000",
-    yellowgreen: "#9acd32",
-    sandybrown: "#f4a460",
-    thistle: "#d8bfd8",
-    violet: "#ee82ee",
-    navy: "#000080",
-    magenta: "#ff00ff",
-    dimgrey: "#696969",
-    tan: "#d2b48c",
-    rosybrown: "#bc8f8f",
-    olivedrab: "#6b8e23",
-    blue: "#0000ff",
-    lightblue: "#add8e6",
-    ghostwhite: "#f8f8ff",
-    honeydew: "#f0fff0",
-    cornflowerblue: "#6495ed",
-    slateblue: "#6a5acd",
-    linen: "#faf0e6",
-    darkblue: "#00008b",
-    powderblue: "#b0e0e6",
-    seagreen: "#2e8b57",
-    darkkhaki: "#bdb76b",
-    snow: "#fffafa",
-    sienna: "#a0522d",
-    mediumblue: "#0000cd",
-    royalblue: "#4169e1",
-    lightcyan: "#e0ffff",
-    green: "#008000",
-    mediumpurple: "#9370db",
-    midnightblue: "#191970",
-    cornsilk: "#fff8dc",
-    paleturquoise: "#afeeee",
-    bisque: "#ffe4c4",
-    slategray: "#708090",
-    darkcyan: "#008b8b",
-    khaki: "#f0e68c",
-    wheat: "#f5deb3",
-    teal: "#008080",
-    darkorchid: "#9932cc",
-    deepskyblue: "#00bfff",
-    salmon: "#fa8072",
-    darkred: "#8b0000",
-    steelblue: "#4682b4",
-    palevioletred: "#db7093",
-    lightslategray: "#778899",
-    aliceblue: "#f0f8ff",
-    lightslategrey: "#778899",
-    lightgreen: "#90ee90",
-    orchid: "#da70d6",
-    gainsboro: "#dcdcdc",
-    mediumseagreen: "#3cb371",
-    lightgray: "#d3d3d3",
-    mediumturquoise: "#48d1cc",
-    lemonchiffon: "#fffacd",
-    cadetblue: "#5f9ea0",
-    lightyellow: "#ffffe0",
-    lavenderblush: "#fff0f5",
-    coral: "#ff7f50",
-    purple: "#800080",
-    aqua: "#00ffff",
-    whitesmoke: "#f5f5f5",
-    mediumslateblue: "#7b68ee",
-    darkorange: "#ff8c00",
-    mediumaquamarine: "#66cdaa",
-    darksalmon: "#e9967a",
-    beige: "#f5f5dc",
-    blueviolet: "#8a2be2",
-    azure: "#f0ffff",
-    lightsteelblue: "#b0c4de",
-    oldlace: "#fdf5e6",
-    rebeccapurple: "#663399"
-  };
-
-
-  /*
-      chroma.js
-  
-      Copyright (c) 2011-2013, Gregor Aisch
-      All rights reserved.
-  
-      Redistribution and use in source and binary forms, with or without
-      modification, are permitted provided that the following conditions are met:
-  
-      * Redistributions of source code must retain the above copyright notice, this
-        list of conditions and the following disclaimer.
-  
-      * Redistributions in binary form must reproduce the above copyright notice,
-        this list of conditions and the following disclaimer in the documentation
-        and/or other materials provided with the distribution.
-  
-      * The name Gregor Aisch may not be used to endorse or promote products
-        derived from this software without specific prior written permission.
-  
-      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-      DISCLAIMED. IN NO EVENT SHALL GREGOR AISCH OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-      INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-      OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-      NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-      EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  
-      @source: https://github.com/gka/chroma.js
-   */
-
-  type = (function() {
+  hsi2rgb = function(h, s, i) {
 
     /*
-    for browser-safe type checking+
-    ported from jQuery's $.type
+    borrowed from here:
+    http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
      */
-    var classToType, len, name, o, ref;
-    classToType = {};
-    ref = "Boolean Number String Function Array Date RegExp Undefined Null".split(" ");
+    var b, g, r, ref;
+    ref = unpack(arguments), h = ref[0], s = ref[1], i = ref[2];
+    h /= 360;
+    if (h < 1 / 3) {
+      b = (1 - s) / 3;
+      r = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
+      g = 1 - (b + r);
+    } else if (h < 2 / 3) {
+      h -= 1 / 3;
+      r = (1 - s) / 3;
+      g = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
+      b = 1 - (r + g);
+    } else {
+      h -= 2 / 3;
+      g = (1 - s) / 3;
+      b = (1 + s * cos(TWOPI * h) / cos(PITHIRD - TWOPI * h)) / 3;
+      r = 1 - (g + b);
+    }
+    r = limit(i * r * 3);
+    g = limit(i * g * 3);
+    b = limit(i * b * 3);
+    return [r * 255, g * 255, b * 255];
+  };
+
+  rgb2hsi = function() {
+
+    /*
+    borrowed from here:
+    http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/rgb2hsi.cpp
+     */
+    var b, g, h, i, min, r, ref, s;
+    ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
+    TWOPI = Math.PI * 2;
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    min = Math.min(r, g, b);
+    i = (r + g + b) / 3;
+    s = 1 - min / i;
+    if (s === 0) {
+      h = 0;
+    } else {
+      h = ((r - g) + (r - b)) / 2;
+      h /= Math.sqrt((r - g) * (r - g) + (r - b) * (g - b));
+      h = Math.acos(h);
+      if (b > g) {
+        h = TWOPI - h;
+      }
+      h /= TWOPI;
+    }
+    return [h * 360, s, i];
+  };
+
+  chroma.hsi = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['hsi']), function(){});
+  };
+
+  _input.hsi = hsi2rgb;
+
+  Color.prototype.hsi = function() {
+    return rgb2hsi(this._rgb);
+  };
+
+  interpolate_hsx = function(col1, col2, f, m) {
+    var dh, hue, hue0, hue1, lbv, lbv0, lbv1, res, sat, sat0, sat1, xyz0, xyz1;
+    if (m === 'hsl') {
+      xyz0 = col1.hsl();
+      xyz1 = col2.hsl();
+    } else if (m === 'hsv') {
+      xyz0 = col1.hsv();
+      xyz1 = col2.hsv();
+    } else if (m === 'hsi') {
+      xyz0 = col1.hsi();
+      xyz1 = col2.hsi();
+    } else if (m === 'lch') {
+      xyz0 = col1.lch();
+      xyz1 = col2.lch();
+    }
+    if (m.substr(0, 1) === 'h') {
+      hue0 = xyz0[0], sat0 = xyz0[1], lbv0 = xyz0[2];
+      hue1 = xyz1[0], sat1 = xyz1[1], lbv1 = xyz1[2];
+    } else {
+      lbv0 = xyz0[0], sat0 = xyz0[1], hue0 = xyz0[2];
+      lbv1 = xyz1[0], sat1 = xyz1[1], hue1 = xyz1[2];
+    }
+    if (!isNaN(hue0) && !isNaN(hue1)) {
+      if (hue1 > hue0 && hue1 - hue0 > 180) {
+        dh = hue1 - (hue0 + 360);
+      } else if (hue1 < hue0 && hue0 - hue1 > 180) {
+        dh = hue1 + 360 - hue0;
+      } else {
+        dh = hue1 - hue0;
+      }
+      hue = hue0 + f * dh;
+    } else if (!isNaN(hue0)) {
+      hue = hue0;
+      if ((lbv1 === 1 || lbv1 === 0) && m !== 'hsv') {
+        sat = sat0;
+      }
+    } else if (!isNaN(hue1)) {
+      hue = hue1;
+      if ((lbv0 === 1 || lbv0 === 0) && m !== 'hsv') {
+        sat = sat1;
+      }
+    } else {
+      hue = Number.NaN;
+    }
+    if (sat == null) {
+      sat = sat0 + f * (sat1 - sat0);
+    }
+    lbv = lbv0 + f * (lbv1 - lbv0);
+    if (m.substr(0, 1) === 'h') {
+      return res = new Color(hue, sat, lbv, m);
+    } else {
+      return res = new Color(lbv, sat, hue, m);
+    }
+  };
+
+  _interpolators = _interpolators.concat((function() {
+    var len, o, ref, results;
+    ref = ['hsv', 'hsl', 'hsi', 'lch'];
+    results = [];
     for (o = 0, len = ref.length; o < len; o++) {
-      name = ref[o];
-      classToType["[object " + name + "]"] = name.toLowerCase();
+      m = ref[o];
+      results.push([m, interpolate_hsx]);
     }
-    return function(obj) {
-      var strType;
-      strType = Object.prototype.toString.call(obj);
-      return classToType[strType] || "object";
-    };
-  })();
+    return results;
+  })());
 
-  limit = function(x, min, max) {
-    if (min == null) {
-      min = 0;
-    }
-    if (max == null) {
-      max = 1;
-    }
-    if (x < min) {
-      x = min;
-    }
-    if (x > max) {
-      x = max;
-    }
-    return x;
+  interpolate_num = function(col1, col2, f, m) {
+    var n1, n2;
+    n1 = col1.num();
+    n2 = col2.num();
+    return chroma.num(n1 + (n2 - n1) * f, 'num');
   };
 
-  unpack = function(args) {
-    if (args.length >= 3) {
-      return args;
-    } else {
-      return args[0];
-    }
+  _interpolators.push(['num', interpolate_num]);
+
+  interpolate_lab = function(col1, col2, f, m) {
+    var res, xyz0, xyz1;
+    xyz0 = col1.lab();
+    xyz1 = col2.lab();
+    return res = new Color(xyz0[0] + f * (xyz1[0] - xyz0[0]), xyz0[1] + f * (xyz1[1] - xyz0[1]), xyz0[2] + f * (xyz1[2] - xyz0[2]), m);
   };
 
-  TWOPI = Math.PI * 2;
-
-  PITHIRD = Math.PI / 3;
-
-  round = Math.round, cos = Math.cos, floor = Math.floor, pow = Math.pow, log = Math.log, sin = Math.sin;
-
-
-  /*
-  interpolates between a set of colors uzing a bezier spline
-   */
-
-  bezier = function(colors) {
-    var I, I0, I1, c, lab0, lab1, lab2, lab3, ref, ref1, ref2;
-    colors = (function() {
-      var len, o, results;
-      results = [];
-      for (o = 0, len = colors.length; o < len; o++) {
-        c = colors[o];
-        results.push(chroma(c));
-      }
-      return results;
-    })();
-    if (colors.length === 2) {
-      ref = (function() {
-        var len, o, results;
-        results = [];
-        for (o = 0, len = colors.length; o < len; o++) {
-          c = colors[o];
-          results.push(c.lab());
-        }
-        return results;
-      })(), lab0 = ref[0], lab1 = ref[1];
-      I = function(t) {
-        var i, lab;
-        lab = (function() {
-          var o, results;
-          results = [];
-          for (i = o = 0; o <= 2; i = ++o) {
-            results.push(lab0[i] + t * (lab1[i] - lab0[i]));
-          }
-          return results;
-        })();
-        return chroma.lab.apply(chroma, lab);
-      };
-    } else if (colors.length === 3) {
-      ref1 = (function() {
-        var len, o, results;
-        results = [];
-        for (o = 0, len = colors.length; o < len; o++) {
-          c = colors[o];
-          results.push(c.lab());
-        }
-        return results;
-      })(), lab0 = ref1[0], lab1 = ref1[1], lab2 = ref1[2];
-      I = function(t) {
-        var i, lab;
-        lab = (function() {
-          var o, results;
-          results = [];
-          for (i = o = 0; o <= 2; i = ++o) {
-            results.push((1 - t) * (1 - t) * lab0[i] + 2 * (1 - t) * t * lab1[i] + t * t * lab2[i]);
-          }
-          return results;
-        })();
-        return chroma.lab.apply(chroma, lab);
-      };
-    } else if (colors.length === 4) {
-      ref2 = (function() {
-        var len, o, results;
-        results = [];
-        for (o = 0, len = colors.length; o < len; o++) {
-          c = colors[o];
-          results.push(c.lab());
-        }
-        return results;
-      })(), lab0 = ref2[0], lab1 = ref2[1], lab2 = ref2[2], lab3 = ref2[3];
-      I = function(t) {
-        var i, lab;
-        lab = (function() {
-          var o, results;
-          results = [];
-          for (i = o = 0; o <= 2; i = ++o) {
-            results.push((1 - t) * (1 - t) * (1 - t) * lab0[i] + 3 * (1 - t) * (1 - t) * t * lab1[i] + 3 * (1 - t) * t * t * lab2[i] + t * t * t * lab3[i]);
-          }
-          return results;
-        })();
-        return chroma.lab.apply(chroma, lab);
-      };
-    } else if (colors.length === 5) {
-      I0 = bezier(colors.slice(0, 3));
-      I1 = bezier(colors.slice(2, 5));
-      I = function(t) {
-        if (t < 0.5) {
-          return I0(t * 2);
-        } else {
-          return I1((t - 0.5) * 2);
-        }
-      };
-    }
-    return I;
-  };
-
-  chroma.interpolate.bezier = bezier;
-
-
-  /*
-  interpolates between a set of colors uzing a bezier spline
-  
-  blend mode formulas taken from:
-  http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
-   */
-
-  blend = function(bottom, top, mode) {
-    if (!blend[mode]) {
-      throw 'unknown blend mode ' + mode;
-    }
-    return blend[mode](bottom, top);
-  };
-
-  blend_f = function(f) {
-    return function(bottom, top) {
-      var c0, c1;
-      c0 = chroma(top).rgb();
-      c1 = chroma(bottom).rgb();
-      return chroma(f(c0, c1), 'rgb');
-    };
-  };
-
-  each = function(f) {
-    return function(c0, c1) {
-      var i, o, out;
-      out = [];
-      for (i = o = 0; o <= 3; i = ++o) {
-        out[i] = f(c0[i], c1[i]);
-      }
-      return out;
-    };
-  };
-
-  normal = function(a, b) {
-    return a;
-  };
-
-  multiply = function(a, b) {
-    return a * b / 255;
-  };
-
-  darken = function(a, b) {
-    if (a > b) {
-      return b;
-    } else {
-      return a;
-    }
-  };
-
-  lighten = function(a, b) {
-    if (a > b) {
-      return a;
-    } else {
-      return b;
-    }
-  };
-
-  screen = function(a, b) {
-    return 255 * (1 - (1 - a / 255) * (1 - b / 255));
-  };
-
-  overlay = function(a, b) {
-    if (b < 128) {
-      return 2 * a * b / 255;
-    } else {
-      return 255 * (1 - 2 * (1 - a / 255) * (1 - b / 255));
-    }
-  };
-
-  burn = function(a, b) {
-    return 255 * (1 - (1 - b / 255) / (a / 255));
-  };
-
-  dodge = function(a, b) {
-    if (a === 255) {
-      return 255;
-    }
-    a = 255 * (b / 255) / (1 - a / 255);
-    if (a > 255) {
-      return 255;
-    } else {
-      return a;
-    }
-  };
-
-  blend.normal = blend_f(each(normal));
-
-  blend.multiply = blend_f(each(multiply));
-
-  blend.screen = blend_f(each(screen));
-
-  blend.overlay = blend_f(each(overlay));
-
-  blend.darken = blend_f(each(darken));
-
-  blend.lighten = blend_f(each(lighten));
-
-  blend.dodge = blend_f(each(dodge));
-
-  blend.burn = blend_f(each(burn));
-
-  chroma.blend = blend;
-
-
-  /*
-      chroma.js
-  
-      Copyright (c) 2011-2013, Gregor Aisch
-      All rights reserved.
-  
-      Redistribution and use in source and binary forms, with or without
-      modification, are permitted provided that the following conditions are met:
-  
-      * Redistributions of source code must retain the above copyright notice, this
-        list of conditions and the following disclaimer.
-  
-      * Redistributions in binary form must reproduce the above copyright notice,
-        this list of conditions and the following disclaimer in the documentation
-        and/or other materials provided with the distribution.
-  
-      * The name Gregor Aisch may not be used to endorse or promote products
-        derived from this software without specific prior written permission.
-  
-      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-      DISCLAIMED. IN NO EVENT SHALL GREGOR AISCH OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-      INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-      OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-      NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-      EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  
-      @source: https://github.com/gka/chroma.js
-   */
-
-  chroma.cubehelix = function(start, rotations, hue, gamma, lightness) {
-    var dh, dl;
-    if (start == null) {
-      start = 300;
-    }
-    if (rotations == null) {
-      rotations = -1.5;
-    }
-    if (hue == null) {
-      hue = 1;
-    }
-    if (gamma == null) {
-      gamma = 1;
-    }
-    if (lightness == null) {
-      lightness = [0, 1];
-    }
-    dl = lightness[1] - lightness[0];
-    if (type(hue) === 'array') {
-      dh = hue[1] - hue[0];
-      if (dh === 0) {
-        hue = hue[1];
-      }
-    } else {
-      dh = 0;
-    }
-    return function(fract) {
-      var a, amp, b, cos_a, g, h, l, r, sin_a;
-      a = TWOPI * ((start + 120) / 360 + rotations * fract);
-      l = pow(lightness[0] + dl * fract, gamma);
-      h = dh !== 0 ? hue[0] + fract * dh : hue;
-      amp = h * l * (1 - l) / 2;
-      cos_a = cos(a);
-      sin_a = sin(a);
-      r = l + amp * (-0.14861 * cos_a + 1.78277 * sin_a);
-      g = l + amp * (-0.29227 * cos_a - 0.90649 * sin_a);
-      b = l + amp * (+1.97294 * cos_a);
-      return chroma(clip_rgb([r * 255, g * 255, b * 255]));
-    };
-  };
+  _interpolators.push(['lab', interpolate_lab]);
 
 }).call(this);

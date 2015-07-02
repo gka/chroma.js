@@ -6,11 +6,14 @@ var fs = require('fs'),
 module.exports = function(grunt) {
 
   grunt.initConfig({
-    clean: [
-      'chroma.js',
-      'chroma.min.js',
-      'license.coffee',
-    ],
+    clean: {
+      pre: [
+        'chroma.js',
+        'chroma.min.js',
+        'license.coffee',
+      ],
+      post: ['chroma.coffee']
+    },
     coffee: {
       compile: {
         options: {
@@ -19,16 +22,7 @@ module.exports = function(grunt) {
         files: {
           'chroma.js': [
             'license.coffee',
-            'src/api.coffee',
-            'src/color.coffee',
-            'src/conversions/*.coffee',
-            'src/scale.coffee',
-            'src/limits.coffee',
-            'src/colors/*.coffee',
-            'src/utils.coffee',
-            'src/interpolate.coffee',
-            'src/blend.coffee',
-            'src/cubehelix.coffee',
+            'chroma.coffee'
           ],
         },
       }
@@ -68,6 +62,13 @@ module.exports = function(grunt) {
     fs.writeFileSync('license.coffee', license.join("\n"));
   });
 
-  grunt.registerTask('default', ['clean', 'license', 'coffee', 'replace', 'uglify']);
+  grunt.registerTask('catty', function() {
+    require("catty")({ global: true })
+      .coffee(true)
+      .addLibrary("src")
+      .cat("src/index.coffee", "./chroma.coffee");
+  });
+
+  grunt.registerTask('default', ['clean:pre', 'license', 'catty', 'coffee', 'replace', 'uglify']);
 };
 

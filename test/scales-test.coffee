@@ -90,7 +90,19 @@ vows
             topic:
                 f: chroma.scale(['white','black']).mode('num')
             'starts white': (topic) -> assert.equal topic.f(0).hex(), '#ffffff'
-            'mid gray': (topic) -> assert.equal topic.f(0.5).hex(), '#7f7f7f'
+            '25%': (topic) -> assert.equal topic.f(0.25).hex(), '#bfffff'
+            '50%': (topic) -> assert.equal topic.f(0.5).hex(), '#7fffff'
+            '75%': (topic) -> assert.equal topic.f(0.75).hex(), '#3fffff'
+            '95%': (topic) -> assert.equal topic.f(0.95).hex(), '#0ccccc'
             'ends black': (topic) -> assert.equal topic.f(1).hex(), '#000000'
+
+        'css rgb colors':
+            topic: chroma.scale("YlGnBu")(0.3).css()
+            'have rounded rgb() values': (topic) -> assert.equal topic, 'rgb(170,222,183)'
+
+        'css rgba colors':
+            topic: chroma.scale("YlGnBu")(0.3).alpha(0.675).css()
+            'dont round alpha value': (topic) -> assert.equal topic, 'rgba(170,222,183,0.675)'
+
 
     .export(module)

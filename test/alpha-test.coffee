@@ -16,7 +16,7 @@ vows
             'alpha is now 0.5': (topic) -> assert.equal topic.alpha(), 0.5
 
         'interpolating alpha channel':
-            topic: chroma.mix chroma.color('white').alpha(0), chroma.color('black').alpha(1), 0.3
+            topic: chroma.mix chroma('white').alpha(0), chroma('black').alpha(1), 0.3
             'color is grey': (topic) -> assert.equal topic.hex(), '#b2b2b2'
             'alpha is 50%': (topic) -> assert.equal topic.alpha(), 0.3
 
@@ -29,7 +29,7 @@ vows
             'alpha is 50%': (topic) -> assert.equal topic.alpha(), 0.5
 
         'constructing rgba color, hsl shorthand':
-            topic: chroma.hsl 0,1,0.5,0.5
+            topic: chroma.hsl(0,1,0.5).alpha(0.5)
             'color is red': (topic) -> assert.equal topic.name(), 'red'
             'alpha is 50%': (topic) -> assert.equal topic.alpha(), 0.5
 
