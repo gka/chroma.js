@@ -1,7 +1,6 @@
 {
   "name": "chroma-js",
   "description": "JavaScript library for color conversions",
-  "version": "0.5.6",
   "main": [
     "./chroma.js"
   ],
