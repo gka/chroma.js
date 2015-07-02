@@ -69,6 +69,6 @@ module.exports = function(grunt) {
       .cat("src/index.coffee", "./chroma.coffee");
   });
 
-  grunt.registerTask('default', ['clean:pre', 'license', 'catty', 'coffee', 'replace', 'uglify']);
+  grunt.registerTask('default', ['clean:pre', 'license', 'catty', 'coffee', 'replace', 'uglify', 'clean:post']);
 };
 
