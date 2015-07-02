@@ -169,7 +169,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.0.0';
+  chroma.version = '1.0.1';
 
 
   /**
@@ -1960,22 +1960,40 @@
       }
       return f;
     };
-    f.colors = function(out) {
-      var i, len, o, ref, samples, w;
-      if (out == null) {
-        out = 'hex';
+    f.colors = function() {
+      var aa, i, len, numColors, o, out, ref, results, samples, w;
+      numColors = 0;
+      out = 'hex';
+      if (arguments.length === 1) {
+        if (type(arguments[0]) === 'string') {
+          out = arguments[0];
+        } else {
+          numColors = arguments[0];
+        }
+      }
+      if (arguments.length === 2) {
+        numColors = arguments[0], out = arguments[1];
+      }
+      if (numColors) {
+        return (function() {
+          results = [];
+          for (var o = 0; 0 <= numColors ? o < numColors : o > numColors; 0 <= numColors ? o++ : o--){ results.push(o); }
+          return results;
+        }).apply(this).map(function(i) {
+          return f(i / (numColors - 1))[out]();
+        });
       }
       colors = [];
       samples = [];
       if (_domain.length > 2) {
-        for (i = o = 1, ref = _domain.length; 1 <= ref ? o < ref : o > ref; i = 1 <= ref ? ++o : --o) {
+        for (i = w = 1, ref = _domain.length; 1 <= ref ? w < ref : w > ref; i = 1 <= ref ? ++w : --w) {
           samples.push((_domain[i - 1] + _domain[i]) * 0.5);
         }
       } else {
         samples = _domain;
       }
-      for (w = 0, len = samples.length; w < len; w++) {
-        i = samples[w];
+      for (aa = 0, len = samples.length; aa < len; aa++) {
+        i = samples[aa];
         colors.push(f(i)[out]());
       }
       return colors;

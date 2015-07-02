@@ -226,7 +226,20 @@ chroma.scale = (colors, positions) ->
             tmap = (t) -> t
         f
 
-    f.colors = (out='hex') ->
+    f.colors = () ->
+        numColors = 0
+        out = 'hex'
+        if arguments.length == 1
+            if type(arguments[0]) == 'string'
+                out = arguments[0]
+            else
+                numColors = arguments[0]
+        if arguments.length == 2
+            [numColors,out] = arguments
+        
+        if numColors
+            return [0...numColors].map (i) -> f(i/(numColors-1))[out]()
+        
         # returns all colors based on the defined classes
         colors = []
         samples = []
