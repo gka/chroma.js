@@ -66,7 +66,7 @@ clip_rgb = (rgb) ->
             rgb[i] = 1 if rgb[i] > 1
     rgb
 
-{PI, round, cos, floor, pow, log, sin, sqrt, atan2, max} = Math
+{PI, round, cos, floor, pow, log, sin, sqrt, atan2, max, abs} = Math
 TWOPI = PI*2
 PITHIRD = PI/3
 
