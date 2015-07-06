@@ -1,0 +1,139 @@
+<link rel="stylesheet" type="text/css" href="vendor/codemirror/lib/codemirror.css"> 
+<script type="text/javascript" src="vendor/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="vendor/chroma-js/chroma.min.js"></script>
+<script type="text/javascript" src="vendor/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="vendor/codemirror/mode/javascript/javascript.js"></script>
+
+<script type="text/javascript">
+    
+    $('code.lang-js').each(function() {
+        
+        var code = this;
+        
+        var cm = CodeMirror(function(elt) {
+            code.parentNode.replaceChild(elt, code);
+            }, {
+                value: code.innerHTML.trim(),
+                indentUnit: 4,
+                mode: 'javascript'
+            });
+
+        cm.on('update', function(_cm, change) {
+            showColors(_cm);
+        });
+
+        var resDisplay = $('<div class="result-display" />')
+            .appendTo(cm.display.wrapper.parentNode);
+
+        showColors(cm);
+
+        function showColors(cm) {
+            $('.cm-string', cm.display.wrapper).each(styleSpan);
+            $('.cm-number', cm.display.wrapper).each(enableSlider);
+
+            // evaluate script
+            var src = cm.getDoc().getValue();
+            //resDisplay.html('');
+            try {
+
+                var s = src.split(';').map(eval);
+                resDisplay.html(s.map(resRec)
+                    .filter(function(d) { return d !== undefined; })
+                    .join(','));
+
+                $('.cm-string', resDisplay).each(styleSpan);
+
+            } catch (e) {
+                // console.warn(e);
+            }
+
+            function resRec(d) {
+                if ($.isArray(d)) {
+                    return '['+d.map(d.length > 2 ? resShort : resLong).join(',')+']';
+                }
+                return resLong(d);
+
+                function resLong(d) {
+                    if (typeof d == 'string') {
+                        // string color, e.g. hex value
+                        return '<span class="cm-string">"'+d+'"</span>';
+                    } else if (typeof d == 'object' && d._rgb) {
+                        // chroma.js object
+                        return '<span class="cm-string cm-color" data-color="'+d.css()+'">'+d.hex()+'</span>';                 
+                    } else if ($.isNumeric(d)) {
+                        return '<span class="cm-number">'+round(d,3)+'</span>';
+                    }
+                }
+
+                function resShort(d) {
+                    if (typeof d == 'string') {
+                        // string color, e.g. hex value
+                        return '<span class="cm-string cm-color" data-color="'+d+'"></span>';
+                    } else if (typeof d == 'object' && d._rgb) {
+                        // chroma.js object
+                        return '<span class="cm-string cm-color" data-color="'+d.css()+'"></span>';                 
+                    } else if ($.isNumeric(d)) {
+                        return '<span class="cm-number">'+round(d,2)+'</span>';
+                    } else if (isNaN(d)) {
+                        return '<span class="cm-number cm-nan">NaN</span>';
+                    }
+                }
+                
+                function round(d, p) {
+                    var n = Math.pow(10, p);
+                    return Math.round(d*n) / n;
+                }
+            }
+        }
+
+        function styleSpan() {
+            var span = $(this);
+            //setTimeout(function() {
+                val = span.data('color') || span.html().replace(/['"]/g, '').trim();
+                if (chroma[val]) {
+                    span.attr('style', '');
+                    return;
+                }
+                        
+                try {
+                    var col = chroma(val),
+                        l = col.luminance();
+                    span.attr('style', [
+                        'background:'+col.hex(),
+                        'color:'+(l <0.5 ? 'white' : 'black'),
+                        'opacity:'+col.alpha()
+                    ].join(';'));                    
+                } catch (e) {
+                    //console.log(e);
+                    span.attr('style', '');
+                    // not a color, so ignore
+                }
+            //}, 50);
+        }
+
+        function enableSlider() {
+            return;
+            var span = $(this),
+                slider = $('<div></div>').addClass('slider'),
+                input = $('<input type="range" />').appendTo(slider);
+            
+            span.off('mouseenter').on('mouseenter', function() {
+                var v = +span.text(),
+                    d = Math.pow(10, Math.max(1, Math.log10(v))),
+                    min = v - d,
+                    max = v + d;
+                input.attr({ min: min, max: max })
+                    .prop('value', v);
+                console.log('span', v);
+
+                span.append(slider);
+            });
+            span.off('mouseleave').on('mouseleave', function() {
+                //slider.remove();
+            });
+        }
+
+    });
+
+    
+</script>

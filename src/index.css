@@ -1,0 +1,108 @@
+body {
+  font-family: Roboto;
+}
+
+body > h1, body > h2, body > h3, body > p, body > pre {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    /*left: -80px;*/
+}
+
+body > h1 {
+    font-weight: 100;
+    font-size: 48px;
+    letter-spacing: -2px;
+}
+
+body > h2 {
+    margin-top: 50px;
+}
+
+body p code {
+    font-size: 16px;
+    margin-left: 2px;
+    margin-right: 2px;
+    color: #069;
+}
+
+pre {
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+pre .CodeMirror {
+    height: auto;
+    font-size: 16px;
+    line-height: 22px;
+    background: #f9f9f9;
+    box-shadow: inset 2px 2px 6px rgba(0,0,0,.1);
+    border-radius: 10px;
+    margin: -5px;
+    padding: 5px;   
+}
+
+
+pre .CodeMirror:hover, pre .CodeMirror:focus {
+    background: #f6f6f0;
+}
+
+.result-display {
+    position: absolute; 
+    right: -180px;
+    top: 5px;
+    width: 160px;
+    white-space: normal;
+    line-height: 22px;
+}
+
+.result-display .cm-string {
+    padding: 2px 4px;
+    display: inline-block;
+    min-width: 12px;
+    min-height: 16px;
+    border-radius: 3px;
+    vertical-align: bottom;
+    margin-left: 2px;
+}
+
+.result-display .cm-number {
+    color: #164;
+}
+
+.CodeMirror, .CodeMirror .CodeMirror-scroll {
+    overflow: visible!important;
+}
+
+.CodeMirror .cm-number {
+    position: relative;
+}
+
+.CodeMirror .cm-number .slider {
+    position: absolute;
+    left: 50%;
+    top: -15px;
+}
+.CodeMirror .cm-number .slider input[type="range"] {
+    position: absolute;
+    left: -50px;
+    top: 0px;
+    width: 100px;
+}
+
+
+.result-display .cm-nan {
+    color: #614;
+}
+
+
+.result-display:before {
+    content: "RESULT";
+    position: absolute;
+    left: 0;
+    top: -25px;
+    font-size: 11px;
+    color: #ccc;
+}
