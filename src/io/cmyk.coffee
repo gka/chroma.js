@@ -1,8 +1,7 @@
 # @require utils rgb2cmyk cmyk2rgb
 
 _input.cmyk = () ->
-    [c,m,y,k] = unpack arguments
-    cmyk2rgb c,m,y,k
+    cmyk2rgb unpack arguments
 
 
 chroma.cmyk = () ->

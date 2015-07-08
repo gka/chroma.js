@@ -1,7 +1,8 @@
 # requrie lab-constants
 
 lab2rgb = () ->
-    [l,a,b] = unpack arguments
+    args = unpack arguments
+    [l,a,b] = args
     ###
     adapted to match d3 implementation
     ###
@@ -18,7 +19,7 @@ lab2rgb = () ->
     r = xyz_rgb( 3.2404542 * x - 1.5371385 * y - 0.4985314 * z)
     g = xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z)
     b = xyz_rgb( 0.0556434 * x - 0.2040259 * y + 1.0572252 * z)
-    [limit(r,0,255), limit(g,0,255), limit(b,0,255), 1]
+    [limit(r,0,255), limit(g,0,255), limit(b,0,255), if args.length > 3 then args[3] else 1]
 
 lab_xyz = (x) ->
     if x > 0.206893034 then x * x * x else (x - 4 / 29) / 7.787037

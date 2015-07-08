@@ -34,4 +34,5 @@ bezier = (colors) ->
                 I1 (t-0.5)*2
     I
 
-chroma.bezier = bezier
+chroma.bezier = (colors) ->
+    chroma.scale bezier colors

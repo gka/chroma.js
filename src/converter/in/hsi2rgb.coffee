@@ -5,7 +5,8 @@ hsi2rgb = (h,s,i) ->
     borrowed from here:
     http://hummer.stanford.edu/museinfo/doc/examples/humdrum/keyscape2/hsi2rgb.cpp
     ###
-    [h,s,i] = unpack arguments
+    args = unpack arguments
+    [h,s,i] = args
 
     # normalize hue
     #h += 360 if h < 0
@@ -28,4 +29,4 @@ hsi2rgb = (h,s,i) ->
     r = limit i*r*3
     g = limit i*g*3
     b = limit i*b*3
-    [r*255,g*255,b*255]
+    [r*255, g*255, b*255, if args.length > 3 then args[3] else 1]

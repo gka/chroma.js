@@ -1,7 +1,8 @@
 # @requires utils
 
 hsl2rgb = () ->
-    [h,s,l] = unpack arguments
+    args = unpack arguments
+    [h,s,l] = args
     if s == 0
         r = g = b = l*255
     else
@@ -25,4 +26,4 @@ hsl2rgb = () ->
             else
                 c[i] = t1
         [r,g,b] = [round(c[0]*255),round(c[1]*255),round(c[2]*255)]
-    if arguments.length == 4 then [r,g,b,arguments[3]] else [r,g,b]
+    if args.length > 3 then [r,g,b,args[3]] else [r,g,b]

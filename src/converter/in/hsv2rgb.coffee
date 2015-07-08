@@ -1,6 +1,7 @@
 
 hsv2rgb = () ->
-    [h,s,v] = unpack arguments
+    args = unpack arguments
+    [h,s,v] = args
     v *= 255
     if s is 0
         r = g = b = v
@@ -24,4 +25,4 @@ hsv2rgb = () ->
     r = round r
     g = round g
     b = round b
-    [r, g, b]
+    [r, g, b, if args.length > 3 then args[3] else 1]

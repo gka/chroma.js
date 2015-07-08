@@ -3,8 +3,8 @@
 chroma.num = (num) ->
     new Color num, 'num'
 
-Color::num = () ->
-    rgb2num @_rgb
+Color::num = (mode='rgb') ->
+    rgb2num @_rgb, mode
 
 _input.num = num2rgb
 

@@ -59,8 +59,40 @@ vows
             'rgb output': (topic) -> assert.deepEqual topic.rgb(), [255,0,0]
             'rgba output': (topic) -> assert.deepEqual topic.rgba(), [255,0,0,0.25]
 
+        'constructing hsla color':
+            topic: chroma 0,1,0.5,0.25,'hsl'
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 25%': (topic) -> assert.equal topic.alpha(), 0.25            
+
+        'constructing hsva color':
+            topic: chroma 0,1,1,0.25,'hsv'
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 25%': (topic) -> assert.equal topic.alpha(), 0.25            
+
+        'constructing hsia color':
+            topic: chroma 0,1,0.3333334,0.25,'hsi'
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 25%': (topic) -> assert.equal topic.alpha(), 0.25            
+
+        'constructing laba color':
+            topic: chroma 53.24079414130722, 80.09245959641109, 67.20319651585301,0.25,'lab'
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 25%': (topic) -> assert.equal topic.alpha(), 0.25            
+
+        'constructing lcha color':
+            topic: chroma 53.24079414130722, 104.55176567686985, 39.99901061253297,0.25,'lch'
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 25%': (topic) -> assert.equal topic.alpha(), 0.25            
+
+        'constructing cmyka color':
+            topic: chroma 0,1,1,0,0.25,'cmyk'
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 25%': (topic) -> assert.equal topic.alpha(), 0.25            
+
         'gl output':
             topic: chroma.gl 1, 0, 0, 0.25
+            'color is red': (topic) -> assert.equal topic.name(), 'red'
+            'alpha is 25%': (topic) -> assert.equal topic.alpha(), 0.25            
             'gloutput': (topic) -> assert.deepEqual topic.gl(), [1, 0, 0, 0.25]
 
         'rgba css output':
@@ -68,9 +100,13 @@ vows
             'cssoutput': -> (topic) -> assert.equal topic.css(), 'rgba(255,0,0,0.25)'
 
         'hex output':
-            topic: chroma.gl 1, 0, 0, 0
+            topic: chroma.gl 1, 0, 0, 0.25
             'hex': (topic) -> assert.equal topic.hex(), '#ff0000'
-            'rgba': (topic) -> assert.equal topic.hex('rgba'), '#ff000000'
-            'argb': (topic) -> assert.equal topic.hex('argb'), '#00ff0000'
+            'rgba': (topic) -> assert.equal topic.hex('rgba'), '#ff000040'
+            'argb': (topic) -> assert.equal topic.hex('argb'), '#40ff0000'
+
+        'num output':
+            topic: chroma.gl 1, 0, 0, 0.25
+            'num ignores alpha': (topic) -> assert.equal topic.num(), 0xff0000
 
     .export(module)
