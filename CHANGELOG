@@ -1,3 +1,7 @@
+# 1.0.2
+
+* standardized alpha channel construction
+* chroma.bezier automatically returns chroma.scale
 
 # 1.0.1
 
