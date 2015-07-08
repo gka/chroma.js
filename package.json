@@ -26,7 +26,8 @@
   },
   "main": "chroma.js",
   "scripts": {
-    "test": "./node_modules/vows/bin/vows; echo"
+    "build": "grunt",
+    "test": "./node_modules/vows/bin/vows --spec"
   },
   "devDependencies": {
     "coffee-script": "1.9.2",
