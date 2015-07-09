@@ -46,10 +46,6 @@ class Color
         for arg in arguments
             args.push arg if arg?
 
-        if args[0] instanceof Color
-            me._rgb = args[0]._rgb.slice(0)
-            return
-
         # last argument could be the mode
         mode = args[args.length-1]
         if _input[mode]?
