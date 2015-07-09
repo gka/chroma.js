@@ -188,6 +188,10 @@
           args.push(arg);
         }
       }
+      if (args[0] instanceof Color) {
+        me._rgb = args[0]._rgb.slice(0);
+        return;
+      }
       mode = args[args.length - 1];
       if (_input[mode] != null) {
         me._rgb = clip_rgb(_input[mode](unpack(args.slice(0, -1))));
@@ -1808,7 +1812,7 @@
     setColors(colors, positions);
     f = function(v) {
       var c;
-      c = getColor(v);
+      c = chroma(getColor(v));
       if (_out && c[_out]) {
         return c[_out]();
       } else {

@@ -117,6 +117,10 @@ vows
             'five hex colors': (topic) -> assert.deepEqual topic.f.domain([0,1], 5).colors(), ['#a50026', '#f88d52', '#ffffbf', '#86cb66', '#006837']
             'five hex colors (new)': (topic) -> assert.deepEqual topic.f.colors(5),           ['#a50026', '#f88d52', '#ffffbf', '#86cb66', '#006837']
 
-
+        'weird result':
+            topic:
+                f: chroma.scale([[ 0, 0, 0, 1 ], [ 255, 255, 255, 1 ]]).domain([0,10]).mode('rgb')
+            'has hex function at 0.5': (topic) -> assert.equal typeof topic.f(0.5).hex, 'function' 
+            'has hex function at 0': (topic) -> assert.equal typeof topic.f(0).hex, 'function' 
 
     .export(module)

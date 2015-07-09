@@ -125,7 +125,7 @@ chroma.scale = (colors, positions) ->
     # public interface
 
     f = (v) ->
-        c = getColor v
+        c = chroma getColor v
         if _out and c[_out] then c[_out]() else c
 
     f.domain = (domain, classes, mode='e', key) ->
