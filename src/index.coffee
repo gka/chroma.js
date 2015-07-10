@@ -20,6 +20,8 @@
     temperature
     contrast
 
+    get set
+
     darken saturate premultiply blend    
 
     scale

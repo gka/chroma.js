@@ -1,14 +1,13 @@
-# @requires color
+# @requires color lab lab-constants
 
-Color::darken = (amount=20) ->
+Color::darken = (amount=1) ->
     me = @
-    lch = me.lch()
-    lch[0] -= amount
-    chroma.lch(lch).alpha(me.alpha())
+    lab = me.lab()
+    lab[0] -= LAB_CONSTANTS.Kn * amount
+    chroma.lab(lab).alpha(me.alpha())
 
-Color::darker = Color::darken
-
-Color::brighten = (amount=20) ->
+Color::brighten = (amount=1) ->
     @darken -amount
 
+Color::darker = Color::darken
 Color::brighter = Color::brighten

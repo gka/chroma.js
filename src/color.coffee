@@ -79,3 +79,5 @@ class Color
     toString: ->
         @name()
 
+
+chroma._input = _input

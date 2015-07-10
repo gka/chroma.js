@@ -34,7 +34,7 @@
  */
 
 (function() {
-  var Color, LAB_CONSTANTS, PI, PITHIRD, TWOPI, _guess_formats, _guess_formats_sorted, _input, _interpolators, abs, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
+  var Color, DEG2RAD, LAB_CONSTANTS, PI, PITHIRD, RAD2DEG, TWOPI, _guess_formats, _guess_formats_sorted, _input, _interpolators, abs, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
     slice = [].slice;
 
   type = (function() {
@@ -108,6 +108,10 @@
   TWOPI = PI * 2;
 
   PITHIRD = PI / 3;
+
+  DEG2RAD = PI / 180;
+
+  RAD2DEG = 180 / PI;
 
   chroma = function() {
     if (arguments[0] instanceof Color) {
@@ -235,6 +239,8 @@
     return Color;
 
   })();
+
+  chroma._input = _input;
 
 
   /**
@@ -455,48 +461,45 @@
   chroma.colors = colors = w3cx11;
 
   lab2rgb = function() {
-    var a, args, b, g, l, r, ref, ref1, x, y, z;
+    var a, args, b, g, l, r, x, y, z;
     args = unpack(arguments);
     l = args[0], a = args[1], b = args[2];
-
-    /*
-    adapted to match d3 implementation
-     */
-    if (l !== void 0 && l.length === 3) {
-      ref = l, l = ref[0], a = ref[1], b = ref[2];
-    }
-    if (l !== void 0 && l.length === 3) {
-      ref1 = l, l = ref1[0], a = ref1[1], b = ref1[2];
-    }
     y = (l + 16) / 116;
-    x = y + a / 500;
-    z = y - b / 200;
-    x = lab_xyz(x) * LAB_CONSTANTS.X;
-    y = lab_xyz(y) * LAB_CONSTANTS.Y;
-    z = lab_xyz(z) * LAB_CONSTANTS.Z;
+    x = isNaN(a) ? y : y + a / 500;
+    z = isNaN(b) ? y : y - b / 200;
+    y = LAB_CONSTANTS.Yn * lab_xyz(y);
+    x = LAB_CONSTANTS.Xn * lab_xyz(x);
+    z = LAB_CONSTANTS.Zn * lab_xyz(z);
     r = xyz_rgb(3.2404542 * x - 1.5371385 * y - 0.4985314 * z);
     g = xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z);
     b = xyz_rgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z);
-    return [limit(r, 0, 255), limit(g, 0, 255), limit(b, 0, 255), args.length > 3 ? args[3] : 1];
-  };
-
-  lab_xyz = function(x) {
-    if (x > 0.206893034) {
-      return x * x * x;
-    } else {
-      return (x - 4 / 29) / 7.787037;
-    }
+    r = limit(r, 0, 255);
+    g = limit(g, 0, 255);
+    b = limit(b, 0, 255);
+    return [r, g, b, args.length > 3 ? args[3] : 1];
   };
 
   xyz_rgb = function(r) {
     return round(255 * (r <= 0.00304 ? 12.92 * r : 1.055 * pow(r, 1 / 2.4) - 0.055));
   };
 
+  lab_xyz = function(t) {
+    if (t > LAB_CONSTANTS.t1) {
+      return t * t * t;
+    } else {
+      return LAB_CONSTANTS.t2 * (t - LAB_CONSTANTS.t0);
+    }
+  };
+
   LAB_CONSTANTS = {
-    K: 18,
-    X: 0.950470,
-    Y: 1,
-    Z: 1.088830
+    Kn: 18,
+    Xn: 0.950470,
+    Yn: 1,
+    Zn: 1.088830,
+    t0: 0.137931034,
+    t1: 0.206896552,
+    t2: 0.12841855,
+    t3: 0.008856452
   };
 
   rgb2lab = function() {
@@ -514,11 +517,11 @@
     }
   };
 
-  xyz_lab = function(x) {
-    if (x > 0.008856) {
-      return pow(x, 1 / 3);
+  xyz_lab = function(t) {
+    if (t > LAB_CONSTANTS.t3) {
+      return pow(t, 1 / 3);
     } else {
-      return 7.787037 * x + 4 / 29;
+      return t / LAB_CONSTANTS.t2 + LAB_CONSTANTS.t0;
     }
   };
 
@@ -528,9 +531,9 @@
     r = rgb_xyz(r);
     g = rgb_xyz(g);
     b = rgb_xyz(b);
-    x = xyz_lab((0.4124564 * r + 0.3575761 * g + 0.1804375 * b) / LAB_CONSTANTS.X);
-    y = xyz_lab((0.2126729 * r + 0.7151522 * g + 0.0721750 * b) / LAB_CONSTANTS.Y);
-    z = xyz_lab((0.0193339 * r + 0.1191920 * g + 0.9503041 * b) / LAB_CONSTANTS.Z);
+    x = xyz_lab((0.4124564 * r + 0.3575761 * g + 0.1804375 * b) / LAB_CONSTANTS.Xn);
+    y = xyz_lab((0.2126729 * r + 0.7151522 * g + 0.0721750 * b) / LAB_CONSTANTS.Yn);
+    z = xyz_lab((0.0193339 * r + 0.1191920 * g + 0.9503041 * b) / LAB_CONSTANTS.Zn);
     return [x, y, z];
   };
 
@@ -640,7 +643,12 @@
   };
 
   chroma.bezier = function(colors) {
-    return chroma.scale(bezier(colors));
+    var f;
+    f = bezier(colors);
+    f.scale = function() {
+      return chroma.scale(f);
+    };
+    return f;
   };
 
 
@@ -678,7 +686,7 @@
    */
 
   chroma.cubehelix = function(start, rotations, hue, gamma, lightness) {
-    var dh, dl;
+    var dh, dl, f;
     if (start == null) {
       start = 300;
     }
@@ -695,15 +703,8 @@
       lightness = [0, 1];
     }
     dl = lightness[1] - lightness[0];
-    if (type(hue) === 'array') {
-      dh = hue[1] - hue[0];
-      if (dh === 0) {
-        hue = hue[1];
-      }
-    } else {
-      dh = 0;
-    }
-    return function(fract) {
+    dh = 0;
+    f = function(fract) {
       var a, amp, b, cos_a, g, h, l, r, sin_a;
       a = TWOPI * ((start + 120) / 360 + rotations * fract);
       l = pow(lightness[0] + dl * fract, gamma);
@@ -716,6 +717,62 @@
       b = l + amp * (+1.97294 * cos_a);
       return chroma(clip_rgb([r * 255, g * 255, b * 255]));
     };
+    f.start = function(s) {
+      if (s == null) {
+        return start;
+      }
+      start = s;
+      return f;
+    };
+    f.rotations = function(r) {
+      if (r == null) {
+        return rotations;
+      }
+      rotations = r;
+      return f;
+    };
+    f.gamma = function(g) {
+      if (g == null) {
+        return gamma;
+      }
+      gamma = g;
+      return f;
+    };
+    f.hue = function(h) {
+      if (h == null) {
+        return hue;
+      }
+      hue = h;
+      if (type(hue) === 'array') {
+        dh = hue[1] - hue[0];
+        if (dh === 0) {
+          hue = hue[1];
+        }
+      } else {
+        dh = 0;
+      }
+      return f;
+    };
+    f.lightness = function(h) {
+      if (h == null) {
+        return lightness;
+      }
+      lightness = h;
+      if (type(lightness) === 'array') {
+        dl = lightness[1] - lightness[0];
+        if (dl === 0) {
+          lightness = lightness[1];
+        }
+      } else {
+        dl = 0;
+      }
+      return f;
+    };
+    f.scale = function() {
+      return chroma.scale(f);
+    };
+    f.hue(hue);
+    return f;
   };
 
   chroma.random = function() {
@@ -1209,7 +1266,7 @@
      */
     var c, h, l, ref;
     ref = unpack(arguments), l = ref[0], c = ref[1], h = ref[2];
-    h = h * PI / 180;
+    h = h * DEG2RAD;
     return [l, cos(h) * c, sin(h) * c];
   };
 
@@ -1226,7 +1283,7 @@
     var a, b, c, h, l, ref;
     ref = unpack(arguments), l = ref[0], a = ref[1], b = ref[2];
     c = sqrt(a * a + b * b);
-    h = (atan2(b, a) / PI * 180 + 360) % 360;
+    h = (atan2(b, a) * RAD2DEG + 360) % 360;
     return [l, c, h];
   };
 
@@ -1516,36 +1573,91 @@
     }
   };
 
-  Color.prototype.darken = function(amount) {
-    var lch, me;
-    if (amount == null) {
-      amount = 20;
-    }
+  Color.prototype.get = function(modechan) {
+    var channel, i, me, mode, ref, src;
     me = this;
-    lch = me.lch();
-    lch[0] -= amount;
-    return chroma.lch(lch).alpha(me.alpha());
+    ref = modechan.split('.'), mode = ref[0], channel = ref[1];
+    src = me[mode]();
+    if (channel) {
+      i = mode.indexOf(channel);
+      if (i > -1) {
+        return src[i];
+      } else {
+        return console.warn('unknown channel ' + channel + ' in mode ' + mode);
+      }
+    } else {
+      return src;
+    }
   };
 
-  Color.prototype.darker = Color.prototype.darken;
+  Color.prototype.set = function(modechan, value) {
+    var channel, i, me, mode, ref, src;
+    me = this;
+    ref = modechan.split('.'), mode = ref[0], channel = ref[1];
+    if (channel) {
+      src = me[mode]();
+      i = mode.indexOf(channel);
+      if (i > -1) {
+        if (type(value) === 'string') {
+          switch (value.charAt(0)) {
+            case '+':
+              src[i] += +value;
+              break;
+            case '-':
+              src[i] += +value;
+              break;
+            case '*':
+              src[i] *= +(value.substr(1));
+              break;
+            case '/':
+              src[i] /= +(value.substr(1));
+              break;
+            default:
+              src[i] = +value;
+          }
+        } else {
+          src[i] = value;
+        }
+      } else {
+        console.warn('unknown channel ' + channel + ' in mode ' + mode);
+      }
+    } else {
+      src = value;
+    }
+    me._rgb = chroma(src, mode).alpha(me.alpha())._rgb;
+    return me;
+  };
+
+  Color.prototype.darken = function(amount) {
+    var lab, me;
+    if (amount == null) {
+      amount = 1;
+    }
+    me = this;
+    lab = me.lab();
+    lab[0] -= LAB_CONSTANTS.Kn * amount;
+    return chroma.lab(lab).alpha(me.alpha());
+  };
 
   Color.prototype.brighten = function(amount) {
     if (amount == null) {
-      amount = 20;
+      amount = 1;
     }
     return this.darken(-amount);
   };
+
+  Color.prototype.darker = Color.prototype.darken;
 
   Color.prototype.brighter = Color.prototype.brighten;
 
   Color.prototype.saturate = function(amount) {
     var lch, me;
     if (amount == null) {
-      amount = 20;
+      amount = 1;
     }
     me = this;
     lch = me.lch();
-    lch[1] += amount;
+    lch[1] += amount * LAB_CONSTANTS.Kn;
     if (lch[1] < 0) {
       lch[1] = 0;
     }
@@ -1554,7 +1666,7 @@
 
   Color.prototype.desaturate = function(amount) {
     if (amount == null) {
-      amount = 20;
+      amount = 1;
     }
     return this.saturate(-amount);
   };

@@ -9,6 +9,5 @@ lch2lab = () ->
     A saturation multiplier was added by Gregor Aisch
     ###
     [l,c,h] = unpack arguments
-    h = h * PI / 180
+    h = h * DEG2RAD
     [l, cos(h) * c, sin(h) * c]
-

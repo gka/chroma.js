@@ -37,12 +37,9 @@
 
 chroma.cubehelix = (start=300, rotations=-1.5, hue=1, gamma=1, lightness=[0,1]) ->
     dl = lightness[1] - lightness[0]
-    if type(hue) == 'array'
-        dh = hue[1] - hue[0]
-        hue = hue[1] if dh == 0
-    else
-        dh = 0
-    (fract) ->
+    dh = 0
+
+    f = (fract) ->
         a = TWOPI * ((start+120)/360 + rotations * fract)
         l = pow(lightness[0] + dl * fract, gamma)
         h = if dh != 0 then hue[0] + fract * dh else hue
@@ -53,4 +50,45 @@ chroma.cubehelix = (start=300, rotations=-1.5, hue=1, gamma=1, lightness=[0,1]) 
         g = l + amp * (-0.29227 * cos_a - 0.90649* sin_a)
         b = l + amp * (+1.97294 * cos_a)
         chroma clip_rgb [r*255,g*255,b*255]
+    
+    f.start = (s) ->
+        if not s? then return start
+        start = s
+        f
+    
+    f.rotations = (r) ->
+        if not r? then return rotations
+        rotations = r
+        f
 
+    f.gamma = (g) ->
+        if not g? then return gamma
+        gamma = g
+        f
+
+    f.hue = (h) ->
+        if not h? then return hue
+        hue = h
+        if type(hue) == 'array'
+            dh = hue[1] - hue[0]
+            hue = hue[1] if dh == 0
+        else
+            dh = 0
+        f
+
+    f.lightness = (h) ->
+        if not h? then return lightness
+        lightness = h
+        if type(lightness) == 'array'
+            dl = lightness[1] - lightness[0]
+            lightness = lightness[1] if dl == 0
+        else
+            dl = 0
+        f
+    
+    f.scale = () ->
+        chroma.scale f
+
+    f.hue hue
+
+    f

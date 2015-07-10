@@ -37,4 +37,5 @@ clip_rgb = (rgb) ->
 {PI, round, cos, floor, pow, log, sin, sqrt, atan2, max, abs} = Math
 TWOPI = PI*2
 PITHIRD = PI/3
-
+DEG2RAD = PI / 180
+RAD2DEG = 180 / PI

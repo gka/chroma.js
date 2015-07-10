@@ -35,4 +35,9 @@ bezier = (colors) ->
     I
 
 chroma.bezier = (colors) ->
-    chroma.scale bezier colors
+    f = bezier colors
+    
+    f.scale = () ->
+        chroma.scale f
+    
+    f

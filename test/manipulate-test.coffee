@@ -15,16 +15,16 @@ vows
 
         'modify colors':
             topic: () -> chroma '#ff0000'
-            'darken': (topic) -> assert.equal topic.darken(10).hex(), '#dd0000'
-            'darker': (topic) -> assert.equal topic.darker(10).hex(), '#dd0000'
-            'darken more': (topic) -> assert.equal topic.darker(40).hex(), '#7d0000'
-            'darken too much': (topic) -> assert.equal topic.darker(400).hex(), '#000000'
-            'brighten': (topic) -> assert.equal topic.brighten(10).hex(), '#ff3e20'
-            'brighten too much': (topic) -> assert.equal topic.brighten(500).hex(), '#ffffff'
-            'brighter': (topic) -> assert.equal topic.brighter(10).hex(), '#ff3e20'
+            'darken': (topic) -> assert.equal topic.darken().hex(), '#c20000'
+            'darker': (topic) -> assert.equal topic.darker().hex(), '#c20000'
+            'darken more': (topic) -> assert.equal topic.darker(2).hex(), '#890000'
+            'darken too much': (topic) -> assert.equal topic.darker(10).hex(), '#000000'
+            'brighten': (topic) -> assert.equal topic.brighten().hex(), '#ff5a36'
+            'brighten too much': (topic) -> assert.equal topic.brighten(10).hex(), '#ffffff'
+            'brighter': (topic) -> assert.equal topic.brighter().hex(), '#ff5a36'
             'saturate': (topic) -> assert.equal topic.saturate().hex(), '#ff0000'
-            'desaturate': (topic) -> assert.equal topic.desaturate().hex(), '#ec3d23'
-            'desaturate more': (topic) -> assert.equal topic.desaturate(40).hex(), '#d7553a'
+            'desaturate': (topic) -> assert.equal topic.desaturate().hex(), '#ee3a20'
+            'desaturate more': (topic) -> assert.equal topic.desaturate(2).hex(), '#db5136'
             'desaturate too much': (topic) -> assert.equal topic.desaturate(400).hex(), '#7f7f7f'
 
         'premultiply':
