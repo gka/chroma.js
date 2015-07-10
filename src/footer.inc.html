@@ -62,6 +62,12 @@
                         return '<span class="cm-string cm-color" data-color="'+d.css()+'">'+d.hex()+'</span>';                 
                     } else if ($.isNumeric(d)) {
                         return '<span class="cm-number">'+round(d,3)+'</span>';
+                    } else if ($.isFunction(d)) {
+                        var s = '';
+                        for (var i=0;i<=100;i++) {
+                            s += '<span class="grad-step" style="background-color:'+d(i/100)+'"></span>';
+                        }
+                        return s;
                     }
                 }
 
@@ -99,7 +105,7 @@
                     var col = chroma(val),
                         l = col.luminance();
                     span.attr('style', [
-                        'background:'+col.hex(),
+                        'background-color:'+col.hex(),
                         'color:'+(l <0.5 ? 'white' : 'black'),
                         'opacity:'+col.alpha()
                     ].join(';'));                    
@@ -135,5 +141,20 @@
 
     });
 
-    
+    var toc = $('<ul />')
+        .addClass('toc')
+        .appendTo(
+            $('<div>')
+            .addClass('toc-container')
+            .appendTo('.wrap')
+        );
+
+    toc.append('<li><a href="#chroma-js">top</a></li>');
+
+    $('h2,h3').each(function() {
+        var h = $(this),
+            l = h.attr('id'),
+            t = h.is('h2');
+        toc.append('<li class="'+('level-'+(t ? '1' : '2'))+'"><a href="#'+l+'">' + h.text() +'</a></li>');
+    });
 </script>

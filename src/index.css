@@ -2,29 +2,69 @@ body {
   font-family: Roboto;
 }
 
-body > h1, body > h2, body > h3, body > p, body > pre {
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    /*left: -80px;*/
+.wrap {
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-body > h1 {
+.wrap > h1, .wrap > h2, .wrap > h3, .wrap > p, .wrap > pre, .wrap > ul {
+    position: relative;
+    /*left: -80px;*/
+    padding-left: 300px;
+}
+
+.wrap > ul {
+    margin-left: 30px;
+}
+
+.wrap > p {
+    margin-right: 180px;
+}
+
+
+ul.toc {
+    position: absolute;
+    top: 50px;
+    width: 200px;
+    list-style: none;
+}
+
+
+.toc li a {
+    text-decoration: none;
+        margin-bottom: 5px;
+    font-size: 13px;
+    border-bottom: 1px dotted white;
+    padding-bottom: 5px;
+    display: block;
+}
+
+.toc li.level-2 a {
+    padding-left: 20px;
+    font-size: 12px;
+}
+
+.wrap > h1 {
     font-weight: 100;
     font-size: 48px;
     letter-spacing: -2px;
 }
 
-body > h2 {
-    margin-top: 50px;
+.wrap > h2 {
+    padding-top: 30px;
+    margin-top: 20px;
 }
 
-body p code {
+.wrap p code, .wrap li code {
     font-size: 16px;
     margin-left: 2px;
     margin-right: 2px;
     color: #069;
+}
+
+html .cm-s-default .cm-comment {
+  color: #B3A9A9;
+  font-style: italic;
 }
 
 pre {
@@ -42,6 +82,7 @@ pre .CodeMirror {
     border-radius: 10px;
     margin: -5px;
     padding: 5px;   
+    margin-right: 180px;
 }
 
 
@@ -51,7 +92,7 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 
 .result-display {
     position: absolute; 
-    right: -180px;
+    right: 0px;
     top: 5px;
     width: 160px;
     white-space: normal;
@@ -66,8 +107,22 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     border-radius: 3px;
     vertical-align: bottom;
     margin-left: 2px;
+    margin-bottom: 2px;
+    position: relative;
+    /**/
 }
 
+.result-display .cm-string:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-image: url(../assets/bg.png);
+    opacity: 0.99;
+    z-index: -10;
+}
 .result-display .cm-number {
     color: #164;
 }
@@ -105,4 +160,10 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     top: -25px;
     font-size: 11px;
     color: #ccc;
+}
+
+.grad-step {
+    display: inline-block;
+    height: 25px;
+    width: 1.5px;
 }
