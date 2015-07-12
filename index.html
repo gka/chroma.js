@@ -50,6 +50,36 @@ chroma([255, 51, 153]);
 chroma(&#39;rgba(255,0,0,0.5)&#39;);
 </code></pre>
 <h2 id="analyze-and-manipulate-colors">Analyze and manipulate colors</h2>
+<h3 id="change-brightness">Change brightness</h3>
+<p>Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness.</p>
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).darken();
+chroma(&#39;hotpink&#39;).darken(2);
+chroma(&#39;hotpink&#39;).brighten();
+</code></pre>
+<h3 id="change-saturation">Change saturation</h3>
+<p>You can also <strong>saturate</strong> colors. chroma.js will use the <code>Lch</code> color space to saturate/desaturate the colors.</p>
+<pre><code class="lang-js">chroma(&#39;slategray&#39;).saturate(); 
+chroma(&#39;slategray&#39;).saturate(2);
+</code></pre>
+<p>You can <strong>desaturate</strong> colors, too. </p>
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).desaturate();
+chroma(&#39;hotpink&#39;).desaturate(3);
+// destaturate is the same as negative saturation
+chroma(&#39;hotpink&#39;).saturate(-3);
+</code></pre>
+<h3 id="set-get-generic-channels">Set/get generic channels</h3>
+<p>Set a channel of a color space.</p>
+<pre><code class="lang-js">// change hue to 0 deg
+chroma(&#39;hotpink&#39;).set(&#39;hsl.h&#39;, 0);
+// set chromacity to 30
+chroma(&#39;hotpink&#39;).set(&#39;lch.c&#39;, 30);
+</code></pre>
+<p>Relative changes work, too:</p>
+<pre><code class="lang-js">// half Lab lightness
+chroma(&#39;orangered&#39;).set(&#39;lab.l&#39;, &#39;*0.5&#39;);
+// double Lch saturation
+chroma(&#39;darkseagreen&#39;).set(&#39;lch.c&#39;, &#39;*2&#39;);
+</code></pre>
 <h3 id="relative-luminance">Relative luminance</h3>
 <p>Returns the relative brightness of any point in a colorspace, normalized to <code>0</code> for darkest black and <code>1</code> for lightest white according to the <a href="http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef">WCAG definition</a>.</p>
 <pre><code class="lang-js">chroma(&#39;white&#39;).luminance();
@@ -59,54 +89,36 @@ chroma(&#39;darkslateblue&#39;).luminance();
 chroma(&#39;black&#39;).luminance();
 </code></pre>
 <p>chroma.js also allows you to <strong>set the luminance</strong> of a color. The source color will be interpolated with black or white until the correct luminance is found.</p>
-<pre><code class="lang-js">chroma(&#39;white&#39;).luminance(0.5);
+<pre><code class="lang-js">// set lumincance to 50% for all colors
+chroma(&#39;white&#39;).luminance(0.5);
 chroma(&#39;aquamarine&#39;).luminance(0.5);
 chroma(&#39;hotpink&#39;).luminance(0.5);
 chroma(&#39;darkslateblue&#39;).luminance(0.5);
 </code></pre>
 <h3 id="contrast-ratio">Contrast ratio</h3>
 <p>Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 <a href="http://www.w3.org/TR/WCAG20-TECHS/G18.html">is recommended</a> to ensure that text is still readable against a background color.</p>
-<pre><code class="lang-js">// not enough
+<pre><code class="lang-js">// contrast &lt; 4.5, too low
 chroma.contrast(&#39;pink&#39;, &#39;hotpink&#39;);
-// enough
+// contrast &gt; 4.5 high enough
 chroma.contrast(&#39;pink&#39;, &#39;purple&#39;);
 </code></pre>
 <h3 id="color-temperature">Color temperature</h3>
-<p>light 2000K, bright sunlight 6000K</p>
+<p>light 2000K, bright sunlight 6000K. Based on <a href="https://github.com/neilbartlett/color-temperature">Neil Bartlett&#39;s implementation</a>. </p>
 <pre><code class="lang-js">chroma.temperature(2000); // candle light
 chroma.temperature(3500); // sunset
 chroma.temperature(6000); // bright sunlight
 </code></pre>
-<pre><code class="lang-js">chroma(&#39;#ff8a13&#39;).temperature();
-chroma(&#39;#ffe3cd&#39;).temperature();
-chroma(&#39;#cbdbff&#39;).temperature();
-chroma(&#39;#b3ccff&#39;).temperature();
+<p>The effective temperature range goes from <code>0</code> to about <code>20000</code> Kelvin:</p>
+<pre><code class="lang-js">f = function(i) {
+    return chroma.temperature(i * 20000)
+}
 </code></pre>
-<p>Estimates the color temperature in Kelvin according to TK TK. Based on <a href="https://github.com/neilbartlett/color-temperature">Neil Bartlett&#39;s implementation</a>. light 2000K, bright sunlight 6000K</p>
+<p>You can also estimate the temperature of any given color, though this makes the only sense for colors from the temperature gradient above.</p>
 <pre><code class="lang-js">chroma(&#39;#ff3300&#39;).temperature();
 chroma(&#39;#ff8a13&#39;).temperature();
 chroma(&#39;#ffe3cd&#39;).temperature();
 chroma(&#39;#cbdbff&#39;).temperature();
 chroma(&#39;#b3ccff&#39;).temperature();
-</code></pre>
-<h3 id="change-brightness">Change brightness</h3>
-<p>Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness.</p>
-<pre><code class="lang-js">chroma(&#39;hotpink&#39;).darken();
-chroma(&#39;hotpink&#39;).darken(2);
-chroma(&#39;hotpink&#39;).brighten();
-</code></pre>
-<h3 id="change-saturation">Change saturation</h3>
-<p>You can also <strong>saturate</strong> colors. The default </p>
-<pre><code class="lang-js">chroma(&#39;slategray&#39;).saturate(); 
-chroma(&#39;slategray&#39;).saturate(1.2);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;hotpink&#39;).desaturate();
-chroma(&#39;hotpink&#39;).desaturate(1.2);
-</code></pre>
-<h3 id="set-get-generic-channels">Set/get generic channels</h3>
-<p>Set a channel</p>
-<pre><code class="lang-js">chroma(&#39;hotpink&#39;).set(&#39;hsl.h&#39;, 0);
-chroma(&#39;hotpink&#39;).set(&#39;lch.c&#39;, 30);
 </code></pre>
 <h2 id="mixing-colors">Mixing colors</h2>
 <p>Simplest way. Mix two colors can be achieved in multiple ways. Change the mix ratio by passing a value between 0 and 1 as third parameter. In the following example, red will be mixed with blue. </p>
@@ -129,14 +141,28 @@ chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;burn&#39;);
 chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;dodge&#39;);
 </code></pre>
 <h2 id="color-scales">Color scales</h2>
-<p>A <code>chroma.scale</code> is a function that returns a color based on a given input value. The default range is <code>0..1</code>.</p>
+<p>A color scale, created with <code>chroma.scale</code>, is a function that maps numeric values to a color palette. The default scale has the domain <code>0..1</code> and goes from white to black.</p>
+<pre><code class="lang-js">f = chroma.scale();
+f(0.25);
+f(0.5);
+f(0.75);
+</code></pre>
+<p>You can pass an array of colors to <code>chroma.scale</code>. Any color that can be read by <code>chroma()</code> will work here, too. If you pass more than two colors, they will be evenly distributed along the gradient.</p>
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]);
 chroma.scale([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
 </code></pre>
 <h3 id="custom-domain">Custom domain</h3>
-<p>A <code>chroma.scale</code> is a function that returns a color based on a given input value. The default range is <code>0..1</code>.</p>
-<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])
-    .domain([0,5]);
+<p>You can change the input domain to match your specific use case.</p>
+<pre><code class="lang-js">// default domain is [0,1]
+chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])(0.5);
+// set domain to [0,100]
+chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])
+    .domain([0,100])(50);
+</code></pre>
+<p>You can change the input domain to match your specific use case.</p>
+<pre><code class="lang-js">// default domain is [0,1]
+chroma.scale([&#39;yellow&#39;, &#39;lightgreen&#39;, &#39;008ae5&#39;])
+    .domain([0,0.25,1]);
 </code></pre>
 <h3 id="specifying-interplation-space">Specifying interplation space</h3>
 <p>As with chroma.mix, the result of the interpolation will depend on the color mode.</p>

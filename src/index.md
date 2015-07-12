@@ -79,6 +79,57 @@ chroma('rgba(255,0,0,0.5)');
 
 ## Analyze and manipulate colors
 
+### Change brightness
+
+Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness.
+
+```js
+chroma('hotpink').darken();
+chroma('hotpink').darken(2);
+chroma('hotpink').brighten();
+```
+
+
+### Change saturation
+
+You can also **saturate** colors. chroma.js will use the `Lch` color space to saturate/desaturate the colors.
+
+```js
+chroma('slategray').saturate(); 
+chroma('slategray').saturate(2); 
+```
+
+You can **desaturate** colors, too. 
+
+```js
+chroma('hotpink').desaturate();
+chroma('hotpink').desaturate(3);
+// destaturate is the same as negative saturation
+chroma('hotpink').saturate(-3);
+```
+
+
+### Set/get generic channels
+
+Set a channel of a color space.
+
+```js
+// change hue to 0 deg
+chroma('hotpink').set('hsl.h', 0);
+// set chromacity to 30
+chroma('hotpink').set('lch.c', 30);
+```
+
+
+Relative changes work, too:
+
+```js
+// half Lab lightness
+chroma('orangered').set('lab.l', '*0.5');
+// double Lch saturation
+chroma('darkseagreen').set('lch.c', '*2');
+```
+
 ### Relative luminance
 
 Returns the relative brightness of any point in a colorspace, normalized to `0` for darkest black and `1` for lightest white according to the [WCAG definition](http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef).
@@ -94,6 +145,7 @@ chroma('black').luminance();
 chroma.js also allows you to **set the luminance** of a color. The source color will be interpolated with black or white until the correct luminance is found.
 
 ```js
+// set lumincance to 50% for all colors
 chroma('white').luminance(0.5);
 chroma('aquamarine').luminance(0.5);
 chroma('hotpink').luminance(0.5);
@@ -105,15 +157,15 @@ chroma('darkslateblue').luminance(0.5);
 Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 [is recommended](http://www.w3.org/TR/WCAG20-TECHS/G18.html) to ensure that text is still readable against a background color.
 
 ```js
-// not enough
+// contrast < 4.5, too low
 chroma.contrast('pink', 'hotpink');
-// enough
+// contrast > 4.5 high enough
 chroma.contrast('pink', 'purple');
 ```
 
 ### Color temperature
 
-light 2000K, bright sunlight 6000K
+light 2000K, bright sunlight 6000K. Based on [Neil Bartlett's implementation](https://github.com/neilbartlett/color-temperature). 
 
 ```js
 chroma.temperature(2000); // candle light
@@ -121,14 +173,16 @@ chroma.temperature(3500); // sunset
 chroma.temperature(6000); // bright sunlight
 ```
 
+The effective temperature range goes from `0` to about `20000` Kelvin:
+
 ```js
-chroma('#ff8a13').temperature();
-chroma('#ffe3cd').temperature();
-chroma('#cbdbff').temperature();
-chroma('#b3ccff').temperature();
+f = function(i) {
+    return chroma.temperature(i * 20000)
+}
 ```
 
-Estimates the color temperature in Kelvin according to TK TK. Based on [Neil Bartlett's implementation](https://github.com/neilbartlett/color-temperature). light 2000K, bright sunlight 6000K
+
+You can also estimate the temperature of any given color, though this makes the only sense for colors from the temperature gradient above.
 
 ```js
 chroma('#ff3300').temperature();
@@ -138,38 +192,7 @@ chroma('#cbdbff').temperature();
 chroma('#b3ccff').temperature();
 ```
 
-### Change brightness
 
-Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness.
-
-```js
-chroma('hotpink').darken();
-chroma('hotpink').darken(2);
-chroma('hotpink').brighten();
-```
-
-
-### Change saturation
-
-You can also **saturate** colors. The default 
-
-```js
-chroma('slategray').saturate(); 
-chroma('slategray').saturate(1.2); 
-```
-```js
-chroma('hotpink').desaturate();
-chroma('hotpink').desaturate(1.2);
-```
-
-### Set/get generic channels
-
-Set a channel
-
-```js
-chroma('hotpink').set('hsl.h', 0);
-chroma('hotpink').set('lch.c', 30);
-```
 
 ## Mixing colors
 
@@ -203,7 +226,17 @@ chroma.blend('4CBBFC', 'EEEE22', 'dodge');
 
 ## Color scales
 
-A `chroma.scale` is a function that returns a color based on a given input value. The default range is `0..1`.
+A color scale, created with `chroma.scale`, is a function that maps numeric values to a color palette. The default scale has the domain `0..1` and goes from white to black.
+
+```js
+f = chroma.scale();
+f(0.25);
+f(0.5);
+f(0.75);
+```
+
+You can pass an array of colors to `chroma.scale`. Any color that can be read by `chroma()` will work here, too. If you pass more than two colors, they will be evenly distributed along the gradient.
+
 
 ```js
 chroma.scale(['yellow', '008ae5']);
@@ -212,12 +245,24 @@ chroma.scale(['yellow', 'red', 'black']);
 
 ### Custom domain
 
-A `chroma.scale` is a function that returns a color based on a given input value. The default range is `0..1`.
+You can change the input domain to match your specific use case.
 
 ```js
+// default domain is [0,1]
+chroma.scale(['yellow', '008ae5'])(0.5);
+// set domain to [0,100]
 chroma.scale(['yellow', '008ae5'])
-    .domain([0,5]);
+    .domain([0,100])(50);
 ```
+
+You can change the input domain to match your specific use case.
+
+```js
+// default domain is [0,1]
+chroma.scale(['yellow', 'lightgreen', '008ae5'])
+    .domain([0,0.25,1]);
+```
+
 
 
 ### Specifying interplation space
