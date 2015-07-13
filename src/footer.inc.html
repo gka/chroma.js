@@ -37,9 +37,9 @@
             try {
 
                 var s = src.split(';').map(eval);
-                resDisplay.html(s.map(resRec)
+                resDisplay.html('<ol><li>'+s.map(resRec)
                     .filter(function(d) { return d !== undefined; })
-                    .join(','));
+                    .join('</li><li>')+'</li></ol>');
 
                 $('.cm-string', resDisplay).each(styleSpan);
 
@@ -64,10 +64,16 @@
                         return '<span class="cm-number">'+round(d,3)+'</span>';
                     } else if ($.isFunction(d)) {
                         var s = '';
+                        var dom = d.domain ? d.domain() : [0,1],
+                            dmin = Math.min(dom[0], dom[dom.length-1]),
+                            dmax = Math.max(dom[dom.length-1], dom[0]);
                         for (var i=0;i<=100;i++) {
-                            s += '<span class="grad-step" style="background-color:'+d(i/100)+'"></span>';
+                            s += '<span class="grad-step" style="background-color:'+d(dmin + i/100 * (dmax - dmin))+'"></span>';
                         }
-                        return s;
+                        s += '<span class="domain-min">'+dmin+'</span>';
+                        s += '<span class="domain-med">'+((dmin + dmax)*0.5)+'</span>';
+                        s += '<span class="domain-max">'+dmax+'</span>';
+                        return '<div class="gradient">'+s+'</div>';
                     }
                 }
 

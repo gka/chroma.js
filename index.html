@@ -97,9 +97,9 @@ chroma(&#39;darkslateblue&#39;).luminance(0.5);
 </code></pre>
 <h3 id="contrast-ratio">Contrast ratio</h3>
 <p>Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 <a href="http://www.w3.org/TR/WCAG20-TECHS/G18.html">is recommended</a> to ensure that text is still readable against a background color.</p>
-<pre><code class="lang-js">// contrast &lt; 4.5, too low
+<pre><code class="lang-js">// contrast smaller than 4.5 = too low
 chroma.contrast(&#39;pink&#39;, &#39;hotpink&#39;);
-// contrast &gt; 4.5 high enough
+// contrast greater than 4.5 = high enough
 chroma.contrast(&#39;pink&#39;, &#39;purple&#39;);
 </code></pre>
 <h3 id="color-temperature">Color temperature</h3>
@@ -154,10 +154,9 @@ chroma.scale([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
 <h3 id="custom-domain">Custom domain</h3>
 <p>You can change the input domain to match your specific use case.</p>
 <pre><code class="lang-js">// default domain is [0,1]
-chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])(0.5);
+chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]);
 // set domain to [0,100]
-chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])
-    .domain([0,100])(50);
+chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).domain([0,100]);
 </code></pre>
 <p>You can change the input domain to match your specific use case.</p>
 <pre><code class="lang-js">// default domain is [0,1]
@@ -165,10 +164,34 @@ chroma.scale([&#39;yellow&#39;, &#39;lightgreen&#39;, &#39;008ae5&#39;])
     .domain([0,0.25,1]);
 </code></pre>
 <h3 id="specifying-interplation-space">Specifying interplation space</h3>
-<p>As with chroma.mix, the result of the interpolation will depend on the color mode.</p>
+<p>As with <code>chroma.mix</code>, the result of the color interpolation will depend on the color mode in which the channels are interpolated. The default mode is <code>RGB</code>:</p>
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]);
-chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).mode(&#39;lab&#39;);
-chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).mode(&#39;lch&#39;);
+</code></pre>
+<p>This is often fine, but sometimes, two-color <code>RGB</code> gradients goes through kind of grayish colors, and <code>Lab</code> interpolation produces better results:</p>
+<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]);
+chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lab&#39;);
+</code></pre>
+<p>Other useful interpolation modes could be <code>HSL</code> or <code>Lch</code>, though both tend to produce too saturated / glowing gradients.</p>
+<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;hsl&#39;);
+chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lch&#39;);
+</code></pre>
+<h3 id="pre-defined-color-scales-from-colorbrewer">Pre-defined color scales from ColorBrewer</h3>
+<p>chroma.js includes the definitions from <a href="http://colorbrewer2.org/">ColorBrewer2.org</a>. Read more about these colors <a href="http://www.albany.edu/faculty/fboscoe/papers/harrower2003.pdf">in the corresponding paper</a> by Mark Harrower and Cynthia A. Brewer.</p>
+<pre><code class="lang-js">chroma.scale(&#39;YlGnBu&#39;);
+chroma.scale(&#39;Spectral&#39;);
+</code></pre>
+<p>To reverse the colors you could simply reverse the domain:</p>
+<pre><code class="lang-js">chroma.scale(&#39;Spectral&#39;).domain([1,0]);
+</code></pre>
+<p>You can access the colors directly using <code>chroma.brewer</code>.</p>
+<pre><code class="lang-js">chroma.brewer.YlOrBr
+</code></pre>
+<h3 id="equi-distant-colors">Equi-distant colors</h3>
+<p>You can call <code>scale.colors(n)</code> to quickly grab <code>n</code> equi-distant colors from a color scale. </p>
+<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).colors(5);
+// effectively the same as
+[0, 0.25, 0.5, 0.75, 1]
+   .map(chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]));
 </code></pre>
 <h3 id="lightness-correction">Lightness correction</h3>
 <p>Sometimes</p>
@@ -176,17 +199,17 @@ chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).mode(&#39;lch&#39;);
 
 chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])
     .mode(&#39;lch&#39;)
-    .correctLightness(1);
+    .correctLightness();
 </code></pre>
 <h3 id="bezier-interpolation">Bezier interpolation</h3>
 <p><code>chroma.bezier</code> returns a function that performs a bezier interpolate. The input range of the function is <code>[0..1]</code>. Bezier interpolation is always done in <code>Lab</code> space.</p>
 <pre><code class="lang-js">// linear interpolation
-chroma.scale([&#39;white&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
+chroma.scale([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
 // bezier interpolation
-chroma.bezier([&#39;white&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
+chroma.bezier([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
 // convert bezier interpolator into chroma.scale
-chroma.bezier([&#39;white&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;])
-    .scale().colors(6);
+chroma.bezier([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;])
+    .scale().colors(5);
 </code></pre>
 <p>Bezier interpolation</p>
 <h3 id="cube-helix">Cube-helix</h3>
@@ -194,16 +217,29 @@ chroma.bezier([&#39;white&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;
 <p>Parameters (description copied from Dave Green):</p>
 <ul>
 <li><strong>start</strong> color for <a href="http://en.wikipedia.org/wiki/Hue#/media/File:HueScale.svg">hue rotation</a>, default=<code>300</code></li>
-<li><strong>rotation</strong>: number of rotations (e.g. 1=<code>360°</code>, 1.5=`540°``), default=-1.5</li>
+<li><strong>rotations</strong>: number of rotations (e.g. 1=<code>360°</code>, 1.5=`540°``), default=-1.5</li>
 <li><strong>hue</strong>: controls how saturated the colour of all hues are. either single value or range, default=1</li>
 <li><strong>gamma factor</strong>: can be used to emphasise low or high intensity values, default=1</li>
 <li><strong>lightness</strong> range: default: [0,1]  (black -&gt; white)</li>
 </ul>
-<pre><code class="lang-js">chroma.cubehelix().start(0);
-chroma.cubehelix().start(50);
-chroma.cubehelix().rotations(0.5);
-// convert into chroma.scale
-chroma.cubehelix().scale().colors(7);
+<pre><code class="lang-js">// use the default helix...
+chroma.cubehelix();
+// or customize it
+chroma.cubehelix()
+    .start(200)
+    .rotations(-0.5)
+    .gamma(0.8)
+    .lightness([0.3, 0.8]);
+</code></pre>
+<p>You can call <code>cubehelix.scale()</code> to use the cube-helix through the <code>chroma.scale()</code> interface.</p>
+<pre><code class="lang-js">chroma.cubehelix()
+    .start(200)
+    .rotations(-0.35)
+    .gamma(0.7)
+    .lightness([0.3, 0.8])
+  .scale() // convert to chroma.scale
+    .correctLightness()
+    .colors(5);
 </code></pre>
 <h2 id="color-output">color output</h2>
 <p>Finally, chroma.js allows you to output colors in various color spaces and formats. Most often you will want to output the color as hexadecimal string.</p>
@@ -365,9 +401,9 @@ chroma(0.2, 0.8, 0, &#39;gl&#39;);
             try {
 
                 var s = src.split(';').map(eval);
-                resDisplay.html(s.map(resRec)
+                resDisplay.html('<ol><li>'+s.map(resRec)
                     .filter(function(d) { return d !== undefined; })
-                    .join(','));
+                    .join('</li><li>')+'</li></ol>');
 
                 $('.cm-string', resDisplay).each(styleSpan);
 
@@ -392,10 +428,16 @@ chroma(0.2, 0.8, 0, &#39;gl&#39;);
                         return '<span class="cm-number">'+round(d,3)+'</span>';
                     } else if ($.isFunction(d)) {
                         var s = '';
+                        var dom = d.domain ? d.domain() : [0,1],
+                            dmin = Math.min(dom[0], dom[dom.length-1]),
+                            dmax = Math.max(dom[dom.length-1], dom[0]);
                         for (var i=0;i<=100;i++) {
-                            s += '<span class="grad-step" style="background-color:'+d(i/100)+'"></span>';
+                            s += '<span class="grad-step" style="background-color:'+d(dmin + i/100 * (dmax - dmin))+'"></span>';
                         }
-                        return s;
+                        s += '<span class="domain-min">'+dmin+'</span>';
+                        s += '<span class="domain-med">'+((dmin + dmax)*0.5)+'</span>';
+                        s += '<span class="domain-max">'+dmax+'</span>';
+                        return '<div class="gradient">'+s+'</div>';
                     }
                 }
 

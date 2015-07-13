@@ -157,9 +157,9 @@ chroma('darkslateblue').luminance(0.5);
 Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 [is recommended](http://www.w3.org/TR/WCAG20-TECHS/G18.html) to ensure that text is still readable against a background color.
 
 ```js
-// contrast < 4.5, too low
+// contrast smaller than 4.5 = too low
 chroma.contrast('pink', 'hotpink');
-// contrast > 4.5 high enough
+// contrast greater than 4.5 = high enough
 chroma.contrast('pink', 'purple');
 ```
 
@@ -249,10 +249,9 @@ You can change the input domain to match your specific use case.
 
 ```js
 // default domain is [0,1]
-chroma.scale(['yellow', '008ae5'])(0.5);
+chroma.scale(['yellow', '008ae5']);
 // set domain to [0,100]
-chroma.scale(['yellow', '008ae5'])
-    .domain([0,100])(50);
+chroma.scale(['yellow', '008ae5']).domain([0,100]);
 ```
 
 You can change the input domain to match your specific use case.
@@ -264,16 +263,62 @@ chroma.scale(['yellow', 'lightgreen', '008ae5'])
 ```
 
 
-
 ### Specifying interplation space
 
-As with chroma.mix, the result of the interpolation will depend on the color mode.
+As with `chroma.mix`, the result of the color interpolation will depend on the color mode in which the channels are interpolated. The default mode is `RGB`:
 
 ```js
 chroma.scale(['yellow', '008ae5']);
-chroma.scale(['yellow', '008ae5']).mode('lab');
-chroma.scale(['yellow', '008ae5']).mode('lch');
 ```
+
+This is often fine, but sometimes, two-color `RGB` gradients goes through kind of grayish colors, and `Lab` interpolation produces better results:
+
+```js
+chroma.scale(['yellow', 'navy']);
+chroma.scale(['yellow', 'navy']).mode('lab');
+```
+
+Other useful interpolation modes could be `HSL` or `Lch`, though both tend to produce too saturated / glowing gradients.
+
+```js
+chroma.scale(['yellow', 'navy']).mode('hsl');
+chroma.scale(['yellow', 'navy']).mode('lch');
+```
+
+
+### Pre-defined color scales from ColorBrewer
+
+chroma.js includes the definitions from [ColorBrewer2.org](http://colorbrewer2.org/). Read more about these colors [in the corresponding paper](http://www.albany.edu/faculty/fboscoe/papers/harrower2003.pdf) by Mark Harrower and Cynthia A. Brewer.
+
+```js
+chroma.scale('YlGnBu');
+chroma.scale('Spectral');
+```
+
+To reverse the colors you could simply reverse the domain:
+
+```js
+chroma.scale('Spectral').domain([1,0]);
+```
+
+You can access the colors directly using `chroma.brewer`.
+
+```js
+chroma.brewer.YlOrBr
+```
+
+
+### Equi-distant colors
+
+You can call `scale.colors(n)` to quickly grab `n` equi-distant colors from a color scale. 
+
+```js
+chroma.scale(['yellow', '008ae5']).colors(5);
+// effectively the same as
+[0, 0.25, 0.5, 0.75, 1]
+   .map(chroma.scale(['yellow', '008ae5']));
+```
+
 
 ### Lightness correction
 Sometimes
@@ -283,7 +328,7 @@ chroma.scale(['yellow', '008ae5']).mode('lch');
 
 chroma.scale(['yellow', '008ae5'])
 	.mode('lch')
-	.correctLightness(1);
+	.correctLightness();
 ```
 
 ### Bezier interpolation
@@ -292,12 +337,12 @@ chroma.scale(['yellow', '008ae5'])
 
 ```js
 // linear interpolation
-chroma.scale(['white', 'yellow', 'red', 'black']);
+chroma.scale(['yellow', 'red', 'black']);
 // bezier interpolation
-chroma.bezier(['white', 'yellow', 'red', 'black']);
+chroma.bezier(['yellow', 'red', 'black']);
 // convert bezier interpolator into chroma.scale
-chroma.bezier(['white', 'yellow', 'red', 'black'])
-    .scale().colors(6);
+chroma.bezier(['yellow', 'red', 'black'])
+    .scale().colors(5);
 ```
 
 Bezier interpolation
@@ -309,19 +354,34 @@ Dave Green's [cubehelix color scheme](http://www.mrao.cam.ac.uk/~dag/CUBEHELIX/)
 Parameters (description copied from Dave Green):
 
 * **start** color for [hue rotation](http://en.wikipedia.org/wiki/Hue#/media/File:HueScale.svg), default=`300`
-* **rotation**: number of rotations (e.g. 1=`360°`, 1.5=`540°``), default=-1.5
+* **rotations**: number of rotations (e.g. 1=`360°`, 1.5=`540°``), default=-1.5
 * **hue**: controls how saturated the colour of all hues are. either single value or range, default=1
 * **gamma factor**: can be used to emphasise low or high intensity values, default=1
 * **lightness** range: default: [0,1]  (black -> white)
 
 
 ```js
-chroma.cubehelix().start(0);
-chroma.cubehelix().start(50);
-chroma.cubehelix().rotations(0.5);
-// convert into chroma.scale
-chroma.cubehelix().scale().colors(7);
+// use the default helix...
+chroma.cubehelix();
+// or customize it
+chroma.cubehelix()
+    .start(200)
+    .rotations(-0.5)
+    .gamma(0.8)
+    .lightness([0.3, 0.8]);
+```
 
+You can call `cubehelix.scale()` to use the cube-helix through the `chroma.scale()` interface.
+
+```js
+chroma.cubehelix()
+    .start(200)
+    .rotations(-0.35)
+    .gamma(0.7)
+    .lightness([0.3, 0.8])
+  .scale() // convert to chroma.scale
+    .correctLightness()
+    .colors(5);
 ```
 
 ## color output

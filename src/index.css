@@ -1,4 +1,4 @@
-body {
+﻿body {
   font-family: Roboto;
 }
 
@@ -83,6 +83,7 @@ pre .CodeMirror {
     margin: -5px;
     padding: 5px;   
     margin-right: 180px;
+    margin-bottom: 20px;
 }
 
 
@@ -93,7 +94,7 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 .result-display {
     position: absolute; 
     right: 0px;
-    top: 5px;
+    top: -5px;
     width: 160px;
     white-space: normal;
     line-height: 22px;
@@ -102,13 +103,14 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 .result-display .cm-string {
     padding: 2px 4px;
     display: inline-block;
-    min-width: 12px;
-    min-height: 16px;
+    min-width: 9px;
+    min-height: 13px;
     border-radius: 3px;
     vertical-align: bottom;
     margin-left: 2px;
     margin-bottom: 2px;
     position: relative;
+    top: 2px;
     /**/
 }
 
@@ -152,7 +154,27 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     color: #614;
 }
 
+.result-display ol {
+    padding: 0;
+    margin: 0;
+    counter-reset: commands;
+}
 
+
+.result-display ol li {
+    list-style-position: inside;
+    list-style: none;
+}
+
+.result-display ol li:before {
+    content: '〉';
+    counter-increment: commands;
+    padding-right: 0px;
+    position: relative;
+    top: 0px;
+    color: #bbb;
+}
+❯
 .result-display:before {
     content: "RESULT";
     position: absolute;
@@ -162,8 +184,40 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     color: #ccc;
 }
 
+.gradient {
+    width: 85%;
+    white-space: nowrap;
+    position: relative;
+    display: inline-block;
+    top: 4px;
+    padding-bottom: 15px;
+}
+
+
+.gradient .domain-min {
+    position: absolute;
+    left: 0;
+    font-size: 11px;
+    bottom: 3px;
+}
+.gradient .domain-med {
+    position: absolute;
+    right: 25%;
+    left: 25%;
+    text-align: center;
+    font-size: 11px;
+    bottom: 3px;
+}
+.gradient .domain-max {
+    position: absolute;
+    right: 0;
+    font-size: 11px;
+    bottom: 3px;
+}
+
+
 .grad-step {
     display: inline-block;
-    height: 25px;
-    width: 1.5px;
+    height: 20px;
+    width: 1%;
 }
