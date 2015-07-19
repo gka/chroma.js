@@ -12,6 +12,7 @@ chroma.scale = (colors, positions) ->
     _fixed = false
     _domain = [0, 1]
     _pos = []
+    _padding = [0,0]
     _classes = false
     _colors = []
     _out = false
@@ -69,9 +70,11 @@ chroma.scale = (colors, positions) ->
                 # find the class
                 c = getClass val
                 t = c / (_classes.length-2)
+                t = _padding[0] + (t * (1 - _padding[0] - _padding[1]))
             else if _max != _min
                 # just interpolate between min/max
-                t = f0 = (val - _min) / (_max - _min)
+                t = (val - _min) / (_max - _min)
+                t = _padding[0] + (t * (1 - _padding[0] - _padding[1]))
                 t = Math.min(1, Math.max(0, t))
             else
                 t = 1
@@ -197,6 +200,15 @@ chroma.scale = (colors, positions) ->
         else
             tmap = (t) -> t
         f
+
+    f.padding = (p) ->
+        if p?
+            if type(p) == 'number'
+                p = [p,p]
+            _padding = p
+            f
+        else
+            _padding
 
     f.colors = () ->
         numColors = 0

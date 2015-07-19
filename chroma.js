@@ -1806,13 +1806,14 @@
   };
 
   chroma.scale = function(colors, positions) {
-    var _classes, _colorCache, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _out, _pos, _spread, classifyValue, f, getClass, getColor, resetCache, setColors, tmap;
+    var _classes, _colorCache, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _out, _padding, _pos, _spread, classifyValue, f, getClass, getColor, resetCache, setColors, tmap;
     _mode = 'rgb';
     _nacol = chroma('#ccc');
     _spread = 0;
     _fixed = false;
     _domain = [0, 1];
     _pos = [];
+    _padding = [0, 0];
     _classes = false;
     _colors = [];
     _out = false;
@@ -1872,7 +1873,7 @@
       return val;
     };
     getColor = function(val, bypassMap) {
-      var c, col, f0, i, k, o, p, ref, t;
+      var c, col, i, k, o, p, ref, t;
       if (bypassMap == null) {
         bypassMap = false;
       }
@@ -1883,8 +1884,10 @@
         if (_classes && _classes.length > 2) {
           c = getClass(val);
           t = c / (_classes.length - 2);
+          t = _padding[0] + (t * (1 - _padding[0] - _padding[1]));
         } else if (_max !== _min) {
-          t = f0 = (val - _min) / (_max - _min);
+          t = (val - _min) / (_max - _min);
+          t = _padding[0] + (t * (1 - _padding[0] - _padding[1]));
           t = Math.min(1, Math.max(0, t));
         } else {
           t = 1;
@@ -2041,6 +2044,17 @@
         };
       }
       return f;
+    };
+    f.padding = function(p) {
+      if (p != null) {
+        if (type(p) === 'number') {
+          p = [p, p];
+        }
+        _padding = p;
+        return f;
+      } else {
+        return _padding;
+      }
     };
     f.colors = function() {
       var dd, dm, i, numColors, o, out, ref, results, samples, w;

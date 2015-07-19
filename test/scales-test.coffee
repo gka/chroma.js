@@ -123,4 +123,18 @@ vows
             'has hex function at 0.5': (topic) -> assert.equal typeof topic.f(0.5).hex, 'function' 
             'has hex function at 0': (topic) -> assert.equal typeof topic.f(0).hex, 'function' 
 
+        'scale padding, simple':
+            topic:
+                f: chroma.scale('RdYlBu').padding(0.15)
+            '0': (topic) -> assert.equal topic.f(0).hex(), '#e54e35'
+            '0.5': (topic) -> assert.equal topic.f(0.5).hex(), '#ffffbf'
+            '1': (topic) -> assert.equal topic.f(1).hex(), '#5c91c2'
+
+        'scale padding, one-sided':
+            topic:
+                f: chroma.scale('OrRd').padding([0.2, 0])
+            '0': (topic) -> assert.equal topic.f(0).hex(), '#fddcae'
+            '0.5': (topic) -> assert.equal topic.f(0.5).hex(), '#f16c4b'
+            '1': (topic) -> assert.equal topic.f(1).hex(), '#7f0000'
+
     .export(module)
