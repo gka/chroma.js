@@ -7,10 +7,29 @@
     margin: 0 auto;
 }
 
-.wrap > h1, .wrap > h2, .wrap > h3, .wrap > p, .wrap > pre, .wrap > ul {
+.wrap > h1, .wrap > h2, .wrap > h3, .wrap > h4, .wrap > p, .wrap > pre, .wrap > ul {
     position: relative;
     /*left: -80px;*/
     padding-left: 300px;
+}
+
+.wrap > h2,
+.wrap > h3 {
+    padding-top: 10px;
+}
+
+.wrap > h2 a,
+.wrap > h3 a {
+    color: #000;
+    text-decoration: none;
+}
+
+.wrap > h2 a:hover:before,
+.wrap > h3 a:hover:before {
+    content: '#';
+    color: #ddd;
+    position: absolute;
+    left: 280px;
 }
 
 .wrap > ul {
@@ -18,7 +37,7 @@
 }
 
 .wrap > p {
-    margin-right: 180px;
+    margin-right: 200px;
 }
 
 
@@ -56,7 +75,7 @@ ul.toc {
 }
 
 .wrap p code, .wrap li code {
-    font-size: 16px;
+    font-size: 15px;
     margin-left: 2px;
     margin-right: 2px;
     color: #069;
@@ -82,7 +101,7 @@ pre .CodeMirror {
     border-radius: 10px;
     margin: -5px;
     padding: 5px;   
-    margin-right: 180px;
+    margin-right: 200px;
     margin-bottom: 20px;
 }
 
@@ -95,7 +114,7 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     position: absolute; 
     right: 0px;
     top: -5px;
-    width: 160px;
+    width: 180px;
     white-space: normal;
     line-height: 22px;
 }
@@ -164,14 +183,16 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 .result-display ol li {
     list-style-position: inside;
     list-style: none;
+    position: relative;
 }
 
 .result-display ol li:before {
-    content: '〉';
+    content: '';
     counter-increment: commands;
     padding-right: 0px;
-    position: relative;
-    top: 0px;
+    position: absolute;
+    left: -10px;
+    top: 2px;
     color: #bbb;
 }
 ❯

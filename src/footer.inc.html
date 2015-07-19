@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="vendor/codemirror/lib/codemirror.css"> 
+﻿<link rel="stylesheet" type="text/css" href="vendor/codemirror/lib/codemirror.css"> 
 <script type="text/javascript" src="vendor/jquery/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="vendor/chroma-js/chroma.min.js"></script>
 <script type="text/javascript" src="vendor/codemirror/lib/codemirror.js"></script>
@@ -155,12 +155,14 @@
             .appendTo('.wrap')
         );
 
-    toc.append('<li><a href="#chroma-js">top</a></li>');
-
     $('h2,h3').each(function() {
         var h = $(this),
             l = h.attr('id'),
             t = h.is('h2');
         toc.append('<li class="'+('level-'+(t ? '1' : '2'))+'"><a href="#'+l+'">' + h.text() +'</a></li>');
+        var a = $('<a />')
+            .attr('href', '#'+l)
+            .html(h.html());
+        h.html('').append(a);
     });
 </script>

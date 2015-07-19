@@ -8,6 +8,7 @@
 <h1 id="chroma-js">chroma.js</h1>
 <p><strong>chroma.js</strong> is a tiny JavaScript library (12kB) for dealing with colors!</p>
 <p><a href="https://travis-ci.org/gka/chroma.js"><img src="https://travis-ci.org/gka/chroma.js.svg?branch=master" alt="Build Status"></a></p>
+<h2 id="quick-start">Quick-start</h2>
 <p>Here are a couple of things chroma.js can do for you:</p>
 <ul>
 <li>read colors from a wide range of formats</li>
@@ -22,7 +23,8 @@
 <pre><code class="lang-js">chroma.scale([&#39;white&#39;,&#39;green&#39;,&#39;blue&#39;]).colors(5)
 </code></pre>
 <p>chroma.js has a lot more to offer, but that&#39;s the basic gist of it.</p>
-<h2 id="reading-colors">Reading colors</h2>
+<h2 id="api">API</h2>
+<h3 id="chroma">chroma</h3>
 <p>The first step is to get your color into chroma.js. That&#39;s what the generic constructor <code>chroma()</code> does. The function is trying to guess the color format for you. For instances, it will recognized any named color from the W3CX11 specification:   </p>
 <pre><code class="lang-js">chroma(&#39;hotpink&#39;)
 </code></pre>
@@ -41,36 +43,120 @@ chroma([255, 51, 153]);
 <p>You can construct colors from different color spaces by passing the name of color space as the last argument. Here we define the same color in HSL by passing the h<em>ue angle (0-360) and percentages for </em>s<em>aturation and </em>l*ightness:</p>
 <pre><code class="lang-js">chroma(330, 1, 0.6, &#39;hsl&#39;)
 </code></pre>
+<h3 id="chroma-hsl">chroma.hsl</h3>
 <p>Alternatively, every color space has it&#39;s own constructor function under the <code>chroma</code> namespace. For a list of all supported color spaces, check the <a href="#supported-color-spaces-and-output-formats">appendix</a>.</p>
 <pre><code class="lang-js">chroma.hsl(330, 1, 0.6)
 </code></pre>
-<h3 id="alpha-channel">Alpha channel</h3>
-<p>You can always set the <code>opacity</code> using <code>.alpha()</code>, but before the color mode.</p>
-<pre><code class="lang-js">chroma(&#39;red&#39;).alpha(0.5);
-chroma(&#39;rgba(255,0,0,0.5)&#39;);
+<h3 id="chroma-hsv">chroma.hsv</h3>
+<h3 id="chroma-lab">chroma.lab</h3>
+<h3 id="chroma-lch">chroma.lch</h3>
+<p><strong>L</strong>: Lightness, <strong>c</strong>: chroma (0-1), <strong>h</strong>: hue (0-1).</p>
+<pre><code class="lang-js">chroma.lch(80, 40, 130);
+chroma(80, 40, 130, &#39;lch&#39;);
 </code></pre>
-<h2 id="analyze-and-manipulate-colors">Analyze and manipulate colors</h2>
-<h3 id="change-brightness">Change brightness</h3>
+<h3 id="chroma-hcl">chroma.hcl</h3>
+<p>You can use <strong>hcl</strong> instead of Lch, too. It is all the same, except that lightness and hue channels are switched to be more consistent with HSL.</p>
+<pre><code class="lang-js">chroma.hcl(130, 40, 80);
+chroma(130, 40, 80, &#39;hcl&#39;);
+</code></pre>
+<h3 id="chroma-cmyk">chroma.cmyk</h3>
+<p>cyan, magenta, yellow, black, each between 0 and 1.</p>
+<pre><code class="lang-js">chroma.cmyk(0.2, 0.8, 0, 0);
+chroma(0.2, 0.8, 0, 0, &#39;cmyk&#39;);
+</code></pre>
+<h3 id="chroma-gl">chroma.gl</h3>
+<p><strong>GL</strong> is a variant of RGB(A), with the only difference that the components are normalized to the range of <code>0..1</code>.</p>
+<pre><code class="lang-js">chroma.gl(0.6, 0, 0.8);
+chroma.gl(0.6, 0, 0.8, 0.5);
+chroma(0.6, 0, 0.8, &#39;gl&#39;);
+</code></pre>
+<h3 id="chroma-temperature">chroma.temperature</h3>
+<p>light 2000K, bright sunlight 6000K. Based on <a href="https://github.com/neilbartlett/color-temperature">Neil Bartlett&#39;s implementation</a>. </p>
+<pre><code class="lang-js">chroma.temperature(2000); // candle light
+chroma.temperature(3500); // sunset
+chroma.temperature(6000); // bright sunlight
+</code></pre>
+<p>The effective temperature range goes from <code>0</code> to about <code>20000</code> Kelvin:</p>
+<pre><code class="lang-js">f = function(i) {
+    return chroma.temperature(i * 20000)
+}
+</code></pre>
+<h3 id="chroma-mix">chroma.mix</h3>
+<p>Simplest way. Mix two colors can be achieved in multiple ways. Change the mix ratio by passing a value between 0 and 1 as third parameter. In the following example, red will be mixed with blue. </p>
+<pre><code class="lang-js">chroma.mix(&#39;red&#39;, &#39;blue&#39;);
+chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.25);
+</code></pre>
+<p>The color mixing produces different results based on what color space the colors are interpolated in. The default color space is <code>rgb</code> but in the following example we interpolate in <code>Lab</code> instead.  </p>
+<pre><code class="lang-js">chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;rgb&#39;);
+chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;hsl&#39;);
+chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lab&#39;);
+chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lch&#39;);
+</code></pre>
+<h3 id="chroma-blend">chroma.blend</h3>
+<p>Blends two colors using RGB channel-wise blend functions. Valid blend modes are <code>multiply</code>, <code>darken</code>, <code>lighten</code>, <code>screen</code>, <code>overlay</code>, <code>burn</code>, and <code>dogde</code>.</p>
+<pre><code class="lang-js">chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;multiply&#39;);
+chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;darken&#39;);
+chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;lighten&#39;);
+</code></pre>
+<h3 id="chroma-random">chroma.random</h3>
+<p>Returns a random color.</p>
+<pre><code class="lang-js">chroma.random();
+chroma.random();
+chroma.random();
+</code></pre>
+<h3 id="chroma-contrast">chroma.contrast</h3>
+<p>Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 <a href="http://www.w3.org/TR/WCAG20-TECHS/G18.html">is recommended</a> to ensure that text is still readable against a background color.</p>
+<pre><code class="lang-js">// contrast smaller than 4.5 = too low
+chroma.contrast(&#39;pink&#39;, &#39;hotpink&#39;);
+// contrast greater than 4.5 = high enough
+chroma.contrast(&#39;pink&#39;, &#39;purple&#39;);
+</code></pre>
+<h3 id="chroma-brewer">chroma.brewer</h3>
+<p>chroma.brewer is an map of ColorBrewer scales that are included in chroma.js for convenience. chroma.scale uses the colors to construct.</p>
+<pre><code class="lang-js">chroma.brewer.OrRd
+</code></pre>
+<h3 id="chroma-limits">chroma.limits</h3>
+<p><code>chroma.limits</code> is a little helper function that computes class breaks for you, based on actual data. Let&#39;s take a few numbers as sample data. </p>
+<pre><code class="lang-js">var data = [3.0,3.5,3.6,3.8,3.8,4.1,4.3,4.4,
+            4.6,4.9,5.2,5.3,5.4,5.7,5.8,5.9,
+            6.2,6.5,6.8,7.2,9];
+</code></pre>
+<p>chroma.limits supports three different modes: equidistant breaks, quantiles breaks and breaks based on k-means clusting.</p>
+<p><strong>equidistant</strong> breaks are the most </p>
+<pre><code class="lang-js">chroma.limits(data, &#39;e&#39;, 5);
+</code></pre>
+<p>In the <strong>quantile</strong> mode, the input domain is divided into classes ensuring that each class contains the same number of input values. </p>
+<pre><code class="lang-js">chroma.limits(data, &#39;q&#39;, 5);
+</code></pre>
+<p><strong>k-means</strong> clusters</p>
+<pre><code class="lang-js">chroma.limits(data, &#39;k&#39;, 5);
+</code></pre>
+<h2 id="color">color</h2>
+<h3 id="color-alpha">color.alpha</h3>
+<p>Get and set the color opacity using <code>color.alpha</code>.</p>
+<pre><code class="lang-js">chroma(&#39;red&#39;).alpha(0.5);
+chroma(&#39;rgba(255,0,0,0.35)&#39;).alpha();
+</code></pre>
+<h3 id="color-darken-brighten">color.darken / brighten</h3>
 <p>Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness.</p>
 <pre><code class="lang-js">chroma(&#39;hotpink&#39;).darken();
 chroma(&#39;hotpink&#39;).darken(2);
 chroma(&#39;hotpink&#39;).brighten();
 </code></pre>
-<h3 id="change-saturation">Change saturation</h3>
+<h3 id="color-saturate">color.saturate</h3>
 <p>You can also <strong>saturate</strong> colors. chroma.js will use the <code>Lch</code> color space to saturate/desaturate the colors.</p>
 <pre><code class="lang-js">chroma(&#39;slategray&#39;).saturate(); 
 chroma(&#39;slategray&#39;).saturate(2);
 </code></pre>
-<p>You can <strong>desaturate</strong> colors, too. </p>
+<h3 id="color-desaturate">color.desaturate</h3>
 <pre><code class="lang-js">chroma(&#39;hotpink&#39;).desaturate();
+chroma(&#39;hotpink&#39;).desaturate(2);
 chroma(&#39;hotpink&#39;).desaturate(3);
-// destaturate is the same as negative saturation
-chroma(&#39;hotpink&#39;).saturate(-3);
 </code></pre>
-<h3 id="set-get-generic-channels">Set/get generic channels</h3>
+<h3 id="color-set">color.set</h3>
 <p>Set a channel of a color space.</p>
-<pre><code class="lang-js">// change hue to 0 deg
-chroma(&#39;hotpink&#39;).set(&#39;hsl.h&#39;, 0);
+<pre><code class="lang-js">// change hue to 0 deg (=red)
+chroma(&#39;skyblue&#39;).set(&#39;hsl.h&#39;, 0);
 // set chromacity to 30
 chroma(&#39;hotpink&#39;).set(&#39;lch.c&#39;, 30);
 </code></pre>
@@ -80,7 +166,12 @@ chroma(&#39;orangered&#39;).set(&#39;lab.l&#39;, &#39;*0.5&#39;);
 // double Lch saturation
 chroma(&#39;darkseagreen&#39;).set(&#39;lch.c&#39;, &#39;*2&#39;);
 </code></pre>
-<h3 id="relative-luminance">Relative luminance</h3>
+<h3 id="color-get">color.get</h3>
+<pre><code class="lang-js">chroma(&#39;orangered&#39;).get(&#39;lab.l&#39;);
+chroma(&#39;orangered&#39;).get(&#39;hsl.l&#39;);
+chroma(&#39;orangered&#39;).get(&#39;rgb.g&#39;);
+</code></pre>
+<h3 id="color-luminance">color.luminance</h3>
 <p>Returns the relative brightness of any point in a colorspace, normalized to <code>0</code> for darkest black and <code>1</code> for lightest white according to the <a href="http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef">WCAG definition</a>.</p>
 <pre><code class="lang-js">chroma(&#39;white&#39;).luminance();
 chroma(&#39;aquamarine&#39;).luminance();
@@ -95,52 +186,67 @@ chroma(&#39;aquamarine&#39;).luminance(0.5);
 chroma(&#39;hotpink&#39;).luminance(0.5);
 chroma(&#39;darkslateblue&#39;).luminance(0.5);
 </code></pre>
-<h3 id="contrast-ratio">Contrast ratio</h3>
-<p>Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 <a href="http://www.w3.org/TR/WCAG20-TECHS/G18.html">is recommended</a> to ensure that text is still readable against a background color.</p>
-<pre><code class="lang-js">// contrast smaller than 4.5 = too low
-chroma.contrast(&#39;pink&#39;, &#39;hotpink&#39;);
-// contrast greater than 4.5 = high enough
-chroma.contrast(&#39;pink&#39;, &#39;purple&#39;);
+<h3 id="color-hex">color.hex</h3>
+<p>Finally, chroma.js allows you to output colors in various color spaces and formats.</p>
+<p>Most often you will want to output the color as hexadecimal string.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).hex()
 </code></pre>
-<h3 id="color-temperature">Color temperature</h3>
-<p>light 2000K, bright sunlight 6000K. Based on <a href="https://github.com/neilbartlett/color-temperature">Neil Bartlett&#39;s implementation</a>. </p>
-<pre><code class="lang-js">chroma.temperature(2000); // candle light
-chroma.temperature(3500); // sunset
-chroma.temperature(6000); // bright sunlight
+<h3 id="color-name">color.name</h3>
+<p>Returns the named color. Falls back to hexadecimal RGB string, if the color isn&#39;t present.</p>
+<pre><code class="lang-js">chroma(&#39;#ffa500&#39;).name();
+chroma(&#39;#ffa505&#39;).name();
 </code></pre>
-<p>The effective temperature range goes from <code>0</code> to about <code>20000</code> Kelvin:</p>
-<pre><code class="lang-js">f = function(i) {
-    return chroma.temperature(i * 20000)
-}
+<h3 id="color-css">color.css</h3>
+<p>Returns a <code>RGB()</code> or <code>HSL()</code> string representation that can be used as CSS-color definition.</p>
+<pre><code class="lang-js">chroma(&#39;teal&#39;).css();
+chroma(&#39;teal&#39;).alpha(0.5).css();
+chroma(&#39;teal&#39;).css(&#39;hsl&#39;);
 </code></pre>
-<p>You can also estimate the temperature of any given color, though this makes the only sense for colors from the temperature gradient above.</p>
+<h3 id="color-rgb">color.rgb</h3>
+<p>Returns an array with the <code>red</code>, <code>green</code>, and <code>blue</code> component, each as number within the range <code>0..255</code>.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).rgb()
+</code></pre>
+<h3 id="color-hsl">color.hsl</h3>
+<p>Returns an array with the <code>hue</code>, <code>saturation</code>, and <code>lightness</code> component. Hue is the color angle in degree (<code>0..360</code>), saturation and lightness are within <code>0..1</code>. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).hsl();
+chroma(&#39;white&#39;).hsl();
+</code></pre>
+<h3 id="color-hsv">color.hsv</h3>
+<p>Returns an array with the <code>hue</code>, <code>saturation</code>, and <code>value</code> components. Hue is the color angle in degree (<code>0..360</code>), saturation and value are within <code>0..1</code>. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).hsv();
+chroma(&#39;white&#39;).hsv();
+</code></pre>
+<h3 id="color-hsi">color.hsi</h3>
+<p>Returns an array with the <code>hue</code>, <code>saturation</code>, and <code>intensity</code> components, each as number between 0 and 255. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).hsi();
+chroma(&#39;white&#39;).hsi();
+</code></pre>
+<h3 id="color-lab">color.lab</h3>
+<p>Returns an array with the <strong>L</strong>, <strong>a</strong>, and <strong>b</strong> components.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).lab()
+</code></pre>
+<h3 id="color-lch">color.lch</h3>
+<p>Returns an array with the <strong>Lightness</strong>, <strong>chroma</strong>, and <strong>hue</strong> components.</p>
+<pre><code class="lang-js">chroma(&#39;skyblue&#39;).lch()
+</code></pre>
+<h3 id="color-hcl">color.hcl</h3>
+<p>Essentially an alias of <a href="#color-lch">lch</a>, but with the components in reverse order.</p>
+<pre><code class="lang-js">chroma(&#39;skyblue&#39;).hcl()
+</code></pre>
+<h3 id="color-temperature">color.temperature</h3>
+<p>Estimate the temperature in Kelvin of any given color, though this makes the only sense for colors from the <a href="#chroma-temperature">temperature gradient</a> above.</p>
 <pre><code class="lang-js">chroma(&#39;#ff3300&#39;).temperature();
 chroma(&#39;#ff8a13&#39;).temperature();
 chroma(&#39;#ffe3cd&#39;).temperature();
 chroma(&#39;#cbdbff&#39;).temperature();
 chroma(&#39;#b3ccff&#39;).temperature();
 </code></pre>
-<h2 id="mixing-colors">Mixing colors</h2>
-<p>Simplest way. Mix two colors can be achieved in multiple ways. Change the mix ratio by passing a value between 0 and 1 as third parameter. In the following example, red will be mixed with blue. </p>
-<pre><code class="lang-js">chroma.mix(&#39;red&#39;, &#39;blue&#39;).hex();
-chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.25).hex();
+<h3 id="color-gl">color.gl</h3>
+<pre><code class="lang-js">chroma(&#39;33cc00&#39;).gl();
 </code></pre>
-<p>The color mixing produces different results based on what color space the colors are interpolated in. The default color space is <code>rgb</code> but in the following example we interpolate in <code>Lab</code> instead.  </p>
-<pre><code class="lang-js">chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;rgb&#39;);
-chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;hsl&#39;);
-chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lab&#39;);
-chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lch&#39;);
-</code></pre>
-<h3 id="blending-colors">Blending colors</h3>
-<pre><code class="lang-js">chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;multiply&#39;);
-chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;darken&#39;);
-chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;lighten&#39;);
-chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;screen&#39;);
-chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;overlay&#39;);
-chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;burn&#39;);
-chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;dodge&#39;);
-</code></pre>
-<h2 id="color-scales">Color scales</h2>
+<p>For a complete list of supported output formats, read the <a href="">API docs</a>.</p>
+<h2 id="color-scales">color scales</h2>
+<h3 id="chroma-scale">chroma.scale</h3>
 <p>A color scale, created with <code>chroma.scale</code>, is a function that maps numeric values to a color palette. The default scale has the domain <code>0..1</code> and goes from white to black.</p>
 <pre><code class="lang-js">f = chroma.scale();
 f(0.25);
@@ -151,19 +257,19 @@ f(0.75);
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]);
 chroma.scale([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
 </code></pre>
-<h3 id="custom-domain">Custom domain</h3>
+<h3 id="scale-domain">scale.domain</h3>
 <p>You can change the input domain to match your specific use case.</p>
 <pre><code class="lang-js">// default domain is [0,1]
 chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]);
 // set domain to [0,100]
 chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).domain([0,100]);
 </code></pre>
-<p>You can change the input domain to match your specific use case.</p>
+<p>You can use the domain to set the exact positions of each color.</p>
 <pre><code class="lang-js">// default domain is [0,1]
 chroma.scale([&#39;yellow&#39;, &#39;lightgreen&#39;, &#39;008ae5&#39;])
     .domain([0,0.25,1]);
 </code></pre>
-<h3 id="specifying-interplation-space">Specifying interplation space</h3>
+<h3 id="scale-mode">scale.mode</h3>
 <p>As with <code>chroma.mix</code>, the result of the color interpolation will depend on the color mode in which the channels are interpolated. The default mode is <code>RGB</code>:</p>
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]);
 </code></pre>
@@ -175,7 +281,7 @@ chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lab&#39;);
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;hsl&#39;);
 chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lch&#39;);
 </code></pre>
-<h3 id="pre-defined-color-scales-from-colorbrewer">Pre-defined color scales from ColorBrewer</h3>
+<h3 id="chroma-brewer">chroma.brewer</h3>
 <p>chroma.js includes the definitions from <a href="http://colorbrewer2.org/">ColorBrewer2.org</a>. Read more about these colors <a href="http://www.albany.edu/faculty/fboscoe/papers/harrower2003.pdf">in the corresponding paper</a> by Mark Harrower and Cynthia A. Brewer.</p>
 <pre><code class="lang-js">chroma.scale(&#39;YlGnBu&#39;);
 chroma.scale(&#39;Spectral&#39;);
@@ -184,16 +290,9 @@ chroma.scale(&#39;Spectral&#39;);
 <pre><code class="lang-js">chroma.scale(&#39;Spectral&#39;).domain([1,0]);
 </code></pre>
 <p>You can access the colors directly using <code>chroma.brewer</code>.</p>
-<pre><code class="lang-js">chroma.brewer.YlOrBr
+<pre><code class="lang-js">chroma.brewer.OrRd
 </code></pre>
-<h3 id="equi-distant-colors">Equi-distant colors</h3>
-<p>You can call <code>scale.colors(n)</code> to quickly grab <code>n</code> equi-distant colors from a color scale. </p>
-<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).colors(5);
-// effectively the same as
-[0, 0.25, 0.5, 0.75, 1]
-   .map(chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]));
-</code></pre>
-<h3 id="lightness-correction">Lightness correction</h3>
+<h3 id="scale-correctlightnet">scale.correctLightnet</h3>
 <p>Sometimes</p>
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).mode(&#39;lch&#39;);
 
@@ -201,7 +300,7 @@ chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])
     .mode(&#39;lch&#39;)
     .correctLightness();
 </code></pre>
-<h3 id="bezier-interpolation">Bezier interpolation</h3>
+<h3 id="chroma-bezier">chroma.bezier</h3>
 <p><code>chroma.bezier</code> returns a function that performs a bezier interpolate. The input range of the function is <code>[0..1]</code>. Bezier interpolation is always done in <code>Lab</code> space.</p>
 <pre><code class="lang-js">// linear interpolation
 chroma.scale([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
@@ -212,7 +311,7 @@ chroma.bezier([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;])
     .scale().colors(5);
 </code></pre>
 <p>Bezier interpolation</p>
-<h3 id="cube-helix">Cube-helix</h3>
+<h3 id="chroma-cubehelix">chroma.cubehelix</h3>
 <p>Dave Green&#39;s <a href="http://www.mrao.cam.ac.uk/~dag/CUBEHELIX/">cubehelix color scheme</a>!!</p>
 <p>Parameters (description copied from Dave Green):</p>
 <ul>
@@ -241,128 +340,28 @@ chroma.cubehelix()
     .correctLightness()
     .colors(5);
 </code></pre>
-<h2 id="color-output">color output</h2>
-<p>Finally, chroma.js allows you to output colors in various color spaces and formats. Most often you will want to output the color as hexadecimal string.</p>
-<pre><code class="lang-js">chroma(&#39;orange&#39;).hex()
+<h3 id="scale-colors">scale.colors</h3>
+<p>You can call <code>scale.colors(n)</code> to quickly grab <code>n</code> equi-distant colors from a color scale. </p>
+<pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;).colors(5);
+chroma.scale([&#39;white&#39;, &#39;black&#39;]).colors(12);
 </code></pre>
-<p><strong><code>name</code></strong> returns the named color or the hexadecimal string, if the color isn&#39;t present.</p>
-<pre><code class="lang-js">chroma(&#39;#ffa500&#39;).name()
+<h3 id="scale-classes">scale.classes</h3>
+<p>If you want the scale function to return a distinct set of colors instead of a continuous gradient, you can set custom class breaks:</p>
+<pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;).classes(5);
+chroma.scale(&#39;OrRd&#39;).classes(8);
 </code></pre>
-<p><strong><code>rgb</code></strong> returns an array with the <strong>r</strong>ed, <strong>b</strong>lue, and <strong>g</strong>reen component, each as number between 0 and 255.</p>
-<pre><code class="lang-js">chroma(&#39;orange&#39;).rgb()
+<p>You can also define custom class breaks by passing them as array: </p>
+<pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;).classes([0,0.3,0.55,0.85,1]);
 </code></pre>
-<p><strong><code>hsl</code></strong> returns an array with the <strong>h</strong>ue, <strong>s</strong>aturation, and <strong>l</strong>ightness component, each as number between 0 and 255. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.</p>
-<pre><code class="lang-js">chroma(&#39;orange&#39;).hsl()
+<p>Note that this works with any color scale:</p>
+<pre><code class="lang-js">chroma.cubehelix()
+    .rotations(-0.35)
+    .lightness([0.1, 0.8])
+    .scale()
+    .classes(breaks)
 </code></pre>
-<pre><code class="lang-js">chroma(&#39;white&#39;).hsl()
-</code></pre>
-<p><strong><code>hsv</code></strong> returns an array with the <strong>h</strong>ue, <strong>s</strong>aturation, and <strong>v</strong>alue component, each as number between 0 and 255. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.</p>
-<pre><code class="lang-js">chroma(&#39;orange&#39;).hsv()
-</code></pre>
-<p><strong><code>lab</code></strong> returns an array with the <strong>L</strong>, <strong>a</strong>, and <strong>b</strong> component, each as number between 0 and 255.</p>
-<pre><code class="lang-js">chroma(&#39;orange&#39;).lab()
-</code></pre>
-<p><strong>luminance</strong> </p>
-<pre><code class="lang-js">chroma(&#39;orange&#39;).luminance()
-</code></pre>
-<p><strong>temperature</strong> </p>
-<pre><code class="lang-js">chroma(&#39;pink&#39;).temperature()
-</code></pre>
-<p>If the output color format is returned as separate channels, you can access them both using numeric and named indexes:</p>
-<pre><code>color.rgb()[0]      // 255
-color.rgb().r       // 255
-color.rgb().red     // 255
-</code></pre><p>For a complete list of supported output formats, read the <a href="">API docs</a>.</p>
-<h2 id="supported-color-spaces-and-output-formats">Supported color spaces and output formats</h2>
-<p>What follows is a complete list of all supported color spaces and formats.</p>
-<h3 id="rgb">RGB</h3>
-<p><strong>r</strong>ed, <strong>g</strong>reen, <strong>b</strong>lue, each between 0 and 255.</p>
-<pre><code class="lang-js">chroma(200, 0, 30);
-chroma.rgb(0.2, 0.8, 0, 0);
-chroma(0.2, 0.8, 0, 0, &#39;rgb&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;lime&#39;).rgb()
-</code></pre>
-<p>Another way to input and output RGB colors is as <em>hexadecimal</em> strings:</p>
-<pre><code class="lang-js">chroma(&#39;#EE5500&#39;);
-chroma.hex(&#39;#EE5500&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;hotpink&#39;).hex()
-</code></pre>
-<p>Another way to input and output RGB colors is as <em>hexadecimal</em> strings:</p>
-<pre><code class="lang-js">chroma(0xEE5500);
-chroma.num(0xEE5500);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;hotpink&#39;).num()
-</code></pre>
-<h3 id="cmyk">CMYK</h3>
-<p><strong>c</strong>yan, <strong>m</strong>agenta, <strong>y</strong>ellow, <strong>b</strong>lack, each between 0 and 1.</p>
-<pre><code class="lang-js">chroma.cmyk(0.2, 0.8, 0, 0);
-chroma(0.2, 0.8, 0, 0, &#39;cmyk&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;lime&#39;).cmyk()
-</code></pre>
-<h3 id="hsl">HSL</h3>
-<p><strong>h</strong>ue (0-360), <strong>s</strong>aturation (0-1), <strong>l</strong>ightness (0-1).</p>
-<pre><code class="lang-js">chroma.hsl(60, 0.8, 0.5);
-chroma(60, 0.8, 0.5, &#39;hsl&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;tomato&#39;).hsl()
-</code></pre>
-<h3 id="hsv">HSV</h3>
-<p><strong>h</strong>ue (0-360), <strong>s</strong>aturation (0-1), <strong>v</strong>alue (0-1).</p>
-<pre><code class="lang-js">chroma.hsv(60, 0.8, 0.8);
-chroma(60, 0.8, 0.8, &#39;hsv&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;tomato&#39;).hsv()
-</code></pre>
-<h3 id="hsi">HSI</h3>
-<p><strong>h</strong>ue (0-360), <strong>s</strong>aturation (0-1), <strong>i</strong>ntensity (0-1).</p>
-<pre><code class="lang-js">chroma.hsi(60, 0.8, 0.8);
-chroma(60, 0.8, 0.8, &#39;hsi&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;tomato&#39;).hsi()
-</code></pre>
-<h3 id="lab">Lab</h3>
-<p><strong>L</strong>ightness (0-100), <strong>a</strong> (-100 - 100), <strong>b</strong> (-100 - 100).</p>
-<pre><code class="lang-js">chroma.lab(80, 40, 130);
-chroma(80, 40, 130, &#39;lab&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;cyan&#39;).lab()
-</code></pre>
-<h3 id="lch">Lch</h3>
-<p><strong>L</strong>ightness, <strong>c</strong>hroma (0-1), <strong>h</strong>ue (0-1).</p>
-<pre><code class="lang-js">chroma.lch(80, 40, 130);
-chroma(80, 40, 130, &#39;lch&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;tomato&#39;).lch()
-</code></pre>
-<h3 id="hcl">HCL</h3>
-<p><strong>HCL</strong>: Btw, if you prefer, you can use <strong>hcl</strong> instead of Lch, too. It is all the same, except that lightness and hue channels are switched to be more consistent with HSL.</p>
-<pre><code class="lang-js">chroma.hcl(130, 40, 80);
-chroma(130, 40, 80, &#39;hcl&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;tomato&#39;).hcl()
-</code></pre>
-<h3 id="css">CSS</h3>
-<p><strong>CSS</strong> If you pass a string that does not look like a hexadecimal color, chroma.js will try to parse it as CSS-color, either as <code>rgb()</code>, <code>rgba()</code>, <code>hsl()</code>, or <code>hsla()</code>.</p>
-<pre><code class="lang-js">chroma(&#39;rgb(255,51,153)&#39;)
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;hsla(330,100%,60%,0.5)&#39;)
-</code></pre>
-<p>You can access the alpha channel using <code>alpha()</code>.</p>
-<pre><code class="lang-js">chroma(&#39;hsla(330,100%,60%,0.5)&#39;).alpha()
-</code></pre>
-<h3 id="gl">GL</h3>
-<p><strong>GL</strong> is a variant of RGB(A), with the only difference that the components are normalized to the range of <code>0..1</code>.</p>
-<pre><code class="lang-js">chroma.gl(0.2, 0.8, 0);
-chroma(0.2, 0.8, 0, &#39;gl&#39;);
-</code></pre>
-<pre><code class="lang-js">chroma(&#39;33cc00&#39;).gl();
-</code></pre>
-<p>sdsd</p>
 
-<link rel="stylesheet" type="text/css" href="vendor/codemirror/lib/codemirror.css"> 
+﻿<link rel="stylesheet" type="text/css" href="vendor/codemirror/lib/codemirror.css"> 
 <script type="text/javascript" src="vendor/jquery/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="vendor/chroma-js/chroma.min.js"></script>
 <script type="text/javascript" src="vendor/codemirror/lib/codemirror.js"></script>
@@ -519,13 +518,15 @@ chroma(0.2, 0.8, 0, &#39;gl&#39;);
             .appendTo('.wrap')
         );
 
-    toc.append('<li><a href="#chroma-js">top</a></li>');
-
     $('h2,h3').each(function() {
         var h = $(this),
             l = h.attr('id'),
             t = h.is('h2');
         toc.append('<li class="'+('level-'+(t ? '1' : '2'))+'"><a href="#'+l+'">' + h.text() +'</a></li>');
+        var a = $('<a />')
+            .attr('href', '#'+l)
+            .html(h.html());
+        h.html('').append(a);
     });
 </script>
 </div></body>

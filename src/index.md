@@ -5,6 +5,8 @@
 
 [![Build Status](https://travis-ci.org/gka/chroma.js.svg?branch=master)](https://travis-ci.org/gka/chroma.js)
 
+## Quick-start
+
 Here are a couple of things chroma.js can do for you:
 
 * read colors from a wide range of formats
@@ -26,7 +28,9 @@ chroma.scale(['white','green','blue']).colors(5)
 
 chroma.js has a lot more to offer, but that's the basic gist of it.
 
-## Reading colors
+## API
+
+### chroma
 
 The first step is to get your color into chroma.js. That's what the generic constructor ``chroma()`` does. The function is trying to guess the color format for you. For instances, it will recognized any named color from the W3CX11 specification:   
 
@@ -61,25 +65,173 @@ You can construct colors from different color spaces by passing the name of colo
 chroma(330, 1, 0.6, 'hsl')
 ```
 
+### chroma.hsl
+
 Alternatively, every color space has it's own constructor function under the `chroma` namespace. For a list of all supported color spaces, check the [appendix](#supported-color-spaces-and-output-formats).
 
 ```js
 chroma.hsl(330, 1, 0.6)
 ```
 
-### Alpha channel
+### chroma.hsv
 
-You can always set the `opacity` using ``.alpha()``, but before the color mode.
+### chroma.lab
+
+### chroma.lch
+
+**L**: Lightness, **c**: chroma (0-1), **h**: hue (0-1).
 
 ```js
-chroma('red').alpha(0.5);
-chroma('rgba(255,0,0,0.5)');
+chroma.lch(80, 40, 130);
+chroma(80, 40, 130, 'lch');
+```
+
+### chroma.hcl
+
+You can use **hcl** instead of Lch, too. It is all the same, except that lightness and hue channels are switched to be more consistent with HSL.
+
+```js
+chroma.hcl(130, 40, 80);
+chroma(130, 40, 80, 'hcl');
+```
+
+### chroma.cmyk
+
+cyan, magenta, yellow, black, each between 0 and 1.
+
+```js
+chroma.cmyk(0.2, 0.8, 0, 0);
+chroma(0.2, 0.8, 0, 0, 'cmyk');
+```
+
+### chroma.gl
+
+**GL** is a variant of RGB(A), with the only difference that the components are normalized to the range of `0..1`.
+
+```js
+chroma.gl(0.6, 0, 0.8);
+chroma.gl(0.6, 0, 0.8, 0.5);
+chroma(0.6, 0, 0.8, 'gl');
+```
+
+### chroma.temperature
+
+light 2000K, bright sunlight 6000K. Based on [Neil Bartlett's implementation](https://github.com/neilbartlett/color-temperature). 
+
+```js
+chroma.temperature(2000); // candle light
+chroma.temperature(3500); // sunset
+chroma.temperature(6000); // bright sunlight
+```
+
+The effective temperature range goes from `0` to about `20000` Kelvin:
+
+```js
+f = function(i) {
+    return chroma.temperature(i * 20000)
+}
+```
+
+### chroma.mix
+
+Simplest way. Mix two colors can be achieved in multiple ways. Change the mix ratio by passing a value between 0 and 1 as third parameter. In the following example, red will be mixed with blue. 
+
+```js
+chroma.mix('red', 'blue');
+chroma.mix('red', 'blue', 0.25);
+```
+
+The color mixing produces different results based on what color space the colors are interpolated in. The default color space is `rgb` but in the following example we interpolate in `Lab` instead.  
+
+```js
+chroma.mix('red', 'blue', 0.5, 'rgb');
+chroma.mix('red', 'blue', 0.5, 'hsl');
+chroma.mix('red', 'blue', 0.5, 'lab');
+chroma.mix('red', 'blue', 0.5, 'lch');
+```
+
+### chroma.blend
+
+Blends two colors using RGB channel-wise blend functions. Valid blend modes are `multiply`, `darken`, `lighten`, `screen`, `overlay`, `burn`, and `dogde`.
+
+```js
+chroma.blend('4CBBFC', 'EEEE22', 'multiply');
+chroma.blend('4CBBFC', 'EEEE22', 'darken');
+chroma.blend('4CBBFC', 'EEEE22', 'lighten');
+```
+
+### chroma.random
+
+Returns a random color.
+
+```js
+chroma.random();
+chroma.random();
+chroma.random();
+```
+
+### chroma.contrast
+
+Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 [is recommended](http://www.w3.org/TR/WCAG20-TECHS/G18.html) to ensure that text is still readable against a background color.
+
+```js
+// contrast smaller than 4.5 = too low
+chroma.contrast('pink', 'hotpink');
+// contrast greater than 4.5 = high enough
+chroma.contrast('pink', 'purple');
+```
+
+### chroma.brewer
+
+chroma.brewer is an map of ColorBrewer scales that are included in chroma.js for convenience. chroma.scale uses the colors to construct.
+
+```js
+chroma.brewer.OrRd
+```
+
+### chroma.limits
+
+`chroma.limits` is a little helper function that computes class breaks for you, based on actual data. Let's take a few numbers as sample data. 
+
+```js
+var data = [3.0,3.5,3.6,3.8,3.8,4.1,4.3,4.4,
+            4.6,4.9,5.2,5.3,5.4,5.7,5.8,5.9,
+            6.2,6.5,6.8,7.2,9];
+```
+
+chroma.limits supports three different modes: equidistant breaks, quantiles breaks and breaks based on k-means clusting.
+
+**equidistant** breaks are the most 
+
+```js
+chroma.limits(data, 'e', 5);
+```
+
+In the **quantile** mode, the input domain is divided into classes ensuring that each class contains the same number of input values. 
+
+```js
+chroma.limits(data, 'q', 5);
+```
+
+**k-means** clusters
+
+```js
+chroma.limits(data, 'k', 5);
 ```
 
 
-## Analyze and manipulate colors
+## color
 
-### Change brightness
+### color.alpha
+
+Get and set the color opacity using ``color.alpha``.
+
+```js
+chroma('red').alpha(0.5);
+chroma('rgba(255,0,0,0.35)').alpha();
+```
+
+### color.darken / brighten
 
 Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness.
 
@@ -90,7 +242,7 @@ chroma('hotpink').brighten();
 ```
 
 
-### Change saturation
+### color.saturate
 
 You can also **saturate** colors. chroma.js will use the `Lch` color space to saturate/desaturate the colors.
 
@@ -99,23 +251,22 @@ chroma('slategray').saturate();
 chroma('slategray').saturate(2); 
 ```
 
-You can **desaturate** colors, too. 
+### color.desaturate
 
 ```js
 chroma('hotpink').desaturate();
+chroma('hotpink').desaturate(2);
 chroma('hotpink').desaturate(3);
-// destaturate is the same as negative saturation
-chroma('hotpink').saturate(-3);
 ```
 
 
-### Set/get generic channels
+### color.set
 
 Set a channel of a color space.
 
 ```js
-// change hue to 0 deg
-chroma('hotpink').set('hsl.h', 0);
+// change hue to 0 deg (=red)
+chroma('skyblue').set('hsl.h', 0);
 // set chromacity to 30
 chroma('hotpink').set('lch.c', 30);
 ```
@@ -130,7 +281,15 @@ chroma('orangered').set('lab.l', '*0.5');
 chroma('darkseagreen').set('lch.c', '*2');
 ```
 
-### Relative luminance
+### color.get
+
+```js
+chroma('orangered').get('lab.l');
+chroma('orangered').get('hsl.l');
+chroma('orangered').get('rgb.g');
+```
+
+### color.luminance 
 
 Returns the relative brightness of any point in a colorspace, normalized to `0` for darkest black and `1` for lightest white according to the [WCAG definition](http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef).
 
@@ -152,37 +311,100 @@ chroma('hotpink').luminance(0.5);
 chroma('darkslateblue').luminance(0.5);
 ```
 
-### Contrast ratio
 
-Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 [is recommended](http://www.w3.org/TR/WCAG20-TECHS/G18.html) to ensure that text is still readable against a background color.
+### color.hex
 
-```js
-// contrast smaller than 4.5 = too low
-chroma.contrast('pink', 'hotpink');
-// contrast greater than 4.5 = high enough
-chroma.contrast('pink', 'purple');
-```
+Finally, chroma.js allows you to output colors in various color spaces and formats.
 
-### Color temperature
-
-light 2000K, bright sunlight 6000K. Based on [Neil Bartlett's implementation](https://github.com/neilbartlett/color-temperature). 
+Most often you will want to output the color as hexadecimal string.
 
 ```js
-chroma.temperature(2000); // candle light
-chroma.temperature(3500); // sunset
-chroma.temperature(6000); // bright sunlight
+chroma('orange').hex()
 ```
 
-The effective temperature range goes from `0` to about `20000` Kelvin:
+### color.name
+
+Returns the named color. Falls back to hexadecimal RGB string, if the color isn't present.
 
 ```js
-f = function(i) {
-    return chroma.temperature(i * 20000)
-}
+chroma('#ffa500').name();
+chroma('#ffa505').name();
+```
+
+### color.css
+
+Returns a `RGB()` or `HSL()` string representation that can be used as CSS-color definition.
+
+```js
+chroma('teal').css();
+chroma('teal').alpha(0.5).css();
+chroma('teal').css('hsl');
+```
+
+### color.rgb
+
+Returns an array with the `red`, `green`, and `blue` component, each as number within the range `0..255`.
+
+```js
+chroma('orange').rgb()
+```
+
+### color.hsl
+
+Returns an array with the `hue`, `saturation`, and `lightness` component. Hue is the color angle in degree (`0..360`), saturation and lightness are within `0..1`. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.
+
+```js
+chroma('orange').hsl();
+chroma('white').hsl();
+```
+
+### color.hsv
+
+Returns an array with the `hue`, `saturation`, and `value` components. Hue is the color angle in degree (`0..360`), saturation and value are within `0..1`. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.
+
+```js
+chroma('orange').hsv();
+chroma('white').hsv();
+```
+
+### color.hsi
+
+Returns an array with the `hue`, `saturation`, and `intensity` components, each as number between 0 and 255. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.
+
+```js
+chroma('orange').hsi();
+chroma('white').hsi();
+```
+
+### color.lab
+
+Returns an array with the **L**, **a**, and **b** components.
+
+```js
+chroma('orange').lab()
 ```
 
 
-You can also estimate the temperature of any given color, though this makes the only sense for colors from the temperature gradient above.
+### color.lch
+
+Returns an array with the **Lightness**, **chroma**, and **hue** components.
+
+```js
+chroma('skyblue').lch()
+```
+
+### color.hcl
+
+Essentially an alias of [lch](#color-lch), but with the components in reverse order.
+
+```js
+chroma('skyblue').hcl()
+```
+
+
+### color.temperature
+
+Estimate the temperature in Kelvin of any given color, though this makes the only sense for colors from the [temperature gradient](#chroma-temperature) above.
 
 ```js
 chroma('#ff3300').temperature();
@@ -193,38 +415,18 @@ chroma('#b3ccff').temperature();
 ```
 
 
-
-## Mixing colors
-
-Simplest way. Mix two colors can be achieved in multiple ways. Change the mix ratio by passing a value between 0 and 1 as third parameter. In the following example, red will be mixed with blue. 
+### color.gl
 
 ```js
-chroma.mix('red', 'blue').hex();
-chroma.mix('red', 'blue', 0.25).hex();
+chroma('33cc00').gl();
 ```
 
-The color mixing produces different results based on what color space the colors are interpolated in. The default color space is `rgb` but in the following example we interpolate in `Lab` instead.  
 
-```js
-chroma.mix('red', 'blue', 0.5, 'rgb');
-chroma.mix('red', 'blue', 0.5, 'hsl');
-chroma.mix('red', 'blue', 0.5, 'lab');
-chroma.mix('red', 'blue', 0.5, 'lch');
-```
+For a complete list of supported output formats, read the [API docs]().
 
-### Blending colors
+## color scales
 
-```js
-chroma.blend('4CBBFC', 'EEEE22', 'multiply');
-chroma.blend('4CBBFC', 'EEEE22', 'darken');
-chroma.blend('4CBBFC', 'EEEE22', 'lighten');
-chroma.blend('4CBBFC', 'EEEE22', 'screen');
-chroma.blend('4CBBFC', 'EEEE22', 'overlay');
-chroma.blend('4CBBFC', 'EEEE22', 'burn');
-chroma.blend('4CBBFC', 'EEEE22', 'dodge');
-```
-
-## Color scales
+### chroma.scale
 
 A color scale, created with `chroma.scale`, is a function that maps numeric values to a color palette. The default scale has the domain `0..1` and goes from white to black.
 
@@ -243,7 +445,7 @@ chroma.scale(['yellow', '008ae5']);
 chroma.scale(['yellow', 'red', 'black']);
 ```
 
-### Custom domain
+### scale.domain
 
 You can change the input domain to match your specific use case.
 
@@ -254,7 +456,7 @@ chroma.scale(['yellow', '008ae5']);
 chroma.scale(['yellow', '008ae5']).domain([0,100]);
 ```
 
-You can change the input domain to match your specific use case.
+You can use the domain to set the exact positions of each color.
 
 ```js
 // default domain is [0,1]
@@ -263,7 +465,7 @@ chroma.scale(['yellow', 'lightgreen', '008ae5'])
 ```
 
 
-### Specifying interplation space
+### scale.mode
 
 As with `chroma.mix`, the result of the color interpolation will depend on the color mode in which the channels are interpolated. The default mode is `RGB`:
 
@@ -285,8 +487,7 @@ chroma.scale(['yellow', 'navy']).mode('hsl');
 chroma.scale(['yellow', 'navy']).mode('lch');
 ```
 
-
-### Pre-defined color scales from ColorBrewer
+### chroma.brewer
 
 chroma.js includes the definitions from [ColorBrewer2.org](http://colorbrewer2.org/). Read more about these colors [in the corresponding paper](http://www.albany.edu/faculty/fboscoe/papers/harrower2003.pdf) by Mark Harrower and Cynthia A. Brewer.
 
@@ -304,23 +505,11 @@ chroma.scale('Spectral').domain([1,0]);
 You can access the colors directly using `chroma.brewer`.
 
 ```js
-chroma.brewer.YlOrBr
+chroma.brewer.OrRd
 ```
 
 
-### Equi-distant colors
-
-You can call `scale.colors(n)` to quickly grab `n` equi-distant colors from a color scale. 
-
-```js
-chroma.scale(['yellow', '008ae5']).colors(5);
-// effectively the same as
-[0, 0.25, 0.5, 0.75, 1]
-   .map(chroma.scale(['yellow', '008ae5']));
-```
-
-
-### Lightness correction
+### scale.correctLightnet
 Sometimes
 
 ```js
@@ -331,7 +520,7 @@ chroma.scale(['yellow', '008ae5'])
 	.correctLightness();
 ```
 
-### Bezier interpolation
+### chroma.bezier
 
 `chroma.bezier` returns a function that performs a bezier interpolate. The input range of the function is `[0..1]`. Bezier interpolation is always done in `Lab` space.
 
@@ -347,7 +536,7 @@ chroma.bezier(['yellow', 'red', 'black'])
 
 Bezier interpolation
 
-### Cube-helix
+### chroma.cubehelix
 
 Dave Green's [cubehelix color scheme](http://www.mrao.cam.ac.uk/~dag/CUBEHELIX/)!!
 
@@ -384,213 +573,38 @@ chroma.cubehelix()
     .colors(5);
 ```
 
-## color output
+### scale.colors
 
-Finally, chroma.js allows you to output colors in various color spaces and formats. Most often you will want to output the color as hexadecimal string.
-
-```js
-chroma('orange').hex()
-```
-
-**`name`** returns the named color or the hexadecimal string, if the color isn't present.
+You can call `scale.colors(n)` to quickly grab `n` equi-distant colors from a color scale. 
 
 ```js
-chroma('#ffa500').name() 
+chroma.scale('OrRd').colors(5);
+chroma.scale(['white', 'black']).colors(12);
 ```
 
-**`rgb`** returns an array with the **r**ed, **b**lue, and **g**reen component, each as number between 0 and 255.
+### scale.classes
+
+If you want the scale function to return a distinct set of colors instead of a continuous gradient, you can set custom class breaks:
 
 ```js
-chroma('orange').rgb()
+chroma.scale('OrRd').classes(5);
+chroma.scale('OrRd').classes(8);
 ```
 
-**`hsl`** returns an array with the **h**ue, **s**aturation, and **l**ightness component, each as number between 0 and 255. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.
+You can also define custom class breaks by passing them as array: 
 
 ```js
-chroma('orange').hsl()
-```
-```js
-chroma('white').hsl()
+chroma.scale('OrRd').classes([0,0.3,0.55,0.85,1]);
 ```
 
-**`hsv`** returns an array with the **h**ue, **s**aturation, and **v**alue component, each as number between 0 and 255. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.
+
+Note that this works with any color scale:
 
 ```js
-chroma('orange').hsv()
-```
-**`lab`** returns an array with the **L**, **a**, and **b** component, each as number between 0 and 255.
-
-```js
-chroma('orange').lab()
-```
-
-**luminance** 
-
-```js
-chroma('orange').luminance()
-```
-**temperature** 
-
-```js
-chroma('pink').temperature() 
+chroma.cubehelix()
+    .rotations(-0.35)
+    .lightness([0.1, 0.8])
+    .scale()
+    .classes(breaks)
 ```
 
-If the output color format is returned as separate channels, you can access them both using numeric and named indexes:
-
-```
-color.rgb()[0]      // 255
-color.rgb().r       // 255
-color.rgb().red     // 255
-```
-
-For a complete list of supported output formats, read the [API docs]().
-
-## Supported color spaces and output formats
-
-What follows is a complete list of all supported color spaces and formats.
-
-### RGB
-
-**r**ed, **g**reen, **b**lue, each between 0 and 255.
-
-```js
-chroma(200, 0, 30);
-chroma.rgb(0.2, 0.8, 0, 0);
-chroma(0.2, 0.8, 0, 0, 'rgb');
-```
-```js
-chroma('lime').rgb()
-```
-
-Another way to input and output RGB colors is as *hexadecimal* strings:
-
-```js
-chroma('#EE5500');
-chroma.hex('#EE5500');
-```
-```js
-chroma('hotpink').hex()
-```
-
-Another way to input and output RGB colors is as *hexadecimal* strings:
-
-```js
-chroma(0xEE5500);
-chroma.num(0xEE5500);
-```
-```js
-chroma('hotpink').num()
-```
-
-### CMYK
-
-**c**yan, **m**agenta, **y**ellow, **b**lack, each between 0 and 1.
-
-```js
-chroma.cmyk(0.2, 0.8, 0, 0);
-chroma(0.2, 0.8, 0, 0, 'cmyk');
-```
-```js
-chroma('lime').cmyk()
-```
-
-### HSL
-
-**h**ue (0-360), **s**aturation (0-1), **l**ightness (0-1).
-
-```js
-chroma.hsl(60, 0.8, 0.5);
-chroma(60, 0.8, 0.5, 'hsl');
-```
-```js
-chroma('tomato').hsl()
-```
-
-### HSV
-
-**h**ue (0-360), **s**aturation (0-1), **v**alue (0-1).
-
-```js
-chroma.hsv(60, 0.8, 0.8);
-chroma(60, 0.8, 0.8, 'hsv');
-```
-```js
-chroma('tomato').hsv()
-```
-
-### HSI
-
-**h**ue (0-360), **s**aturation (0-1), **i**ntensity (0-1).
-
-```js
-chroma.hsi(60, 0.8, 0.8);
-chroma(60, 0.8, 0.8, 'hsi');
-```
-```js
-chroma('tomato').hsi()
-```
-
-### Lab
-**L**ightness (0-100), **a** (-100 - 100), **b** (-100 - 100).
-
-```js
-chroma.lab(80, 40, 130);
-chroma(80, 40, 130, 'lab');
-```
-
-```js
-chroma('cyan').lab()
-```
-
-### Lch
-
-**L**ightness, **c**hroma (0-1), **h**ue (0-1).
-
-```js
-chroma.lch(80, 40, 130);
-chroma(80, 40, 130, 'lch');
-```
-
-```js
-chroma('tomato').lch()
-```
-
-### HCL
-
-**HCL**: Btw, if you prefer, you can use **hcl** instead of Lch, too. It is all the same, except that lightness and hue channels are switched to be more consistent with HSL.
-
-```js
-chroma.hcl(130, 40, 80);
-chroma(130, 40, 80, 'hcl');
-```
-
-```js
-chroma('tomato').hcl()
-```
-
-### CSS
-
-**CSS** If you pass a string that does not look like a hexadecimal color, chroma.js will try to parse it as CSS-color, either as `rgb()`, `rgba()`, `hsl()`, or `hsla()`.
-
-```js
-chroma('rgb(255,51,153)')
-```
-```js
-chroma('hsla(330,100%,60%,0.5)')
-```
-You can access the alpha channel using `alpha()`.
-```js
-chroma('hsla(330,100%,60%,0.5)').alpha()
-```
-
-### GL
-**GL** is a variant of RGB(A), with the only difference that the components are normalized to the range of `0..1`.
-
-```js
-chroma.gl(0.2, 0.8, 0);
-chroma(0.2, 0.8, 0, 'gl');
-```
-```js
-chroma('33cc00').gl();
-```
-sdsd
