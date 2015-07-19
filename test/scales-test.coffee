@@ -26,11 +26,11 @@ vows
 
         'simple hsv scale (white-->black), classified':
             topic:
-                f: chroma.scale(['white','black']).domain([0, 1], 7).mode('hsv')
+                f: chroma.scale(['white','black']).classes(7).mode('hsv')
             'starts white': (topic) -> assert.equal topic.f(0).hex(), '#ffffff'
             'mid gray': (topic) -> assert.equal topic.f(0.5).hex(), '#808080'
             'ends black': (topic) -> assert.equal topic.f(1).hex(), '#000000'
-            'colors': (topic) -> assert.deepEqual topic.f.colors(), ['#ffffff', '#d5d5d5', '#aaaaaa', '#808080', '#555555', '#2a2a2a', '#000000']
+            'colors': (topic) -> assert.deepEqual topic.f.colors(7), ['#ffffff', '#d5d5d5', '#aaaaaa', '#808080', '#555555', '#2a2a2a', '#000000']
 
         'simple lab scale (white-->black)':
             topic:
@@ -56,17 +56,18 @@ vows
 
         'colorbrewer scale - domained - classified':
             topic:
-                f: chroma.scale('RdYlGn').domain([0, 100], 5)
+                f: chroma.scale('RdYlGn').domain([0, 100]).classes(5)
             'starts white': (topic) -> assert.equal topic.f(0).hex(), '#a50026'
             '10': (topic) -> assert.equal topic.f(10).hex(), '#a50026'
             'mid gray': (topic) -> assert.equal topic.f(50).hex(), '#ffffbf'
             'ends black': (topic) -> assert.equal topic.f(100).hex(), '#006837'
-            'get colors': (topic) -> assert.deepEqual topic.f.colors(), ['#a50026', '#f88d52', '#ffffbf', '#86cb66', '#006837']
+            'get colors': (topic) -> assert.deepEqual topic.f.colors(5), ['#a50026', '#f88d52', '#ffffbf', '#86cb66', '#006837']
 
         'calling domain with no arguments':
             topic:
-                f: chroma.scale('RdYlGn').domain([0, 100], 5)
-            'returns domain': (topic) -> assert.deepEqual topic.f.domain(), [0, 20, 40, 60, 80, 100]
+                f: chroma.scale('RdYlGn').domain([0, 100]).classes(5)
+            'returns domain': (topic) -> assert.deepEqual topic.f.domain(), [0, 100]
+            'returns classes': (topic) -> assert.deepEqual topic.f.classes(), [0, 20, 40, 60, 80, 100]
 
         'source array keeps untouched':
             topic: chroma.brewer.Blues.slice(0)
@@ -83,7 +84,7 @@ vows
 
         'domain with same min and max':
             topic:
-                f: chroma.scale(['white','black']).domain([1, 1], 5)
+                f: chroma.scale(['white','black']).domain([1, 1])
             'returns color': (topic) -> assert.deepEqual topic.f(1).hex(), '#000000'
 
         'simple num scale (white-->black)':
@@ -114,7 +115,6 @@ vows
         'test example in readme':
             topic: 
                 f: chroma.scale('RdYlGn')
-            'five hex colors': (topic) -> assert.deepEqual topic.f.domain([0,1], 5).colors(), ['#a50026', '#f88d52', '#ffffbf', '#86cb66', '#006837']
             'five hex colors (new)': (topic) -> assert.deepEqual topic.f.colors(5),           ['#a50026', '#f88d52', '#ffffbf', '#86cb66', '#006837']
 
         'weird result':

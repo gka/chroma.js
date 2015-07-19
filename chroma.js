@@ -1775,25 +1775,55 @@
 
   chroma.blend = blend;
 
+  chroma.analyze = function(data) {
+    var len, o, r, val;
+    r = {
+      min: Number.MAX_VALUE,
+      max: Number.MAX_VALUE * -1,
+      sum: 0,
+      values: [],
+      count: 0
+    };
+    for (o = 0, len = data.length; o < len; o++) {
+      val = data[o];
+      if ((val != null) && !isNaN(val)) {
+        r.values.push(val);
+        r.sum += val;
+        if (val < r.min) {
+          r.min = val;
+        }
+        if (val > r.max) {
+          r.max = val;
+        }
+        r.count += 1;
+      }
+    }
+    r.domain = [r.min, r.max];
+    r.limits = function(mode, num) {
+      return chroma.limits(r, mode, num);
+    };
+    return r;
+  };
+
   chroma.scale = function(colors, positions) {
-    var _colorCache, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _numClasses, _out, _pos, _spread, classifyValue, f, getClass, getColor, resetCache, setColors, setDomain, tmap;
+    var _classes, _colorCache, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _out, _pos, _spread, classifyValue, f, getClass, getColor, resetCache, setColors, tmap;
     _mode = 'rgb';
     _nacol = chroma('#ccc');
     _spread = 0;
     _fixed = false;
     _domain = [0, 1];
+    _pos = [];
+    _classes = false;
     _colors = [];
     _out = false;
-    _pos = [];
     _min = 0;
     _max = 1;
     _correctLightness = false;
-    _numClasses = 0;
     _colorCache = {};
-    setColors = function(colors, positions) {
+    setColors = function(colors) {
       var c, col, o, ref, ref1, ref2, w;
       if (colors == null) {
-        colors = ['#ddd', '#222'];
+        colors = ['#fff', '#000'];
       }
       if ((colors != null) && type(colors) === 'string' && (((ref = chroma.brewer) != null ? ref[colors] : void 0) != null)) {
         colors = chroma.brewer[colors];
@@ -1806,43 +1836,20 @@
             colors[c] = chroma(col);
           }
         }
-        if (positions != null) {
-          _pos = positions;
-        } else {
-          _pos = [];
-          for (c = w = 0, ref2 = colors.length - 1; 0 <= ref2 ? w <= ref2 : w >= ref2; c = 0 <= ref2 ? ++w : --w) {
-            _pos.push(c / (colors.length - 1));
-          }
+        _pos.length = 0;
+        for (c = w = 0, ref2 = colors.length - 1; 0 <= ref2 ? w <= ref2 : w >= ref2; c = 0 <= ref2 ? ++w : --w) {
+          _pos.push(c / (colors.length - 1));
         }
       }
       resetCache();
       return _colors = colors;
     };
-    setDomain = function(domain) {
-      if (domain == null) {
-        domain = [];
-      }
-
-      /*
-       * use this if you want to display a limited number of data classes
-       * possible methods are "equalinterval", "quantiles", "custom"
-       */
-      _domain = domain;
-      _min = domain[0];
-      _max = domain[domain.length - 1];
-      resetCache();
-      if (domain.length === 2) {
-        return _numClasses = 0;
-      } else {
-        return _numClasses = domain.length - 1;
-      }
-    };
     getClass = function(value) {
       var i, n;
-      if (_domain != null) {
-        n = _domain.length - 1;
+      if (_classes != null) {
+        n = _classes.length - 1;
         i = 0;
-        while (i < n && value >= _domain[i]) {
+        while (i < n && value >= _classes[i]) {
           i++;
         }
         return i - 1;
@@ -1855,12 +1862,12 @@
     classifyValue = function(value) {
       var i, maxc, minc, n, val;
       val = value;
-      if (_domain.length > 2) {
-        n = _domain.length - 1;
+      if (_classes.length > 2) {
+        n = _classes.length - 1;
         i = getClass(value);
-        minc = _domain[0] + (_domain[1] - _domain[0]) * (0 + _spread * 0.5);
-        maxc = _domain[n - 1] + (_domain[n] - _domain[n - 1]) * (1 - _spread * 0.5);
-        val = _min + ((_domain[i] + (_domain[i + 1] - _domain[i]) * 0.5 - minc) / (maxc - minc)) * (_max - _min);
+        minc = _classes[0] + (_classes[1] - _classes[0]) * (0 + _spread * 0.5);
+        maxc = _classes[n - 1] + (_classes[n] - _classes[n - 1]) * (1 - _spread * 0.5);
+        val = _min + ((_classes[i] + (_classes[i + 1] - _classes[i]) * 0.5 - minc) / (maxc - minc)) * (_max - _min);
       }
       return val;
     };
@@ -1873,12 +1880,14 @@
         return _nacol;
       }
       if (!bypassMap) {
-        if (_domain.length > 2) {
+        if (_classes && _classes.length > 2) {
           c = getClass(val);
-          t = c / (_numClasses - 1);
-        } else {
+          t = c / (_classes.length - 2);
+        } else if (_max !== _min) {
           t = f0 = (val - _min) / (_max - _min);
           t = Math.min(1, Math.max(0, t));
+        } else {
+          t = 1;
         }
       } else {
         t = val;
@@ -1917,7 +1926,7 @@
     resetCache = function() {
       return _colorCache = {};
     };
-    setColors(colors, positions);
+    setColors(colors);
     f = function(v) {
       var c;
       c = chroma(getColor(v));
@@ -1927,23 +1936,44 @@
         return c;
       }
     };
-    f.domain = function(domain, classes, mode, key) {
+    f.classes = function(classes) {
       var d;
-      if (mode == null) {
-        mode = 'e';
+      if (classes != null) {
+        if (type(classes) === 'array') {
+          _classes = classes;
+          _domain = [classes[0], classes[classes.length - 1]];
+        } else {
+          d = chroma.analyze(_domain);
+          if (classes === 0) {
+            _classes = [d.min, d.max];
+          } else {
+            _classes = chroma.limits(d, 'e', classes);
+          }
+        }
+        return f;
       }
+      return _classes;
+    };
+    f.domain = function(domain) {
+      var c, d, k, len, o, ref, w;
       if (!arguments.length) {
         return _domain;
       }
-      if (classes != null) {
-        d = chroma.analyze(domain, key);
-        if (classes === 0) {
-          domain = [d.min, d.max];
-        } else {
-          domain = chroma.limits(d, mode, classes);
+      _min = domain[0];
+      _max = domain[domain.length - 1];
+      _pos = [];
+      k = _colors.length;
+      if (domain.length === k && _min !== _max) {
+        for (o = 0, len = domain.length; o < len; o++) {
+          d = domain[o];
+          _pos.push((d - _min) / (_max - _min));
+        }
+      } else {
+        for (c = w = 0, ref = k - 1; 0 <= ref ? w <= ref : w >= ref; c = 0 <= ref ? ++w : --w) {
+          _pos.push(c / (k - 1));
         }
       }
-      setDomain(domain);
+      _domain = [_min, _max];
       return f;
     };
     f.mode = function(_m) {
@@ -1970,8 +2000,8 @@
       return f;
     };
     f.correctLightness = function(v) {
-      if (!arguments.length) {
-        return _correctLightness;
+      if (v == null) {
+        v = true;
       }
       _correctLightness = v;
       resetCache();
@@ -2013,7 +2043,7 @@
       return f;
     };
     f.colors = function() {
-      var aa, i, len, numColors, o, out, ref, results, samples, w;
+      var dd, dm, i, numColors, o, out, ref, results, samples, w;
       numColors = 0;
       out = 'hex';
       if (arguments.length === 1) {
@@ -2027,28 +2057,28 @@
         numColors = arguments[0], out = arguments[1];
       }
       if (numColors) {
+        dm = _domain[0];
+        dd = _domain[1] - dm;
         return (function() {
           results = [];
           for (var o = 0; 0 <= numColors ? o < numColors : o > numColors; 0 <= numColors ? o++ : o--){ results.push(o); }
           return results;
         }).apply(this).map(function(i) {
-          return f(i / (numColors - 1))[out]();
+          return f(dm + i / (numColors - 1) * dd)[out]();
         });
       }
       colors = [];
       samples = [];
-      if (_domain.length > 2) {
-        for (i = w = 1, ref = _domain.length; 1 <= ref ? w < ref : w > ref; i = 1 <= ref ? ++w : --w) {
-          samples.push((_domain[i - 1] + _domain[i]) * 0.5);
+      if (_classes && _classes.length > 2) {
+        for (i = w = 1, ref = _classes.length; 1 <= ref ? w < ref : w > ref; i = 1 <= ref ? ++w : --w) {
+          samples.push((_classes[i - 1] + _classes[i]) * 0.5);
         }
       } else {
         samples = _domain;
       }
-      for (aa = 0, len = samples.length; aa < len; aa++) {
-        i = samples[aa];
-        colors.push(f(i)[out]());
-      }
-      return colors;
+      return samples.map(function(v) {
+        return f(v)[out]();
+      });
     };
     return f;
   };

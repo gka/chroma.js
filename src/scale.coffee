@@ -1,7 +1,7 @@
 
 # minimal multi-purpose interface
 
-# @requires utils color
+# @requires utils color analyze
 
 chroma.scale = (colors, positions) ->
 
@@ -11,20 +11,20 @@ chroma.scale = (colors, positions) ->
     _spread = 0
     _fixed = false
     _domain = [0, 1]
+    _pos = []
+    _classes = false
     _colors = []
     _out = false
-    _pos = []
     _min = 0
     _max = 1
     _correctLightness = false
-    _numClasses = 0
     _colorCache = {}
 
     # private methods
 
-    setColors = (colors, positions) ->
+    setColors = (colors) ->
         if not colors?
-            colors = ['#ddd', '#222']
+            colors = ['#fff', '#000']
         if colors? and type(colors) == 'string' and chroma.brewer?[colors]?
             colors = chroma.brewer[colors]
         if type(colors) == 'array'
@@ -35,34 +35,17 @@ chroma.scale = (colors, positions) ->
                 col = colors[c]
                 colors[c] = chroma(col) if type(col) == "string"
             # auto-fill color position
-            if positions?
-                _pos = positions
-            else
-                _pos = []
-                for c in [0..colors.length-1]
-                    _pos.push c/(colors.length-1)
+            _pos.length = 0
+            for c in [0..colors.length-1]
+                _pos.push c/(colors.length-1)
         resetCache()
         _colors = colors
 
-    setDomain = (domain = []) ->
-        ###
-        # use this if you want to display a limited number of data classes
-        # possible methods are "equalinterval", "quantiles", "custom"
-        ###
-        _domain = domain
-        _min = domain[0]
-        _max = domain[domain.length-1]
-        resetCache()
-        if domain.length == 2
-            _numClasses = 0
-        else
-            _numClasses = domain.length-1
-
     getClass = (value) ->
-        if _domain?
-            n = _domain.length-1
+        if _classes?
+            n = _classes.length-1
             i = 0
-            while i < n and value >= _domain[i]
+            while i < n and value >= _classes[i]
                 i++
             return i-1
         return 0
@@ -71,23 +54,27 @@ chroma.scale = (colors, positions) ->
 
     classifyValue = (value) ->
         val = value
-        if _domain.length > 2
-            n = _domain.length-1
+        if _classes.length > 2
+            n = _classes.length-1
             i = getClass(value)
-            minc = _domain[0] + (_domain[1]-_domain[0]) * (0 + _spread * 0.5)  # center of 1st class
-            maxc = _domain[n-1] + (_domain[n]-_domain[n-1]) * (1 - _spread * 0.5)  # center of last class
-            val = _min + ((_domain[i] + (_domain[i+1] - _domain[i]) * 0.5 - minc) / (maxc-minc)) * (_max - _min)
+            minc = _classes[0] + (_classes[1]-_classes[0]) * (0 + _spread * 0.5)  # center of 1st class
+            maxc = _classes[n-1] + (_classes[n]-_classes[n-1]) * (1 - _spread * 0.5)  # center of last class
+            val = _min + ((_classes[i] + (_classes[i+1] - _classes[i]) * 0.5 - minc) / (maxc-minc)) * (_max - _min)
         val
 
     getColor = (val, bypassMap=false) ->
         if isNaN(val) then return _nacol
         if not bypassMap
-            if _domain.length > 2
+            if _classes and _classes.length > 2
+                # find the class
                 c = getClass val
-                t = c / (_numClasses-1)
-            else
+                t = c / (_classes.length-2)
+            else if _max != _min
+                # just interpolate between min/max
                 t = f0 = (val - _min) / (_max - _min)
                 t = Math.min(1, Math.max(0, t))
+            else
+                t = 1
         else
             t = val
 
@@ -120,7 +107,7 @@ chroma.scale = (colors, positions) ->
     resetCache = () ->
         _colorCache = {}
 
-    setColors colors, positions
+    setColors colors
 
     # public interface
 
@@ -128,16 +115,36 @@ chroma.scale = (colors, positions) ->
         c = chroma getColor v
         if _out and c[_out] then c[_out]() else c
 
-    f.domain = (domain, classes, mode='e', key) ->
+    f.classes = (classes) ->
+        if classes?
+            if type(classes) == 'array'
+                _classes = classes
+                _domain = [classes[0], classes[classes.length-1]]
+            else
+                d = chroma.analyze _domain
+                if classes == 0
+                    _classes = [d.min, d.max]
+                else
+                    _classes = chroma.limits d, 'e', classes
+            return f
+        _classes
+
+
+    f.domain = (domain) ->
         if not arguments.length
             return _domain
-        if classes?
-            d = chroma.analyze domain, key
-            if classes == 0
-                domain = [d.min, d.max]
-            else
-                domain = chroma.limits d, mode, classes
-        setDomain domain
+        _min = domain[0]
+        _max = domain[domain.length-1]
+        _pos = []
+        k = _colors.length
+        if domain.length == k and _min != _max
+            # update positions
+            for d in domain
+                _pos.push (d-_min) / (_max-_min)
+        else
+            for c in [0..k-1]
+                _pos.push c/(k-1)
+        _domain = [_min, _max]
         f
 
     f.mode = (_m) ->
@@ -161,9 +168,7 @@ chroma.scale = (colors, positions) ->
         _spread = val
         f
 
-    f.correctLightness = (v) ->
-        if not arguments.length
-            return _correctLightness
+    f.correctLightness = (v=true) ->
         _correctLightness = v
         resetCache()
         if _correctLightness
@@ -202,22 +207,22 @@ chroma.scale = (colors, positions) ->
             else
                 numColors = arguments[0]
         if arguments.length == 2
-            [numColors,out] = arguments
+            [numColors, out] = arguments
         
         if numColors
-            return [0...numColors].map (i) -> f(i/(numColors-1))[out]()
+            dm = _domain[0]
+            dd = _domain[1] - dm
+            return [0...numColors].map (i) -> f( dm + i/(numColors-1) * dd )[out]()
         
         # returns all colors based on the defined classes
         colors = []
         samples = []
-        if _domain.length > 2
-            for i in [1..._domain.length]
-                samples.push (_domain[i-1]+_domain[i])*0.5
+        if _classes and _classes.length > 2
+            for i in [1..._classes.length]
+                samples.push (_classes[i-1]+_classes[i])*0.5
         else
             samples = _domain
-        for i in samples
-            colors.push f(i)[out]()
-        colors
+        samples.map (v) -> f(v)[out]()
 
     f
 
