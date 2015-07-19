@@ -1,3 +1,10 @@
+# 1.1.0
+
+* refactored chroma.scale
+* changed behaviour of scale.domain
+* added scale.classes
+* added scale.padding
+
 # 1.0.2
 
 * standardized alpha channel construction
