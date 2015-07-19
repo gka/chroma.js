@@ -509,7 +509,7 @@ chroma.brewer.OrRd
 ```
 
 
-### scale.correctLightnet
+### scale.correctLightness
 Sometimes
 
 ```js
@@ -572,6 +572,23 @@ chroma.cubehelix()
     .correctLightness()
     .colors(5);
 ```
+
+### scale.padding
+
+Reduces the color range by cutting of a fraction of the gradient on both sides. If you pass a single number, the same padding will be applied to both ends.
+
+```js
+chroma.scale('RdYlBu');
+chroma.scale('RdYlBu').padding(0.15);
+```
+
+Alternatively you can specify the padding for each sides individually by passing an array of two numbers.
+
+```js
+chroma.scale('OrRd');
+chroma.scale('OrRd').padding([0.2, 0]);
+```
+
 
 ### scale.colors
 

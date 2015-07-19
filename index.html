@@ -292,7 +292,7 @@ chroma.scale(&#39;Spectral&#39;);
 <p>You can access the colors directly using <code>chroma.brewer</code>.</p>
 <pre><code class="lang-js">chroma.brewer.OrRd
 </code></pre>
-<h3 id="scale-correctlightnet">scale.correctLightnet</h3>
+<h3 id="scale-correctlightness">scale.correctLightness</h3>
 <p>Sometimes</p>
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).mode(&#39;lch&#39;);
 
@@ -339,6 +339,15 @@ chroma.cubehelix()
   .scale() // convert to chroma.scale
     .correctLightness()
     .colors(5);
+</code></pre>
+<h3 id="scale-padding">scale.padding</h3>
+<p>Reduces the color range by cutting of a fraction of the gradient on both sides. If you pass a single number, the same padding will be applied to both ends.</p>
+<pre><code class="lang-js">chroma.scale(&#39;RdYlBu&#39;);
+chroma.scale(&#39;RdYlBu&#39;).padding(0.15);
+</code></pre>
+<p>Alternatively you can specify the padding for each sides individually by passing an array of two numbers.</p>
+<pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;);
+chroma.scale(&#39;OrRd&#39;).padding([0.2, 0]);
 </code></pre>
 <h3 id="scale-colors">scale.colors</h3>
 <p>You can call <code>scale.colors(n)</code> to quickly grab <code>n</code> equi-distant colors from a color scale. </p>
