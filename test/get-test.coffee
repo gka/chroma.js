@@ -6,7 +6,7 @@ chroma = require '../chroma'
 vows
     .describe('Testing color.get')
     .addBatch
-        'set hue':
+        'get hue':
             topic: chroma 'hotpink'
             'hue not zero': (topic) -> assert.equal topic.hsl()[0], topic.get('hsl.h')
 

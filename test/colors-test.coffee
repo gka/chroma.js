@@ -60,4 +60,11 @@ vows
             'gray': (topic) -> assert.equal topic[1].css('hsl'), 'hsl(0,0%,50.2%)'
             'white': (topic) -> assert.equal topic[2].css('hsl'), 'hsl(0,0%,100%)'
 
+        'hcl.h is NaN for hue-less colors':
+            topic: [chroma('black'), chroma('gray'), chroma('white')]
+            'black': (topic) -> assert.isNaN topic[0].hcl()[0]
+            'gray': (topic) -> assert.isNaN topic[1].hcl()[0]
+            'white': (topic) -> assert.isNaN topic[2].hcl()[0]
+            
+
     .export(module)

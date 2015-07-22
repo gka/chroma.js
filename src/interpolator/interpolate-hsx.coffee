@@ -10,16 +10,14 @@ interpolate_hsx = (col1, col2, f, m) ->
     else if m == 'hsi'
         xyz0 = col1.hsi()
         xyz1 = col2.hsi()
-    else if m == 'lch'
-        xyz0 = col1.lch()
-        xyz1 = col2.lch()
+    else if m == 'lch' or m == 'hcl'
+        m = 'hcl'
+        xyz0 = col1.hcl()
+        xyz1 = col2.hcl()
 
     if m.substr(0, 1) == 'h'
         [hue0, sat0, lbv0] = xyz0
         [hue1, sat1, lbv1] = xyz1
-    else
-        [lbv0, sat0, hue0] = xyz0
-        [lbv1, sat1, hue1] = xyz1
 
     if not isNaN(hue0) and not isNaN(hue1)
         if hue1 > hue0 and hue1 - hue0 > 180
@@ -40,10 +38,7 @@ interpolate_hsx = (col1, col2, f, m) ->
 
     sat ?= sat0 + f*(sat1 - sat0)
     lbv = lbv0 + f*(lbv1-lbv0)
+    res = chroma[m](hue, sat, lbv)
 
-    if m.substr(0, 1) == 'h'
-        res = new Color hue, sat, lbv, m
-    else
-        res = new Color lbv, sat, hue, m
-
-_interpolators = _interpolators.concat ([m, interpolate_hsx] for m in ['hsv','hsl','hsi','lch'])
+    
+_interpolators = _interpolators.concat ([m, interpolate_hsx] for m in ['hsv','hsl','hsi','hcl','lch'])

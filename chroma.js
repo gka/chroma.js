@@ -139,7 +139,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.1.0';
+  chroma.version = '1.1.1';
 
 
   /**
@@ -1284,6 +1284,9 @@
     ref = unpack(arguments), l = ref[0], a = ref[1], b = ref[2];
     c = sqrt(a * a + b * b);
     h = (atan2(b, a) * RAD2DEG + 360) % 360;
+    if (round(c * 10000) === 0) {
+      h = Number.NaN;
+    }
     return [l, c, h];
   };
 
@@ -2392,16 +2395,14 @@
     } else if (m === 'hsi') {
       xyz0 = col1.hsi();
       xyz1 = col2.hsi();
-    } else if (m === 'lch') {
-      xyz0 = col1.lch();
-      xyz1 = col2.lch();
+    } else if (m === 'lch' || m === 'hcl') {
+      m = 'hcl';
+      xyz0 = col1.hcl();
+      xyz1 = col2.hcl();
     }
     if (m.substr(0, 1) === 'h') {
       hue0 = xyz0[0], sat0 = xyz0[1], lbv0 = xyz0[2];
       hue1 = xyz1[0], sat1 = xyz1[1], lbv1 = xyz1[2];
-    } else {
-      lbv0 = xyz0[0], sat0 = xyz0[1], hue0 = xyz0[2];
-      lbv1 = xyz1[0], sat1 = xyz1[1], hue1 = xyz1[2];
     }
     if (!isNaN(hue0) && !isNaN(hue1)) {
       if (hue1 > hue0 && hue1 - hue0 > 180) {
@@ -2429,16 +2430,12 @@
       sat = sat0 + f * (sat1 - sat0);
     }
     lbv = lbv0 + f * (lbv1 - lbv0);
-    if (m.substr(0, 1) === 'h') {
-      return res = new Color(hue, sat, lbv, m);
-    } else {
-      return res = new Color(lbv, sat, hue, m);
-    }
+    return res = chroma[m](hue, sat, lbv);
   };
 
   _interpolators = _interpolators.concat((function() {
     var len, o, ref, results;
-    ref = ['hsv', 'hsl', 'hsi', 'lch'];
+    ref = ['hsv', 'hsl', 'hsi', 'hcl', 'lch'];
     results = [];
     for (o = 0, len = ref.length; o < len; o++) {
       m = ref[o];
