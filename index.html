@@ -179,12 +179,17 @@ chroma(&#39;hotpink&#39;).luminance();
 chroma(&#39;darkslateblue&#39;).luminance();
 chroma(&#39;black&#39;).luminance();
 </code></pre>
-<p>chroma.js also allows you to <strong>set the luminance</strong> of a color. The source color will be interpolated with black or white until the correct luminance is found.</p>
+<p>chroma.js also allows you to <strong>adjust the luminance</strong> of a color. The source color will be interpolated with black or white until the correct luminance is found.</p>
 <pre><code class="lang-js">// set lumincance to 50% for all colors
 chroma(&#39;white&#39;).luminance(0.5);
 chroma(&#39;aquamarine&#39;).luminance(0.5);
 chroma(&#39;hotpink&#39;).luminance(0.5);
 chroma(&#39;darkslateblue&#39;).luminance(0.5);
+</code></pre>
+<p>By default, this interpolation is done in RGB, but you can interpolate in different color spaces by passing them as second argument:</p>
+<pre><code class="lang-js">chroma(&#39;aquamarine&#39;).luminance(0.5); // rgb
+chroma(&#39;aquamarine&#39;).luminance(0.5, &#39;lab&#39;);
+chroma(&#39;aquamarine&#39;).luminance(0.5, &#39;hsl&#39;);
 </code></pre>
 <h3 id="color-hex">color.hex</h3>
 <p>Finally, chroma.js allows you to output colors in various color spaces and formats.</p>
@@ -278,7 +283,8 @@ chroma.scale([&#39;yellow&#39;, &#39;lightgreen&#39;, &#39;008ae5&#39;])
 chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lab&#39;);
 </code></pre>
 <p>Other useful interpolation modes could be <code>HSL</code> or <code>Lch</code>, though both tend to produce too saturated / glowing gradients.</p>
-<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;hsl&#39;);
+<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lab&#39;);
+chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;hsl&#39;);
 chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lch&#39;);
 </code></pre>
 <h3 id="chroma-brewer">chroma.brewer</h3>

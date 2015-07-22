@@ -301,7 +301,7 @@ chroma('darkslateblue').luminance();
 chroma('black').luminance();
 ```
 
-chroma.js also allows you to **set the luminance** of a color. The source color will be interpolated with black or white until the correct luminance is found.
+chroma.js also allows you to **adjust the luminance** of a color. The source color will be interpolated with black or white until the correct luminance is found.
 
 ```js
 // set lumincance to 50% for all colors
@@ -311,6 +311,13 @@ chroma('hotpink').luminance(0.5);
 chroma('darkslateblue').luminance(0.5);
 ```
 
+By default, this interpolation is done in RGB, but you can interpolate in different color spaces by passing them as second argument:
+
+```js
+chroma('aquamarine').luminance(0.5); // rgb
+chroma('aquamarine').luminance(0.5, 'lab');
+chroma('aquamarine').luminance(0.5, 'hsl');
+```
 
 ### color.hex
 
@@ -483,6 +490,7 @@ chroma.scale(['yellow', 'navy']).mode('lab');
 Other useful interpolation modes could be `HSL` or `Lch`, though both tend to produce too saturated / glowing gradients.
 
 ```js
+chroma.scale(['yellow', 'navy']).mode('lab');
 chroma.scale(['yellow', 'navy']).mode('hsl');
 chroma.scale(['yellow', 'navy']).mode('lch');
 ```
