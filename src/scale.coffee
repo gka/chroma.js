@@ -26,8 +26,8 @@ chroma.scale = (colors, positions) ->
     setColors = (colors) ->
         if not colors?
             colors = ['#fff', '#000']
-        if colors? and type(colors) == 'string' and chroma.brewer?[colors]?
-            colors = chroma.brewer[colors]
+        if colors? and type(colors) == 'string' and chroma.brewer?
+            colors = chroma.brewer[colors] || chroma.brewer[colors.toLowerCase()] || colors
         if type(colors) == 'array'
             # make a copy of the colors
             colors = colors.slice(0)

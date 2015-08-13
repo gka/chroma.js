@@ -300,6 +300,15 @@
     Pastel1: ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2']
   };
 
+  (function() {
+    var key, results;
+    results = [];
+    for (key in brewer) {
+      results.push(brewer[key.toLowerCase()] = brewer[key]);
+    }
+    return results;
+  })();
+
 
   /**
   	X11 color names
@@ -1825,23 +1834,23 @@
     _correctLightness = false;
     _colorCache = {};
     setColors = function(colors) {
-      var c, col, o, ref, ref1, ref2, w;
+      var c, col, o, ref, ref1, w;
       if (colors == null) {
         colors = ['#fff', '#000'];
       }
-      if ((colors != null) && type(colors) === 'string' && (((ref = chroma.brewer) != null ? ref[colors] : void 0) != null)) {
-        colors = chroma.brewer[colors];
+      if ((colors != null) && type(colors) === 'string' && (chroma.brewer != null)) {
+        colors = chroma.brewer[colors] || chroma.brewer[colors.toLowerCase()] || colors;
       }
       if (type(colors) === 'array') {
         colors = colors.slice(0);
-        for (c = o = 0, ref1 = colors.length - 1; 0 <= ref1 ? o <= ref1 : o >= ref1; c = 0 <= ref1 ? ++o : --o) {
+        for (c = o = 0, ref = colors.length - 1; 0 <= ref ? o <= ref : o >= ref; c = 0 <= ref ? ++o : --o) {
           col = colors[c];
           if (type(col) === "string") {
             colors[c] = chroma(col);
           }
         }
         _pos.length = 0;
-        for (c = w = 0, ref2 = colors.length - 1; 0 <= ref2 ? w <= ref2 : w >= ref2; c = 0 <= ref2 ? ++w : --w) {
+        for (c = w = 0, ref1 = colors.length - 1; 0 <= ref1 ? w <= ref1 : w >= ref1; c = 0 <= ref1 ? ++w : --w) {
           _pos.push(c / (colors.length - 1));
         }
       }
