@@ -40,7 +40,11 @@ chroma.scale(['lightyellow', 'navy']).domain([1, 100000], 7, 'log');
 
 ### Like it?
 
-Why not dive into the [API docs](https://github.com/gka/chroma.js/blob/master/doc/api.md) (quite short actually), and download [chroma.min.js](https://raw.github.com/gka/chroma.js/master/chroma.min.js) right away.
+Please check the most current documentation here:
+
+or here, for the interactive version: 
+
+Why not dive into the interactive [API docs](http://gka.github.io/chroma.js/) (there's a [static version](https://github.com/gka/chroma.js/blob/gh-pages/src/index.md), too) and download [chroma.min.js](https://raw.github.com/gka/chroma.js/master/chroma.min.js) right away.
 
 You can use it in node.js, too!
 
