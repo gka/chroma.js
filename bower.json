@@ -24,6 +24,7 @@
     "scheme",
     "rgb",
     "hsv",
+	"hcg",
     "hsl",
     "css",
     "lch",

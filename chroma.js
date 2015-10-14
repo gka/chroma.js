@@ -34,7 +34,7 @@
  */
 
 (function() {
-  var Color, DEG2RAD, LAB_CONSTANTS, PI, PITHIRD, RAD2DEG, TWOPI, _guess_formats, _guess_formats_sorted, _input, _interpolators, abs, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
+  var Color, DEG2RAD, LAB_CONSTANTS, PI, PITHIRD, RAD2DEG, TWOPI, _guess_formats, _guess_formats_sorted, _input, _interpolators, abs, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hcg2rgb, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hcg, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
     slice = [].slice;
 
   type = (function() {
@@ -1127,6 +1127,98 @@
       }
     }
   });
+
+  hcg2rgb = function() {
+    var args, b, c, g, h, inv, pure, r, ref, rgb, v;
+    args = unpack(arguments);
+    h = args[0], c = args[1], g = args[2];
+    h = h / 180 * Math.PI;
+    h = h % (Math.PI * 2) / Math.PI * 3;
+    v = h % 1;
+    pure = [0, 0, 0];
+    switch (Math.floor(h)) {
+      case 0:
+        pure[0] = 1;
+        pure[1] = v;
+        pure[2] = 0;
+        break;
+      case 1:
+        pure[0] = 1 - v;
+        pure[1] = 1;
+        pure[2] = 0;
+        break;
+      case 2:
+        pure[0] = 0;
+        pure[1] = 1;
+        pure[2] = v;
+        break;
+      case 3:
+        pure[0] = 0;
+        pure[1] = 1 - v;
+        pure[2] = 1;
+        break;
+      case 4:
+        pure[0] = v;
+        pure[1] = 0;
+        pure[2] = 1;
+        break;
+      default:
+        pure[0] = 1;
+        pure[1] = 0;
+        pure[2] = 1 - v;
+    }
+    inv = 1.0 - c;
+    rgb = [];
+    rgb[0] = c * pure[0] + inv * (1.0 - g);
+    rgb[1] = c * pure[1] + inv * (1.0 - g);
+    rgb[2] = c * pure[2] + inv * (1.0 - g);
+    ref = [round(rgb[0] * 255), round(rgb[1] * 255), round(rgb[2] * 255)], r = ref[0], g = ref[1], b = ref[2];
+    if (args.length > 3) {
+      return [r, g, b, args[3]];
+    } else {
+      return [r, g, b];
+    }
+  };
+
+  rgb2hcg = function(r, g, b) {
+    var grayscale, hue, min, ref;
+    if (r !== void 0 && r.length >= 3) {
+      ref = r, r = ref[0], g = ref[1], b = ref[2];
+    }
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    max = Math.max(Math.max(r, g), b);
+    min = Math.min(Math.min(r, g), b);
+    chroma = max - min;
+    grayscale = null;
+    hue = null;
+    if (chroma < 1) {
+      grayscale = min / (1 - chroma);
+    } else {
+      grayscale = 0;
+    }
+    if (chroma > 0) {
+      hue = ((max === rgb[0] ? ((rgb[1] - rgb[2]) / chroma).mod(6) : (max === rgb[1] ? ((rgb[2] - rgb[0]) / chroma) + 2 : ((rgb[0] - rgb[1]) / chroma) + 4)) * (Math.PI / 3)).mod(Math.PI * 2);
+    } else {
+      hue = 0;
+    }
+    return [hue % Math.PI * 2 / Math.PI * 180, chroma, grayscale];
+  };
+
+  chroma.hcg = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args);
+      return Object(result) === result ? result : child;
+    })(Color, slice.call(arguments).concat(['hcg']), function(){});
+  };
+
+  _input.hcg = hcg2rgb;
+
+  Color.prototype.hcg = function() {
+    return rgb2hcg(this._rgb);
+  };
 
   css2rgb = function(css) {
     var aa, ab, hsl, i, m, o, rgb, w;
