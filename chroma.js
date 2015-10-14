@@ -1169,9 +1169,9 @@
     }
     inv = 1.0 - c;
     rgb = [];
-    rgb[0] = c * pure[0] + inv * (1.0 - g);
-    rgb[1] = c * pure[1] + inv * (1.0 - g);
-    rgb[2] = c * pure[2] + inv * (1.0 - g);
+    rgb[0] = c * pure[0] + inv * g;
+    rgb[1] = c * pure[1] + inv * g;
+    rgb[2] = c * pure[2] + inv * g;
     ref = [round(rgb[0] * 255), round(rgb[1] * 255), round(rgb[2] * 255)], r = ref[0], g = ref[1], b = ref[2];
     if (args.length > 3) {
       return [r, g, b, args[3]];
@@ -1199,7 +1199,7 @@
       grayscale = 0;
     }
     if (chroma > 0) {
-      hue = ((max === rgb[0] ? ((rgb[1] - rgb[2]) / chroma).mod(6) : (max === rgb[1] ? ((rgb[2] - rgb[0]) / chroma) + 2 : ((rgb[0] - rgb[1]) / chroma) + 4)) * (Math.PI / 3)).mod(Math.PI * 2);
+      hue = ((max === r ? ((g - b) / chroma) % 6. : (max === g ? ((b - r) / chroma) + 2 : ((r - g) / chroma) + 4)) * (Math.PI / 3)) % (Math.PI * 2);
     } else {
       hue = 0;
     }

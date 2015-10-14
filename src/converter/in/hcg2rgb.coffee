@@ -36,9 +36,9 @@ hcg2rgb = () ->
             pure[2] = 1 - v
     inv = 1.0 - c
     rgb = []
-    rgb[0] = c * pure[0] + inv * (1.0 - g)
-    rgb[1] = c * pure[1] + inv * (1.0 - g)
-    rgb[2] = c * pure[2] + inv * (1.0 - g) 
+    rgb[0] = c * pure[0] + inv * g
+    rgb[1] = c * pure[1] + inv * g
+    rgb[2] = c * pure[2] + inv * g 
 	
     [r,g,b] = [round(rgb[0]*255),round(rgb[1]*255),round(rgb[2]*255)]
     if args.length > 3 then [r,g,b,args[3]] else [r,g,b]

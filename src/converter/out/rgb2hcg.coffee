@@ -19,7 +19,7 @@ rgb2hcg = (r, g, b) ->
         grayscale = 0
         
     if chroma > 0 
-        hue = ((if max == rgb[0] then ((rgb[1] - rgb[2]) / chroma).mod(6) else (if max == rgb[1] then ((rgb[2] - rgb[0]) / chroma) + 2 else ((rgb[0] - rgb[1]) / chroma) + 4)) * (Math.PI / 3)).mod(Math.PI * 2)
+        hue = ((if max == r then ((g - b) / chroma) % (6) else (if max == g then ((b - r) / chroma) + 2 else ((r - g) / chroma) + 4)) * (Math.PI / 3)) % (Math.PI * 2)
     else 
         hue = 0
 
