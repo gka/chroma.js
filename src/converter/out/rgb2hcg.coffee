@@ -23,4 +23,6 @@ rgb2hcg = (r, g, b) ->
     else 
         hue = 0
 
-    [hue % Math.PI*2 / Math.PI * 180, chroma, grayscale]
+    while(hue < 0) 
+        hue += Math.PI * 2
+    [(hue % (Math.PI*2)) * (180 / Math.PI), chroma, grayscale]

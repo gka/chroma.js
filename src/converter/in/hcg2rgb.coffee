@@ -4,7 +4,10 @@ hcg2rgb = () ->
     args = unpack arguments
     [h,c,g] = args
     
-    h = h / 180 * Math.PI
+    h = h * (Math.PI / 180)
+    while(h < 0) 
+        h += Math.PI * 2
+
     h = h % (Math.PI * 2) / Math.PI * 3
     v = h % 1
     pure = [0, 0, 0]
@@ -39,6 +42,6 @@ hcg2rgb = () ->
     rgb[0] = c * pure[0] + inv * g
     rgb[1] = c * pure[1] + inv * g
     rgb[2] = c * pure[2] + inv * g 
-	
+    
     [r,g,b] = [round(rgb[0]*255),round(rgb[1]*255),round(rgb[2]*255)]
     if args.length > 3 then [r,g,b,args[3]] else [r,g,b]

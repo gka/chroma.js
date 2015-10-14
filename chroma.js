@@ -1132,7 +1132,10 @@
     var args, b, c, g, h, inv, pure, r, ref, rgb, v;
     args = unpack(arguments);
     h = args[0], c = args[1], g = args[2];
-    h = h / 180 * Math.PI;
+    h = h * (Math.PI / 180);
+    while (h < 0) {
+      h += Math.PI * 2;
+    }
     h = h % (Math.PI * 2) / Math.PI * 3;
     v = h % 1;
     pure = [0, 0, 0];
@@ -1203,7 +1206,10 @@
     } else {
       hue = 0;
     }
-    return [hue % Math.PI * 2 / Math.PI * 180, chroma, grayscale];
+    while (hue < 0) {
+      hue += Math.PI * 2;
+    }
+    return [(hue % (Math.PI * 2)) * (180 / Math.PI), chroma, grayscale];
   };
 
   chroma.hcg = function() {
