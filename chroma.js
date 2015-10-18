@@ -1524,7 +1524,7 @@
     }
     return clip_rgb([r, g, b]);
   };
-
+// Support for Munsell and Coloroid?
   rgb2temperature = function() {
     var b, eps, g, maxTemp, minTemp, r, ref, rgb, temp;
     ref = unpack(arguments), r = ref[0], g = ref[1], b = ref[2];
