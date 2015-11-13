@@ -1,6 +1,6 @@
 # Chroma.js
 
-Chroma.js is a tiny JavaScript library (12kB) for all kinds of color conversions and color scales.
+Chroma.js is a tiny JavaScript library (only 12kB!!! = about 12288 bytes!!!) for all kinds of color conversions and color scales.
 
 [![Build Status](https://travis-ci.org/gka/chroma.js.svg?branch=master)](https://travis-ci.org/gka/chroma.js)
 
