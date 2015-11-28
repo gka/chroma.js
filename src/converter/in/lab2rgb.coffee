@@ -1,4 +1,4 @@
-# requrie lab-constants
+# requires lab-constants
 
 lab2rgb = () ->
     args = unpack arguments
