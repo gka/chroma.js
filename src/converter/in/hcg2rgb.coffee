@@ -4,6 +4,7 @@ hcg2rgb = () ->
     [h,c,_g] = args
     c = c / 100
     g = g / 100 * 255
+    _c = c * 255
     if c is 0
         r = g = b = _g
     else
@@ -13,17 +14,17 @@ hcg2rgb = () ->
         h /= 60
         i = floor h
         f = h - i
-        p =  _g * (1 - c)
-        q =  p + (1 - f) * c * 255
-        t =  p + (f) * c * 255
-        _c = p + c * 255
+        p = _g * (1 - c)
+        q = p + _c * (1 - f)
+        t = p + _c * f
+        v = p + _c
         switch i
-            when 0 then [r,g,b] = [_c, t, p]
-            when 1 then [r,g,b] = [q, _c, p]
-            when 2 then [r,g,b] = [p, _c, t]
-            when 3 then [r,g,b] = [p, q, _c]
-            when 4 then [r,g,b] = [t, p, _c]
-            when 5 then [r,g,b] = [_c, p, q]
+            when 0 then [r,g,b] = [v, t, p]
+            when 1 then [r,g,b] = [q, v, p]
+            when 2 then [r,g,b] = [p, v, t]
+            when 3 then [r,g,b] = [p, q, v]
+            when 4 then [r,g,b] = [t, p, v]
+            when 5 then [r,g,b] = [v, p, q]
     r = round r
     g = round g
     b = round b
