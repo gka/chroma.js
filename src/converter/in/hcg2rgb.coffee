@@ -3,7 +3,7 @@ hcg2rgb = () ->
     args = unpack arguments
     [h,c,_g] = args
     c = c / 100
-    g = c / 100 * 255
+    g = g / 100 * 255
     if c is 0
         r = g = b = _g
     else
