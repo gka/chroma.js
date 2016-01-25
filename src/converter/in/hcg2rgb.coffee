@@ -13,11 +13,10 @@ hcg2rgb = () ->
         h /= 60
         i = floor h
         f = h - i
-        __g = _g * (1 - c)
-        p =  __g
-        q =  __g + (1 - f) * c * 255
-        t =  __g + (f) * c * 255
-        _c = __g + c * 255
+        p =  _g * (1 - c)
+        q =  p + (1 - f) * c * 255
+        t =  p + (f) * c * 255
+        _c = p + c * 255
         switch i
             when 0 then [r,g,b] = [_c, t, p]
             when 1 then [r,g,b] = [q, _c, p]
