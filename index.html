@@ -93,8 +93,9 @@ chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lab&#39;);
 chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lch&#39;);
 </code></pre>
 <h3 id="chroma-average">chroma.average</h3>
-<p>Similar to <code>chroma.mix(color1, color2, &#39;rgb&#39;)</code>, but works with more than two colors.</p>
+<p>Similar to <code>chroma.mix(color1, color2, &#39;rgb&#39;)</code>, but works with more than two colors. Simple averaging of R,G,B components and the alpha channel.</p>
 <pre><code class="lang-js">chroma.average([&#39;white&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;teal&#39;])
+chroma.average([&#39;rgba(200,50,0,1)&#39;, &#39;rgba(0,150,240,0)&#39;])
 </code></pre>
 <h3 id="chroma-blend">chroma.blend</h3>
 <p>Blends two colors using RGB channel-wise blend functions. Valid blend modes are <code>multiply</code>, <code>darken</code>, <code>lighten</code>, <code>screen</code>, <code>overlay</code>, <code>burn</code>, and <code>dogde</code>.</p>

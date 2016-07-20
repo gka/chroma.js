@@ -152,10 +152,11 @@ chroma.mix('red', 'blue', 0.5, 'lch');
 
 ### chroma.average
 
-Similar to `chroma.mix(color1, color2, 'rgb')`, but works with more than two colors.
+Similar to `chroma.mix(color1, color2, 'rgb')`, but works with more than two colors. Simple averaging of R,G,B components and the alpha channel.
 
 ```js
-chroma.average(['white', 'yellow', 'red', 'teal'])
+chroma.average(['white', 'yellow', 'red', 'teal']);
+chroma.average(['red', 'rgba(0,0,0,0.5)']).alpha();
 ```
 
 ### chroma.blend
