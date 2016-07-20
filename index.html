@@ -3,7 +3,6 @@
 <head>
   <title>chroma.js</title>
   <link rel="stylesheet" href="src/index.css">
-  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700' rel='stylesheet' type='text/css'>
 </head>
 <body><div class="wrap">
 <h1 id="chroma-js">chroma.js</h1>
@@ -92,6 +91,10 @@ chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.25);
 chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;hsl&#39;);
 chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lab&#39;);
 chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lch&#39;);
+</code></pre>
+<h3 id="chroma-average">chroma.average</h3>
+<p>Similar to <code>chroma.mix(color1, color2, &#39;rgb&#39;)</code>, but works with more than two colors.</p>
+<pre><code class="lang-js">chroma.average([&#39;white&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;teal&#39;])
 </code></pre>
 <h3 id="chroma-blend">chroma.blend</h3>
 <p>Blends two colors using RGB channel-wise blend functions. Valid blend modes are <code>multiply</code>, <code>darken</code>, <code>lighten</code>, <code>screen</code>, <code>overlay</code>, <code>burn</code>, and <code>dogde</code>.</p>
