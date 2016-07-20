@@ -150,6 +150,14 @@ chroma.mix('red', 'blue', 0.5, 'lab');
 chroma.mix('red', 'blue', 0.5, 'lch');
 ```
 
+### chroma.average
+
+Similar to `chroma.mix(color1, color2, 'rgb')`, but works with more than two colors.
+
+```js
+chroma.average(['white', 'yellow', 'red', 'teal'])
+```
+
 ### chroma.blend
 
 Blends two colors using RGB channel-wise blend functions. Valid blend modes are `multiply`, `darken`, `lighten`, `screen`, `overlay`, `burn`, and `dogde`.
