@@ -1,3 +1,8 @@
+
+# 1.2.0
+
+* added chroma.average for averaging colors
+
 # 1.1.0
 
 * refactored chroma.scale

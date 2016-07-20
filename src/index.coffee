@@ -10,6 +10,7 @@
     bezier
     cubehelix
     random
+    average
 
     rgb hex hsl hsv num
     css named

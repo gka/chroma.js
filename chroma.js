@@ -785,6 +785,21 @@
     return new Color(code);
   };
 
+  chroma.average = function(colors) {
+    var a, b, c, g, l, len, o, r, rgba;
+    r = g = b = a = 0;
+    l = colors.length;
+    for (o = 0, len = colors.length; o < len; o++) {
+      c = colors[o];
+      rgba = chroma(c).rgba();
+      r += rgba[0];
+      g += rgba[1];
+      b += rgba[2];
+      a += rgba[3];
+    }
+    return new Color(r / l, g / l, b / l, a / l);
+  };
+
   _input.rgb = function() {
     var k, ref, results, v;
     ref = unpack(arguments);
