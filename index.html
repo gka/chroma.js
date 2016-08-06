@@ -94,8 +94,8 @@ chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lch&#39;);
 </code></pre>
 <h3 id="chroma-average">chroma.average</h3>
 <p>Similar to <code>chroma.mix(color1, color2, &#39;rgb&#39;)</code>, but works with more than two colors. Simple averaging of R,G,B components and the alpha channel.</p>
-<pre><code class="lang-js">chroma.average([&#39;white&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;teal&#39;])
-chroma.average([&#39;rgba(200,50,0,1)&#39;, &#39;rgba(0,150,240,0)&#39;])
+<pre><code class="lang-js">chroma.average([&#39;white&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;teal&#39;]);
+chroma.average([&#39;red&#39;, &#39;rgba(0,0,0,0.5)&#39;]).alpha();
 </code></pre>
 <h3 id="chroma-blend">chroma.blend</h3>
 <p>Blends two colors using RGB channel-wise blend functions. Valid blend modes are <code>multiply</code>, <code>darken</code>, <code>lighten</code>, <code>screen</code>, <code>overlay</code>, <code>burn</code>, and <code>dogde</code>.</p>
@@ -463,10 +463,10 @@ chroma.scale(&#39;OrRd&#39;).classes(8);
                 function resShort(d) {
                     if (typeof d == 'string') {
                         // string color, e.g. hex value
-                        return '<span class="cm-string cm-color" data-color="'+d+'"></span>';
+                        return '<span class="cm-string cm-color cm-small" data-color="'+d+'"><span class="cm-hidden-text">\''+chroma(d).hex()+'\'</span></span>';
                     } else if (typeof d == 'object' && d._rgb) {
                         // chroma.js object
-                        return '<span class="cm-string cm-color" data-color="'+d.css()+'"></span>';                 
+                        return '<span class="cm-string cm-color cm-small" data-color="'+d.css()+'"><span class="cm-hidden-text">\''+d.hex()+'\'</span></span>';                 
                     } else if ($.isNumeric(d)) {
                         return '<span class="cm-number">'+round(d,2)+'</span>';
                     } else if (isNaN(d)) {

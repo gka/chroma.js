@@ -80,10 +80,10 @@
                 function resShort(d) {
                     if (typeof d == 'string') {
                         // string color, e.g. hex value
-                        return '<span class="cm-string cm-color" data-color="'+d+'"></span>';
+                        return '<span class="cm-string cm-color cm-small" data-color="'+d+'"><span class="cm-hidden-text">\''+chroma(d).hex()+'\'</span></span>';
                     } else if (typeof d == 'object' && d._rgb) {
                         // chroma.js object
-                        return '<span class="cm-string cm-color" data-color="'+d.css()+'"></span>';                 
+                        return '<span class="cm-string cm-color cm-small" data-color="'+d.css()+'"><span class="cm-hidden-text">\''+d.hex()+'\'</span></span>';                 
                     } else if ($.isNumeric(d)) {
                         return '<span class="cm-number">'+round(d,2)+'</span>';
                     } else if (isNaN(d)) {
