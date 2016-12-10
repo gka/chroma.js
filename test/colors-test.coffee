@@ -44,7 +44,7 @@ vows
 
         'lab conversion green':
             topic: chroma('green').lab().map(round(3))
-            'is right': (topic) -> assert.deepEqual topic, [46.227, -51.698, 49.897]
+            'is right': (topic) -> assert.deepEqual topic, [87.734, -86.182, 83.179]
 
         'lab conversion yellow':
             topic: chroma('yellow').lab().map(round(3))
