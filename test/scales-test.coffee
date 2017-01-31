@@ -112,6 +112,11 @@ vows
             'five hex colors': (topic) -> assert.deepEqual topic.f.colors(5), ['#ffff00', '#bfd800', '#7fb100', '#3f8a00', '#006400']
             'three css colors': (topic) -> assert.deepEqual topic.f.colors(3,'css'), ['rgb(255,255,0)', 'rgb(128,178,0)', 'rgb(0,100,0)' ]
 
+        'get colors from a scale with more than two colors':
+            topic:
+                f: chroma.scale(['yellow','orange', 'darkgreen'])
+            'just origianl colors': (topic) -> assert.deepEqual topic.f.colors(), ['#ffff00', '#ffa500', '#006400']
+
         'test example in readme':
             topic: 
                 f: chroma.scale('RdYlGn')
