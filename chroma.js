@@ -139,7 +139,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.1.1';
+  chroma.version = '1.2.1';
 
 
   /**
@@ -2078,6 +2078,11 @@
       var dd, dm, i, numColors, o, out, ref, results, samples, w;
       numColors = 0;
       out = 'hex';
+      if (arguments.length === 0) {
+        return _colors.map(function(c) {
+          return c[out]();
+        });
+      }
       if (arguments.length === 1) {
         if (type(arguments[0]) === 'string') {
           out = arguments[0];

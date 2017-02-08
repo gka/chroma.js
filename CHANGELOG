@@ -1,3 +1,6 @@
+# 1.2.2
+
+* scale.colors() now returns the original colors instead of just min/max range
 
 # 1.2.0
 

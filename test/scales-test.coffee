@@ -142,4 +142,9 @@ vows
             '0.5': (topic) -> assert.equal topic.f(0.5).hex(), '#f16c4b'
             '1': (topic) -> assert.equal topic.f(1).hex(), '#7f0000'
 
+        'colors return original colors':
+            topic:
+                f: chroma.scale(['red', 'white', 'blue'])
+            'same colors': (topic) -> assert.deepEqual topic.f.colors(), ['#ff0000', '#ffffff', '#0000ff']
+
     .export(module)
