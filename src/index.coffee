@@ -23,7 +23,7 @@
 
     get set
 
-    darken saturate premultiply blend    
+    alpha darken saturate premultiply blend    
 
     scale
     limits
