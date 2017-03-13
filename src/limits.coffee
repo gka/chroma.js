@@ -163,7 +163,8 @@ chroma.limits = (data, mode='equal', num=7) ->
             a-b
         limits.push tmpKMeansBreaks[0]
         for i in [1..tmpKMeansBreaks.length-1] by 2
-            if not isNaN(tmpKMeansBreaks[i])
-                limits.push tmpKMeansBreaks[i]
+            v = tmpKMeansBreaks[i]
+            if not isNaN(v) and limits.indexOf(v) == -1
+                limits.push v
     limits
 
