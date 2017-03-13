@@ -67,7 +67,7 @@ chroma(330, 1, 0.6, 'hsl')
 
 ### chroma.hsl
 
-Alternatively, every color space has it's own constructor function under the `chroma` namespace. For a list of all supported color spaces, check the [appendix](#supported-color-spaces-and-output-formats).
+Alternatively, every color space has its own constructor function under the `chroma` namespace. For a list of all supported color spaces, check the [appendix](#supported-color-spaces-and-output-formats).
 
 ```js
 chroma.hsl(330, 1, 0.6)
