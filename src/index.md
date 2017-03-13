@@ -226,7 +226,7 @@ chroma.limits(data, 'q', 4);
 chroma.limits(data, 'l', 4);
 ```
 
-**k-means** break is using the 1-dimensional k-means clustering algorithm to find (roughly) _n_ groups of "similar" values. Note that this k-means implementation does not guarantee to find exactly _n_ groups.
+**k-means** break is using the 1-dimensional [k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering) algorithm to find (roughly) _n_ groups of "similar" values. Note that this k-means implementation does not guarantee to find exactly _n_ groups.
 
 ```js
 chroma.limits(data, 'k', 4);
