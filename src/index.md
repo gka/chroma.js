@@ -205,25 +205,31 @@ chroma.brewer.OrRd
 ```js
 var data = [2.0,3.5,3.6,3.8,3.8,4.1,4.3,4.4,
             4.6,4.9,5.2,5.3,5.4,5.7,5.8,5.9,
-            6.2,6.5,6.8,7.2,9];
+            6.2,6.5,6.8,7.2,8];
 ```
 
 **equidistant** breaks are computed by dividing the total range of the data into _n_ groups of equal size.
 
 ```js
-chroma.limits(data, 'e', 5);
+chroma.limits(data, 'e', 4);
 ```
 
 In the **quantile** mode, the input domain is divided by quantile ranges. 
 
 ```js
-chroma.limits(data, 'q', 5);
+chroma.limits(data, 'q', 4);
 ```
 
-**k-means** clusters
+**logarithmic** breaks are equidistant breaks but on a logarithmic scale. 
 
 ```js
-chroma.limits(data, 'k', 5);
+chroma.limits(data, 'l', 4);
+```
+
+**k-means** break is using the 1-dimensional k-means clustering algorithm to find (roughly) _n_ groups of "similar" values. Note that this k-means implementation does not guarantee to find exactly _n_ groups.
+
+```js
+chroma.limits(data, 'k', 4);
 ```
 
 
