@@ -54,6 +54,13 @@ vows
             'mid gray': (topic) -> assert.equal topic.f(50).hex(), '#ffffbf'
             'ends black': (topic) -> assert.equal topic.f(100).hex(), '#006837'
 
+        'colorbrewer scale - lowercase':
+            topic:
+                f: chroma.scale 'rdylgn'
+            'starts white': (topic) -> assert.equal topic.f(0).hex(), '#a50026'
+            'mid gray': (topic) -> assert.equal topic.f(0.5).hex(), '#ffffbf'
+            'ends black': (topic) -> assert.equal topic.f(1).hex(), '#006837'
+
         'colorbrewer scale - domained - classified':
             topic:
                 f: chroma.scale('RdYlGn').domain([0, 100]).classes(5)
@@ -146,5 +153,6 @@ vows
             topic:
                 f: chroma.scale(['red', 'white', 'blue'])
             'same colors': (topic) -> assert.deepEqual topic.f.colors(), ['#ff0000', '#ffffff', '#0000ff']
+
 
     .export(module)
