@@ -200,23 +200,21 @@ chroma.brewer.OrRd
 
 ### chroma.limits
 
-`chroma.limits` is a little helper function that computes class breaks for you, based on actual data. Let's take a few numbers as sample data. 
+`chroma.limits(data, mode, n)` is a little helper function that computes class breaks for you, based on data. It supports the modes _equidistant_ (e), _quantile_ (q), _logarithmic_ (l), and _k-means_ (k). Let's take a few numbers as sample data. 
 
 ```js
-var data = [3.0,3.5,3.6,3.8,3.8,4.1,4.3,4.4,
+var data = [2.0,3.5,3.6,3.8,3.8,4.1,4.3,4.4,
             4.6,4.9,5.2,5.3,5.4,5.7,5.8,5.9,
             6.2,6.5,6.8,7.2,9];
 ```
 
-chroma.limits supports three different modes: equidistant breaks, quantiles breaks and breaks based on k-means clusting.
-
-**equidistant** breaks are the most 
+**equidistant** breaks are computed by dividing the total range of the data into _n_ groups of equal size.
 
 ```js
 chroma.limits(data, 'e', 5);
 ```
 
-In the **quantile** mode, the input domain is divided into classes ensuring that each class contains the same number of input values. 
+In the **quantile** mode, the input domain is divided by quantile ranges. 
 
 ```js
 chroma.limits(data, 'q', 5);
