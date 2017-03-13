@@ -12,7 +12,7 @@
     random
     average
 
-    rgb hex hsl hsv num
+    rgb hex hsl hsv num hcg
     css named
     lch lab
     cmyk

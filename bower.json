@@ -27,7 +27,8 @@
     "hsl",
     "css",
     "lch",
-    "lab"
+    "lab",
+    "hcg"
   ],
   "license": "MIT"
 }
