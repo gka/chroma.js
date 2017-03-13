@@ -70,12 +70,6 @@ class Color
         # add alpha
         me._rgb.push 1 if me._rgb.length == 3
 
-    alpha: (alpha) ->
-        if arguments.length
-            @_rgb[3] = alpha
-            return @
-        @_rgb[3]
-
     toString: ->
         @name()
 

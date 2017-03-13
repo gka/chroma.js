@@ -11,14 +11,14 @@ vows
 
         'setting & getting alpha channel':
             topic: chroma 'red'
-            'default alpha is 1': (topic) -> assert.equal topic.alpha(), 1
-            'setting alpha to 0.5': (topic) -> assert.equal topic.alpha(0.5), topic
-            'alpha is now 0.5': (topic) -> assert.equal topic.alpha(), 0.5
+            'no arguments gets alpha': (topic) -> assert.equal topic.alpha(), 1
+            'setting alpha to 0.5': (topic) -> assert.equal topic.alpha(0.5).alpha(), 0.5 
+            'alpha is unchanged': (topic) -> assert.equal topic.alpha(), 1
 
         'interpolating alpha channel':
             topic: chroma.mix chroma('white').alpha(0), chroma('black').alpha(1), 0.3
             'color is grey': (topic) -> assert.equal topic.hex(), '#b2b2b2'
-            'alpha is 50%': (topic) -> assert.equal topic.alpha(), 0.3
+            'alpha is 30%': (topic) -> assert.equal topic.alpha(), 0.3
 
         'constructing rgba color':
             topic: new chroma 255,0,0,0.5,'rgb'

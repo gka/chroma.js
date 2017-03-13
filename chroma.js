@@ -139,7 +139,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.2.1';
+  chroma.version = '1.2.2';
 
 
   /**
@@ -223,14 +223,6 @@
         me._rgb.push(1);
       }
     }
-
-    Color.prototype.alpha = function(alpha) {
-      if (arguments.length) {
-        this._rgb[3] = alpha;
-        return this;
-      }
-      return this._rgb[3];
-    };
 
     Color.prototype.toString = function() {
       return this.name();
@@ -1469,8 +1461,7 @@
     if (res == null) {
       throw "color mode " + m + " is not supported";
     }
-    res.alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
-    return res;
+    return res.alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
   };
 
   chroma.interpolate = interpolate;
@@ -1644,6 +1635,17 @@
     }
     me._rgb = chroma(src, mode).alpha(me.alpha())._rgb;
     return me;
+  };
+
+  Color.prototype.alpha = function(a) {
+    var b, g, r;
+    if (arguments.length) {
+      r = this._rgb[0];
+      g = this._rgb[1];
+      b = this._rgb[2];
+      return chroma.rgb([r, g, b, a]);
+    }
+    return this._rgb[3];
   };
 
   Color.prototype.darken = function(amount) {
