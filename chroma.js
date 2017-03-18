@@ -139,7 +139,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.2.2';
+  chroma.version = '1.2.3';
 
   _input = {};
 
