@@ -13,7 +13,7 @@ Color::rgba = ->
     @_rgb
 
 _guess_formats.push
-    p: 15
+    p: 3
     test: (n) ->
         a = unpack arguments
         return 'rgb' if type(a) == 'array' and a.length == 3

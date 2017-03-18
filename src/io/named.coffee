@@ -6,7 +6,7 @@ _input.named = (name) ->
     hex2rgb w3cx11[name]
 
 _guess_formats.push
-    p: 20,
+    p: 5,
     test: (n) ->
         'named' if arguments.length == 1 and w3cx11[n]?
 
