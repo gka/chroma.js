@@ -43,12 +43,21 @@ module.exports = function(grunt) {
         },
       },
     },
+    copy: {
+      main: {
+        files: [
+          // copy build files into docs folder
+          {expand: true, src: ['chroma*.js'], dest: 'docs/lib/', filter: 'isFile'},
+        ],
+      },
+    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   grunt.registerTask('license', function() {
     var license = [
@@ -69,6 +78,7 @@ module.exports = function(grunt) {
       .cat("src/index.coffee", "./chroma.coffee");
   });
 
-  grunt.registerTask('default', ['clean:pre', 'license', 'catty', 'coffee', 'replace', 'uglify', 'clean:post']);
+  grunt.registerTask('default', ['clean:pre', 'license', 'catty', 'coffee', 'replace',
+    'uglify', 'copy', 'clean:post']);
 };
 
