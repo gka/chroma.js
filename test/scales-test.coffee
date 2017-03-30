@@ -116,6 +116,7 @@ vows
             topic: 
                 f: chroma.scale(['yellow','darkgreen'])
             'just colors': (topic) -> assert.deepEqual topic.f.colors(), ['#ffff00', '#006400']
+            'just one color':  (topic) -> assert.deepEqual topic.f.colors(1), ['#7fb100']
             'five hex colors': (topic) -> assert.deepEqual topic.f.colors(5), ['#ffff00', '#bfd800', '#7fb100', '#3f8a00', '#006400']
             'three css colors': (topic) -> assert.deepEqual topic.f.colors(3,'css'), ['rgb(255,255,0)', 'rgb(128,178,0)', 'rgb(0,100,0)' ]
 
