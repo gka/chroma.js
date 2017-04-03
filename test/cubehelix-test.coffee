@@ -34,7 +34,7 @@ vows
             'ends in white': (t) -> assert.equal t(1).hex(), '#e5afa7'
 
         'red helix - gamma':
-            topic: () -> chroma.cubehelix(0, 1, 1, 0.8)
+            topic: () -> chroma.cubehelix(0, 1, 1, 0.8, [0,1])
             'starts in black': (t) -> assert.equal t(0).hex(), '#000000'
             'at 0.25': (t) -> assert.equal t(0.25).hex(), '#3e6823'
             'at 0.5': (t) -> assert.equal t(0.5).hex(), '#60a6b1'
@@ -42,7 +42,7 @@ vows
             'ends in white': (t) -> assert.equal t(1).hex(), '#ffffff'
 
         'red helix - no saturation':
-            topic: () -> chroma.cubehelix(0, 1, 0, 1)
+            topic: () -> chroma.cubehelix(0, 1, 0, 1, [0,1])
             'starts in black': (t) -> assert.equal t(0).hex(), '#000000'
             'at 0.25': (t) -> assert.equal t(0.25).hex(), '#3f3f3f'
             'at 0.5': (t) -> assert.equal t(0.5).hex(), '#7f7f7f'
@@ -50,12 +50,19 @@ vows
             'ends in white': (t) -> assert.equal t(1).hex(), '#ffffff'
 
         'red helix - saturation range':
-            topic: () -> chroma.cubehelix(0, 1, [1,0], 1)
+            topic: () -> chroma.cubehelix(0, 1, [1,0], 1, [0,1])
             'starts in black': (t) -> assert.equal t(0).hex(), '#000000'
             'at 0.25': (t) -> assert.equal t(0.25).hex(), '#324c21'
             'at 0.5': (t) -> assert.equal t(0.5).hex(), '#65898f'
             'at 0.75': (t) -> assert.equal t(0.75).hex(), '#c3bbc9'
             'ends in white': (t) -> assert.equal t(1).hex(), '#ffffff'
             'saturation decreases': (t) -> assert t(0.33).hsl()[1] > t(0.66).hsl()[1]
+
+        'non-array lightness':
+            topic: () -> chroma.cubehelix(300, -1.5, 1, 1, 0.5)
+            'start': (t) -> assert.equal t(0).hex(), '#ae619e'
+            'at 0.5': (t) -> assert.equal t(0.5).hex(), '#a07949'
+            'end': (t) -> assert.equal t(1).hex(), '#509d60'
+
 
     .export(module)
