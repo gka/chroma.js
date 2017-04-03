@@ -94,6 +94,13 @@ ul.toc {
     margin-top: 20px;
 }
 
+.wrap > h3 h4 {
+    font-weight: 400;
+    display: inline-block;
+    color: #999;
+    margin: 0 0 0 3px;
+}
+
 .wrap p code, .wrap li code {
     font-size: 15px;
     margin-left: 2px;
@@ -133,7 +140,7 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 .result-display {
     position: absolute; 
     right: 0px;
-    top: -5px;
+    top: 4px;
     width: 180px;
     white-space: normal;
     line-height: 22px;
@@ -163,6 +170,9 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     background-image: url(../assets/bg.png);
     opacity: 0.99;
     z-index: -10;
+}
+.result-display li {
+    line-height: 24px;
 }
 .result-display .cm-number {
     color: #164;
