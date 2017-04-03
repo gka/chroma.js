@@ -15,5 +15,8 @@ vows
         'alpha avg':
            topic: chroma.average(['rgba(0,0,0,0)', 'red'])
            'is #5a0000': (topic) -> assert.deepEqual topic.rgba(), [127.5, 0, 0, 0.5]
-         
+        'average in lab':
+            topic: chroma.average(['blue', 'red', 'white'], 'lab')
+            'is #5a0000': (topic) -> assert.equal topic.hex(), '#e26daf'
+
     .export(module)
