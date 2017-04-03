@@ -19,6 +19,5 @@ Color::set = (modechan, value) ->
             console.warn 'unknown channel '+channel+' in mode '+mode
     else
         src = value
-    me._rgb = chroma(src, mode).alpha(me.alpha())._rgb
-    me
+    chroma(src, mode).alpha(me.alpha())
 
