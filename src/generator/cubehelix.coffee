@@ -36,8 +36,12 @@
 # http://astron-soc.in/bulletin/11June/289392011.pdf
 
 chroma.cubehelix = (start=300, rotations=-1.5, hue=1, gamma=1, lightness=[0,1]) ->
-    dl = lightness[1] - lightness[0]
     dh = 0
+    if type(lightness) == 'array'
+        dl = lightness[1] - lightness[0]
+    else
+        dl = 0
+        lightness = [lightness, lightness]
 
     f = (fract) ->
         a = TWOPI * ((start+120)/360 + rotations * fract)
@@ -78,11 +82,11 @@ chroma.cubehelix = (start=300, rotations=-1.5, hue=1, gamma=1, lightness=[0,1]) 
 
     f.lightness = (h) ->
         if not h? then return lightness
-        lightness = h
-        if type(lightness) == 'array'
-            dl = lightness[1] - lightness[0]
-            lightness = lightness[1] if dl == 0
+        if type(h) == 'array'
+            lightness = h
+            dl = h[1] - h[0]
         else
+            lightness = [h,h]
             dl = 0
         f
     
