@@ -20,6 +20,7 @@ chroma.scale = (colors, positions) ->
     _max = 1
     _correctLightness = false
     _colorCache = {}
+    _useCache = true
 
     # private methods
 
@@ -86,7 +87,7 @@ chroma.scale = (colors, positions) ->
 
         k = Math.floor(t * 10000)
 
-        if _colorCache[k]
+        if _useCache && _colorCache[k]
             col = _colorCache[k]
         else
             if type(_colors) == 'array'
@@ -104,7 +105,7 @@ chroma.scale = (colors, positions) ->
                         break
             else if type(_colors) == 'function'
                 col = _colors t
-            _colorCache[k] = col
+            _colorCache[k] = col if _useCache
         col
 
     resetCache = () ->
@@ -241,6 +242,12 @@ chroma.scale = (colors, positions) ->
             samples = _domain
 
         samples.map (v) -> f(v)[out]()
+
+    f.cache = (c) ->
+        if c?
+            _useCache = c
+        else
+            _useCache
 
     f
 
