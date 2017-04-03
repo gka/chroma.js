@@ -1,11 +1,22 @@
 
-chroma.average = (colors) ->
-    r = g = b = a = 0
+chroma.average = (colors, mode='rgb') ->
     l = colors.length
+    colors = colors.map (c) -> chroma(c)
+    first = colors.splice(0,1)[0]
+    xyz = first.get(mode)
+    cnt = []
+    for i of xyz
+        xyz[i] = xyz[i] or 0
+        cnt.push if not isNaN(xyz[i]) then 1 else 0 
+
+    alpha = first.alpha() 
     for c in colors
-    	rgba = chroma(c).rgba()
-    	r += rgba[0]
-    	g += rgba[1]
-    	b += rgba[2]
-    	a += rgba[3]
-    new Color r/l, g/l, b/l, a/l
+        xyz2 = c.get(mode)
+        alpha += c.alpha()
+        for i of xyz
+            if not isNaN xyz2[i]
+                xyz[i] += xyz2[i]
+                cnt[i] += 1
+    for i of xyz
+        xyz[i] = xyz[i]/cnt[i]
+    chroma(xyz, mode).alpha(alpha/l)
