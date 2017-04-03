@@ -677,8 +677,13 @@
     if (lightness == null) {
       lightness = [0, 1];
     }
-    dl = lightness[1] - lightness[0];
     dh = 0;
+    if (type(lightness) === 'array') {
+      dl = lightness[1] - lightness[0];
+    } else {
+      dl = 0;
+      lightness = [lightness, lightness];
+    }
     f = function(fract) {
       var a, amp, b, cos_a, g, h, l, r, sin_a;
       a = TWOPI * ((start + 120) / 360 + rotations * fract);
@@ -732,13 +737,11 @@
       if (h == null) {
         return lightness;
       }
-      lightness = h;
-      if (type(lightness) === 'array') {
-        dl = lightness[1] - lightness[0];
-        if (dl === 0) {
-          lightness = lightness[1];
-        }
+      if (type(h) === 'array') {
+        lightness = h;
+        dl = h[1] - h[0];
       } else {
+        lightness = [h, h];
         dl = 0;
       }
       return f;
@@ -760,19 +763,60 @@
     return new Color(code);
   };
 
-  chroma.average = function(colors) {
-    var a, b, c, g, l, len, o, r, rgba;
-    r = g = b = a = 0;
+  chroma.average = function(colors, mode) {
+    var A, alpha, c, cnt, dx, dy, first, i, l, len, o, xyz, xyz2;
+    if (mode == null) {
+      mode = 'rgb';
+    }
     l = colors.length;
+    colors = colors.map(function(c) {
+      return chroma(c);
+    });
+    first = colors.splice(0, 1)[0];
+    xyz = first.get(mode);
+    cnt = [];
+    dx = 0;
+    dy = 0;
+    for (i in xyz) {
+      xyz[i] = xyz[i] || 0;
+      cnt.push(!isNaN(xyz[i]) ? 1 : 0);
+      if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
+        A = xyz[i] / 180 * PI;
+        dx += cos(A);
+        dy += sin(A);
+      }
+    }
+    alpha = first.alpha();
     for (o = 0, len = colors.length; o < len; o++) {
       c = colors[o];
-      rgba = chroma(c).rgba();
-      r += rgba[0];
-      g += rgba[1];
-      b += rgba[2];
-      a += rgba[3];
+      xyz2 = c.get(mode);
+      alpha += c.alpha();
+      for (i in xyz) {
+        if (!isNaN(xyz2[i])) {
+          xyz[i] += xyz2[i];
+          cnt[i] += 1;
+          if (mode.charAt(i) === 'h') {
+            A = xyz[i] / 180 * PI;
+            dx += cos(A);
+            dy += sin(A);
+          }
+        }
+      }
     }
-    return new Color(r / l, g / l, b / l, a / l);
+    for (i in xyz) {
+      xyz[i] = xyz[i] / cnt[i];
+      if (mode.charAt(i) === 'h') {
+        A = atan2(dy / cnt[i], dx / cnt[i]) / PI * 180;
+        while (A < 0) {
+          A += 360;
+        }
+        while (A >= 360) {
+          A -= 360;
+        }
+        xyz[i] = A;
+      }
+    }
+    return chroma(xyz, mode).alpha(alpha / l);
   };
 
   _input.rgb = function() {
@@ -1659,6 +1703,69 @@
     }
   };
 
+  chroma.distance = function(a, b, mode) {
+    var d, i, l1, l2, ref, ref1, sum_sq;
+    if (mode == null) {
+      mode = 'lab';
+    }
+    if ((ref = type(a)) === 'string' || ref === 'number') {
+      a = new Color(a);
+    }
+    if ((ref1 = type(b)) === 'string' || ref1 === 'number') {
+      b = new Color(b);
+    }
+    l1 = a.get(mode);
+    l2 = b.get(mode);
+    sum_sq = 0;
+    for (i in l1) {
+      d = (l1[i] || 0) - (l2[i] || 0);
+      sum_sq += d * d;
+    }
+    return Math.sqrt(sum_sq);
+  };
+
+  chroma.deltaE = function(a, b, L, C) {
+    var L1, L2, a1, a2, b1, b2, c1, c2, c4, dH2, delA, delB, delC, delL, f, h1, ref, ref1, ref2, ref3, sc, sh, sl, t, v1, v2, v3;
+    if (L == null) {
+      L = 1;
+    }
+    if (C == null) {
+      C = 1;
+    }
+    if ((ref = type(a)) === 'string' || ref === 'number') {
+      a = new Color(a);
+    }
+    if ((ref1 = type(b)) === 'string' || ref1 === 'number') {
+      b = new Color(b);
+    }
+    ref2 = a.lab(), L1 = ref2[0], a1 = ref2[1], b1 = ref2[2];
+    ref3 = b.lab(), L2 = ref3[0], a2 = ref3[1], b2 = ref3[2];
+    c1 = sqrt(a1 * a1 + b1 * b1);
+    c2 = sqrt(a2 * a2 + b2 * b2);
+    sl = L1 < 16.0 ? 0.511 : (0.040975 * L1) / (1.0 + 0.01765 * L1);
+    sc = (0.0638 * c1) / (1.0 + 0.0131 * c1) + 0.638;
+    h1 = c1 < 0.000001 ? 0.0 : (atan2(b1, a1) * 180.0) / PI;
+    while (h1 < 0) {
+      h1 += 360;
+    }
+    while (h1 >= 360) {
+      h1 -= 360;
+    }
+    t = (h1 >= 164.0) && (h1 <= 345.0) ? 0.56 + abs(0.2 * cos((PI * (h1 + 168.0)) / 180.0)) : 0.36 + abs(0.4 * cos((PI * (h1 + 35.0)) / 180.0));
+    c4 = c1 * c1 * c1 * c1;
+    f = sqrt(c4 / (c4 + 1900.0));
+    sh = sc * (f * t + 1.0 - f);
+    delL = L1 - L2;
+    delC = c1 - c2;
+    delA = a1 - a2;
+    delB = b1 - b2;
+    dH2 = delA * delA + delB * delB - delC * delC;
+    v1 = delL / (L * sl);
+    v2 = delC / (C * sc);
+    v3 = sh;
+    return sqrt(v1 * v1 + v2 * v2 + (dH2 / (v3 * v3)));
+  };
+
   Color.prototype.get = function(modechan) {
     var channel, i, me, mode, ref, src;
     me = this;
@@ -1710,8 +1817,7 @@
     } else {
       src = value;
     }
-    me._rgb = chroma(src, mode).alpha(me.alpha())._rgb;
-    return me;
+    return chroma(src, mode).alpha(me.alpha());
   };
 
   Color.prototype.alpha = function(a) {
@@ -1903,7 +2009,7 @@
   };
 
   chroma.scale = function(colors, positions) {
-    var _classes, _colorCache, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _out, _padding, _pos, _spread, classifyValue, f, getClass, getColor, resetCache, setColors, tmap;
+    var _classes, _colorCache, _colors, _correctLightness, _domain, _fixed, _max, _min, _mode, _nacol, _out, _padding, _pos, _spread, _useCache, classifyValue, f, getClass, getColor, resetCache, setColors, tmap;
     _mode = 'rgb';
     _nacol = chroma('#ccc');
     _spread = 0;
@@ -1918,6 +2024,7 @@
     _max = 1;
     _correctLightness = false;
     _colorCache = {};
+    _useCache = true;
     setColors = function(colors) {
       var c, col, o, ref, ref1, w;
       if (colors == null) {
@@ -1996,7 +2103,7 @@
         t = tmap(t);
       }
       k = Math.floor(t * 10000);
-      if (_colorCache[k]) {
+      if (_useCache && _colorCache[k]) {
         col = _colorCache[k];
       } else {
         if (type(_colors) === 'array') {
@@ -2019,7 +2126,9 @@
         } else if (type(_colors) === 'function') {
           col = _colors(t);
         }
-        _colorCache[k] = col;
+        if (_useCache) {
+          _colorCache[k] = col;
+        }
       }
       return col;
     };
@@ -2195,6 +2304,13 @@
       return samples.map(function(v) {
         return f(v)[out]();
       });
+    };
+    f.cache = function(c) {
+      if (c != null) {
+        return _useCache = c;
+      } else {
+        return _useCache;
+      }
     };
     return f;
   };

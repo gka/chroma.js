@@ -20,6 +20,8 @@
     luminance
     temperature
     contrast
+    distance
+    delta-e
 
     get set
 

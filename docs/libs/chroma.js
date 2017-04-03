@@ -688,7 +688,6 @@
       var a, amp, b, cos_a, g, h, l, r, sin_a;
       a = TWOPI * ((start + 120) / 360 + rotations * fract);
       l = pow(lightness[0] + dl * fract, gamma);
-      console.log(fract, l, lightness, dl, gamma);
       h = dh !== 0 ? hue[0] + fract * dh : hue;
       amp = h * l * (1 - l) / 2;
       cos_a = cos(a);
@@ -765,7 +764,7 @@
   };
 
   chroma.average = function(colors, mode) {
-    var alpha, c, cnt, first, i, l, len, o, xyz, xyz2;
+    var A, alpha, c, cnt, dx, dy, first, i, l, len, o, xyz, xyz2;
     if (mode == null) {
       mode = 'rgb';
     }
@@ -776,9 +775,16 @@
     first = colors.splice(0, 1)[0];
     xyz = first.get(mode);
     cnt = [];
+    dx = 0;
+    dy = 0;
     for (i in xyz) {
       xyz[i] = xyz[i] || 0;
       cnt.push(!isNaN(xyz[i]) ? 1 : 0);
+      if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
+        A = xyz[i] / 180 * PI;
+        dx += cos(A);
+        dy += sin(A);
+      }
     }
     alpha = first.alpha();
     for (o = 0, len = colors.length; o < len; o++) {
@@ -789,11 +795,26 @@
         if (!isNaN(xyz2[i])) {
           xyz[i] += xyz2[i];
           cnt[i] += 1;
+          if (mode.charAt(i) === 'h') {
+            A = xyz[i] / 180 * PI;
+            dx += cos(A);
+            dy += sin(A);
+          }
         }
       }
     }
     for (i in xyz) {
       xyz[i] = xyz[i] / cnt[i];
+      if (mode.charAt(i) === 'h') {
+        A = atan2(dy / cnt[i], dx / cnt[i]) / PI * 180;
+        while (A < 0) {
+          A += 360;
+        }
+        while (A >= 360) {
+          A -= 360;
+        }
+        xyz[i] = A;
+      }
     }
     return chroma(xyz, mode).alpha(alpha / l);
   };
@@ -1706,7 +1727,7 @@
   chroma.deltaE = function(a, b, L, C) {
     var L1, L2, a1, a2, b1, b2, c1, c2, c4, dH2, delA, delB, delC, delL, f, h1, ref, ref1, ref2, ref3, sc, sh, sl, t, v1, v2, v3;
     if (L == null) {
-      L = 2;
+      L = 1;
     }
     if (C == null) {
       C = 1;
@@ -1742,11 +1763,7 @@
     v1 = delL / (L * sl);
     v2 = delC / (C * sc);
     v3 = sh;
-    if (L === 2) {
-      return sqrt(v1 * v1 + v2 * v2 + (dH2 / (v3 * v3)));
-    } else {
-      return sqrt(v1 * v1 + v2 * v2 + (dH2 / (v3 * v3)));
-    }
+    return sqrt(v1 * v1 + v2 * v2 + (dH2 / (v3 * v3)));
   };
 
   Color.prototype.get = function(modechan) {
