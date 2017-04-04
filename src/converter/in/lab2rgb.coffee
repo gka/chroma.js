@@ -24,7 +24,7 @@ lab2rgb = () ->
 
 
 xyz_rgb = (r) ->
-    round(255 * (if r <= 0.00304 then 12.92 * r else 1.055 * pow(r, 1 / 2.4) - 0.055))
+    255 * (if r <= 0.00304 then 12.92 * r else 1.055 * pow(r, 1 / 2.4) - 0.055)
 
 lab_xyz = (t) ->
     if t > LAB_CONSTANTS.t1 then t * t * t else LAB_CONSTANTS.t2 * (t - LAB_CONSTANTS.t0)
