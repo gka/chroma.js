@@ -139,7 +139,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.2.3';
+  chroma.version = '1.3.0';
 
   _input = {};
 
@@ -455,7 +455,7 @@
   };
 
   xyz_rgb = function(r) {
-    return round(255 * (r <= 0.00304 ? 12.92 * r : 1.055 * pow(r, 1 / 2.4) - 0.055));
+    return 255 * (r <= 0.00304 ? 12.92 * r : 1.055 * pow(r, 1 / 2.4) - 0.055);
   };
 
   lab_xyz = function(t) {
@@ -838,12 +838,25 @@
     })(Color, slice.call(arguments).concat(['rgb']), function(){});
   };
 
-  Color.prototype.rgb = function() {
-    return this._rgb.slice(0, 3);
+  Color.prototype.rgb = function(round) {
+    if (round == null) {
+      round = true;
+    }
+    if (round) {
+      return this._rgb.map(Math.round).slice(0, 3);
+    } else {
+      return this._rgb.slice(0, 3);
+    }
   };
 
-  Color.prototype.rgba = function() {
-    return this._rgb;
+  Color.prototype.rgba = function(round) {
+    if (round == null) {
+      round = true;
+    }
+    if (!round) {
+      return this._rgb;
+    }
+    return [Math.round(this._rgb[0]), Math.round(this._rgb[1]), Math.round(this._rgb[2]), this._rgb[3]];
   };
 
   _guess_formats.push({
@@ -899,6 +912,9 @@
       mode = 'rgb';
     }
     r = channels[0], g = channels[1], b = channels[2], a = channels[3];
+    r = Math.round(r);
+    g = Math.round(g);
+    b = Math.round(b);
     u = r << 16 | g << 8 | b;
     str = "000000" + u.toString(16);
     str = str.substr(str.length - 6);
@@ -1478,9 +1494,9 @@
     if (k === 1) {
       return [0, 0, 0, alpha];
     }
-    r = c >= 1 ? 0 : round(255 * (1 - c) * (1 - k));
-    g = m >= 1 ? 0 : round(255 * (1 - m) * (1 - k));
-    b = y >= 1 ? 0 : round(255 * (1 - y) * (1 - k));
+    r = c >= 1 ? 0 : 255 * (1 - c) * (1 - k);
+    g = m >= 1 ? 0 : 255 * (1 - m) * (1 - k);
+    b = y >= 1 ? 0 : 255 * (1 - y) * (1 - k);
     return [r, g, b, alpha];
   };
 
@@ -1821,12 +1837,11 @@
   };
 
   Color.prototype.alpha = function(a) {
-    var b, g, r;
+    var rgba;
     if (arguments.length) {
-      r = this._rgb[0];
-      g = this._rgb[1];
-      b = this._rgb[2];
-      return chroma.rgb([r, g, b, a]);
+      rgba = this._rgb.slice(0, 3);
+      rgba.push(a);
+      return chroma.rgb(rgba);
     }
     return this._rgb[3];
   };
