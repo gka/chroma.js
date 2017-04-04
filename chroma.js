@@ -147,7 +147,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.3.0';
+  chroma.version = '1.3.1';
 
   _input = {};
 
@@ -199,7 +199,7 @@
     }
 
     Color.prototype.toString = function() {
-      return this.name();
+      return this.hex();
     };
 
     return Color;

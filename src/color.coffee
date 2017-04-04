@@ -38,7 +38,7 @@ class Color
         me._rgb.push 1 if me._rgb.length == 3
 
     toString: ->
-        @name()
+        @hex()
 
 
 chroma._input = _input

@@ -666,9 +666,12 @@ chroma.scale(['white', 'black']).colors(12);
 ### scale.classes
 #### (numOrArray)
 
-If you want the scale function to return a distinct set of colors instead of a continuous gradient, you can set custom class breaks:
+If you want the scale function to return a distinct set of colors instead of a continuous gradient, you can use `scale.classes`. If you pass a number the scale will broken into equi-distant classes:
 
 ```js
+// continuous
+chroma.scale('OrRd');
+// class breaks
 chroma.scale('OrRd').classes(5);
 chroma.scale('OrRd').classes(8);
 ```
@@ -704,7 +707,7 @@ chroma.brewer.OrRd
 ### chroma.bezier
 #### (colors)
 
-`chroma.bezier` returns a function that performs a bezier interpolate. The input range of the function is `[0..1]`. Bezier interpolation is always done in `Lab` space.
+`chroma.bezier` returns a function that [bezier-interpolates between colors](https://www.vis4.net/blog/posts/mastering-multi-hued-color-scales/) in `Lab` space. The input range of the function is `[0..1]`.
 
 ```js
 // linear interpolation
