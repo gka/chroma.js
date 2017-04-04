@@ -329,8 +329,9 @@ chroma(&#39;#b3ccff&#39;).temperature();
 [c = chroma.hcl(50, 40, 80), c.clipped()];
 [c = chroma.hcl(50, 40, 100), c.clipped()];
 </code></pre>
-<p>As a bonus feature you can access the unclipped RGB components using <code>_unclipped</code>.</p>
-<pre><code class="lang-js">[c = chroma.hcl(50, 40, 100), c._unclipped];
+<p>As a bonus feature you can access the unclipped RGB components using <code>color._rgb._unclipped</code>.</p>
+<pre><code class="lang-js">chroma.hcl(50, 40, 100).rgb();
+chroma.hcl(50, 40, 100)._rgb._unclipped;
 </code></pre>
 <h2 id="color-scales">color scales</h2>
 <h3 id="chroma-scale">chroma.scale</h3>

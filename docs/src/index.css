@@ -149,12 +149,12 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 .result-display .cm-string {
     padding: 0px 4px;
     display: inline-block;
-    min-width: 9px;
-    min-height: 12px;
+    min-width: 13px;
+    min-height: 13px;
     border-radius: 3px;
     box-sizing: border-box;
     position: relative;
-    vertical-align: bottom;
+    vertical-align: middle;
     margin-left: 2px;
     margin-bottom: 2px;
     position: relative;
@@ -275,7 +275,8 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 }
 
 .cm-small {
-    height: 13px;
+    height: 15px;
+    width: 15px;
 }
 
 .cm-hidden-text {
