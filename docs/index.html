@@ -19,17 +19,11 @@
 <p>Here&#39;s an example for a simple read / manipulate / output chain:</p>
 <pre><code class="lang-js">chroma(&#39;pink&#39;).darken().saturate(2).hex()
 </code></pre>
-<pre><code class="lang-js">chroma.deltaE(&#39;pink&#39;, &#39;red&#39;);
-chroma.deltaE(&#39;pink&#39;, &#39;white&#39;);
-chroma.deltaE(&#39;pink&#39;, &#39;black&#39;);
-chroma(&#39;white&#39;).lab();
-chroma(&#39;black&#39;).lab();
-chroma.deltaE(&#39;white&#39;, &#39;gray&#39;);
+<p>Aside from that, chroma.js can also help you <strong>generate nice colors</strong> using various methods, for instance to be <a href="https://www.vis4.net/blog/posts/avoid-equidistant-hsv-colors/">used</a> in color palette for maps or data visualization.</p>
+<pre><code class="lang-js">chroma.scale([&#39;#fafa6e&#39;,&#39;#2A4858&#39;])
+    .mode(&#39;lch&#39;).colors(6)
 </code></pre>
-<p>Aside from that, chroma.js can also help you <strong>generate nice colors</strong> using various methods, for instance to be used in color palette for maps or data visualizations.</p>
-<pre><code class="lang-js">chroma.scale([&#39;white&#39;,&#39;green&#39;,&#39;blue&#39;]).colors(5)
-</code></pre>
-<p>chroma.js has a lot more to offer, but that&#39;s the basic gist of it.</p>
+<p>chroma.js has a lot more to offer, but that&#39;s the gist of it.</p>
 <h2 id="api">API</h2>
 <h3 id="chroma">chroma</h3>
 <h4 id="-color-">(<em>color</em>)</h4>
@@ -152,9 +146,12 @@ chroma.distance(&#39;#fff&#39;, &#39;#f0f&#39;);
 </code></pre>
 <h3 id="chroma-deltae">chroma.deltaE</h3>
 <h4 id="-reference-sample-l-1-c-1-">(reference, sample, L=1, C=1)</h4>
-<p>Another way to compute perceptial differences between colors is <a href="http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html">Delta E (CMC)</a>. The implementation is adapted from <a href="http://www.brucelindbloom.com">Bruce Lindbloom</a> (with permission). The parameters L and C are weighting factors for lightness and chromacity.</p>
-<pre><code class="lang-js">chroma.deltaE(&#39;#fff&#39;, &#39;#ff0&#39;);
-chroma.deltaE(&#39;#fff&#39;, &#39;#f0f&#39;);
+<p>Computes <a href="https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_.281984.29">color difference</a> as developed by the Colour Measurement Committee of the Society of Dyers and Colourists (CMC) in 1984. The implementation is adapted from <a href="https://web.archive.org/web/20160306044036/http://www.brucelindbloom.com/javascript/ColorDiff.js">Bruce Lindbloom</a>. The parameters L and C are weighting factors for lightness and chromacity.</p>
+<pre><code class="lang-js">chroma.deltaE(&#39;#ededee&#39;, &#39;#edeeed&#39;);
+chroma.deltaE(&#39;#ececee&#39;, &#39;#eceeec&#39;);
+chroma.deltaE(&#39;#e9e9ee&#39;, &#39;#e9eee9&#39;);
+chroma.deltaE(&#39;#e4e4ee&#39;, &#39;#e4eee4&#39;);
+chroma.deltaE(&#39;#e0e0ee&#39;, &#39;#e0eee0&#39;);
 </code></pre>
 <h3 id="chroma-brewer">chroma.brewer</h3>
 <p>chroma.brewer is an map of ColorBrewer scales that are included in chroma.js for convenience. chroma.scale uses the colors to construct.</p>
@@ -191,7 +188,7 @@ chroma(&#39;rgba(255,0,0,0.35)&#39;).alpha();
 <p>Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness. </p>
 <pre><code class="lang-js">chroma(&#39;hotpink&#39;).darken();
 chroma(&#39;hotpink&#39;).darken(2);
-chroma(&#39;hotpink&#39;).darken(3);
+chroma(&#39;hotpink&#39;).darken(2.6);
 </code></pre>
 <h3 id="color-brighten">color.brighten</h3>
 <h4 id="-value-1-">(value=1)</h4>
@@ -273,8 +270,17 @@ chroma(&#39;teal&#39;).alpha(0.5).css();
 chroma(&#39;teal&#39;).css(&#39;hsl&#39;);
 </code></pre>
 <h3 id="color-rgb">color.rgb</h3>
-<p>Returns an array with the <code>red</code>, <code>green</code>, and <code>blue</code> component, each as number within the range <code>0..255</code>.</p>
-<pre><code class="lang-js">chroma(&#39;orange&#39;).rgb()
+<h4 id="-round-true-">(round=true)</h4>
+<p>Returns an array with the <code>red</code>, <code>green</code>, and <code>blue</code> component, each as number within the range <code>0..255</code>. Chroma internally stores RGB channels as floats but rounds the numbers before returning them. You can pass <code>false</code> to prevent the rounding.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).rgb();
+chroma(&#39;orange&#39;).darken().rgb();
+chroma(&#39;orange&#39;).darken().rgb(false);
+</code></pre>
+<h3 id="color-rgba">color.rgba</h3>
+<h4 id="-round-true-">(round=true)</h4>
+<p>Just like <code>color.rgb</code> but adds the alpha channel to the returned array.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).rgba();
+chroma(&#39;hsla(150,0.6,0.8,0.5&#39;).rgba();
 </code></pre>
 <h3 id="color-hsl">color.hsl</h3>
 <p>Returns an array with the <code>hue</code>, <code>saturation</code>, and <code>lightness</code> component. Hue is the color angle in degree (<code>0..360</code>), saturation and lightness are within <code>0..1</code>. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.</p>
@@ -372,6 +378,8 @@ chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])
 <p>Reduces the color range by cutting of a fraction of the gradient on both sides. If you pass a single number, the same padding will be applied to both ends.</p>
 <pre><code class="lang-js">chroma.scale(&#39;RdYlBu&#39;);
 chroma.scale(&#39;RdYlBu&#39;).padding(0.15);
+chroma.scale(&#39;RdYlBu&#39;).padding(0.3);
+chroma.scale(&#39;RdYlBu&#39;).padding(-0.15);
 </code></pre>
 <p>Alternatively you can specify the padding for each sides individually by passing an array of two numbers.</p>
 <pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;);
@@ -453,7 +461,7 @@ chroma.cubehelix().hue([1,0]);
 <h4 id="-factor-">(factor)</h4>
 <p>gamma factor can be used to emphasise low or high intensity values, default=1</p>
 <pre><code class="lang-js">chroma.cubehelix().gamma(1);
-chroma.cubehelix().gamma(0.7);
+chroma.cubehelix().gamma(0.5);
 </code></pre>
 <h3 id="cubehelix-lightness">cubehelix.lightness</h3>
 <h4 id="-range-">(range)</h4>

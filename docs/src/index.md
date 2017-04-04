@@ -20,22 +20,14 @@ Here's an example for a simple read / manipulate / output chain:
 chroma('pink').darken().saturate(2).hex()
 ```
 
-```js
-chroma.deltaE('pink', 'red');
-chroma.deltaE('pink', 'white');
-chroma.deltaE('pink', 'black');
-chroma('white').lab();
-chroma('black').lab();
-chroma.deltaE('white', 'gray');
-```
-
-Aside from that, chroma.js can also help you **generate nice colors** using various methods, for instance to be used in color palette for maps or data visualizations.
+Aside from that, chroma.js can also help you **generate nice colors** using various methods, for instance to be [used](https://www.vis4.net/blog/posts/avoid-equidistant-hsv-colors/) in color palette for maps or data visualization.
 
 ```js
-chroma.scale(['white','green','blue']).colors(5)
+chroma.scale(['#fafa6e','#2A4858'])
+    .mode('lch').colors(6)
 ```
 
-chroma.js has a lot more to offer, but that's the basic gist of it.
+chroma.js has a lot more to offer, but that's the gist of it.
 
 ## API
 
@@ -237,11 +229,14 @@ chroma.distance('#fff', '#f0f');
 ### chroma.deltaE
 #### (reference, sample, L=1, C=1)
 
-Another way to compute perceptial differences between colors is [Delta E (CMC)](http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html). The implementation is adapted from [Bruce Lindbloom](http://www.brucelindbloom.com) (with permission). The parameters L and C are weighting factors for lightness and chromacity.
+Computes [color difference](https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_.281984.29) as developed by the Colour Measurement Committee of the Society of Dyers and Colourists (CMC) in 1984. The implementation is adapted from [Bruce Lindbloom](https://web.archive.org/web/20160306044036/http://www.brucelindbloom.com/javascript/ColorDiff.js). The parameters L and C are weighting factors for lightness and chromacity.
 
 ```js
-chroma.deltaE('#fff', '#ff0');
-chroma.deltaE('#fff', '#f0f');
+chroma.deltaE('#ededee', '#edeeed');
+chroma.deltaE('#ececee', '#eceeec');
+chroma.deltaE('#e9e9ee', '#e9eee9');
+chroma.deltaE('#e4e4ee', '#e4eee4');
+chroma.deltaE('#e0e0ee', '#e0eee0');
 
 ```
 
@@ -308,7 +303,7 @@ Once loaded, chroma.js can change colors. One way we already saw above, you can 
 ```js
 chroma('hotpink').darken();
 chroma('hotpink').darken(2);
-chroma('hotpink').darken(3);
+chroma('hotpink').darken(2.6);
 ```
 
 ### color.brighten
@@ -438,11 +433,24 @@ chroma('teal').css('hsl');
 ```
 
 ### color.rgb
+#### (round=true)
 
-Returns an array with the `red`, `green`, and `blue` component, each as number within the range `0..255`.
+Returns an array with the `red`, `green`, and `blue` component, each as number within the range `0..255`. Chroma internally stores RGB channels as floats but rounds the numbers before returning them. You can pass `false` to prevent the rounding.
 
 ```js
-chroma('orange').rgb()
+chroma('orange').rgb();
+chroma('orange').darken().rgb();
+chroma('orange').darken().rgb(false);
+```
+
+### color.rgba
+#### (round=true)
+
+Just like `color.rgb` but adds the alpha channel to the returned array.
+
+```js
+chroma('orange').rgba();
+chroma('hsla(20, 100%, 40%, 0.5)').rgba();
 ```
 
 ### color.hsl
@@ -612,6 +620,8 @@ Reduces the color range by cutting of a fraction of the gradient on both sides. 
 ```js
 chroma.scale('RdYlBu');
 chroma.scale('RdYlBu').padding(0.15);
+chroma.scale('RdYlBu').padding(0.3);
+chroma.scale('RdYlBu').padding(-0.15);
 ```
 
 Alternatively you can specify the padding for each sides individually by passing an array of two numbers.
