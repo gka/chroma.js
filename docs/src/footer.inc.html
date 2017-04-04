@@ -55,7 +55,10 @@
                 return resLong(d);
 
                 function resLong(d) {
-                    if (typeof d == 'string') {
+                    if (typeof d == 'boolean') {
+                        return '<span class="cm-number">'+(d ? 'true' : 'false')+'</span>';
+                        
+                    } else if (typeof d == 'string') {
                         // string color, e.g. hex value
                         return '<span class="cm-string">"'+d+'"</span>';
                     } else if (typeof d == 'object' && d._rgb) {

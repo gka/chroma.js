@@ -306,7 +306,7 @@ chroma(&#39;white&#39;).hsi();
 <pre><code class="lang-js">chroma(&#39;skyblue&#39;).lch()
 </code></pre>
 <h3 id="color-hcl">color.hcl</h3>
-<p>Essentially an alias of <a href="#color-lch">lch</a>, but with the components in reverse order.</p>
+<p>Alias of <a href="#color-lch">lch</a>, but with the components in reverse order.</p>
 <pre><code class="lang-js">chroma(&#39;skyblue&#39;).hcl()
 </code></pre>
 <h3 id="color-temperature">color.temperature</h3>
@@ -318,7 +318,19 @@ chroma(&#39;#cbdbff&#39;).temperature();
 chroma(&#39;#b3ccff&#39;).temperature();
 </code></pre>
 <h3 id="color-gl">color.gl</h3>
+<p>Like RGB, but in the channel range of <code>[0..1]</code> instead of <code>[0..255]</code></p>
 <pre><code class="lang-js">chroma(&#39;33cc00&#39;).gl();
+</code></pre>
+<h3 id="color-clipped">color.clipped</h3>
+<p>When converting colors from CIELab color spaces to RGB the color channels get clipped to the range of <code>[0..255]</code>. Colors outside that range may exist in nature but are not displayable on RGB monitors (such as ultraviolet). you can use color.clipped to test if a color has been clipped or not.</p>
+<pre><code class="lang-js">[c = chroma.hcl(50, 40, 20), c.clipped()];
+[c = chroma.hcl(50, 40, 40), c.clipped()];
+[c = chroma.hcl(50, 40, 60), c.clipped()];
+[c = chroma.hcl(50, 40, 80), c.clipped()];
+[c = chroma.hcl(50, 40, 100), c.clipped()];
+</code></pre>
+<p>As a bonus feature you can access the unclipped RGB components using <code>_unclipped</code>.</p>
+<pre><code class="lang-js">[c = chroma.hcl(50, 40, 100), c._unclipped];
 </code></pre>
 <h2 id="color-scales">color scales</h2>
 <h3 id="chroma-scale">chroma.scale</h3>
@@ -539,7 +551,10 @@ chroma.cubehelix().lightness([0.3,0.7]);
                 return resLong(d);
 
                 function resLong(d) {
-                    if (typeof d == 'string') {
+                    if (typeof d == 'boolean') {
+                        return '<span class="cm-number">'+(d ? 'true' : 'false')+'</span>';
+                        
+                    } else if (typeof d == 'string') {
                         // string color, e.g. hex value
                         return '<span class="cm-string">"'+d+'"</span>';
                     } else if (typeof d == 'object' && d._rgb) {

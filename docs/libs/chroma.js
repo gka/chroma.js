@@ -82,9 +82,14 @@
   };
 
   clip_rgb = function(rgb) {
-    var i;
-    for (i in rgb) {
+    var i, o;
+    rgb._clipped = false;
+    rgb._unclipped = rgb.slice(0);
+    for (i = o = 0; o < 3; i = ++o) {
       if (i < 3) {
+        if (rgb[i] < 0 || rgb[i] > 255) {
+          rgb._clipped = true;
+        }
         if (rgb[i] < 0) {
           rgb[i] = 0;
         }
@@ -99,6 +104,9 @@
           rgb[i] = 1;
         }
       }
+    }
+    if (!rgb._clipped) {
+      delete rgb._unclipped;
     }
     return rgb;
   };
@@ -448,9 +456,6 @@
     r = xyz_rgb(3.2404542 * x - 1.5371385 * y - 0.4985314 * z);
     g = xyz_rgb(-0.9692660 * x + 1.8760108 * y + 0.0415560 * z);
     b = xyz_rgb(0.0556434 * x - 0.2040259 * y + 1.0572252 * z);
-    r = limit(r, 0, 255);
-    g = limit(g, 0, 255);
-    b = limit(b, 0, 255);
     return [r, g, b, args.length > 3 ? args[3] : 1];
   };
 
@@ -854,7 +859,7 @@
       round = true;
     }
     if (!round) {
-      return this._rgb;
+      return this._rgb.slice(0);
     }
     return [Math.round(this._rgb[0]), Math.round(this._rgb[1]), Math.round(this._rgb[2]), this._rgb[3]];
   };
@@ -1089,9 +1094,6 @@
           ref5 = [v, p, q], r = ref5[0], g = ref5[1], b = ref5[2];
       }
     }
-    r = round(r);
-    g = round(g);
-    b = round(b);
     return [r, g, b, args.length > 3 ? args[3] : 1];
   };
 
@@ -1224,9 +1226,6 @@
           ref5 = [v, p, q], r = ref5[0], g = ref5[1], b = ref5[2];
       }
     }
-    r = round(r);
-    g = round(g);
-    b = round(b);
     return [r, g, b, args.length > 3 ? args[3] : 1];
   };
 
@@ -1420,7 +1419,7 @@
     l = args[0], c = args[1], h = args[2];
     ref = lch2lab(l, c, h), L = ref[0], a = ref[1], b = ref[2];
     ref1 = lab2rgb(L, a, b), r = ref1[0], g = ref1[1], b = ref1[2];
-    return [limit(r, 0, 255), limit(g, 0, 255), limit(b, 0, 255), args.length > 3 ? args[3] : 1];
+    return [r, g, b, args.length > 3 ? args[3] : 1];
   };
 
   lab2lch = function() {
@@ -1665,7 +1664,7 @@
       g = 325.4494125711974 + 0.07943456536662342 * (g = temp - 50) - 28.0852963507957 * log(g);
       b = 255;
     }
-    return clip_rgb([r, g, b]);
+    return [r, g, b];
   };
 
   rgb2temperature = function() {
@@ -1836,12 +1835,13 @@
     return chroma(src, mode).alpha(me.alpha());
   };
 
+  Color.prototype.clipped = function() {
+    return this._rgb._clipped || false;
+  };
+
   Color.prototype.alpha = function(a) {
-    var rgba;
     if (arguments.length) {
-      rgba = this._rgb.slice(0, 3);
-      rgba.push(a);
-      return chroma.rgb(rgba);
+      return chroma.rgb([this._rgb[0], this._rgb[1], this._rgb[2], a]);
     }
     return this._rgb[3];
   };

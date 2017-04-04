@@ -147,17 +147,18 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 }
 
 .result-display .cm-string {
-    padding: 2px 4px;
+    padding: 0px 4px;
     display: inline-block;
     min-width: 9px;
-    min-height: 13px;
+    min-height: 12px;
     border-radius: 3px;
+    box-sizing: border-box;
+    position: relative;
     vertical-align: bottom;
     margin-left: 2px;
     margin-bottom: 2px;
     position: relative;
-    top: 2px;
-    /**/
+    top: 1px;
 }
 
 .result-display .cm-string:before {
