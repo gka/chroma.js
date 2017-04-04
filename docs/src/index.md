@@ -1,7 +1,7 @@
 
 # chroma.js
 
-**chroma.js** is a tiny JavaScript library (12kB) for dealing with colors!
+**chroma.js** is a tiny JavaScript library (14kB) for dealing with colors!
 
 [![Build Status](https://travis-ci.org/gka/chroma.js.svg?branch=master)](https://travis-ci.org/gka/chroma.js)
 

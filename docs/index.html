@@ -6,7 +6,7 @@
 </head>
 <body><div class="wrap">
 <h1 id="chroma-js">chroma.js</h1>
-<p><strong>chroma.js</strong> is a tiny JavaScript library (12kB) for dealing with colors!</p>
+<p><strong>chroma.js</strong> is a tiny JavaScript library (14kB) for dealing with colors!</p>
 <p><a href="https://travis-ci.org/gka/chroma.js"><img src="https://travis-ci.org/gka/chroma.js.svg?branch=master" alt="Build Status"></a></p>
 <h2 id="quick-start">Quick-start</h2>
 <p>Here are a couple of things chroma.js can do for you:</p>
@@ -280,7 +280,7 @@ chroma(&#39;orange&#39;).darken().rgb(false);
 <h4 id="-round-true-">(round=true)</h4>
 <p>Just like <code>color.rgb</code> but adds the alpha channel to the returned array.</p>
 <pre><code class="lang-js">chroma(&#39;orange&#39;).rgba();
-chroma(&#39;hsla(150,0.6,0.8,0.5&#39;).rgba();
+chroma(&#39;hsla(20, 100%, 40%, 0.5)&#39;).rgba();
 </code></pre>
 <h3 id="color-hsl">color.hsl</h3>
 <p>Returns an array with the <code>hue</code>, <code>saturation</code>, and <code>lightness</code> component. Hue is the color angle in degree (<code>0..360</code>), saturation and lightness are within <code>0..1</code>. Note that for hue-less colors (black, white, and grays), the hue component will be NaN.</p>
