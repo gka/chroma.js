@@ -2,8 +2,5 @@
 
 Color::alpha = (a) ->
     if arguments.length
-        r = @_rgb[0]
-        g = @_rgb[1]
-        b = @_rgb[2]
-        return chroma.rgb([r, g, b, a])
+        return chroma.rgb([@_rgb[0], @_rgb[1], @_rgb[2], a])
     @_rgb[3]
