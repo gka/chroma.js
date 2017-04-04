@@ -3,4 +3,5 @@ all:
 	bin/post-process
 
 preview:
-	python -m SimpleHTTPServer
+	http-server
+	# python -m SimpleHTTPServer
