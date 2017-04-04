@@ -10,7 +10,7 @@ Color::rgb = (round=true) ->
     if round then @_rgb.map(Math.round).slice 0,3 else @_rgb.slice 0,3
 
 Color::rgba = (round=true) ->
-    return @_rgb if not round
+    return @_rgb.slice(0) if not round
     return [Math.round(@_rgb[0]), Math.round(@_rgb[1]), Math.round(@_rgb[2]), @_rgb[3]]
 
 _guess_formats.push

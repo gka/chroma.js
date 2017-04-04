@@ -22,7 +22,4 @@ hsv2rgb = () ->
             when 3 then [r,g,b] = [p, q, v]
             when 4 then [r,g,b] = [t, p, v]
             when 5 then [r,g,b] = [v, p, q]
-    r = round r
-    g = round g
-    b = round b
     [r, g, b, if args.length > 3 then args[3] else 1]

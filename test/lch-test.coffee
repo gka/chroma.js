@@ -25,4 +25,12 @@ vows
             'blue-ish': (t) -> assert.equal chroma.lch(t[4]).hex(), '#008cde'
             'purple-ish': (t) -> assert.equal chroma.lch(t[5]).hex(), '#6f67df'
 
+        'clipping':
+            topic: (chroma.hcl(50, 40, l) for l in [20,40,60,80,100])
+            '20-clipped': (t) -> assert.equal t[0].clipped(), true
+            '40-not clipped': (t) -> assert.equal t[1].clipped(), false
+            '60-not clipped': (t) -> assert.equal t[2].clipped(), false
+            '80-clipped': (t) -> assert.equal t[3].clipped(), true
+            '100-clipped': (t) -> assert.equal t[4].clipped(), true
+
     .export(module)

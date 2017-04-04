@@ -499,7 +499,7 @@ chroma('skyblue').lch()
 
 ### color.hcl
 
-Essentially an alias of [lch](#color-lch), but with the components in reverse order.
+Alias of [lch](#color-lch), but with the components in reverse order.
 
 ```js
 chroma('skyblue').hcl()
@@ -521,8 +521,29 @@ chroma('#b3ccff').temperature();
 
 ### color.gl
 
+Like RGB, but in the channel range of `[0..1]` instead of `[0..255]`
+
 ```js
 chroma('33cc00').gl();
+```
+
+### color.clipped
+
+When converting colors from CIELab color spaces to RGB the color channels get clipped to the range of `[0..255]`. Colors outside that range may exist in nature but are not displayable on RGB monitors (such as ultraviolet). you can use color.clipped to test if a color has been clipped or not.
+
+```js
+[c = chroma.hcl(50, 40, 20), c.clipped()];
+[c = chroma.hcl(50, 40, 40), c.clipped()];
+[c = chroma.hcl(50, 40, 60), c.clipped()];
+[c = chroma.hcl(50, 40, 80), c.clipped()];
+[c = chroma.hcl(50, 40, 100), c.clipped()];
+```
+
+As a bonus feature you can access the unclipped RGB components using `color._rgb._unclipped`.
+
+```js
+chroma.hcl(50, 40, 100).rgb();
+chroma.hcl(50, 40, 100)._rgb._unclipped;
 ```
 
 ## color scales

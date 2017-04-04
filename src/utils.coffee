@@ -25,13 +25,17 @@ unpack = (args) ->
         args[0]
 
 clip_rgb = (rgb) ->
-    for i of rgb
+    rgb._clipped = false
+    rgb._unclipped = rgb.slice(0)
+    for i in [0...3]
         if i < 3
+            rgb._clipped = true if rgb[i] < 0 or rgb[i] > 255
             rgb[i] = 0 if rgb[i] < 0
             rgb[i] = 255 if rgb[i] > 255
         else if i == 3
             rgb[i] = 0 if rgb[i] < 0
             rgb[i] = 1 if rgb[i] > 1
+    delete rgb._unclipped if not rgb._clipped
     rgb
 
 {PI, round, cos, floor, pow, log, sin, sqrt, atan2, max, abs} = Math
