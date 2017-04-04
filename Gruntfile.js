@@ -47,7 +47,7 @@ module.exports = function(grunt) {
       main: {
         files: [
           // copy build files into docs folder
-          {expand: true, src: ['chroma*.js'], dest: 'docs/lib/', filter: 'isFile'},
+          {expand: true, src: ['chroma*.js'], dest: 'docs/libs/', filter: 'isFile'},
         ],
       },
     },
