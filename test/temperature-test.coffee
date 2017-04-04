@@ -12,12 +12,12 @@ vows
         'generate colors by temperatures':
             topic: [4000,5000,10000,20000,30000,1000]
             '1k': (t) -> assert.equal chroma.kelvin(t[5]).hex(), '#ff3a00'
-            '4k': (t) -> assert.equal chroma.kelvin(t[0]).hex(), '#ffcfa3'
-            '5k': (t) -> assert.equal chroma.kelvin(t[1]).hex(), '#ffe3cd'
-            '7k': (t) -> assert.equal chroma.kelvin(t[1]).hex(), '#ffe3cd'
-            '10k': (t) -> assert.equal chroma.kelvin(t[2]).hex(), '#cbdbff'
-            '20k': (t) -> assert.equal chroma.kelvin(t[3]).hex(), '#a8c4ff'
-            '30k': (t) -> assert.equal chroma.kelvin(t[4]).hex(), '#9ebeff'
+            '4k': (t) -> assert.equal chroma.kelvin(t[0]).hex(), '#ffd0a4'
+            '5k': (t) -> assert.equal chroma.kelvin(t[1]).hex(), '#ffe4cd'
+            '7k': (t) -> assert.equal chroma.kelvin(t[1]).hex(), '#ffe4cd'
+            '10k': (t) -> assert.equal chroma.kelvin(t[2]).hex(), '#ccdcff'
+            '20k': (t) -> assert.equal chroma.kelvin(t[3]).hex(), '#a8c5ff'
+            '30k': (t) -> assert.equal chroma.kelvin(t[4]).hex(), '#9fbeff'
 
         'color --> temp':
             topic: ['#ff3a00', 'ffcfa3', 'cbdbff', '9ebeff']

@@ -12,11 +12,11 @@ vows
 
         'multiply 2':
             topic: chroma.blend '#33b16f', '#857590', 'multiply'
-            'is #1a513e': (topic) -> assert.equal topic.hex(), '#1a513e'
+            'is #1a513e': (topic) -> assert.equal topic.hex(), '#1b513f'
 
         'screen':
             topic: chroma.blend '#b83d31', '#0da671', 'screen'
-            'is #bbbb8c': (topic) -> assert.equal topic.hex(), '#bbbb8c'
+            'is #bbbb8c': (topic) -> assert.equal topic.hex(), '#bcbb8c'
 
         'overlay':
             topic: chroma.blend '#b83d31', '#0da671', 'overlay'

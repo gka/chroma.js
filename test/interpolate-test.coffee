@@ -19,7 +19,7 @@ vows
 
         'alternative mix syntax':
             topic: chroma.mix('red', 'blue', 0.25)
-            'works': (topic) -> assert.deepEqual topic.hex(), '#bf003f'
+            'works': (topic) -> assert.deepEqual topic.hex(), '#bf0040'
 
         'hsl interpolation white <-> red':
             topic: chroma('white').interpolate('red', 0.5, 'hsl')
@@ -27,7 +27,7 @@ vows
 
         'rgb interpolation white <-> red':
             topic: chroma('white').interpolate('red', 0.5, 'rgb')
-            'works': (topic) -> assert.deepEqual topic.hex(), '#ff7f7f'
+            'works': (topic) -> assert.deepEqual topic.hex(), '#ff8080'
 
         'hsv interpolation red <-> white':
             topic: chroma('red').interpolate('white', 0.5, 'hsv')
@@ -39,7 +39,7 @@ vows
 
         'rgb interpolation red <-> white':
             topic: chroma('red').interpolate('white', 0.5, 'rgb')
-            'works': (topic) -> assert.deepEqual topic.hex(), '#ff7f7f'
+            'works': (topic) -> assert.deepEqual topic.hex(), '#ff8080'
 
         'interpolation short function':
             topic:

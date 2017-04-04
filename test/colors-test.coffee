@@ -66,5 +66,12 @@ vows
             'gray': (topic) -> assert.isNaN topic[1].hcl()[0]
             'white': (topic) -> assert.isNaN topic[2].hcl()[0]
             
+        'lab-rgb precision':
+            topic: [74, 24, 78],
+            'to_rgb_to_lab': (topic) -> assert.deepEqual chroma.rgb(chroma.lab(topic).rgb(false)).lab().map(round(3)), topic
+
+        'cmyk-rgb precision':
+            topic: [0, 1, 1, 0.02],
+            'to_rgb_to_cmyk': (topic) -> assert.deepEqual chroma.rgb(chroma.cmyk(topic).rgb(false)).cmyk().map(round(3)), topic
 
     .export(module)

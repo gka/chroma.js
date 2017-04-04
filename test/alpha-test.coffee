@@ -17,7 +17,7 @@ vows
 
         'interpolating alpha channel':
             topic: chroma.mix chroma('white').alpha(0), chroma('black').alpha(1), 0.3
-            'color is grey': (topic) -> assert.equal topic.hex(), '#b2b2b2'
+            'color is grey': (topic) -> assert.equal topic.hex(), '#b3b3b3'
             'alpha is 30%': (topic) -> assert.equal topic.alpha(), 0.3
 
         'constructing rgba color':

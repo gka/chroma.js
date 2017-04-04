@@ -48,13 +48,13 @@ vows
         'set black luminance to 0.5':
             topic: chroma('black').luminance 0.5
             'lum = 0.5': (topic) -> assert.equal rnd(topic.luminance(), 2), 0.5
-            'hex = #999': (topic) -> assert.equal '#bbbbbb', topic.hex()
+            'hex': (topic) -> assert.equal '#bcbcbc', topic.hex()
 
             # setting luminance
         'set black luminance to 0.5 (lab)':
             topic: chroma('black').luminance 0.5, 'lab'
             'lum = 0.5': (topic) -> assert.equal rnd(topic.luminance(),2), 0.5
-            'hex = #999': (topic) -> assert.equal '#bbbbbb', topic.hex()
+            'hex': (topic) -> assert.equal '#bcbcbc', topic.hex()
 
 
     .export(module)
