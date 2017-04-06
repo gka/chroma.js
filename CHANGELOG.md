@@ -1,14 +1,14 @@
 # 1.3.3
 
-* added color.clipped 
-* added chroma.distance
-* added chroma.deltaE
+* added [color.clipped](https://gka.github.io/chroma.js/#color-clipped) 
+* added [chroma.distance](https://gka.github.io/chroma.js/#chroma-distance)
+* added [chroma.deltaE](https://gka.github.io/chroma.js/#chroma-deltae)
+* [color.set](https://gka.github.io/chroma.js/#color-set) now returns a new chroma instance
+* chroma.scale now allows [disabling of internal cache](https://gka.github.io/chroma.js/#scale-cache)
+* [chroma.average](https://gka.github.io/chroma.js/#chroma-average) now works with any color mode
 * added unit tests for color conversions
-* color.set returns a new chroma instance
-* chroma.scale now allows disabling of internal cache
-* chroma.average now works with any color mode
 * use hex colors as default string representation
-* storing RGB channels as floats internally for higher precision
+* RGB channels are now stored as floats internally for higher precision
 * bugfix with cubehelix and constant lightness
 * bugfix in chroma.limits quantiles
 * bugfix when running scale.colors(1)
