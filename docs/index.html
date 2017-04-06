@@ -56,6 +56,7 @@ chroma([255, 51, 153]);
 <h4 id="-lightness-a-b-">(Lightness, a, b)</h4>
 <h3 id="chroma-lch">chroma.lch</h3>
 <h4 id="-lightness-chroma-hue-">(Lightness, chroma, hue)</h4>
+<p>The range for <code>lightness</code> and <code>chroma</code> depend on the hue, but go roughly from 0..100-150. The range for <code>hue</code> is 0..360.</p>
 <pre><code class="lang-js">chroma.lch(80, 40, 130);
 chroma(80, 40, 130, &#39;lch&#39;);
 </code></pre>
@@ -399,7 +400,7 @@ chroma.scale(&#39;RdYlBu&#39;).padding(-0.15);
 chroma.scale(&#39;OrRd&#39;).padding([0.2, 0]);
 </code></pre>
 <h3 id="scale-colors">scale.colors</h3>
-<h4 id="-num-">(num)</h4>
+<h4 id="-num-format-hex-">(num, format=&#39;hex&#39;)</h4>
 <p>You can call <code>scale.colors(n)</code> to quickly grab <code>n</code> equi-distant colors from a color scale. If called with no arguments, <code>scale.colors</code> returns the original array of colors used to create the scale.</p>
 <pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;).colors(5);
 chroma.scale([&#39;white&#39;, &#39;black&#39;]).colors(12);

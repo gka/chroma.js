@@ -85,6 +85,7 @@ chroma.hsl(330, 1, 0.6)
 ### chroma.lch
 #### (Lightness, chroma, hue)
 
+The range for `lightness` and `chroma` depend on the hue, but go roughly from 0..100-150. The range for `hue` is 0..360.
 
 ```js
 chroma.lch(80, 40, 130);
