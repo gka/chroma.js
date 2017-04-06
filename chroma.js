@@ -147,7 +147,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.3.2';
+  chroma.version = '1.3.3';
 
   _input = {};
 
@@ -2277,26 +2277,20 @@
         return _padding;
       }
     };
-    f.colors = function() {
-      var dd, dm, i, numColors, o, out, ref, results, samples, w;
-      numColors = 0;
-      out = 'hex';
+    f.colors = function(numColors, out) {
+      var dd, dm, i, o, ref, results, samples, w;
+      if (out == null) {
+        out = 'hex';
+      }
       if (arguments.length === 0) {
         return _colors.map(function(c) {
           return c[out]();
         });
       }
-      if (arguments.length === 1) {
-        if (type(arguments[0]) === 'string') {
-          out = arguments[0];
-        } else {
-          numColors = arguments[0];
-        }
-      }
-      if (arguments.length === 2) {
-        numColors = arguments[0], out = arguments[1];
-      }
       if (numColors) {
+        if (numColors === 1) {
+          return f(0.5)[out]();
+        }
         dm = _domain[0];
         dd = _domain[1] - dm;
         return (function() {

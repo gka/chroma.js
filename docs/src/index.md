@@ -654,7 +654,7 @@ chroma.scale('OrRd').padding([0.2, 0]);
 
 
 ### scale.colors
-#### (num)
+#### (num, format='hex')
 
 You can call `scale.colors(n)` to quickly grab `n` equi-distant colors from a color scale. If called with no arguments, `scale.colors` returns the original array of colors used to create the scale.
 

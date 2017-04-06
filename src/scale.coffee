@@ -211,23 +211,13 @@ chroma.scale = (colors, positions) ->
         else
             _padding
 
-    f.colors = () ->
-        numColors = 0
-        out = 'hex'
-
+    f.colors = (numColors, out='hex') ->
         # If no arguments are given, return the original colors that were provided
         if arguments.length == 0
-          return _colors.map (c) -> c[out]()
-
-        if arguments.length == 1
-            if type(arguments[0]) == 'string'
-                out = arguments[0]
-            else
-                numColors = arguments[0]
-        if arguments.length == 2
-            [numColors, out] = arguments
+            return _colors.map (c) -> c[out]()
 
         if numColors
+            return f(0.5)[out]() if numColors == 1
             dm = _domain[0]
             dd = _domain[1] - dm
             return [0...numColors].map (i) -> f( dm + i/(numColors-1) * dd )[out]()
