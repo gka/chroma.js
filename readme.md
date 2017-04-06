@@ -80,10 +80,6 @@ Chroma.js is written by [Gregor Aisch](http://driven-by-data.net).
 Released under [BSD license](http://opensource.org/licenses/BSD-3-Clause).
 Versions prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-3.0).
 
-### Known issues
-
-* HSI color conversion is experimental and produces weird results sometimes
-
 ### Further reading
 
 * [How To Avoid Equidistant HSV Colors](https://vis4.net/blog/posts/avoid-equidistant-hsv-colors/)
