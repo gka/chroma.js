@@ -41,6 +41,10 @@ vows
 
         'quantiles domain':
             topic: chroma.limits [1,2,3,4,5,10,20,100], 'quantiles', 2
-            'domain': (topic) -> assert.deepEqual topic, [1, 5, 100]
+            'domain': (topic) -> assert.deepEqual topic, [1, 4.5, 100]
+
+        'quantiles not enough values':
+            topic: chroma.limits [0,1], 'quantiles', 5
+            'domain': (topic) -> assert.deepEqual topic, [0,0.2,0.4,0.6,0.8,1]
 
     .export(module)

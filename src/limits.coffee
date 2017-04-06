@@ -52,6 +52,8 @@ chroma.limits = (data, mode='equal', num=7) ->
     values = data.values.sort (a,b)->
         a-b
 
+    return [min,max] if num == 1
+
     limits = []
 
     if mode.substr(0,1) == 'c' # continuous
@@ -77,13 +79,13 @@ chroma.limits = (data, mode='equal', num=7) ->
     else if mode.substr(0,1) == 'q' # quantile scale
         limits.push min
         for i in [1..num-1]
-            p = values.length * i/num
+            p = (values.length-1) * i/num
             pb = floor p
             if pb == p
                 limits.push values[pb]
             else # p > pb
                 pr = p - pb
-                limits.push values[pb]*pr + values[pb+1]*(1-pr)
+                limits.push values[pb]*(1-pr) + values[pb+1]*pr
         limits.push max
 
     else if mode.substr(0,1) == 'k' # k-means clustering

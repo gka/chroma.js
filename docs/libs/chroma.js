@@ -147,7 +147,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.3.1';
+  chroma.version = '1.3.2';
 
   _input = {};
 
@@ -2415,6 +2415,9 @@
     values = data.values.sort(function(a, b) {
       return a - b;
     });
+    if (num === 1) {
+      return [min, max];
+    }
     limits = [];
     if (mode.substr(0, 1) === 'c') {
       limits.push(min);
@@ -2440,13 +2443,13 @@
     } else if (mode.substr(0, 1) === 'q') {
       limits.push(min);
       for (i = aa = 1, ref2 = num - 1; 1 <= ref2 ? aa <= ref2 : aa >= ref2; i = 1 <= ref2 ? ++aa : --aa) {
-        p = values.length * i / num;
+        p = (values.length - 1) * i / num;
         pb = floor(p);
         if (pb === p) {
           limits.push(values[pb]);
         } else {
           pr = p - pb;
-          limits.push(values[pb] * pr + values[pb + 1] * (1 - pr));
+          limits.push(values[pb] * (1 - pr) + values[pb + 1] * pr);
         }
       }
       limits.push(max);

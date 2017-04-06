@@ -3,4 +3,4 @@ node_js:
   - 0.12
   - 0.11
 before_script: "npm install -g grunt-cli"
-script: "npm run-script build"
+script: "npm run-script build && npm run-script test"
