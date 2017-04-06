@@ -2,6 +2,8 @@
 
 * bugfix in chroma.limits quantiles
 * bugfix when running scale.colors(1)
+* bugfix in hsi2rgb color conversion
+* added unit tests for color conversions
 
 # 1.3.2
 
