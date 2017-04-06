@@ -1,27 +1,18 @@
 # 1.3.3
 
+* added color.clipped 
+* added chroma.distance
+* added chroma.deltaE
+* added unit tests for color conversions
+* color.set returns a new chroma instance
+* chroma.scale now allows disabling of internal cache
+* chroma.average now works with any color mode
+* use hex colors as default string representation
+* storing RGB channels as floats internally for higher precision
+* bugfix with cubehelix and constant lightness
 * bugfix in chroma.limits quantiles
 * bugfix when running scale.colors(1)
 * bugfix in hsi2rgb color conversion
-* added unit tests for color conversions
-
-# 1.3.2
-
-* use hex colors as default string representation
-
-# 1.3.1
-
-* added color.clipped 
-
-# 1.3.0
-
-* added chroma.distance
-* added chroma.deltaE
-* chroma.average now works with any color mode
-* color.set returns a new chroma instance
-* storing RGB channels as floats internally for higher precision
-* chroma.scale now allows disabling of internal cache
-* fixed bug with cubehelix and constant lightness
 
 # 1.2.2
 
