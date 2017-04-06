@@ -2547,6 +2547,9 @@
     var args, b, g, r;
     args = unpack(arguments);
     h = args[0], s = args[1], i = args[2];
+    if (isNaN(h)) {
+      h = 0;
+    }
     h /= 360;
     if (h < 1 / 3) {
       b = (1 - s) / 3;
