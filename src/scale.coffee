@@ -217,7 +217,7 @@ chroma.scale = (colors, positions) ->
             return _colors.map (c) -> c[out]()
 
         if numColors
-            return f(0.5)[out]() if numColors == 1
+            return [f(0.5)[out]()] if numColors == 1
             dm = _domain[0]
             dd = _domain[1] - dm
             return [0...numColors].map (i) -> f( dm + i/(numColors-1) * dd )[out]()

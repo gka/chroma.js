@@ -2289,7 +2289,7 @@
       }
       if (numColors) {
         if (numColors === 1) {
-          return f(0.5)[out]();
+          return [f(0.5)[out]()];
         }
         dm = _domain[0];
         dd = _domain[1] - dm;
