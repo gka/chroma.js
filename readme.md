@@ -46,6 +46,7 @@ You can use it in node.js, too!
 
     npm install chroma-js
 
+Or you can use it in SASS using [chromatic-sass](https://github.com/bugsnag/chromatic-sass)!
 
 ### Build instructions
 
