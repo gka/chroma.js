@@ -109,4 +109,10 @@ vows
             topic: chroma.gl 1, 0, 0, 0.25
             'num ignores alpha': (topic) -> assert.equal topic.num(), 0xff0000
 
+        'setting alpha returns new instance':
+            topic: chroma('red')
+            'set alpha to 0.5': (topic) ->
+                topic.alpha(0.5)
+                assert.equal topic.alpha(), 1
+
     .export(module)

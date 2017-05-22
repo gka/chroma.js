@@ -40,5 +40,8 @@ class Color
     toString: ->
         @hex()
 
+    clone: ->
+        chroma(me._rgb)
+
 
 chroma._input = _input
