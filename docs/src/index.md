@@ -664,6 +664,8 @@ chroma.scale('OrRd').colors(5);
 chroma.scale(['white', 'black']).colors(12);
 ```
 
+If you want to return `chroma` instances just pass *null* as `format`.
+
 ### scale.classes
 #### (numOrArray)
 

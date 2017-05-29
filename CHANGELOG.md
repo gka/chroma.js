@@ -1,3 +1,6 @@
+# 1.3.4
+* passing *null* as mode in scale.colors will return chroma objects
+
 # 1.3.3
 
 * added [color.clipped](https://gka.github.io/chroma.js/#color-clipped) 
