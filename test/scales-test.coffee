@@ -23,6 +23,10 @@ vows
             'mid gray': (topic) -> assert.equal topic.f(0.5).hex(), '#808080'
             'ends black': (topic) -> assert.equal topic.f(1).hex(), '#000000'
             'colors': (topic) -> assert.deepEqual topic.f.colors(), ['#ffffff', '#000000']
+            'colors start and end': (topic) -> assert.deepEqual topic.f.colors(2), ['#ffffff', '#000000']
+            'color mode': (topic) -> assert.deepEqual topic.f.colors(2, 'rgb')[1], [0,0,0]
+            'color mode null len': (topic) -> assert.equal topic.f.colors(2, null).length, 2
+            'color mode null': (topic) -> assert topic.f.colors(2, null)[0]._rgb
 
         'simple hsv scale (white-->black), classified':
             topic:
