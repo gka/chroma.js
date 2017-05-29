@@ -2185,7 +2185,7 @@
     f.domain = function(domain) {
       var c, d, k, len, o, ref, w;
       if (!arguments.length) {
-        return _pos;
+        return _domain;
       }
       _min = domain[0];
       _max = domain[domain.length - 1];
