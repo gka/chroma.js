@@ -147,7 +147,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.3.3';
+  chroma.version = '1.3.4';
 
   _input = {};
 
@@ -200,6 +200,10 @@
 
     Color.prototype.toString = function() {
       return this.hex();
+    };
+
+    Color.prototype.clone = function() {
+      return chroma(me._rgb);
     };
 
     return Color;
@@ -2181,7 +2185,7 @@
     f.domain = function(domain) {
       var c, d, k, len, o, ref, w;
       if (!arguments.length) {
-        return _domain;
+        return _pos;
       }
       _min = domain[0];
       _max = domain[domain.length - 1];
@@ -2278,41 +2282,45 @@
       }
     };
     f.colors = function(numColors, out) {
-      var dd, dm, i, o, ref, results, samples, w;
-      if (out == null) {
+      var dd, dm, i, o, ref, result, results, samples, w;
+      if (arguments.length < 2) {
         out = 'hex';
       }
+      result = [];
       if (arguments.length === 0) {
-        return _colors.map(function(c) {
-          return c[out]();
-        });
-      }
-      if (numColors) {
-        if (numColors === 1) {
-          return [f(0.5)[out]()];
-        }
+        result = _colors.slice(0);
+      } else if (numColors === 1) {
+        result = [f(0.5)];
+      } else if (numColors > 1) {
         dm = _domain[0];
         dd = _domain[1] - dm;
-        return (function() {
+        result = (function() {
           results = [];
           for (var o = 0; 0 <= numColors ? o < numColors : o > numColors; 0 <= numColors ? o++ : o--){ results.push(o); }
           return results;
         }).apply(this).map(function(i) {
-          return f(dm + i / (numColors - 1) * dd)[out]();
+          return f(dm + i / (numColors - 1) * dd);
+        });
+      } else {
+        colors = [];
+        samples = [];
+        if (_classes && _classes.length > 2) {
+          for (i = w = 1, ref = _classes.length; 1 <= ref ? w < ref : w > ref; i = 1 <= ref ? ++w : --w) {
+            samples.push((_classes[i - 1] + _classes[i]) * 0.5);
+          }
+        } else {
+          samples = _domain;
+        }
+        result = samples.map(function(v) {
+          return f(v);
         });
       }
-      colors = [];
-      samples = [];
-      if (_classes && _classes.length > 2) {
-        for (i = w = 1, ref = _classes.length; 1 <= ref ? w < ref : w > ref; i = 1 <= ref ? ++w : --w) {
-          samples.push((_classes[i - 1] + _classes[i]) * 0.5);
-        }
-      } else {
-        samples = _domain;
+      if (chroma[out]) {
+        result = result.map(function(c) {
+          return c[out]();
+        });
       }
-      return samples.map(function(v) {
-        return f(v)[out]();
-      });
+      return result;
     };
     f.cache = function(c) {
       if (c != null) {
