@@ -31,7 +31,7 @@
 <pre><code class="lang-js">chroma(&#39;hotpink&#39;)
 </code></pre>
 <p>If there&#39;s no matching named color chroma.js checks for a <strong>hexadecimal string</strong>. It ignores case, the <code>#</code> sign is optional, and the shorter three letter format is recognized as well. So any of these are valid hexadecimal representations: <code>#ff3399</code>, <code>FF3399</code>, <code>#f39</code>, etc.</p>
-<pre><code class="lang-js">chroma(&#39;#ff3399&#39;); 
+<pre><code class="lang-js">chroma(&#39;#ff3399&#39;);
 chroma(&#39;F39&#39;);
 </code></pre>
 <p>In addition to hex strings, <strong>hexadecimal numbers</strong> (in fact, just any number between <code>0</code> and <code>16777215</code>), will be recognized, too.</p>
@@ -139,7 +139,7 @@ chroma.contrast(&#39;pink&#39;, &#39;purple&#39;);
 </code></pre>
 <h3 id="chroma-distance">chroma.distance</h3>
 <h4 id="-color1-color2-mode-lab-">(color1, color2, mode=&#39;lab&#39;)</h4>
-<p>Computes the <a href="https://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions">eucledian distance</a> between two colors in a given color space (default is <code>Lab</code>). </p>
+<p>Computes the <a href="https://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions">Euclidean distance</a> between two colors in a given color space (default is <code>Lab</code>). </p>
 <pre><code class="lang-js">chroma.distance(&#39;#fff&#39;, &#39;#ff0&#39;, &#39;rgb&#39;);
 chroma.distance(&#39;#fff&#39;, &#39;#f0f&#39;, &#39;rgb&#39;);
 chroma.distance(&#39;#fff&#39;, &#39;#ff0&#39;);
@@ -201,8 +201,8 @@ chroma(&#39;hotpink&#39;).brighten(3);
 <h3 id="color-saturate">color.saturate</h3>
 <h4 id="-value-1-">(value=1)</h4>
 <p>Changes the saturation of a color by manipulating the Lch chromacity.</p>
-<pre><code class="lang-js">chroma(&#39;slategray&#39;).saturate(); 
-chroma(&#39;slategray&#39;).saturate(2); 
+<pre><code class="lang-js">chroma(&#39;slategray&#39;).saturate();
+chroma(&#39;slategray&#39;).saturate(2);
 chroma(&#39;slategray&#39;).saturate(3);
 </code></pre>
 <h3 id="color-desaturate">color.desaturate</h3>
@@ -500,7 +500,7 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 
-﻿<link rel="stylesheet" type="text/css" href="libs/codemirror/lib/codemirror.css"> 
+﻿<link rel="stylesheet" type="text/css" href="libs/codemirror/lib/codemirror.css">
 <script type="text/javascript" src="libs/jquery/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="libs/chroma.min.js"></script>
 <script type="text/javascript" src="libs/codemirror/lib/codemirror.js"></script>
@@ -510,9 +510,9 @@ chroma.cubehelix().lightness([0.3,0.7]);
 
 
     $('code.lang-js').each(function() {
-        
+
         var code = this;
-        
+
         var cm = CodeMirror(function(elt) {
             code.parentNode.replaceChild(elt, code);
             }, {
@@ -559,13 +559,13 @@ chroma.cubehelix().lightness([0.3,0.7]);
                 function resLong(d) {
                     if (typeof d == 'boolean') {
                         return '<span class="cm-number">'+(d ? 'true' : 'false')+'</span>';
-                        
+
                     } else if (typeof d == 'string') {
                         // string color, e.g. hex value
                         return '<span class="cm-string">"'+d+'"</span>';
                     } else if (typeof d == 'object' && d._rgb) {
                         // chroma.js object
-                        return '<span class="cm-string cm-color" data-color="'+d.css()+'">'+d.hex()+'</span>';                 
+                        return '<span class="cm-string cm-color" data-color="'+d.css()+'">'+d.hex()+'</span>';
                     } else if ($.isNumeric(d)) {
                         return '<span class="cm-number">'+round(d,3)+'</span>';
                     } else if ($.isFunction(d)) {
@@ -589,14 +589,14 @@ chroma.cubehelix().lightness([0.3,0.7]);
                         return '<span class="cm-string cm-color cm-small" data-color="'+d+'"><span class="cm-hidden-text">\''+chroma(d).hex()+'\'</span></span>';
                     } else if (typeof d == 'object' && d._rgb) {
                         // chroma.js object
-                        return '<span class="cm-string cm-color cm-small" data-color="'+d.css()+'"><span class="cm-hidden-text">\''+d.hex()+'\'</span></span>';                 
+                        return '<span class="cm-string cm-color cm-small" data-color="'+d.css()+'"><span class="cm-hidden-text">\''+d.hex()+'\'</span></span>';
                     } else if ($.isNumeric(d)) {
                         return '<span class="cm-number">'+round(d,2)+'</span>';
                     } else if (isNaN(d)) {
                         return '<span class="cm-number cm-nan">NaN</span>';
                     }
                 }
-                
+
                 function round(d, p) {
                     var n = Math.pow(10, p);
                     return Math.round(d*n) / n;
@@ -612,7 +612,7 @@ chroma.cubehelix().lightness([0.3,0.7]);
                     span.attr('style', '');
                     return;
                 }
-                        
+
                 try {
                     var col = chroma(val),
                         l = col.luminance();
@@ -620,7 +620,7 @@ chroma.cubehelix().lightness([0.3,0.7]);
                         'background-color:'+col.hex(),
                         'color:'+(l <0.5 ? 'white' : 'black'),
                         'opacity:'+col.alpha()
-                    ].join(';'));                    
+                    ].join(';'));
                 } catch (e) {
                     //console.log(e);
                     span.attr('style', '');
@@ -634,7 +634,7 @@ chroma.cubehelix().lightness([0.3,0.7]);
             var span = $(this),
                 slider = $('<div></div>').addClass('slider'),
                 input = $('<input type="range" />').appendTo(slider);
-            
+
             span.off('mouseenter').on('mouseenter', function() {
                 var v = +span.text(),
                     d = Math.pow(10, Math.max(1, Math.log10(v))),

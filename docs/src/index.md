@@ -34,23 +34,23 @@ chroma.js has a lot more to offer, but that's the gist of it.
 ### chroma
 #### (*color*)
 
-The first step is to get your color into chroma.js. That's what the generic constructor ``chroma()`` does. The function is trying to guess the color format for you. For instances, it will recognized any named color from the W3CX11 specification:   
+The first step is to get your color into chroma.js. That's what the generic constructor ``chroma()`` does. The function is trying to guess the color format for you. For instances, it will recognized any named color from the W3CX11 specification:
 
 ```js
-chroma('hotpink') 
+chroma('hotpink')
 ```
 
 If there's no matching named color chroma.js checks for a **hexadecimal string**. It ignores case, the `#` sign is optional, and the shorter three letter format is recognized as well. So any of these are valid hexadecimal representations: `#ff3399`, `FF3399`, `#f39`, etc.
 
 ```js
-chroma('#ff3399'); 
+chroma('#ff3399');
 chroma('F39');
 ```
 
 In addition to hex strings, **hexadecimal numbers** (in fact, just any number between `0` and `16777215`), will be recognized, too.
 
 ```js
-chroma(0xff3399) 
+chroma(0xff3399)
 ```
 
 If you pass the RGB channels individually, too. Each parameter must be within `0..255`. You can pass the numbers as individual arguments or as array.
@@ -126,7 +126,7 @@ chroma(0.6, 0, 0.8, 'gl');
 ### chroma.temperature
 #### (K)
 
-Returns a color from the [color temperature](http://www.zombieprototypes.com/?p=210) scale. Based on [Neil Bartlett's implementation](https://github.com/neilbartlett/color-temperature). 
+Returns a color from the [color temperature](http://www.zombieprototypes.com/?p=210) scale. Based on [Neil Bartlett's implementation](https://github.com/neilbartlett/color-temperature).
 
 ```js
 chroma.temperature(2000); // candle light
@@ -218,7 +218,7 @@ chroma.contrast('pink', 'purple');
 ### chroma.distance
 #### (color1, color2, mode='lab')
 
-Computes the [eucledian distance](https://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions) between two colors in a given color space (default is `Lab`). 
+Computes the [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions) between two colors in a given color space (default is `Lab`).
 
 ```js
 chroma.distance('#fff', '#ff0', 'rgb');
@@ -252,7 +252,7 @@ chroma.brewer.OrRd
 ### chroma.limits
 #### (data, mode, n)
 
-A helper function that computes class breaks for you, based on data. It supports the modes _equidistant_ (e), _quantile_ (q), _logarithmic_ (l), and _k-means_ (k). Let's take a few numbers as sample data. 
+A helper function that computes class breaks for you, based on data. It supports the modes _equidistant_ (e), _quantile_ (q), _logarithmic_ (l), and _k-means_ (k). Let's take a few numbers as sample data.
 
 ```js
 var data = [2.0,3.5,3.6,3.8,3.8,4.1,4.3,4.4,
@@ -266,13 +266,13 @@ var data = [2.0,3.5,3.6,3.8,3.8,4.1,4.3,4.4,
 chroma.limits(data, 'e', 4);
 ```
 
-In the **quantile** mode, the input domain is divided by quantile ranges. 
+In the **quantile** mode, the input domain is divided by quantile ranges.
 
 ```js
 chroma.limits(data, 'q', 4);
 ```
 
-**logarithmic** breaks are equidistant breaks but on a logarithmic scale. 
+**logarithmic** breaks are equidistant breaks but on a logarithmic scale.
 
 ```js
 chroma.limits(data, 'l', 4);
@@ -299,7 +299,7 @@ chroma('rgba(255,0,0,0.35)').alpha();
 ### color.darken
 #### (value=1)
 
-Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness. 
+Once loaded, chroma.js can change colors. One way we already saw above, you can change the lightness.
 
 ```js
 chroma('hotpink').darken();
@@ -324,9 +324,9 @@ chroma('hotpink').brighten(3);
 Changes the saturation of a color by manipulating the Lch chromacity.
 
 ```js
-chroma('slategray').saturate(); 
-chroma('slategray').saturate(2); 
-chroma('slategray').saturate(3); 
+chroma('slategray').saturate();
+chroma('slategray').saturate(2);
+chroma('slategray').saturate(3);
 ```
 
 ### color.desaturate
@@ -373,7 +373,7 @@ chroma('orangered').get('hsl.l');
 chroma('orangered').get('rgb.g');
 ```
 
-### color.luminance 
+### color.luminance
 #### ([lum, mode='rgb'])
 
 If called without arguments color.luminance returns the relative brightness, according to the [WCAG definition](http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef). Normalized to `0` for darkest black and `1` for lightest white.
@@ -679,7 +679,7 @@ chroma.scale('OrRd').classes(5);
 chroma.scale('OrRd').classes(8);
 ```
 
-You can also define custom class breaks by passing them as array: 
+You can also define custom class breaks by passing them as array:
 
 ```js
 chroma.scale('OrRd').classes([0,0.3,0.55,0.85,1]);
