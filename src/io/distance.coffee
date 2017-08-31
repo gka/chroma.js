@@ -1,4 +1,4 @@
-# simple eucledian distance
+# simple Euclidean distance
 chroma.distance = (a, b, mode='lab') ->
     # Delta E (CIE 1976)
     # see http://www.brucelindbloom.com/index.html?Equations.html

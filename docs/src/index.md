@@ -218,7 +218,7 @@ chroma.contrast('pink', 'purple');
 ### chroma.distance
 #### (color1, color2, mode='lab')
 
-Computes the [eucledian distance](https://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions) between two colors in a given color space (default is `Lab`).
+Computes the [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions) between two colors in a given color space (default is `Lab`).
 
 ```js
 chroma.distance('#fff', '#ff0', 'rgb');
