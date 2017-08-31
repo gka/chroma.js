@@ -147,7 +147,7 @@ chroma.distance(&#39;#fff&#39;, &#39;#f0f&#39;);
 </code></pre>
 <h3 id="chroma-deltae">chroma.deltaE</h3>
 <h4 id="-reference-sample-l-1-c-1-">(reference, sample, L=1, C=1)</h4>
-<p>Computes <a href="https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_.281984.29">color difference</a> as developed by the Colour Measurement Committee of the Society of Dyers and Colourists (CMC) in 1984. The implementation is adapted from <a href="https://web.archive.org/web/20160306044036/http://www.brucelindbloom.com/javascript/ColorDiff.js">Bruce Lindbloom</a>. The parameters L and C are weighting factors for lightness and chromacity.</p>
+<p>Computes <a href="https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_.281984.29">color difference</a> as developed by the Colour Measurement Committee of the Society of Dyers and Colourists (CMC) in 1984. The implementation is adapted from <a href="https://web.archive.org/web/20160306044036/http://www.brucelindbloom.com/javascript/ColorDiff.js">Bruce Lindbloom</a>. The parameters L and C are weighting factors for lightness and chromaticity.</p>
 <pre><code class="lang-js">chroma.deltaE(&#39;#ededee&#39;, &#39;#edeeed&#39;);
 chroma.deltaE(&#39;#ececee&#39;, &#39;#eceeec&#39;);
 chroma.deltaE(&#39;#e9e9ee&#39;, &#39;#e9eee9&#39;);
@@ -200,7 +200,7 @@ chroma(&#39;hotpink&#39;).brighten(3);
 </code></pre>
 <h3 id="color-saturate">color.saturate</h3>
 <h4 id="-value-1-">(value=1)</h4>
-<p>Changes the saturation of a color by manipulating the Lch chromacity.</p>
+<p>Changes the saturation of a color by manipulating the Lch chromaticity.</p>
 <pre><code class="lang-js">chroma(&#39;slategray&#39;).saturate();
 chroma(&#39;slategray&#39;).saturate(2);
 chroma(&#39;slategray&#39;).saturate(3);
@@ -217,7 +217,7 @@ chroma(&#39;hotpink&#39;).desaturate(3);
 <p>Changes a single channel and returns the result a new <code>chroma</code> object.</p>
 <pre><code class="lang-js">// change hue to 0 deg (=red)
 chroma(&#39;skyblue&#39;).set(&#39;hsl.h&#39;, 0);
-// set chromacity to 30
+// set chromaticity to 30
 chroma(&#39;hotpink&#39;).set(&#39;lch.c&#39;, 30);
 </code></pre>
 <p>Relative changes work, too:</p>

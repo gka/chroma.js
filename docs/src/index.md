@@ -230,7 +230,7 @@ chroma.distance('#fff', '#f0f');
 ### chroma.deltaE
 #### (reference, sample, L=1, C=1)
 
-Computes [color difference](https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_.281984.29) as developed by the Colour Measurement Committee of the Society of Dyers and Colourists (CMC) in 1984. The implementation is adapted from [Bruce Lindbloom](https://web.archive.org/web/20160306044036/http://www.brucelindbloom.com/javascript/ColorDiff.js). The parameters L and C are weighting factors for lightness and chromacity.
+Computes [color difference](https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_.281984.29) as developed by the Colour Measurement Committee of the Society of Dyers and Colourists (CMC) in 1984. The implementation is adapted from [Bruce Lindbloom](https://web.archive.org/web/20160306044036/http://www.brucelindbloom.com/javascript/ColorDiff.js). The parameters L and C are weighting factors for lightness and chromaticity.
 
 ```js
 chroma.deltaE('#ededee', '#edeeed');
@@ -321,7 +321,7 @@ chroma('hotpink').brighten(3);
 ### color.saturate
 #### (value=1)
 
-Changes the saturation of a color by manipulating the Lch chromacity.
+Changes the saturation of a color by manipulating the Lch chromaticity.
 
 ```js
 chroma('slategray').saturate();
@@ -349,7 +349,7 @@ Changes a single channel and returns the result a new `chroma` object.
 ```js
 // change hue to 0 deg (=red)
 chroma('skyblue').set('hsl.h', 0);
-// set chromacity to 30
+// set chromaticity to 30
 chroma('hotpink').set('lch.c', 30);
 ```
 
