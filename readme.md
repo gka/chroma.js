@@ -40,7 +40,7 @@ chroma.scale(['lightyellow', 'navy']).domain([1, 100000], 7, 'log');
 
 ### Like it?
 
-Why not dive into the [interactive documentation](http://gka.github.io/chroma.js/) (there's a [static version](https://github.com/gka/chroma.js/blob/v1.3.1/docs/src/index.md), too). You can download [chroma.min.js](https://raw.github.com/gka/chroma.js/master/chroma.min.js) or use the [hosted version on cdnjs.com](https://cdnjs.com/libraries/chroma-js).
+Why not dive into the [interactive documentation](http://gka.github.io/chroma.js/) (there's a [static version](https://github.com/gka/chroma.js/blob/master/docs/src/index.md), too). You can download [chroma.min.js](https://raw.github.com/gka/chroma.js/master/chroma.min.js) or use the [hosted version on cdnjs.com](https://cdnjs.com/libraries/chroma-js).
 
 You can use it in node.js, too!
 
@@ -50,7 +50,7 @@ Or you can use it in SASS using [chromatic-sass](https://github.com/bugsnag/chro
 
 ### Build instructions
 
-To compile the coffee-script source files you have to run (might have to ``npm install` first)
+To compile the coffee-script source files you have to run (might have to `npm install` first)
 
     grunt
 
