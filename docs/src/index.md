@@ -184,7 +184,7 @@ chroma.average(['red', 'rgba(0,0,0,0.5)']).css();
 ### chroma.blend
 #### (color1, color2, mode)
 
-Blends two colors using RGB channel-wise blend functions. Valid blend modes are `multiply`, `darken`, `lighten`, `screen`, `overlay`, `burn`, and `dogde`.
+Blends two colors using RGB channel-wise blend functions. Valid blend modes are `multiply`, `darken`, `lighten`, `screen`, `overlay`, `burn`, and `dodge`.
 
 ```js
 chroma.blend('4CBBFC', 'EEEE22', 'multiply');
