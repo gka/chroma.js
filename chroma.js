@@ -2158,7 +2158,7 @@
     f = function(v) {
       var c;
       c = chroma(getColor(v));
-      if (_out && c[_out]) {
+      if (_out) {
         return c[_out]();
       } else {
         return c;
@@ -2315,7 +2315,7 @@
           return f(v);
         });
       }
-      if (chroma[out]) {
+      if (out) {
         result = result.map(function(c) {
           return c[out]();
         });

@@ -117,7 +117,7 @@ chroma.scale = (colors, positions) ->
 
     f = (v) ->
         c = chroma getColor v
-        if _out and c[_out] then c[_out]() else c
+        if _out then c[_out]() else c
 
     f.classes = (classes) ->
         if classes?
@@ -136,7 +136,7 @@ chroma.scale = (colors, positions) ->
 
     f.domain = (domain) ->
         if not arguments.length
-            return _domain     
+            return _domain
         _min = domain[0]
         _max = domain[domain.length-1]
         _pos = []
@@ -215,7 +215,7 @@ chroma.scale = (colors, positions) ->
         # If no arguments are given, return the original colors that were provided
         out = 'hex' if arguments.length < 2
         result = []
-        
+
         if arguments.length == 0
             result = _colors.slice 0
 
@@ -236,10 +236,10 @@ chroma.scale = (colors, positions) ->
             else
                 samples = _domain
             result = samples.map (v) -> f(v)
-    
-        if chroma[out]
+
+        if out
             result = result.map (c) -> c[out]()
-        result 
+        result
 
     f.cache = (c) ->
         if c?
