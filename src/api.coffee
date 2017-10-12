@@ -2,6 +2,7 @@
 chroma = () ->
     return arguments[0] if arguments[0] instanceof Color
     new Color arguments...
+chroma.default = chroma
 
 _interpolators = []
 
