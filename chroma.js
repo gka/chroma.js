@@ -132,6 +132,8 @@
     })(Color, arguments, function(){});
   };
 
+  chroma["default"] = chroma;
+
   _interpolators = [];
 
   if ((typeof module !== "undefined" && module !== null) && (module.exports != null)) {
