@@ -14,7 +14,8 @@ class Color
             args.push arg if arg?
 
         # last argument could be the mode
-        mode = args[args.length-1]
+        mode = args[args.length-1] if args.length > 1
+
         if _input[mode]?
             me._rgb = clip_rgb _input[mode] unpack args[...-1]
         else

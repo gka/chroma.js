@@ -160,7 +160,9 @@ chroma.mix('red', 'blue', 0.5, 'rgb');
 chroma.mix('red', 'blue', 0.5, 'hsl');
 chroma.mix('red', 'blue', 0.5, 'lab');
 chroma.mix('red', 'blue', 0.5, 'lch');
+chroma.mix('red', 'blue', 0.5, 'lrgb');
 ```
+
 
 ### chroma.average
 #### (colors, mode='rgb')
@@ -169,9 +171,10 @@ Similar to `chroma.mix`, but accepts more than two colors. Simple averaging of R
 
 ```js
 colors = ['#ddd', 'yellow', 'red', 'teal'];
-chroma.average(colors);
+chroma.average(colors); // rgb
 chroma.average(colors, 'lab');
 chroma.average(colors, 'lch');
+chroma.average(colors, 'lrgb');
 ```
 
 Also works with alpha channels.
@@ -612,6 +615,14 @@ Other useful interpolation modes could be `HSL` or `Lch`, though both tend to pr
 chroma.scale(['yellow', 'navy']).mode('lab');
 chroma.scale(['yellow', 'navy']).mode('hsl');
 chroma.scale(['yellow', 'navy']).mode('lch');
+```
+
+As of version TK, chroma.js supports [linear RGB interpolation](https://www.youtube.com/watch?v=LKnqECcg6Gw), which produces results a lot better than RGB, and is easier to compute than Lab.
+
+```js
+chroma.scale(['#f00', '#0f0']).mode('rgb');
+chroma.scale(['#f00', '#0f0']).mode('lrgb');
+chroma.scale(['#f00', '#0f0']).mode('lab');
 ```
 
 ### scale.correctLightness

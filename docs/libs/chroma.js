@@ -34,7 +34,7 @@
  */
 
 (function() {
-  var Color, DEG2RAD, LAB_CONSTANTS, PI, PITHIRD, RAD2DEG, TWOPI, _guess_formats, _guess_formats_sorted, _input, _interpolators, abs, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hcg2rgb, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hcg, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
+  var Color, DEG2RAD, LAB_CONSTANTS, PI, PITHIRD, RAD2DEG, TWOPI, _average_lrgb, _guess_formats, _guess_formats_sorted, _input, _interpolators, abs, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hcg2rgb, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_lrgb, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hcg, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
     slice = [].slice;
 
   type = (function() {
@@ -168,7 +168,9 @@
           args.push(arg);
         }
       }
-      mode = args[args.length - 1];
+      if (args.length > 1) {
+        mode = args[args.length - 1];
+      }
       if (_input[mode] != null) {
         me._rgb = clip_rgb(_input[mode](unpack(args.slice(0, -1))));
       } else {
@@ -774,61 +776,50 @@
     return new Color(code);
   };
 
-  chroma.average = function(colors, mode) {
-    var A, alpha, c, cnt, dx, dy, first, i, l, len, o, xyz, xyz2;
-    if (mode == null) {
-      mode = 'rgb';
+  _interpolators = [];
+
+  interpolate = function(col1, col2, f, m) {
+    var interpol, len, o, res;
+    if (f == null) {
+      f = 0.5;
     }
-    l = colors.length;
-    colors = colors.map(function(c) {
-      return chroma(c);
-    });
-    first = colors.splice(0, 1)[0];
-    xyz = first.get(mode);
-    cnt = [];
-    dx = 0;
-    dy = 0;
-    for (i in xyz) {
-      xyz[i] = xyz[i] || 0;
-      cnt.push(!isNaN(xyz[i]) ? 1 : 0);
-      if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
-        A = xyz[i] / 180 * PI;
-        dx += cos(A);
-        dy += sin(A);
+    if (m == null) {
+      m = 'rgb';
+    }
+
+    /*
+    interpolates between colors
+    f = 0 --> me
+    f = 1 --> col
+     */
+    if (type(col1) !== 'object') {
+      col1 = chroma(col1);
+    }
+    if (type(col2) !== 'object') {
+      col2 = chroma(col2);
+    }
+    for (o = 0, len = _interpolators.length; o < len; o++) {
+      interpol = _interpolators[o];
+      if (m === interpol[0]) {
+        res = interpol[1](col1, col2, f, m);
+        break;
       }
     }
-    alpha = first.alpha();
-    for (o = 0, len = colors.length; o < len; o++) {
-      c = colors[o];
-      xyz2 = c.get(mode);
-      alpha += c.alpha();
-      for (i in xyz) {
-        if (!isNaN(xyz2[i])) {
-          xyz[i] += xyz2[i];
-          cnt[i] += 1;
-          if (mode.charAt(i) === 'h') {
-            A = xyz[i] / 180 * PI;
-            dx += cos(A);
-            dy += sin(A);
-          }
-        }
-      }
+    if (res == null) {
+      throw "color mode " + m + " is not supported";
     }
-    for (i in xyz) {
-      xyz[i] = xyz[i] / cnt[i];
-      if (mode.charAt(i) === 'h') {
-        A = atan2(dy / cnt[i], dx / cnt[i]) / PI * 180;
-        while (A < 0) {
-          A += 360;
-        }
-        while (A >= 360) {
-          A -= 360;
-        }
-        xyz[i] = A;
-      }
-    }
-    return chroma(xyz, mode).alpha(alpha / l);
+    return res.alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
   };
+
+  chroma.interpolate = interpolate;
+
+  Color.prototype.interpolate = function(col2, f, m) {
+    return interpolate(this, col2, f, m);
+  };
+
+  chroma.mix = interpolate;
+
+  Color.prototype.mix = Color.prototype.interpolate;
 
   _input.rgb = function() {
     var k, ref, results, v;
@@ -883,6 +874,94 @@
       }
     }
   });
+
+  _input.lrgb = _input.rgb;
+
+  interpolate_lrgb = function(col1, col2, f, m) {
+    var xyz0, xyz1;
+    xyz0 = col1._rgb;
+    xyz1 = col2._rgb;
+    return new Color(sqrt(pow(xyz0[0], 2) * (1 - f) + pow(xyz1[0], 2) * f), sqrt(pow(xyz0[1], 2) * (1 - f) + pow(xyz1[1], 2) * f), sqrt(pow(xyz0[2], 2) * (1 - f) + pow(xyz1[2], 2) * f), m);
+  };
+
+  _average_lrgb = function(colors) {
+    var col, f, len, o, rgb, xyz;
+    f = 1 / colors.length;
+    xyz = [0, 0, 0, 0];
+    for (o = 0, len = colors.length; o < len; o++) {
+      col = colors[o];
+      rgb = col._rgb;
+      xyz[0] += pow(rgb[0], 2) * f;
+      xyz[1] += pow(rgb[1], 2) * f;
+      xyz[2] += pow(rgb[2], 2) * f;
+      xyz[3] += rgb[3] * f;
+    }
+    xyz[0] = sqrt(xyz[0]);
+    xyz[1] = sqrt(xyz[1]);
+    xyz[2] = sqrt(xyz[2]);
+    return new Color(xyz);
+  };
+
+  _interpolators.push(['lrgb', interpolate_lrgb]);
+
+  chroma.average = function(colors, mode) {
+    var A, alpha, c, cnt, dx, dy, first, i, l, len, o, xyz, xyz2;
+    if (mode == null) {
+      mode = 'rgb';
+    }
+    l = colors.length;
+    colors = colors.map(function(c) {
+      return chroma(c);
+    });
+    first = colors.splice(0, 1)[0];
+    if (mode === 'lrgb') {
+      return _average_lrgb(colors);
+    }
+    xyz = first.get(mode);
+    cnt = [];
+    dx = 0;
+    dy = 0;
+    for (i in xyz) {
+      xyz[i] = xyz[i] || 0;
+      cnt.push(!isNaN(xyz[i]) ? 1 : 0);
+      if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
+        A = xyz[i] / 180 * PI;
+        dx += cos(A);
+        dy += sin(A);
+      }
+    }
+    alpha = first.alpha();
+    for (o = 0, len = colors.length; o < len; o++) {
+      c = colors[o];
+      xyz2 = c.get(mode);
+      alpha += c.alpha();
+      for (i in xyz) {
+        if (!isNaN(xyz2[i])) {
+          xyz[i] += xyz2[i];
+          cnt[i] += 1;
+          if (mode.charAt(i) === 'h') {
+            A = xyz[i] / 180 * PI;
+            dx += cos(A);
+            dy += sin(A);
+          }
+        }
+      }
+    }
+    for (i in xyz) {
+      xyz[i] = xyz[i] / cnt[i];
+      if (mode.charAt(i) === 'h') {
+        A = atan2(dy / cnt[i], dx / cnt[i]) / PI * 180;
+        while (A < 0) {
+          A += 360;
+        }
+        while (A >= 360) {
+          A -= 360;
+        }
+        xyz[i] = A;
+      }
+    }
+    return chroma(xyz, mode).alpha(alpha / l);
+  };
 
   hex2rgb = function(hex) {
     var a, b, g, r, rgb, u;
@@ -1570,51 +1649,6 @@
       return pow((x + 0.055) / 1.055, 2.4);
     }
   };
-
-  _interpolators = [];
-
-  interpolate = function(col1, col2, f, m) {
-    var interpol, len, o, res;
-    if (f == null) {
-      f = 0.5;
-    }
-    if (m == null) {
-      m = 'rgb';
-    }
-
-    /*
-    interpolates between colors
-    f = 0 --> me
-    f = 1 --> col
-     */
-    if (type(col1) !== 'object') {
-      col1 = chroma(col1);
-    }
-    if (type(col2) !== 'object') {
-      col2 = chroma(col2);
-    }
-    for (o = 0, len = _interpolators.length; o < len; o++) {
-      interpol = _interpolators[o];
-      if (m === interpol[0]) {
-        res = interpol[1](col1, col2, f, m);
-        break;
-      }
-    }
-    if (res == null) {
-      throw "color mode " + m + " is not supported";
-    }
-    return res.alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
-  };
-
-  chroma.interpolate = interpolate;
-
-  Color.prototype.interpolate = function(col2, f, m) {
-    return interpolate(this, col2, f, m);
-  };
-
-  chroma.mix = interpolate;
-
-  Color.prototype.mix = Color.prototype.interpolate;
 
   interpolate_rgb = function(col1, col2, f, m) {
     var xyz0, xyz1;

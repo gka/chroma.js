@@ -76,5 +76,9 @@ vows
             topic: chroma.interpolate 'lightyellow', 'navy', 0.5, 'hsl'
             'hex': (topic) -> assert.equal topic.hex(), '#31ff98'
 
+        'interpolate in lrgb':
+            topic: chroma.interpolate 'red', 'blue', 0.5, 'lrgb'
+            'hex': (topic) -> assert.equal topic.hex(), '#b400b4'
+
 
     .export(module)

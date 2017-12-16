@@ -1,21 +1,24 @@
+# @require interpolate-lrgb
 
 chroma.average = (colors, mode='rgb') ->
     l = colors.length
     colors = colors.map (c) -> chroma(c)
     first = colors.splice(0,1)[0]
+    if mode == 'lrgb'
+        return _average_lrgb colors
     xyz = first.get(mode)
     cnt = []
     dx = 0
     dy = 0
-    for i of xyz 
+    for i of xyz
         xyz[i] = xyz[i] or 0
-        cnt.push if not isNaN(xyz[i]) then 1 else 0 
+        cnt.push if not isNaN(xyz[i]) then 1 else 0
         if mode.charAt(i) == 'h' and not isNaN(xyz[i])
             A = xyz[i] / 180 * PI
             dx += cos(A)
             dy += sin(A)
 
-    alpha = first.alpha() 
+    alpha = first.alpha()
     for c in colors
         xyz2 = c.get(mode)
         alpha += c.alpha()

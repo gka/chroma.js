@@ -1,7 +1,7 @@
 
 ###
 @requires
-    
+
     color
 
     colorbrewer
@@ -26,13 +26,14 @@
     get set
     clipped
 
-    alpha darken saturate premultiply blend    
+    alpha darken saturate premultiply blend
 
     scale
     limits
-    
+
     interpolate-hsx
     interpolate-rgb
     interpolate-num
     interpolate-lab
+    interpolate-lrgb
 ###
