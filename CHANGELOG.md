@@ -1,3 +1,6 @@
+# 1.3.5
+* added LRGB interpolation
+
 # 1.3.4
 * passing *null* as mode in scale.colors will return chroma objects
 
