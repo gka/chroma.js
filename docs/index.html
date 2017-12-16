@@ -371,6 +371,10 @@ chroma.scale([&#39;yellow&#39;, &#39;lightgreen&#39;, &#39;008ae5&#39;])
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]);
 chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lab&#39;);
 </code></pre>
+<p>Also note how the RGB interpolation seems to be very dark. You can achieve better results using linear RGB interpolation:</p>
+<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]);
+chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lrgb&#39;);
+</code></pre>
 <p>Other useful interpolation modes could be <code>HSL</code> or <code>Lch</code>, though both tend to produce too saturated / glowing gradients.</p>
 <pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lab&#39;);
 chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;hsl&#39;);
@@ -381,12 +385,17 @@ chroma.scale([&#39;yellow&#39;, &#39;navy&#39;]).mode(&#39;lch&#39;);
 chroma.scale([&#39;#f00&#39;, &#39;#0f0&#39;]).mode(&#39;lrgb&#39;);
 chroma.scale([&#39;#f00&#39;, &#39;#0f0&#39;]).mode(&#39;lab&#39;);
 </code></pre>
+<h3 id="scale-gamma">scale.gamma</h3>
+<p>Gamma-correction can be used to &quot;shift&quot; a scale&#39;s center more the the beginning (gamma &lt; 1) or end (gamma &gt; 1), typically used to &quot;even&quot; the lightness gradient. Default is 1.</p>
+<pre><code class="lang-js">chroma.scale(&#39;YlGn&#39;).gamma(0.5);
+chroma.scale(&#39;YlGn&#39;).gamma(1);
+chroma.scale(&#39;YlGn&#39;).gamma(2);
+</code></pre>
 <h3 id="scale-correctlightness">scale.correctLightness</h3>
-<p>Sometimes</p>
-<pre><code class="lang-js">chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]).mode(&#39;lch&#39;);
+<p>This makes sure the lightness range is spread evenly across a color scale. Especially useful when working with <a href="https://www.vis4.net/blog/2013/09/mastering-multi-hued-color-scales/">multi-hue color scales</a>, where simple gamma correction can&#39;t help you very much.</p>
+<pre><code class="lang-js">chroma.scale([&#39;black&#39;,&#39;red&#39;,&#39;yellow&#39;,&#39;white&#39;]);
 
-chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;])
-    .mode(&#39;lch&#39;)
+chroma.scale([&#39;black&#39;,&#39;red&#39;,&#39;yellow&#39;,&#39;white&#39;])
     .correctLightness();
 </code></pre>
 <h3 id="scale-cache">scale.cache</h3>

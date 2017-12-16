@@ -609,6 +609,13 @@ chroma.scale(['yellow', 'navy']);
 chroma.scale(['yellow', 'navy']).mode('lab');
 ```
 
+Also note how the RGB interpolation seems to be very dark. You can achieve better results using linear RGB interpolation:
+
+```js
+chroma.scale(['yellow', 'navy']);
+chroma.scale(['yellow', 'navy']).mode('lrgb');
+```
+
 Other useful interpolation modes could be `HSL` or `Lch`, though both tend to produce too saturated / glowing gradients.
 
 ```js
@@ -625,15 +632,25 @@ chroma.scale(['#f00', '#0f0']).mode('lrgb');
 chroma.scale(['#f00', '#0f0']).mode('lab');
 ```
 
-### scale.correctLightness
-Sometimes
+### scale.gamma
+
+Gamma-correction can be used to "shift" a scale's center more the the beginning (gamma < 1) or end (gamma > 1), typically used to "even" the lightness gradient. Default is 1.
 
 ```js
-chroma.scale(['yellow', '008ae5']).mode('lch');
+chroma.scale('YlGn').gamma(0.5);
+chroma.scale('YlGn').gamma(1);
+chroma.scale('YlGn').gamma(2);
+```
 
-chroma.scale(['yellow', '008ae5'])
-	.mode('lch')
-	.correctLightness();
+### scale.correctLightness
+
+This makes sure the lightness range is spread evenly across a color scale. Especially useful when working with [multi-hue color scales](https://www.vis4.net/blog/2013/09/mastering-multi-hued-color-scales/), where simple gamma correction can't help you very much.
+
+```js
+chroma.scale(['black','red','yellow','white']);
+
+chroma.scale(['black','red','yellow','white'])
+    .correctLightness();
 ```
 
 ### scale.cache

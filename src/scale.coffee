@@ -21,6 +21,7 @@ chroma.scale = (colors, positions) ->
     _correctLightness = false
     _colorCache = {}
     _useCache = true
+    _gamma = 1
 
     # private methods
 
@@ -71,12 +72,9 @@ chroma.scale = (colors, positions) ->
                 # find the class
                 c = getClass val
                 t = c / (_classes.length-2)
-                t = _padding[0] + (t * (1 - _padding[0] - _padding[1]))
             else if _max != _min
                 # just interpolate between min/max
                 t = (val - _min) / (_max - _min)
-                t = _padding[0] + (t * (1 - _padding[0] - _padding[1]))
-                t = Math.min(1, Math.max(0, t))
             else
                 t = 1
         else
@@ -84,6 +82,12 @@ chroma.scale = (colors, positions) ->
 
         if not bypassMap
             t = tmap t  # lightness correction
+
+        t = pow t, _gamma if _gamma != 1
+
+        t = _padding[0] + (t * (1 - _padding[0] - _padding[1]))
+
+        t = Math.min(1, Math.max(0, t))
 
         k = Math.floor(t * 10000)
 
@@ -136,7 +140,7 @@ chroma.scale = (colors, positions) ->
 
     f.domain = (domain) ->
         if not arguments.length
-            return _domain     
+            return _domain
         _min = domain[0]
         _max = domain[domain.length-1]
         _pos = []
@@ -215,7 +219,7 @@ chroma.scale = (colors, positions) ->
         # If no arguments are given, return the original colors that were provided
         out = 'hex' if arguments.length < 2
         result = []
-        
+
         if arguments.length == 0
             result = _colors.slice 0
 
@@ -236,16 +240,24 @@ chroma.scale = (colors, positions) ->
             else
                 samples = _domain
             result = samples.map (v) -> f(v)
-    
+
         if chroma[out]
             result = result.map (c) -> c[out]()
-        result 
+        result
 
     f.cache = (c) ->
         if c?
             _useCache = c
+            f
         else
             _useCache
+
+    f.gamma = (g) ->
+        if g?
+            _gamma = g
+            f
+        else
+            _gamma
 
     f
 
