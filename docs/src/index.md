@@ -609,11 +609,11 @@ chroma.scale(['yellow', 'navy']);
 chroma.scale(['yellow', 'navy']).mode('lab');
 ```
 
-Also note how the RGB interpolation seems to be very dark. You can achieve better results using linear RGB interpolation:
+Also note how the RGB interpolation can get very dark around the center. You can achieve better results using [linear RGB interpolation](https://www.youtube.com/watch?v=LKnqECcg6Gw):
 
 ```js
-chroma.scale(['yellow', 'navy']);
-chroma.scale(['yellow', 'navy']).mode('lrgb');
+chroma.scale(['#f00', '#0f0']);
+chroma.scale(['#f00', '#0f0']).mode('lrgb');
 ```
 
 Other useful interpolation modes could be `HSL` or `Lch`, though both tend to produce too saturated / glowing gradients.
@@ -622,14 +622,6 @@ Other useful interpolation modes could be `HSL` or `Lch`, though both tend to pr
 chroma.scale(['yellow', 'navy']).mode('lab');
 chroma.scale(['yellow', 'navy']).mode('hsl');
 chroma.scale(['yellow', 'navy']).mode('lch');
-```
-
-As of version 1.3.5, chroma.js supports [linear RGB interpolation](https://www.youtube.com/watch?v=LKnqECcg6Gw), which produces results a lot better than RGB, and is easier to compute than Lab.
-
-```js
-chroma.scale(['#f00', '#0f0']).mode('rgb');
-chroma.scale(['#f00', '#0f0']).mode('lrgb');
-chroma.scale(['#f00', '#0f0']).mode('lab');
 ```
 
 ### scale.gamma
