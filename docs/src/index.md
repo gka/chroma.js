@@ -617,7 +617,7 @@ chroma.scale(['yellow', 'navy']).mode('hsl');
 chroma.scale(['yellow', 'navy']).mode('lch');
 ```
 
-As of version TK, chroma.js supports [linear RGB interpolation](https://www.youtube.com/watch?v=LKnqECcg6Gw), which produces results a lot better than RGB, and is easier to compute than Lab.
+As of version 1.3.5, chroma.js supports [linear RGB interpolation](https://www.youtube.com/watch?v=LKnqECcg6Gw), which produces results a lot better than RGB, and is easier to compute than Lab.
 
 ```js
 chroma.scale(['#f00', '#0f0']).mode('rgb');
