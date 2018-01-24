@@ -43,6 +43,9 @@
     "uglify-js": "2.x",
     "vows": "0.8.x"
   },
+  "optionalDependencies": {
+    "seedrandom": "^2.4.3"
+  },
   "spm": {
     "main": "chroma.js",
     "ignore": [

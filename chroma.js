@@ -34,7 +34,7 @@
  */
 
 (function() {
-  var Color, DEG2RAD, LAB_CONSTANTS, PI, PITHIRD, RAD2DEG, TWOPI, _average_lrgb, _guess_formats, _guess_formats_sorted, _input, _interpolators, abs, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hcg2rgb, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_lrgb, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hcg, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
+  var Color, DEG2RAD, LAB_CONSTANTS, PI, PITHIRD, RAD2DEG, TWOPI, _average_lrgb, _guess_formats, _guess_formats_sorted, _input, _interpolators, _random, abs, atan2, bezier, blend, blend_f, brewer, burn, chroma, clip_rgb, cmyk2rgb, colors, cos, css2rgb, darken, dodge, each, floor, hcg2rgb, hex2rgb, hsi2rgb, hsl2css, hsl2rgb, hsv2rgb, interpolate, interpolate_hsx, interpolate_lab, interpolate_lrgb, interpolate_num, interpolate_rgb, lab2lch, lab2rgb, lab_xyz, lch2lab, lch2rgb, lighten, limit, log, luminance_x, m, max, multiply, normal, num2rgb, overlay, pow, rgb2cmyk, rgb2css, rgb2hcg, rgb2hex, rgb2hsi, rgb2hsl, rgb2hsv, rgb2lab, rgb2lch, rgb2luminance, rgb2num, rgb2temperature, rgb2xyz, rgb_xyz, rnd, root, round, screen, sin, sqrt, temperature2rgb, type, unpack, w3cx11, xyz_lab, xyz_rgb,
     slice = [].slice;
 
   type = (function() {
@@ -149,7 +149,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.3.5';
+  chroma.version = '1.3.6';
 
   _input = {};
 
@@ -766,14 +766,27 @@
     return f;
   };
 
+  _random = Math.random;
+
   chroma.random = function() {
     var code, digits, i, o;
     digits = '0123456789abcdef';
     code = '#';
     for (i = o = 0; o < 6; i = ++o) {
-      code += digits.charAt(floor(Math.random() * 16));
+      code += digits.charAt(floor(_random() * 16));
     }
     return new Color(code);
+  };
+
+  chroma.seedrandom = function(seed) {
+    var error, seed_random;
+    try {
+      seed_random = require('seedrandom');
+    } catch (_error) {
+      error = _error;
+      throw 'seedrandom module required for random(seed)';
+    }
+    return _random = seed_random(seed);
   };
 
   _interpolators = [];
