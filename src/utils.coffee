@@ -20,7 +20,7 @@ limit = (x, min=0, max=1) ->
 
 unpack = (args) ->
     if args.length >= 3
-        [].slice.call args
+        Array.prototype.slice.call args
     else
         args[0]
 
