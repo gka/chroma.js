@@ -5,6 +5,7 @@ Color::luminance = (lum, mode='rgb') ->
         return rgb2luminance @_rgb
 
     # set luminance
+    rgba = @_rgb
     if lum == 0
         rgba = [0,0,0,@_rgb[3]]
     else if lum == 1
