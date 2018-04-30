@@ -206,6 +206,22 @@ chroma.random();
 chroma.random();
 ```
 
+### chroma.seedrandom
+#### (seed)
+
+Seeds the random generator. Seed can be any type. The resulting random values are deterministic. Requires the optional dependancy [seedrandom](https://github.com/davidbau/seedrandom).
+
+```js
+chroma.seedrandom(new Date());
+```
+
+```js
+chroma.random();
+chroma.random();
+chroma.random();
+```
+
+
 ### chroma.contrast
 #### (color1, color2)
 

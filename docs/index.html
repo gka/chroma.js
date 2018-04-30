@@ -131,6 +131,15 @@ chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;lighten&#39;);
 chroma.random();
 chroma.random();
 </code></pre>
+<h3 id="chroma-seedrandom">chroma.seedrandom</h3>
+<h4 id="-seed-">(seed)</h4>
+<p>Seeds the random generator. Seed can be any type. The resulting random values are deterministic. Requires the optional dependancy <a href="https://github.com/davidbau/seedrandom">seedrandom</a>.</p>
+<pre><code class="lang-js">chroma.seedrandom(new Date());
+</code></pre>
+<pre><code class="lang-js">chroma.random();
+chroma.random();
+chroma.random();
+</code></pre>
 <h3 id="chroma-contrast">chroma.contrast</h3>
 <h4 id="-color1-color2-">(color1, color2)</h4>
 <p>Computes the WCAG contrast ratio between two colors. A minimum contrast of 4.5:1 <a href="http://www.w3.org/TR/WCAG20-TECHS/G18.html">is recommended</a> to ensure that text is still readable against a background color.</p>
