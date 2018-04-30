@@ -19,14 +19,14 @@ vows
         'average in lab':
             topic: chroma.average(['blue', 'red', 'white'], 'lab')
             'is #5a0000': (topic) -> assert.equal topic.hex(), '#e26daf'
-        'average in lch of same colors':
-            topic: chroma.average(['#02c03a', '#02c03a'], 'lch')
-            'is same': (topic) -> assert.equal topic.hex(), '#02c03a'
         'average h in lch':
             topic: chroma.average([chroma.lch(50, 50, 0), chroma.lch(50, 50, 90)], 'lch').get('lch.h')
             'is approximately 45': (topic) -> assert.equal Math.round(topic), 45
         'average in hsl of same colors':
             topic: chroma.average(['#02c03a', '#02c03a'], 'hsl')
             'is same': (topic) -> assert.equal topic.hex(), '#02c03a'
+        'average same color':
+            topic: chroma.average(["#02c03a", "#02c03a"],'hsl')
+            'is #02c03a': (topic) -> assert.equal topic.hex(), '#02c03a'
 
     .export(module)
