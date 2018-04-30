@@ -75,7 +75,7 @@
 
   unpack = function(args) {
     if (args.length >= 3) {
-      return [].slice.call(args);
+      return Array.prototype.slice.call(args);
     } else {
       return args[0];
     }
@@ -149,7 +149,7 @@
     root.chroma = chroma;
   }
 
-  chroma.version = '1.3.5';
+  chroma.version = '1.3.7';
 
   _input = {};
 
@@ -923,7 +923,7 @@
     dy = 0;
     for (i in xyz) {
       xyz[i] = xyz[i] || 0;
-      cnt.push(!isNaN(xyz[i]) ? 1 : 0);
+      cnt.push(isNaN(xyz[i]) ? 0 : 1);
       if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
         A = xyz[i] / 180 * PI;
         dx += cos(A);
@@ -937,18 +937,18 @@
       alpha += c.alpha();
       for (i in xyz) {
         if (!isNaN(xyz2[i])) {
-          xyz[i] += xyz2[i];
           cnt[i] += 1;
           if (mode.charAt(i) === 'h') {
-            A = xyz[i] / 180 * PI;
+            A = xyz2[i] / 180 * PI;
             dx += cos(A);
             dy += sin(A);
+          } else {
+            xyz[i] += xyz2[i];
           }
         }
       }
     }
     for (i in xyz) {
-      xyz[i] = xyz[i] / cnt[i];
       if (mode.charAt(i) === 'h') {
         A = atan2(dy / cnt[i], dx / cnt[i]) / PI * 180;
         while (A < 0) {
@@ -958,6 +958,8 @@
           A -= 360;
         }
         xyz[i] = A;
+      } else {
+        xyz[i] = xyz[i] / cnt[i];
       }
     }
     return chroma(xyz, mode).alpha(alpha / l);
@@ -1660,18 +1662,20 @@
   _interpolators.push(['rgb', interpolate_rgb]);
 
   Color.prototype.luminance = function(lum, mode) {
-    var cur_lum, eps, max_iter, test;
+    var cur_lum, eps, max_iter, rgba, test;
     if (mode == null) {
       mode = 'rgb';
     }
     if (!arguments.length) {
       return rgb2luminance(this._rgb);
     }
+    rgba = this._rgb;
     if (lum === 0) {
-      this._rgb = [0, 0, 0, this._rgb[3]];
+      rgba = [0, 0, 0, this._rgb[3]];
     } else if (lum === 1) {
-      this._rgb = [255, 255, 255, this._rgb[3]];
+      rgba = [255, 255, 255, this[3]];
     } else {
+      cur_lum = rgb2luminance(this._rgb);
       eps = 1e-7;
       max_iter = 20;
       test = function(l, h) {
@@ -1686,10 +1690,13 @@
         }
         return test(m, h);
       };
-      cur_lum = rgb2luminance(this._rgb);
-      this._rgb = (cur_lum > lum ? test(chroma('black'), this) : test(this, chroma('white'))).rgba();
+      if (cur_lum > lum) {
+        rgba = test(chroma('black'), this).rgba();
+      } else {
+        rgba = test(this, chroma('white')).rgba();
+      }
     }
-    return this;
+    return chroma(rgba).alpha(this.alpha());
   };
 
   temperature2rgb = function(kelvin) {
