@@ -56,5 +56,11 @@ vows
             'lum = 0.5': (topic) -> assert.equal rnd(topic.luminance(),2), 0.5
             'hex': (topic) -> assert.equal '#bcbcbc', topic.hex()
 
+        'setting luminance returns new color':
+            topic: chroma('red')
+            'red luminance is 0.21': (topic) -> assert.equal rnd(topic.luminance(),2), 0.21
+            'set luminance to 0.4': (topic) -> assert.equal topic.luminance(0.4).hex(), '#ff8686'
+            'old luminance is still 0.21': (topic) -> assert.equal rnd(topic.luminance(),2), 0.21
+            'old color is still red': (topic) -> assert.equal topic.hex(), '#ff0000'
 
     .export(module)
