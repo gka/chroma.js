@@ -37,7 +37,7 @@ vows
             'domain': (topic) ->
                 assert.throws () ->
                     chroma.limits topic, 'log', 4
-                , 'Logarithmic scales are only possible for values > 0'
+                , 'Logarithmic scales should only be possible for values > 0'
 
         'quantiles domain':
             topic: chroma.limits [1,2,3,4,5,10,20,100], 'quantiles', 2
