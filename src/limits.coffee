@@ -139,7 +139,7 @@ chroma.limits = (data, mode='equal', num=7) ->
             # check convergence
             repeat = false
             for j in [0..num-1]
-                if newCentroids[j] != centroids[i]
+                if newCentroids[j] != centroids[j]
                     repeat = true
                     break
 
