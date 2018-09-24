@@ -513,7 +513,7 @@ chroma('skyblue').hcl()
 
 Returns the numeric representation of the hexadecimal RGB color.
 
-```
+```js
 chroma('#000000').num();
 chroma('#0000ff').num();
 chroma('#00ff00').num();
