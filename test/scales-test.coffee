@@ -158,5 +158,9 @@ vows
                 f: chroma.scale(['red', 'white', 'blue'])
             'same colors': (topic) -> assert.deepEqual topic.f.colors(), ['#ff0000', '#ffffff', '#0000ff']
 
+        'scale with one color':
+            topic:
+                f: chroma.scale(['red'])
+            'should return that color': (topic) -> assert.equal topic.f(0.3).hex(), '#ff0000'
 
     .export(module)

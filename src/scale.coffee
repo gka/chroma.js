@@ -31,6 +31,9 @@ chroma.scale = (colors, positions) ->
         if colors? and type(colors) == 'string' and chroma.brewer?
             colors = chroma.brewer[colors] || chroma.brewer[colors.toLowerCase()] || colors
         if type(colors) == 'array'
+            # handle single color
+            if colors.length == 1
+                colors = [colors[0], colors[0]]
             # make a copy of the colors
             colors = colors.slice(0)
             # convert to chroma classes

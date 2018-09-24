@@ -2096,6 +2096,9 @@
         colors = chroma.brewer[colors] || chroma.brewer[colors.toLowerCase()] || colors;
       }
       if (type(colors) === 'array') {
+        if (colors.length === 1) {
+          colors = [colors[0], colors[0]];
+        }
         colors = colors.slice(0);
         for (c = o = 0, ref = colors.length - 1; 0 <= ref ? o <= ref : o >= ref; c = 0 <= ref ? ++o : --o) {
           col = colors[c];
