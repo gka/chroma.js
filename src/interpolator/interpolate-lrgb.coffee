@@ -22,7 +22,8 @@ _average_lrgb = (colors) ->
     xyz[0] = sqrt(xyz[0])
     xyz[1] = sqrt(xyz[1])
     xyz[2] = sqrt(xyz[2])
-    new Color xyz
+    xyz[3] = 1 if xyz[3] > 1
+    new Color clip_rgb xyz
 
 
 _interpolators.push ['lrgb', interpolate_lrgb]

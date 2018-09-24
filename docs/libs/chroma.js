@@ -206,10 +206,6 @@
       return this.hex();
     };
 
-    Color.prototype.clone = function() {
-      return chroma(me._rgb);
-    };
-
     return Color;
 
   })();
@@ -899,7 +895,10 @@
     xyz[0] = sqrt(xyz[0]);
     xyz[1] = sqrt(xyz[1]);
     xyz[2] = sqrt(xyz[2]);
-    return new Color(xyz);
+    if (xyz[3] > 1) {
+      xyz[3] = 1;
+    }
+    return new Color(clip_rgb(xyz));
   };
 
   _interpolators.push(['lrgb', interpolate_lrgb]);

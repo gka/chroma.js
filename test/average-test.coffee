@@ -3,6 +3,10 @@ vows = require 'vows'
 assert = require 'assert'
 chroma = require '../chroma'
 
+
+colors = [[125,133,127], [131,127,134], [138,121,141], [144,114,147], [149,107,153],
+    [165,83,170], [160,92,164], [170,73,175], [175,62,180], [155,100,159]]
+
 vows
     .describe('Testing color averaging modes')
     .addBatch
@@ -28,5 +32,8 @@ vows
         'average same color':
             topic: chroma.average(["#02c03a", "#02c03a"],'hsl')
             'is #02c03a': (topic) -> assert.equal topic.hex(), '#02c03a'
+        'lrgb avergage':
+            topic: chroma.average(colors, 'lrgb')
+            'is ???': (topic) -> assert.equal topic.hex(), '#9b649f'
 
     .export(module)
