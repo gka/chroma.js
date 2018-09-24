@@ -312,7 +312,13 @@ chroma(&#39;white&#39;).hsi();
 <p>Alias of <a href="#color-lch">lch</a>, but with the components in reverse order.</p>
 <pre><code class="lang-js">chroma(&#39;skyblue&#39;).hcl()
 </code></pre>
-<h3 id="color-temperature">color.temperature</h3>
+<h3 id="color-num">color.num</h3>
+<p>Returns the numeric representation of the hexadecimal RGB color.</p>
+<pre><code>chroma(&#39;#000000&#39;).num();
+chroma(&#39;#0000ff&#39;).num();
+chroma(&#39;#00ff00&#39;).num();
+chroma(&#39;#ff0000&#39;).num();
+</code></pre><h3 id="color-temperature">color.temperature</h3>
 <p>Estimate the temperature in Kelvin of any given color, though this makes the only sense for colors from the <a href="#chroma-temperature">temperature gradient</a> above.</p>
 <pre><code class="lang-js">chroma(&#39;#ff3300&#39;).temperature();
 chroma(&#39;#ff8a13&#39;).temperature();

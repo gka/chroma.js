@@ -509,6 +509,16 @@ Alias of [lch](#color-lch), but with the components in reverse order.
 chroma('skyblue').hcl()
 ```
 
+### color.num
+
+Returns the numeric representation of the hexadecimal RGB color.
+
+```
+chroma('#000000').num();
+chroma('#0000ff').num();
+chroma('#00ff00').num();
+chroma('#ff0000').num();
+```
 
 ### color.temperature
 
