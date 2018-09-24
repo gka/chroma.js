@@ -635,40 +635,6 @@
     return f;
   };
 
-
-  /*
-      chroma.js
-  
-      Copyright (c) 2011-2013, Gregor Aisch
-      All rights reserved.
-  
-      Redistribution and use in source and binary forms, with or without
-      modification, are permitted provided that the following conditions are met:
-  
-      * Redistributions of source code must retain the above copyright notice, this
-        list of conditions and the following disclaimer.
-  
-      * Redistributions in binary form must reproduce the above copyright notice,
-        this list of conditions and the following disclaimer in the documentation
-        and/or other materials provided with the distribution.
-  
-      * The name Gregor Aisch may not be used to endorse or promote products
-        derived from this software without specific prior written permission.
-  
-      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-      AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-      IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-      DISCLAIMED. IN NO EVENT SHALL GREGOR AISCH OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-      INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-      OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-      NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-      EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  
-      @source: https://github.com/gka/chroma.js
-   */
-
   chroma.cubehelix = function(start, rotations, hue, gamma, lightness) {
     var dh, dl, f;
     if (start == null) {
@@ -704,7 +670,7 @@
       r = l + amp * (-0.14861 * cos_a + 1.78277 * sin_a);
       g = l + amp * (-0.29227 * cos_a - 0.90649 * sin_a);
       b = l + amp * (+1.97294 * cos_a);
-      return chroma(clip_rgb([r * 255, g * 255, b * 255]));
+      return chroma(clip_rgb([r * 255, g * 255, b * 255, 1]));
     };
     f.start = function(s) {
       if (s == null) {
@@ -1000,9 +966,12 @@
   rgb2hex = function(channels, mode) {
     var a, b, g, hxa, r, str, u;
     if (mode == null) {
-      mode = 'rgb';
+      mode = 'auto';
     }
     r = channels[0], g = channels[1], b = channels[2], a = channels[3];
+    if (mode === 'auto') {
+      mode = a < 1 ? 'rgba' : 'rgb';
+    }
     r = Math.round(r);
     g = Math.round(g);
     b = Math.round(b);
@@ -1037,7 +1006,7 @@
 
   Color.prototype.hex = function(mode) {
     if (mode == null) {
-      mode = 'rgb';
+      mode = 'auto';
     }
     return rgb2hex(this._rgb, mode);
   };
@@ -1475,7 +1444,7 @@
       this._rgb[3] = 1;
       this;
     }
-    h = this.hex();
+    h = this.hex('rgb');
     for (k in w3cx11) {
       if (h === w3cx11[k]) {
         return k;

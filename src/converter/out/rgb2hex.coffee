@@ -1,6 +1,8 @@
 
-rgb2hex = (channels, mode='rgb') ->
+rgb2hex = (channels, mode='auto') ->
     [r,g,b,a] = channels
+    if mode == 'auto'
+        mode = if a < 1 then 'rgba'  else 'rgb'
     r = Math.round r
     g = Math.round g
     b = Math.round b

@@ -65,7 +65,7 @@ vows
             'black': (topic) -> assert.isNaN topic[0].hcl()[0]
             'gray': (topic) -> assert.isNaN topic[1].hcl()[0]
             'white': (topic) -> assert.isNaN topic[2].hcl()[0]
-            
+
         'lab-rgb precision':
             topic: [74, 24, 78],
             'to_rgb_to_lab': (topic) -> assert.deepEqual chroma.rgb(chroma.lab(topic).rgb(false)).lab().map(round(3)), topic
@@ -73,5 +73,10 @@ vows
         'cmyk-rgb precision':
             topic: [0, 1, 1, 0.02],
             'to_rgb_to_cmyk': (topic) -> assert.deepEqual chroma.rgb(chroma.cmyk(topic).rgb(false)).cmyk().map(round(3)), topic
+
+        'auto-detect rgba in hex output':
+            topic: ['rgba(255,0,0,1)', 'rgba(255,0,0,0.5)']
+            'rgb if alpha == 1': (topic) -> assert.equal chroma(topic[0]).hex(), '#ff0000'
+            'rgba if alpha != 1': (topic) -> assert.equal chroma(topic[1]).hex(), '#ff000080'
 
     .export(module)

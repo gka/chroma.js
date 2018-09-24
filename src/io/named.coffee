@@ -16,7 +16,7 @@ Color::name = (n) ->
         @_rgb[3] = 1
         @
     # resolve name from hex
-    h = @hex()
+    h = @hex('rgb')
     for k of w3cx11
         if h == w3cx11[k]
             return k

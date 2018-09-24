@@ -257,9 +257,14 @@ chroma(&#39;aquamarine&#39;).luminance(0.5, &#39;lab&#39;);
 chroma(&#39;aquamarine&#39;).luminance(0.5, &#39;hsl&#39;);
 </code></pre>
 <h3 id="color-hex">color.hex</h3>
-<p>Finally, chroma.js allows you to output colors in various color spaces and formats.</p>
-<p>Most often you will want to output the color as hexadecimal string.</p>
+<h4 id="-mode-auto-rgb-rgba-">(mode=&#39;auto|rgb|rgba&#39;)</h4>
+<p>Finally, chroma.js allows you to output colors in various color spaces and formats. Most often you will want to output the color as hexadecimal string.</p>
 <pre><code class="lang-js">chroma(&#39;orange&#39;).hex()
+</code></pre>
+<p><strong>Note</strong> that as of version 1.4.0 the default mode is &quot;auto&quot; which means that the hex string will include the alpha channel if it&#39;s less than 1. If you don&#39;t want the alpha channel to be included you must explicitly set the mode to &quot;rgb&quot; now:</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).hex();
+chroma(&#39;orange&#39;).alpha(0.5).hex();
+chroma(&#39;orange&#39;).alpha(0.5).hex(&#39;rgb&#39;);
 </code></pre>
 <h3 id="color-name">color.name</h3>
 <p>Returns the named color. Falls back to hexadecimal RGB string, if the color isn&#39;t present.</p>
@@ -517,6 +522,65 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .correctLightness()
     .colors(5);
 </code></pre>
+<h2 id="changelog">Changelog</h2>
+<h3 id="1-4-0">1.4.0</h3>
+<ul>
+<li>color.hex() now automatically sets the mode to &#39;rgba&#39; if the colors alpha channel is &lt; 1. so <code>chroma(&#39;rgba(255,0,0,.5)&#39;).hex()</code> will now return <code>&quot;#ff000080&quot;</code> instead of <code>&quot;#ff0000&quot;</code>. if this is not what you want, you must explicitly set the mode to <code>rgb</code> using <code>.hex(&quot;rgb&quot;)</code>.</li>
+</ul>
+<h3 id="1-3-5">1.3.5</h3>
+<ul>
+<li>added LRGB interpolation</li>
+</ul>
+<h3 id="1-3-4">1.3.4</h3>
+<ul>
+<li>passing <em>null</em> as mode in scale.colors will return chroma objects</li>
+</ul>
+<h3 id="1-3-3">1.3.3</h3>
+<ul>
+<li>added <a href="https://gka.github.io/chroma.js/#color-clipped">color.clipped</a></li>
+<li>added <a href="https://gka.github.io/chroma.js/#chroma-distance">chroma.distance</a></li>
+<li>added <a href="https://gka.github.io/chroma.js/#chroma-deltae">chroma.deltaE</a></li>
+<li><a href="https://gka.github.io/chroma.js/#color-set">color.set</a> now returns a new chroma instance</li>
+<li>chroma.scale now allows <a href="https://gka.github.io/chroma.js/#scale-cache">disabling of internal cache</a></li>
+<li><a href="https://gka.github.io/chroma.js/#chroma-average">chroma.average</a> now works with any color mode</li>
+<li>added unit tests for color conversions</li>
+<li>use hex colors as default string representation</li>
+<li>RGB channels are now stored as floats internally for higher precision</li>
+<li>bugfix with cubehelix and constant lightness</li>
+<li>bugfix in chroma.limits quantiles</li>
+<li>bugfix when running scale.colors(1)</li>
+<li>bugfix in hsi2rgb color conversion</li>
+</ul>
+<h3 id="1-2-2">1.2.2</h3>
+<ul>
+<li>scale.colors() now returns the original colors instead of just min/max range</li>
+</ul>
+<h3 id="1-2-0">1.2.0</h3>
+<ul>
+<li>added chroma.average for averaging colors</li>
+</ul>
+<h3 id="1-1-0">1.1.0</h3>
+<ul>
+<li>refactored chroma.scale</li>
+<li>changed behaviour of scale.domain</li>
+<li>added scale.classes</li>
+<li>added scale.padding</li>
+</ul>
+<h3 id="1-0-2">1.0.2</h3>
+<ul>
+<li>standardized alpha channel construction</li>
+<li>chroma.bezier automatically returns chroma.scale</li>
+</ul>
+<h3 id="1-0-1">1.0.1</h3>
+<ul>
+<li>added simple color output to chroma.scale().colors()</li>
+</ul>
+<h3 id="1-0-0">1.0.0</h3>
+<ul>
+<li>numeric interpolation does what it should</li>
+<li>refactored and modularized code base</li>
+<li>changed argument order of Color::interpolate</li>
+</ul>
 
 ﻿<link rel="stylesheet" type="text/css" href="libs/codemirror/lib/codemirror.css">
 <script type="text/javascript" src="libs/jquery/jquery-1.11.1.min.js"></script>

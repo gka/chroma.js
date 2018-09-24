@@ -6,7 +6,7 @@ _input.hex = (h) ->
 chroma.hex = () ->
     new Color arguments..., 'hex'
 
-Color::hex = (mode='rgb') ->
+Color::hex = (mode='auto') ->
     rgb2hex @_rgb, mode
 
 _guess_formats.push

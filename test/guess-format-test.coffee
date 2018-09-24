@@ -38,13 +38,15 @@ vows
 
         'rgba css color':
             topic: chroma 'rgba(128,0,128,0.5)'
-            'hex': (topic) -> assert.equal topic.hex(), '#800080'
+            'hex': (topic) -> assert.equal topic.hex(), '#80008080'
+            'hex rgb': (topic) -> assert.equal topic.hex('rgb'), '#800080'
             'alpha': (topic) -> assert.equal topic.alpha(), 0.5
             'css': (topic) -> assert.equal topic.css(), 'rgba(128,0,128,0.5)'
 
         'hsla css color':
             topic: chroma 'hsla(240,100%,50%,0.5)'
-            'hex': (topic) -> assert.equal topic.hex(), '#0000ff'
+            'hex': (topic) -> assert.equal topic.hex(), '#0000ff80'
+            'hex rgb': (topic) -> assert.equal topic.hex('rgb'), '#0000ff'
             'alpha': (topic) -> assert.equal topic.alpha(), 0.5
             'css': (topic) -> assert.equal topic.css(), 'rgba(0,0,255,0.5)'
 

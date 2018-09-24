@@ -408,13 +408,20 @@ chroma('aquamarine').luminance(0.5, 'hsl');
 ```
 
 ### color.hex
+#### (mode='auto|rgb|rgba')
 
-Finally, chroma.js allows you to output colors in various color spaces and formats.
-
-Most often you will want to output the color as hexadecimal string.
+Finally, chroma.js allows you to output colors in various color spaces and formats. Most often you will want to output the color as hexadecimal string.
 
 ```js
 chroma('orange').hex()
+```
+
+**Note** that as of version 1.4.0 the default mode is "auto" which means that the hex string will include the alpha channel if it's less than 1. If you don't want the alpha channel to be included you must explicitly set the mode to "rgb" now:
+
+```js
+chroma('orange').hex();
+chroma('orange').alpha(0.5).hex();
+chroma('orange').alpha(0.5).hex('rgb');
 ```
 
 ### color.name
