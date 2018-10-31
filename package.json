@@ -27,6 +27,7 @@
   "main": "chroma.js",
   "scripts": {
     "build": "grunt",
+    "docs": "cd docs && make",
     "test": "./node_modules/vows/bin/vows --dot-matrix"
   },
   "devDependencies": {
@@ -39,6 +40,7 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-replace": "^0.9.2",
+    "markdown-to-html": "0.0.13",
     "minimatch": "^3.0.2",
     "uglify-js": "2.x",
     "vows": "0.8.x"

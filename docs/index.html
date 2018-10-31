@@ -155,9 +155,10 @@ chroma.deltaE(&#39;#ececee&#39;, &#39;#eceeec&#39;);
 chroma.deltaE(&#39;#e9e9ee&#39;, &#39;#e9eee9&#39;);
 chroma.deltaE(&#39;#e4e4ee&#39;, &#39;#e4eee4&#39;);
 chroma.deltaE(&#39;#e0e0ee&#39;, &#39;#e0eee0&#39;);
+
 </code></pre>
 <h3 id="chroma-brewer">chroma.brewer</h3>
-<p>chroma.brewer is an map of ColorBrewer scales that are included in chroma.js for convenience. chroma.scale uses the colors to construct.</p>
+<p>chroma.brewer is an map of <a href="http://colorbrewer2.org/">ColorBrewer scales</a> that are included in chroma.js for convenience. chroma.scale uses the colors to construct.</p>
 <pre><code class="lang-js">chroma.brewer.OrRd
 </code></pre>
 <h3 id="chroma-limits">chroma.limits</h3>
@@ -167,7 +168,7 @@ chroma.deltaE(&#39;#e0e0ee&#39;, &#39;#e0eee0&#39;);
             4.6,4.9,5.2,5.3,5.4,5.7,5.8,5.9,
             6.2,6.5,6.8,7.2,8];
 </code></pre>
-<p><strong>equidistant</strong> breaks are computed by dividing the total range of the data into <em>n</em> groups of equal size.</p>
+<p><strong>equidistant</strong> breaks are computed by dividing the total range of the data into _n_ groups of equal size.</p>
 <pre><code class="lang-js">chroma.limits(data, &#39;e&#39;, 4);
 </code></pre>
 <p>In the <strong>quantile</strong> mode, the input domain is divided by quantile ranges.</p>
@@ -176,7 +177,7 @@ chroma.deltaE(&#39;#e0e0ee&#39;, &#39;#e0eee0&#39;);
 <p><strong>logarithmic</strong> breaks are equidistant breaks but on a logarithmic scale.</p>
 <pre><code class="lang-js">chroma.limits(data, &#39;l&#39;, 4);
 </code></pre>
-<p><strong>k-means</strong> break is using the 1-dimensional <a href="https://en.wikipedia.org/wiki/K-means_clustering">k-means clustering</a> algorithm to find (roughly) <em>n</em> groups of &quot;similar&quot; values. Note that this k-means implementation does not guarantee to find exactly <em>n</em> groups.</p>
+<p><strong>k-means</strong> break is using the 1-dimensional <a href="https://en.wikipedia.org/wiki/K-means_clustering">k-means clustering</a> algorithm to find (roughly) _n_ groups of &quot;similar&quot; values. Note that this k-means implementation does not guarantee to find exactly _n_ groups.</p>
 <pre><code class="lang-js">chroma.limits(data, &#39;k&#39;, 4);
 </code></pre>
 <h2 id="color">color</h2>
@@ -442,7 +443,7 @@ chroma.scale(&#39;OrRd&#39;).classes(8);
 <pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;).classes([0,0.3,0.55,0.85,1]);
 </code></pre>
 <h3 id="chroma-brewer">chroma.brewer</h3>
-<p>chroma.js includes the definitions from <a href="http://colorbrewer2.org/">ColorBrewer2.org</a>. Read more about these colors <a href="http://www.albany.edu/faculty/fboscoe/papers/harrower2003.pdf">in the corresponding paper</a> by Mark Harrower and Cynthia A. Brewer.</p>
+<p>chroma.js includes the definitions from <a href="http://colorbrewer2.org/">ColorBrewer2.org</a>. Read more about these colors <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.361.6082&amp;rep=rep1&amp;type=pdf">in the corresponding paper</a> by Mark Harrower and Cynthia A. Brewer.</p>
 <pre><code class="lang-js">chroma.scale(&#39;YlGnBu&#39;);
 chroma.scale(&#39;Spectral&#39;);
 </code></pre>
@@ -486,7 +487,7 @@ chroma.cubehelix().start(200);
 </code></pre>
 <h3 id="cubehelix-rotations">cubehelix.rotations</h3>
 <h4 id="-num-">(num)</h4>
-<p>number (and direction) of hue rotations (e.g. 1=<code>360°</code>, 1.5=`540°``), default=-1.5</p>
+<p>number (and direction) of hue rotations (e.g. 1=<code>360°</code>, 1.5=<code>540°`</code>), default=-1.5</p>
 <pre><code class="lang-js">chroma.cubehelix().rotations(-1.5);
 chroma.cubehelix().rotations(0.5);
 chroma.cubehelix().rotations(3);
