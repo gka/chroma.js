@@ -5,5 +5,5 @@ all:
 	rm tmp.md
 
 preview:
-	http-server
+	../node_modules/.bin/http-server
 	# python -m SimpleHTTPServer

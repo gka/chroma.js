@@ -50,19 +50,27 @@ Or you can use it in SASS using [chromatic-sass](https://github.com/bugsnag/chro
 
 ### Build instructions
 
-To compile the coffee-script source files you have to run (might have to `npm install` first)
+First clone the repository and install the dev dependencies:
 
-    grunt
+    git clone git@github.com:gka/chroma.js.git
+    cd chroma.js
+    npm install
 
-To run the tests simply run
+Then compile the coffee-script source files to the build files:
+
+    npm run build
+
+Don't forget to tests your changes! You will probably also want to add new test to the `/test` folder in case you added a feature.
 
     npm test
 
-And to update the documentation (thanks!), just do
+And to update the documentation just run
 
-	npm install --global markdown-to-html http-server
-    cd docs/
-    make && make preview
+    npm run docs
+
+To preview the docs locally you can use
+
+    npm run docs-preview
 
 ### Similar Libraries / Prior Art
 
