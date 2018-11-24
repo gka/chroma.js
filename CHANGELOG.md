@@ -2,6 +2,8 @@
 
 ### 1.4.0
 * color.hex() now automatically sets the mode to 'rgba' if the colors alpha channel is < 1. so `chroma('rgba(255,0,0,.5)').hex()` will now return `"#ff000080"` instead of `"#ff0000"`. if this is not what you want, you must explicitly set the mode to `rgb` using `.hex("rgb")`.
+* bugfix in chroma.average in LRGB mode ([#187](https://github.com/gka/chroma.js/issues/187))
+* chroma.scale now also works with just one color ([#180](https://github.com/gka/chroma.js/issues/180))
 
 
 ### 1.3.5
