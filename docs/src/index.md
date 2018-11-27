@@ -728,8 +728,9 @@ chroma.scale('OrRd').classes([0,0.3,0.55,0.85,1]);
 When you pass a non-numeric value like `null` or `undefined` to a chroma.scale, "#cccccc" is returned as fallback or "no data" color. You can change the no-data color:
 
 ```js
-chroma.scale('OrRd')();
-chroma.scale('OrRd').nodata('#eee');
+chroma.scale('OrRd')(null);
+chroma.scale('OrRd')(undefined);
+chroma.scale('OrRd').nodata('#eee')(null);
 ```
 
 ### chroma.brewer

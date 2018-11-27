@@ -445,8 +445,9 @@ chroma.scale(&#39;OrRd&#39;).classes(8);
 <h3 id="scale-nodata">scale.nodata</h3>
 <h4 id="-color-">(color)</h4>
 <p>When you pass a non-numeric value like <code>null</code> or <code>undefined</code> to a chroma.scale, &quot;#cccccc&quot; is returned as fallback or &quot;no data&quot; color. You can change the no-data color:</p>
-<pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;)();
-chroma.scale(&#39;OrRd&#39;).nodata(&#39;#eee&#39;);
+<pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;)(null);
+chroma.scale(&#39;OrRd&#39;)(undefined);
+chroma.scale(&#39;OrRd&#39;).nodata(&#39;#eee&#39;)(null);
 </code></pre>
 <h3 id="chroma-brewer">chroma.brewer</h3>
 <p>chroma.js includes the definitions from <a href="http://colorbrewer2.org/">ColorBrewer2.org</a>. Read more about these colors <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.361.6082&amp;rep=rep1&amp;type=pdf">in the corresponding paper</a> by Mark Harrower and Cynthia A. Brewer.</p>
