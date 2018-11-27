@@ -2115,7 +2115,7 @@
       if (bypassMap == null) {
         bypassMap = false;
       }
-      if (isNaN(val)) {
+      if (isNaN(val) || val === null) {
         return _nacol;
       }
       if (!bypassMap) {
@@ -2353,6 +2353,14 @@
         return f;
       } else {
         return _gamma;
+      }
+    };
+    f.nodata = function(d) {
+      if (d != null) {
+        _nacol = chroma(d);
+        return f;
+      } else {
+        return _nacol;
       }
     };
     return f;

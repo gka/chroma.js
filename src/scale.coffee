@@ -69,7 +69,7 @@ chroma.scale = (colors, positions) ->
         val
 
     getColor = (val, bypassMap=false) ->
-        if isNaN(val) then return _nacol
+        if isNaN(val) or val == null then return _nacol
         if not bypassMap
             if _classes and _classes.length > 2
                 # find the class
@@ -261,6 +261,13 @@ chroma.scale = (colors, positions) ->
             f
         else
             _gamma
+
+    f.nodata = (d) ->
+        if d?
+            _nacol = chroma d
+            f
+        else
+            _nacol
 
     f
 

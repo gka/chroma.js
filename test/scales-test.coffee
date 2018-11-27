@@ -163,4 +163,11 @@ vows
                 f: chroma.scale(['red'])
             'should return that color': (topic) -> assert.equal topic.f(0.3).hex(), '#ff0000'
 
+        'scale() no data color':
+            topic:
+                f: chroma.scale('OrRd')
+            'null --> nodata': (topic) -> assert.equal topic.f(null).hex(), '#cccccc'
+            'undefined --> nodata': (topic) -> assert.equal topic.f(undefined).hex(), '#cccccc'
+            'custom nodata color': (topic) -> assert.equal topic.f.nodata('#eee')(undefined).hex(), '#eeeeee'
+
     .export(module)

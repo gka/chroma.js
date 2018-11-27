@@ -527,6 +527,8 @@ chroma.cubehelix().lightness([0.3,0.7]);
 <h3 id="1-4-0">1.4.0</h3>
 <ul>
 <li>color.hex() now automatically sets the mode to &#39;rgba&#39; if the colors alpha channel is &lt; 1. so <code>chroma(&#39;rgba(255,0,0,.5)&#39;).hex()</code> will now return <code>&quot;#ff000080&quot;</code> instead of <code>&quot;#ff0000&quot;</code>. if this is not what you want, you must explicitly set the mode to <code>rgb</code> using <code>.hex(&quot;rgb&quot;)</code>.</li>
+<li>bugfix in chroma.average in LRGB mode (<a href="https://github.com/gka/chroma.js/issues/187">#187</a>)</li>
+<li>chroma.scale now also works with just one color (<a href="https://github.com/gka/chroma.js/issues/180">#180</a>)</li>
 </ul>
 <h3 id="1-3-5">1.3.5</h3>
 <ul>
