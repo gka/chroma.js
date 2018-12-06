@@ -1,4 +1,4 @@
-const {unpack} = require('../../utils/index');
+const {unpack} = require('../../utils');
 
 const cmyk2rgb = (...args) => {
     const [c,m,y,k] = unpack(args);
