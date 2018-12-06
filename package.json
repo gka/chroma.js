@@ -9,11 +9,6 @@
   ],
   "maintainers": [
     {
-      "name": "Klemen Slavič",
-      "email": "klemen@celtra.com",
-      "web": "http://about.me/klemen.slavic"
-    },
-    {
       "name": "Gregor Aisch",
       "email": "mail@driven-by-data.net",
       "web": "http://driven-by-data.net"
@@ -29,11 +24,9 @@
     "build": "grunt",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make preview",
-    "test": "./node_modules/vows/bin/vows --dot-matrix"
+    "test": "vows --dot-matrix test/unit/*"
   },
   "devDependencies": {
-    "catty": "gka/catty#coffeescript",
-    "coffee-script": "1.9.2",
     "es6-shim": "^0.18.0",
     "grunt": "^0.4.5",
     "grunt-cli": "^1.3.1",
