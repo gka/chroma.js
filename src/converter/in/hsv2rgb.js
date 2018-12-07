@@ -1,33 +1,25 @@
 const {unpack} = require('../../utils');
 const {floor} = Math;
 
-/*
- * this is basically just HSV with some minor tweaks
- *
- * hue.. [0..360]
- * chroma .. [0..1]
- * grayness .. [0..1]
- */
-
-const hcg2rgb = (...args) => {
-    args = unpack(args, 'hcg');
-    let [h,c,_g] = args;
+const hsv2rgb = (...args) => {
+    args = unpack(args, 'hsv');
+    let [h,s,v] = args;
     let r,g,b;
-    _g = _g * 255;
-    const _c = c * 255;
-    if (c === 0) {
-        r = g = b = _g
+    v *= 255;
+    if (s === 0) {
+        r = g = b = v;
     } else {
         if (h === 360) h = 0;
         if (h > 360) h -= 360;
         if (h < 0) h += 360;
         h /= 60;
+
         const i = floor(h);
         const f = h - i;
-        const p = _g * (1 - c);
-        const q = p + _c * (1 - f);
-        const t = p + _c * f;
-        const v = p + _c;
+        const p = v * (1 - s);
+        const q = v * (1 - s * f);
+        const t = v * (1 - s * (1 - f));
+
         switch (i) {
             case 0: [r,g,b] = [v, t, p]; break
             case 1: [r,g,b] = [q, v, p]; break
@@ -37,7 +29,8 @@ const hcg2rgb = (...args) => {
             case 5: [r,g,b] = [v, p, q]; break
         }
     }
-    return [r, g, b, args.length > 3 ? args[3] : 1];
+    return [r,g,b,args.length > 3?args[3]:1];
 }
 
-module.exports = hcg2rgb;
+module.exports = hsv2rgb;
+
