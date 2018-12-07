@@ -1,5 +1,10 @@
 ## Changelog
 
+### in progress
+* rewrote codebase to ES6
+* changed HCG input space from [0..360,0..100,0..100] to [0..360,0..1,0..1] (to be in line with HSL)
+* added new object unpacking (e.g. `hsl2rgb({h,s,l})`)
+
 ### 1.4.1
 * chroma.scale() now interprets `null` as NaN and returns the fallback color. Before it had interpreted `null` as `0`
 * added `scale.nodata()` to allow customizing the previously hard-coded fallback (aka "no data") color #cccccc
