@@ -2,7 +2,7 @@ const {unpack} = require('../../utils');
 const {round} = Math;
 
 const hsl2rgb = (...args) => {
-    args = unpack(args);
+    args = unpack(args, 'hsl');
     const [h,s,l] = args;
     let r,g,b;
     if (s === 0) {

@@ -1,7 +1,7 @@
 const {unpack} = require('../../utils');
 
 const cmyk2rgb = (...args) => {
-    args = unpack(args);
+    args = unpack(args, 'cmyk');
     const [c,m,y,k] = args;
     const alpha = args.length > 4 ? args[4] : 1;
     if (k === 1) return [0,0,0,alpha];
