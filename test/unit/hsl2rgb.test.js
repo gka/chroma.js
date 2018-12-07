@@ -4,11 +4,6 @@ require('es6-shim');
 
 const hsl2rgb = require('../../src/converter/in/hsl2rgb');
 
-// const round = (digits) => {
-//     const d = Math.pow(10,digits);
-//     return (v) => Math.round(v*d) / d;
-// }
-
 vows
     .describe('Testing CMYK color conversions')
     .addBatch({
