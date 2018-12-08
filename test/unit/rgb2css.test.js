@@ -30,8 +30,13 @@ const batch = {};
 Object.keys(tests).forEach(key => {
     batch[key] = {
         topic: tests[key],
-        test(topic) {
+        var1(topic) {
             assert.equal(rgb2css(topic.rgb, topic.mode || 'rgb'), topic.css);
+        },
+        var2(topic) {
+            const args = topic.rgb;
+            args.push(topic.mode || 'rgb');
+            assert.equal(rgb2css.apply(null, args), topic.css);
         }
     }
 });
