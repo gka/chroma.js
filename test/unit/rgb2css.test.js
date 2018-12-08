@@ -26,6 +26,10 @@ Object.keys(tests).forEach(key => {
             let [r,g,b] = topic.rgb;
             let obj = {r,g,b,...(topic.rgb.length>3 ? {a:topic.rgb[3]}:{})};
             assert.equal(rgb2css(obj, topic.mode), topic.css);
+        },
+        args(topic) {
+            if (topic.mode != 'rgb') return;
+            assert.deepStrictEqual(rgb2css.apply(null, topic.rgb), topic.hex);
         }
     }
 });
