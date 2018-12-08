@@ -10,6 +10,7 @@ const lch2lab = (...args) => {
     A saturation multiplier was added by Gregor Aisch
     */
     let [l,c,h] = unpack(args, 'lch');
+    if (isNaN(h)) h = 0;
     h = h * DEG2RAD;
     return [l, cos(h) * c, sin(h) * c]
 }
