@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const rgb2cmyk = require('../../src/converter/out/rgb2cmyk');
+const rgb2cmyk = require('../../src/io/cmyk/rgb2cmyk');
 
 vows
     .describe('Testing CMYK color conversions')

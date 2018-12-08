@@ -1,6 +1,6 @@
 const {unpack} = require('../../utils');
-const rgb2lab = require('./rgb2lab');
-const lab2lch = require('../misc/lab2lch');
+const rgb2lab = require('../lab/rgb2lab');
+const lab2lch = require('./lab2lch');
 
 const rgb2lch = (...args) => {
     const [r,g,b] = unpack(args, 'rgb');

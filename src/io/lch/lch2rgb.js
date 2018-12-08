@@ -1,6 +1,6 @@
 const {unpack} = require('../../utils');
-const lch2lab = require('../misc/lch2lab');
-const lab2rgb = require('./lab2rgb');
+const lch2lab = require('./lch2lab');
+const lab2rgb = require('../lab/lab2rgb');
 
 const lch2rgb = (...args) => {
     args = unpack(args, 'lch');

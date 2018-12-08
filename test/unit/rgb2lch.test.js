@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const rgb2lch = require('../../src/converter/out/rgb2lch');
+const rgb2lch = require('../../src/io/lch/rgb2lch');
 
 const tests = {
     black:      { lch: [0,0,NaN],             rgb: [0,0,0] },

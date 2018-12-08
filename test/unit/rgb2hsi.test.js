@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const rgb2hsi = require('../../src/converter/out/rgb2hsi');
+const rgb2hsi = require('../../src/io/hsi/rgb2hsi');
 
 const tests = {
     black2:     { hsi: [NaN,0,0],   rgb: [0,0,0,1]},
@@ -20,7 +20,6 @@ const round = (digits) => {
     const d = Math.pow(10,digits);
     return (v) => Math.round(v*d) / d;
 }
-
 const rnd = round(5);
 
 const batch = {};

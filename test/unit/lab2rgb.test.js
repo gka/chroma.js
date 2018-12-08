@@ -4,7 +4,7 @@ require('es6-shim');
 
 
 const limit = require('../../src/utils/limit');
-const lab2rgb = require('../../src/converter/in/lab2rgb');
+const lab2rgb = require('../../src/io/lab/lab2rgb');
 
 const round = v => limit(Math.round(v), 0, 255);
 

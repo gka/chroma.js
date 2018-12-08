@@ -1,4 +1,4 @@
-const LAB_CONSTANTS = require('../misc/lab-constants');
+const LAB_CONSTANTS = require('./lab-constants');
 const {unpack} = require('../../utils');
 const {pow} = Math;
 

@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const hsi2rgb = require('../../src/converter/in/hsi2rgb');
+const hsi2rgb = require('../../src/io/hsi/hsi2rgb');
 
 const round = (digits) => {
     const d = Math.pow(10,digits);

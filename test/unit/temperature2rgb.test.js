@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const temperature2rgb = require('../../src/converter/in/temperature2rgb');
+const temperature2rgb = require('../../src/io/temp/temperature2rgb');
 const {round} = Math;
 
 vows

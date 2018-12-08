@@ -1,6 +1,6 @@
 const {unpack, last} = require('../../utils');
-const hsl2css = require('../misc/hsl2css');
-const rgb2hsl = require('./rgb2hsl');
+const hsl2css = require('./hsl2css');
+const rgb2hsl = require('../hsl/rgb2hsl');
 const {round} = Math;
 
 /*

@@ -1,5 +1,5 @@
-const hex2rgb = require('./hex2rgb');
-const hsl2rgb = require('./hsl2rgb');
+const hex2rgb = require('../hex/hex2rgb');
+const hsl2rgb = require('../hsl/hsl2rgb');
 const w3cx11 = require('../../colors/w3cx11');
 
 const RE_RGB = /^rgb\(\s*(-?\d+),\s*(-?\d+)\s*,\s*(-?\d+)\s*\)$/;
