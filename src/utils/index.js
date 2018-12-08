@@ -5,6 +5,7 @@ module.exports = {
 	limit: require('./limit'),
 	type: require('./type'),
 	unpack: require('./unpack'),
+	last: require('./last'),
 	PI: PI,
 	TWOPI: PI*2,
 	PITHIRD: PI/3,
