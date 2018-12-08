@@ -1,5 +1,13 @@
 const {unpack} = require('../../utils');
 
+/*
+ * supported arguments:
+ * - rgb2hsl(r,g,b)
+ * - rgb2hsl(r,g,b,a)
+ * - rgb2hsl([r,g,b])
+ * - rgb2hsl([r,g,b,a])
+ * - rgb2hsl({r,g,b,a})
+ */
 const rgb2hsl = (...args) => {
     args = unpack(args, 'rgba');
     let [r,g,b] = args;

@@ -30,13 +30,13 @@ const batch = {};
 Object.keys(tests).forEach(key => {
     batch[key] = {
         topic: tests[key],
-        var1(topic) {
+        array(topic) {
             assert.equal(rgb2css(topic.rgb, topic.mode || 'rgb'), topic.css);
         },
-        var2(topic) {
-            const args = topic.rgb;
-            args.push(topic.mode || 'rgb');
-            assert.equal(rgb2css.apply(null, args), topic.css);
+        obj(topic) {
+            let [r,g,b] = topic.rgb;
+            let obj = {r,g,b,...(topic.rgb.length>3 ? {a:topic.rgb[3]}:{})};
+            assert.equal(rgb2css(obj, topic.mode), topic.css);
         }
     }
 });

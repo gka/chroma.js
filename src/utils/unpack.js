@@ -6,7 +6,9 @@ module.exports = (args, keyOrder=null) => {
     // with less than 3 args we check if first arg is object
     // and use the keyOrder string to extract and sort properties
 	if (type(args[0]) == 'object' && keyOrder) {
-		return keyOrder.split('').map(k => args[0][k]);
+		return keyOrder.split('')
+			.filter(k => args[0][k] !== undefined)
+			.map(k => args[0][k]);
 	}
 	// otherwise we just return the first argument
 	// (which we suppose is an array of args)

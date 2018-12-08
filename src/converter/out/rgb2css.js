@@ -3,6 +3,14 @@ const hsl2css = require('../misc/hsl2css');
 const rgb2hsl = require('./rgb2hsl');
 const {round} = Math;
 
+/*
+ * supported arguments:
+ * - rgb2css(r,g,b)
+ * - rgb2css(r,g,b,a)
+ * - rgb2css([r,g,b], mode)
+ * - rgb2css([r,g,b,a], mode)
+ * - rgb2css({r,g,b,a}, mode)
+ */
 const rgb2css = (...args) => {
     const rgba = unpack(args, 'rgba');
     let mode = last(args) || 'rgb';
