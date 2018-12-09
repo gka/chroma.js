@@ -11,4 +11,5 @@ module.exports = (rgb) => {
             rgb[i] = limit(rgb[i], 0, 1);
         }
     }
+    return rgb;
 };
