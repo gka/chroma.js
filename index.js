@@ -23,6 +23,7 @@ require('./src/io/temp');
 require('./src/ops/alpha');
 require('./src/ops/clipped');
 require('./src/ops/darken');
+require('./src/ops/saturate');
 require('./src/ops/luminance');
 
 // interpolators

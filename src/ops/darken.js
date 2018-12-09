@@ -6,7 +6,7 @@ Color.prototype.darken = function(amount=1) {
 	const me = this;
 	const lab = me.lab();
 	lab[0] -= LAB_CONSTANTS.Kn * amount;
-	return new Color(lab, 'lab').alpha(me.alpha());
+	return new Color(lab, 'lab').alpha(me.alpha(), true);
 }
 
 Color.prototype.brighten = function(amount=1) {
