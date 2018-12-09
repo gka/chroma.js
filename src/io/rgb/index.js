@@ -19,7 +19,6 @@ Color.prototype.rgba = function(...args) {
     }
 };
 
-
 chroma.rgb = (...args) => new Color(...args, 'rgb');
 
 input.format.rgb = (...args) => {

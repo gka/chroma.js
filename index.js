@@ -41,9 +41,10 @@ require('./src/interpolator/hsl');
 require('./src/interpolator/hsv');
 
 // generators -- > create new colors
+chroma.average = require('./src/generator/average');
 chroma.blend = require('./src/generator/blend');
-chroma.random = require('./src/generator/random');
 chroma.mix = chroma.interpolate = require('./src/generator/mix');
+chroma.random = require('./src/generator/random');
 
 // colors
 chroma.colors = require('./src/colors/w3cx11');

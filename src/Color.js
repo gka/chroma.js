@@ -5,6 +5,12 @@ class Color {
 
     constructor(...args) {
         const me = this;
+        if (type(args[0]) === 'object' &&
+            args[0].constructor &&
+            args[0].constructor.name === 'Color') {
+            // the argument is already a Color instance
+            return args[0];
+        }
 
         // last argument could be the mode
         let mode = last(args);
