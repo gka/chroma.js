@@ -24,7 +24,7 @@ const rgb2css = (...args) => {
         rgba[3] = rgba.length > 3 ? rgba[3] : 1;
         mode = 'rgba';
     }
-    return `${mode}(${rgba.join(',')})`;
+    return `${mode}(${rgba.slice(0,mode==='rgb'?3:4).join(',')})`;
 }
 
 module.exports = rgb2css;
