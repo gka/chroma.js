@@ -11,7 +11,7 @@ const RE_HSLA = /^hsla\(\s*(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)%\s*,\s*(-?\d+(
 
 const {round} = Math;
 
-module.exports = (css) => {
+const css2rgb = (css) => {
     css = css.toLowerCase().trim();
     // named X11 colors
     if (w3cx11[css]) {
@@ -78,3 +78,14 @@ module.exports = (css) => {
         return rgb;
     }
 }
+
+css2rgb.test = (s) => {
+    return RE_RGB.test(s) ||
+        RE_RGBA.test(s) ||
+        RE_RGB_PCT.test(s) ||
+        RE_RGBA_PCT.test(s) ||
+        RE_HSL.test(s) ||
+        RE_HSLA.test(s);
+}
+
+module.exports = css2rgb;
