@@ -46,6 +46,9 @@ chroma.blend = require('./src/generator/blend');
 chroma.mix = chroma.interpolate = require('./src/generator/mix');
 chroma.random = require('./src/generator/random');
 
+// other utility methods
+chroma.contrast = require('./src/utils/contrast');
+
 // colors
 chroma.colors = require('./src/colors/w3cx11');
 chroma.brewer = require('./src/colors/colorbrewer');
