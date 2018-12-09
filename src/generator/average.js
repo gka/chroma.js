@@ -2,7 +2,7 @@ const Color = require('../Color');
 const {clip_rgb} = require('../utils');
 const {pow, sqrt, PI, cos, sin, atan2} = Math;
 
-module.exports = (colors, mode='rgb') => {
+module.exports = (colors, mode='lrgb') => {
     const l = colors.length;
     // convert colors to Color objects
     colors = colors.map(c => new Color(c));
@@ -53,7 +53,8 @@ module.exports = (colors, mode='rgb') => {
             xyz[i] = xyz[i]/cnt[i];
         }
     }
-    return (new Color(xyz, mode)).alpha(alpha/l, true);
+    alpha /= l;
+    return (new Color(xyz, mode)).alpha(alpha > 0.99999 ? 1 : alpha, true);
 };
 
 
@@ -71,6 +72,6 @@ const _average_lrgb = (colors) => {
     xyz[0] = sqrt(xyz[0]);
     xyz[1] = sqrt(xyz[1]);
     xyz[2] = sqrt(xyz[2]);
-    if (xyz[3] > 1) xyz[3] = 1;
+    if (xyz[3] > 0.9999999) xyz[3] = 1;
     return new Color(clip_rgb(xyz));
 }

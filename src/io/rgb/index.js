@@ -2,27 +2,25 @@ const chroma = require('../../chroma');
 const Color = require('../../Color');
 const input = require('../input');
 const {unpack, type} = require('../../utils');
+const {round} = Math;
 
-Color.prototype.rgb = function(...args) {
-    if (args.length) {
-        this._rgb = unpack(args, 'rgb');
-    } else {
-        return this._rgb.slice(0,3);
-    }
-};
+Color.prototype.rgb = function(rnd=true) {
+    if (rnd === false) return this._rgb.slice(0,3);
+    return this._rgb.slice(0,3).map(round);
+}
 
-Color.prototype.rgba = function(...args) {
-    if (args.length) {
-        this._rgb = unpack(args, 'rgba');
-    } else {
-        return this._rgb.slice(0,4);
-    }
+Color.prototype.rgba = function(rnd=true) {
+    return this._rgb.slice(0,4).map((v,i) => {
+        return i<3 ? (rnd === false ? v : round(v)) : v;
+    });
 };
 
 chroma.rgb = (...args) => new Color(...args, 'rgb');
 
 input.format.rgb = (...args) => {
-    return unpack(args, 'rgba');
+    const rgba = unpack(args, 'rgba');
+    if (rgba[3] === undefined) rgba[3] = 1;
+    return rgba;
 };
 
 input.autodetect.push({
