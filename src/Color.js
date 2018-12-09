@@ -13,6 +13,7 @@ class Color {
         if (!mode) {
             autodetect = true;
             if (!_input.sorted) {
+                console.log(_input.autodetect);
                 _input.autodetect = _input.autodetect.sort((a,b) => b.p - a.p);
                 _input.sorted = true;
             }

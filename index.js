@@ -21,9 +21,24 @@ require('./src/io/temp');
 
 // operators --> modify existing Colors
 require('./src/ops/alpha');
+require('./src/ops/clipped');
+require('./src/ops/darken');
+require('./src/ops/luminance');
+
+// interpolators
+require('./src/interpolator/rgb');
+require('./src/interpolator/lrgb');
+require('./src/interpolator/lab');
+require('./src/interpolator/lch');
+require('./src/interpolator/num');
+require('./src/interpolator/hcg');
+require('./src/interpolator/hsi');
+require('./src/interpolator/hsl');
+require('./src/interpolator/hsv');
 
 // generators -- > create new colors
 chroma.blend = require('./src/generator/blend');
 chroma.random = require('./src/generator/random');
+chroma.mix = chroma.interpolate = require('./src/generator/mix');
 
 module.exports = chroma;

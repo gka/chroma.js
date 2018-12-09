@@ -31,7 +31,7 @@ input.autodetect.push({
     test: (...args) => {
         args = unpack(args, 'rgba');
         if (type(args) === 'array' && (args.length === 3 ||
-            args.length === 4 && type(a[3]) == 'number' && a[3] >= 0 && a[3] <= 1)) {
+            args.length === 4 && type(args[3]) == 'number' && args[3] >= 0 && args[3] <= 1)) {
             return 'rgb';
         }
     }
