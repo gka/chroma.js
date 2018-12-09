@@ -38,8 +38,10 @@
     "markdown-to-html": "0.0.13",
     "minimatch": "^3.0.4",
     "rollup": "^0.67.4",
+    "rollup-plugin-buble": "^0.19.4",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-uglify": "^6.0.0",
     "uglify-js": "^2.8.29",
     "vows": "^0.8.2"
   },

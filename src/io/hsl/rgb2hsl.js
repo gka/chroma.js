@@ -35,7 +35,8 @@ const rgb2hsl = (...args) => {
 
     h *= 60;
     if (h < 0) h += 360;
-    return [h,s,l,args.length>3?args[3]:1];
+    if (args.length>3 && args[3]!==undefined) return [h,s,l,args[3]];
+    return [h,s,l];
 }
 
 module.exports = rgb2hsl;

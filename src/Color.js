@@ -1,4 +1,4 @@
-const {last, clip_rgb} = require('./utils');
+const {last, clip_rgb, type} = require('./utils');
 const _input = require('./io/input');
 
 class Color {
@@ -8,15 +8,35 @@ class Color {
 
         // last argument could be the mode
         let mode = last(args);
+        let autodetect = false;
 
-        console.log(mode, _input[mode] ? 'y' : 'f', args.slice(0,-1));
-
-        if (_input[mode]) {
-            // we know the exact input mode from the last parameter
-            me._rgb = clip_rgb(_input[mode].apply(null, args.slice(0,-1)));
-        } else {
-            // we need to guess the input mode
+        if (!mode) {
+            autodetect = true;
+            if (!_input.sorted) {
+                _input.autodetect = _input.autodetect.sort((a,b) => b.p - a.p);
+                _input.sorted = true;
+            }
+            // auto-detect format
+            for (let chk of _input.autodetect) {
+                mode = chk.test(...args);
+                if (mode) break;
+            }
         }
+
+        if (_input.format[mode]) {
+            me._rgb = clip_rgb(_input.format[mode].apply(null, autodetect ? args : args.slice(0,-1)));
+        } else {
+            console.warn('unknown format: '+args);
+            me._rgb = [0,0,0];
+        }
+
+        // add alpha channel
+        if (me._rgb.length === 3) me._rgb.push(1);
+    }
+
+    toString() {
+        if (type(this.hex) == 'function') return this.hex();
+        return `[${this._rgb.join(',')}]`;
     }
 
 }
