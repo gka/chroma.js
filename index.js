@@ -51,8 +51,10 @@ chroma.random = require('./src/generator/random');
 chroma.scale = require('./src/generator/scale');
 
 // other utility methods
-chroma.contrast = require('./src/utils/contrast');
 chroma.analyze = require('./src/utils/analyze').analyze;
+chroma.contrast = require('./src/utils/contrast');
+chroma.deltaE = require('./src/utils/delta-e');
+chroma.distance = require('./src/utils/distance');
 chroma.limits = require('./src/utils/analyze').limits;
 
 // scale

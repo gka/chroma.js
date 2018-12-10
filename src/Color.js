@@ -33,8 +33,7 @@ class Color {
             const rgb = _input.format[mode].apply(null, autodetect ? args : args.slice(0,-1));
             me._rgb = clip_rgb(rgb);
         } else {
-            console.warn('unknown format: '+args);
-            me._rgb = [0,0,0];
+            throw new Error('unknown format: '+args);
         }
 
         // add alpha channel

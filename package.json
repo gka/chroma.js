@@ -21,9 +21,9 @@
   },
   "main": "chroma.js",
   "scripts": {
-    "build": "rollup -c && DEV=1 rollup -c",
+    "build": "rollup -c && uglifyjs --comments '' chroma.js > chroma.min.js ",
     "docs": "cd docs && make",
-    "docs-preview": "cd docs && make preview",
+    "docs-preview": "cd docs && make && make preview",
     "test": "vows --dot-matrix test/*.js"
   },
   "devDependencies": {

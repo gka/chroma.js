@@ -4,16 +4,14 @@ import buble from 'rollup-plugin-buble';
 import license from 'rollup-plugin-license';
 import path from 'path';
 
-import {uglify} from 'rollup-plugin-uglify';
+// import {uglify} from 'rollup-plugin-uglify';
 
 /** globals process, __dirname **/
-
-const production = !process.env.ROLLUP_WATCH && !process.env.DEV;
 
 module.exports = {
     input: 'index.js',
     output: {
-        file: `chroma${production?'.min':''}.js`,
+        file: `chroma.js`,
         format: 'umd',
         name: 'chroma',
     },
@@ -26,9 +24,9 @@ module.exports = {
         buble({
             transforms: { dangerousForOf: true }
         }),
-        production && uglify({
-            mangle: true
-        }),
+        // production && uglify({
+        //     mangle: true
+        // }),
         license({
             sourceMap: true,
             cwd: '.', // Default is process.cwd()
