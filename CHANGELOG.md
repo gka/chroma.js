@@ -1,6 +1,6 @@
 ## Changelog
 
-### in progress
+### 2.0.0
 * ported entire codebase from CoffeeScript to ES6
 * changed HCG input space from [0..360,0..100,0..100] to [0..360,0..1,0..1] (to be in line with HSL)
 * added new object unpacking (e.g. `hsl2rgb({h,s,l})`)
