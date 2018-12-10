@@ -51,6 +51,10 @@ chroma.contrast = require('./src/utils/contrast');
 chroma.analyze = require('./src/utils/analyze').analyze;
 chroma.limits = require('./src/utils/analyze').limits;
 
+// scale
+chroma.scale = require('./src/scale');
+chroma.scales = require('./src/utils/scales');
+
 // colors
 chroma.colors = require('./src/colors/w3cx11');
 chroma.brewer = require('./src/colors/colorbrewer');
