@@ -48,6 +48,8 @@ chroma.random = require('./src/generator/random');
 
 // other utility methods
 chroma.contrast = require('./src/utils/contrast');
+chroma.analyze = require('./src/utils/analyze').analyze;
+chroma.limits = require('./src/utils/analyze').limits;
 
 // colors
 chroma.colors = require('./src/colors/w3cx11');
