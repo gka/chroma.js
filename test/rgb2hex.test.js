@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const rgb2hex = require('../../src/io/hex/rgb2hex');
+const rgb2hex = require('../src/io/hex/rgb2hex');
 
 const tests = {
     black:      { rgb: [0,0,0,1],       mode: 'auto',   hex: '#000000' },

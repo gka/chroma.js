@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const lch2lab = require('../../src/io/lch/lch2lab');
+const lch2lab = require('../src/io/lch/lch2lab');
 
 const tests = {
     black:      { lab: [0,0,0],               lch: [0,0,NaN]},

@@ -3,7 +3,7 @@ require('es6-shim');
 
 const vows = require('vows');
 const assert = require('assert');
-const chroma = require('../../index');
+const chroma = require('../index');
 
 const test = vows.describe('Testing color conversions');
 

@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const unpack = require('../../src/utils/unpack');
+const unpack = require('../src/utils/unpack');
 
 // const round = (digits) => {
 //     const d = Math.pow(10,digits);

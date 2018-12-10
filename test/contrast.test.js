@@ -2,8 +2,8 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-require('../../src/io/named');
-const contrast = require('../../src/utils/contrast');
+require('../src/io/named');
+const contrast = require('../src/utils/contrast');
 
 
 vows

@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const chroma = require('../../index');
+const chroma = require('../index');
 
 const colors = [[125,133,127], [131,127,134], [138,121,141], [144,114,147], [149,107,153],
     [165,83,170], [160,92,164], [170,73,175], [175,62,180], [155,100,159]];

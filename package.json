@@ -24,7 +24,7 @@
     "build": "rollup -c",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make preview",
-    "test": "vows --dot-matrix test/unit/*"
+    "test": "vows --dot-matrix test/*.js"
   },
   "devDependencies": {
     "es6-shim": "^0.18.0",

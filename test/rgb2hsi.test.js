@@ -2,7 +2,7 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-const rgb2hsi = require('../../src/io/hsi/rgb2hsi');
+const rgb2hsi = require('../src/io/hsi/rgb2hsi');
 
 const tests = {
     black2:     { hsi: [NaN,0,0],   rgb: [0,0,0,1]},

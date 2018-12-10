@@ -3,8 +3,8 @@ const assert = require('assert');
 require('es6-shim');
 
 
-const limit = require('../../src/utils/limit');
-const lch2rgb = require('../../src/io/lch/lch2rgb');
+const limit = require('../src/utils/limit');
+const lch2rgb = require('../src/io/lch/lch2rgb');
 
 const round = v => limit(Math.round(v), 0, 255);
 

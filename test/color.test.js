@@ -2,8 +2,8 @@ const vows = require('vows')
 const assert = require('assert');
 require('es6-shim');
 
-require('../../index');
-const Color = require('../../src/Color');
+require('../index');
+const Color = require('../src/Color');
 
 const hexColors = {};
 ['#ff9900', '#FF9900', '#F90', 'f90', 'FF9900', 'FF9900F0'].forEach(hex => {
