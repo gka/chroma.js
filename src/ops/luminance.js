@@ -31,7 +31,7 @@ Color.prototype.luminance = function(lum) {
         }
 
         const rgb = (cur_lum > lum ? test(new Color([0,0,0]), this) : test(this, new Color([255,255,255]))).rgb();
-        return new Color([rgb,...this._rgb[3]]);
+        return new Color([...rgb,this._rgb[3]]);
     }
     return rgb2luminance(...(this._rgb).slice(0,3));
 }
