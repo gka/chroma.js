@@ -43,6 +43,7 @@ require('./src/interpolator/hsv');
 
 // generators -- > create new colors
 chroma.average = require('./src/generator/average');
+chroma.bezier = require('./src/generator/bezier');
 chroma.blend = require('./src/generator/blend');
 chroma.cubehelix = require('./src/generator/cubehelix');
 chroma.mix = chroma.interpolate = require('./src/generator/mix');

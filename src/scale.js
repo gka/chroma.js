@@ -35,7 +35,6 @@ module.exports = function(colors, positions) {
             chroma.brewer[colors.toLowerCase()]) {
             colors = chroma.brewer[colors.toLowerCase()];
         }
-        if (type(colors) !== 'array') colors = ['#fff', '#000'];
         if (type(colors) === 'array') {
             // handle single color
             if (colors.length === 1) {
