@@ -1,8 +1,8 @@
 # Chroma.js
 
-[Chroma.js](https://gka.github.io/chroma.js/) is a tiny JavaScript library (14kB) for all kinds of color conversions and color scales.
+[Chroma.js](https://gka.github.io/chroma.js/) is a ~~tiny~~ small zero-dependency JavaScript library (17kB) for all kinds of color conversions and color scales.
 
-[![Build Status](https://travis-ci.org/gka/chroma.js.svg?branch=master)](https://travis-ci.org/gka/chroma.js)
+[![Build Status](https://travis-ci.org/gka/chroma.js.svg?branch=master)](https://travis-ci.com/gka/chroma.js)
 
 ### Usage
 
