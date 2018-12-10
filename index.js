@@ -48,6 +48,7 @@ chroma.blend = require('./src/generator/blend');
 chroma.cubehelix = require('./src/generator/cubehelix');
 chroma.mix = chroma.interpolate = require('./src/generator/mix');
 chroma.random = require('./src/generator/random');
+chroma.scale = require('./src/generator/scale');
 
 // other utility methods
 chroma.contrast = require('./src/utils/contrast');
@@ -55,7 +56,6 @@ chroma.analyze = require('./src/utils/analyze').analyze;
 chroma.limits = require('./src/utils/analyze').limits;
 
 // scale
-chroma.scale = require('./src/scale');
 chroma.scales = require('./src/utils/scales');
 
 // colors

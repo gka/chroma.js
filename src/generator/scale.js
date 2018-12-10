@@ -2,8 +2,8 @@
 
 // @requires utils color analyze
 
-const chroma = require('./chroma');
-const {type} = require('./utils');
+const chroma = require('../chroma');
+const {type} = require('../utils');
 
 const {pow} = Math;
 

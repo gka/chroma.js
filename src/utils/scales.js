@@ -1,7 +1,7 @@
 // some pre-defined color scales:
 const chroma = require('../chroma');
 require('../io/hsl');
-const scale = require('../scale');
+const scale = require('../generator/scale');
 
 module.exports = {
 	cool() { return scale([chroma.hsl(180,1,.9), chroma.hsl(250,.7,.4)]) },

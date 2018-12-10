@@ -5,7 +5,7 @@
 // @requires utils lab
 const Color = require('../Color');
 require('../io/lab');
-const scale = require('../scale');
+const scale = require('./scale');
 
 const bezier = function(colors) {
     let I, lab0, lab1, lab2;
