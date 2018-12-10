@@ -1,9 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS205: Consider reworking code to avoid use of IIFEs
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-let l;
 require('es6-shim');
 const vows = require('vows');
 const assert = require('assert');
@@ -17,7 +11,8 @@ vows
         'lch grayscale': {
             topic: (((() => {
                 const result = [];
-                for (l of [0,100,25,50,75]) {                     result.push([l,0,0]);
+                for (let l of [0,100,25,50,75]) {
+                    result.push([l,0,0]);
                 }
                 return result;
             })())),
