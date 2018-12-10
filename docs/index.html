@@ -531,6 +531,18 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 <h2 id="changelog">Changelog</h2>
+<h3 id="in-progress">in progress</h3>
+<ul>
+<li>ported entire codebase from CoffeeScript to ES6</li>
+<li>changed HCG input space from [0..360,0..100,0..100] to [0..360,0..1,0..1] (to be in line with HSL)</li>
+<li>added new object unpacking (e.g. <code>hsl2rgb({h,s,l})</code>)</li>
+<li>changed default interpolation to <code>lrgb</code> in mix/interpolate and average.</li>
+</ul>
+<h3 id="1-4-1">1.4.1</h3>
+<ul>
+<li>chroma.scale() now interprets <code>null</code> as NaN and returns the fallback color. Before it had interpreted <code>null</code> as <code>0</code></li>
+<li>added <code>scale.nodata()</code> to allow customizing the previously hard-coded fallback (aka &quot;no data&quot;) color #cccccc</li>
+</ul>
 <h3 id="1-4-0">1.4.0</h3>
 <ul>
 <li>color.hex() now automatically sets the mode to &#39;rgba&#39; if the colors alpha channel is &lt; 1. so <code>chroma(&#39;rgba(255,0,0,.5)&#39;).hex()</code> will now return <code>&quot;#ff000080&quot;</code> instead of <code>&quot;#ff0000&quot;</code>. if this is not what you want, you must explicitly set the mode to <code>rgb</code> using <code>.hex(&quot;rgb&quot;)</code>.</li>
