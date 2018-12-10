@@ -8,7 +8,8 @@ const {unpack} = require('../../utils');
 const {round} = Math;
 
 const rgb2temperature = (...args) => {
-    const [r,g,b] = unpack(args, 'rgb');
+    const rgb = unpack(args, 'rgb');
+    const r = rgb[0], b = rgb[2];
     let minTemp = 1000;
     let maxTemp = 40000;
     const eps = 0.4;

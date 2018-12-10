@@ -7,13 +7,13 @@ const {type} = require('../utils');
 
 const {pow} = Math;
 
-module.exports = function(colors, positions) {
+module.exports = function(colors) {
 
     // constructor
     let _mode = 'rgb';
     let _nacol = chroma('#ccc');
     let _spread = 0;
-    const _fixed = false;
+    // const _fixed = false;
     let _domain = [0, 1];
     let _pos = [];
     let _padding = [0,0];

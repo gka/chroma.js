@@ -1,7 +1,7 @@
 const Color = require('../../Color');
 const chroma = require('../../chroma');
 const input = require('../input');
-const {type, unpack} = require('../../utils');
+const {unpack} = require('../../utils');
 
 input.format.gl = (...args) => {
     const rgb = unpack(args, 'rgba');

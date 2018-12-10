@@ -1,5 +1,5 @@
 const type = require('./type');
-const {log, pow, floor} = Math;
+const {log, pow, floor, abs} = Math;
 
 
 const analyze = (data, key=null) => {
@@ -115,6 +115,7 @@ const limits = (data, mode='equal', num=7) => {
             for (let i=0; i<n; i++) {
                 const value = values[i];
                 let mindist = Number.MAX_VALUE;
+                let best;
                 for (let j=0; j<num; j++) {
                     const dist = abs(centroids[j]-value);
                     if (dist < mindist) {
@@ -131,7 +132,7 @@ const limits = (data, mode='equal', num=7) => {
             for (let j=0; j<num; j++) {
                 newCentroids[j] = null;
             }
-            for (let i=0; i<n; j++) {
+            for (let i=0; i<n; i++) {
                 cluster = assignments[i];
                 if (newCentroids[cluster] === null) {
                     newCentroids[cluster] = values[i];
@@ -146,7 +147,7 @@ const limits = (data, mode='equal', num=7) => {
             // check convergence
             repeat = false;
             for (let j=0; j<num; j++) {
-                if (newCentroids[j] !== centroids[i]) {
+                if (newCentroids[j] !== centroids[j]) {
                     repeat = true;
                     break;
                 }

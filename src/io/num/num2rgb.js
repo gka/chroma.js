@@ -7,8 +7,7 @@ const num2rgb = (num) => {
         const b = num & 0xFF;
         return [r,g,b,1];
     }
-    console.warn("unknown num color: "+num);
-    return [0,0,0,1];
+    throw new Error("unknown num color: "+num);
 }
 
 module.exports = num2rgb;
