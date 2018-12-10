@@ -84,8 +84,8 @@
 
     // ported from jQuery's $.type
     var classToType = {};
-    for (var i$1 = 0, list = ['Boolean', 'Number', 'String', 'Function', 'Array', 'Date', 'RegExp', 'Undefined', 'Null']; i$1 < list.length; i$1 += 1) {
-        var name = list[i$1];
+    for (var i = 0, list = ['Boolean', 'Number', 'String', 'Function', 'Array', 'Date', 'RegExp', 'Undefined', 'Null']; i < list.length; i += 1) {
+        var name = list[i];
 
         classToType[("[object " + name + "]")] = name.toLowerCase();
     }
@@ -859,7 +859,7 @@
     var hcg2rgb_1 = hcg2rgb;
 
     var unpack$a = utils.unpack;
-    var type$4 = utils.type;
+    var type$3 = utils.type;
 
 
 
@@ -886,7 +886,7 @@
             while ( len-- ) args[ len ] = arguments[ len ];
 
             args = unpack$a(args, 'hcg');
-            if (type$4(args) === 'array' && args.length === 3) {
+            if (type$3(args) === 'array' && args.length === 3) {
                 return 'hcg';
             }
         }
@@ -927,7 +927,7 @@
 
     var rgb2hex_1 = rgb2hex;
 
-    var type$5 = utils.type;
+    var type$4 = utils.type;
 
 
 
@@ -950,7 +950,7 @@
             var rest = [], len = arguments.length - 1;
             while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
 
-            if (!rest.length && type$5(h) === 'string' && [3,4,6,7,8,9].includes(h.length)) {
+            if (!rest.length && type$4(h) === 'string' && [3,4,6,7,8,9].includes(h.length)) {
                 return 'hex';
             }
         }
@@ -1052,7 +1052,7 @@
     var hsi2rgb_1 = hsi2rgb;
 
     var unpack$e = utils.unpack;
-    var type$6 = utils.type;
+    var type$5 = utils.type;
 
 
 
@@ -1079,14 +1079,14 @@
             while ( len-- ) args[ len ] = arguments[ len ];
 
             args = unpack$e(args, 'hsi');
-            if (type$6(args) === 'array' && args.length === 3) {
+            if (type$5(args) === 'array' && args.length === 3) {
                 return 'hsi';
             }
         }
     });
 
     var unpack$f = utils.unpack;
-    var type$7 = utils.type;
+    var type$6 = utils.type;
 
 
 
@@ -1113,7 +1113,7 @@
             while ( len-- ) args[ len ] = arguments[ len ];
 
             args = unpack$f(args, 'hsl');
-            if (type$7(args) === 'array' && args.length === 3) {
+            if (type$6(args) === 'array' && args.length === 3) {
                 return 'hsl';
             }
         }
@@ -1201,7 +1201,7 @@
     var hsv2rgb_1 = hsv2rgb;
 
     var unpack$i = utils.unpack;
-    var type$8 = utils.type;
+    var type$7 = utils.type;
 
 
 
@@ -1228,7 +1228,7 @@
             while ( len-- ) args[ len ] = arguments[ len ];
 
             args = unpack$i(args, 'hsv');
-            if (type$8(args) === 'array' && args.length === 3) {
+            if (type$7(args) === 'array' && args.length === 3) {
                 return 'hsv';
             }
         }
@@ -1334,7 +1334,7 @@
     var lab2rgb_1 = lab2rgb;
 
     var unpack$l = utils.unpack;
-    var type$9 = utils.type;
+    var type$8 = utils.type;
 
 
 
@@ -1361,7 +1361,7 @@
             while ( len-- ) args[ len ] = arguments[ len ];
 
             args = unpack$l(args, 'lab');
-            if (type$9(args) === 'array' && args.length === 3) {
+            if (type$8(args) === 'array' && args.length === 3) {
                 return 'lab';
             }
         }
@@ -1476,7 +1476,7 @@
     var hcl2rgb_1 = hcl2rgb;
 
     var unpack$r = utils.unpack;
-    var type$a = utils.type;
+    var type$9 = utils.type;
 
 
 
@@ -1509,13 +1509,13 @@
             while ( len-- ) args[ len ] = arguments[ len ];
 
             args = unpack$r(args, m);
-            if (type$a(args) === 'array' && args.length === 3) {
+            if (type$9(args) === 'array' && args.length === 3) {
                 return m;
             }
         }
     }); });
 
-    var type$b = utils.type;
+    var type$a = utils.type;
 
 
 
@@ -1543,7 +1543,7 @@
             var rest = [], len = arguments.length - 1;
             while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
 
-            if (!rest.length && type$b(h) === 'string' && w3cx11_1[h.toLowerCase()]) {
+            if (!rest.length && type$a(h) === 'string' && w3cx11_1[h.toLowerCase()]) {
                 return 'named';
             }
         }
@@ -1564,22 +1564,21 @@
 
     var rgb2num_1 = rgb2num;
 
-    var type$c = utils.type;
+    var type$b = utils.type;
 
     var num2rgb = function (num) {
-        if (type$c(num) == "number" && num >= 0 && num <= 0xFFFFFF) {
+        if (type$b(num) == "number" && num >= 0 && num <= 0xFFFFFF) {
             var r = num >> 16;
             var g = (num >> 8) & 0xFF;
             var b = num & 0xFF;
             return [r,g,b,1];
         }
-        console.warn("unknown num color: "+num);
-        return [0,0,0,1];
+        throw new Error("unknown num color: "+num);
     };
 
     var num2rgb_1 = num2rgb;
 
-    var type$d = utils.type;
+    var type$c = utils.type;
 
 
 
@@ -1602,14 +1601,14 @@
             var args = [], len = arguments.length;
             while ( len-- ) args[ len ] = arguments[ len ];
 
-            if (args.length === 1 && type$d(args[0]) === 'number' && args[0] >= 0 && args[0] <= 0xFFFFFF) {
+            if (args.length === 1 && type$c(args[0]) === 'number' && args[0] >= 0 && args[0] <= 0xFFFFFF) {
                 return 'num';
             }
         }
     });
 
     var unpack$t = utils.unpack;
-    var type$e = utils.type;
+    var type$d = utils.type;
     var round$5 = Math.round;
 
     Color_1.prototype.rgb = function(rnd) {
@@ -1650,8 +1649,8 @@
             while ( len-- ) args[ len ] = arguments[ len ];
 
             args = unpack$t(args, 'rgba');
-            if (type$e(args) === 'array' && (args.length === 3 ||
-                args.length === 4 && type$e(args[3]) == 'number' && args[3] >= 0 && args[3] <= 1)) {
+            if (type$d(args) === 'array' && (args.length === 3 ||
+                args.length === 4 && type$d(args[3]) == 'number' && args[3] >= 0 && args[3] <= 1)) {
                 return 'rgb';
             }
         }
@@ -1694,18 +1693,16 @@
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        var ref = unpack$u(args, 'rgb');
-        var r = ref[0];
-        var g = ref[1];
-        var b = ref[2];
+        var rgb = unpack$u(args, 'rgb');
+        var r = rgb[0], b = rgb[2];
         var minTemp = 1000;
         var maxTemp = 40000;
         var eps = 0.4;
         var temp;
         while (maxTemp - minTemp > eps) {
             temp = (maxTemp + minTemp) * 0.5;
-            var rgb = temperature2rgb_1(temp);
-            if ((rgb[2] / rgb[0]) >= (b / r)) {
+            var rgb$1 = temperature2rgb_1(temp);
+            if ((rgb$1[2] / rgb$1[0]) >= (b / r)) {
                 maxTemp = temp;
             } else {
                 minTemp = temp;
@@ -1735,12 +1732,12 @@
     input.format.kelvin =
     input.format.temperature = temperature2rgb_1;
 
-    var type$f = utils.type;
+    var type$e = utils.type;
 
     Color_1.prototype.alpha = function(a, mutate) {
         if ( mutate === void 0 ) mutate=false;
 
-        if (a !== undefined && type$f(a) === 'number') {
+        if (a !== undefined && type$e(a) === 'number') {
             if (mutate) {
                 this._rgb[3] = a;
                 return this;
@@ -1786,14 +1783,14 @@
         }
     };
 
-    var type$g = utils.type;
+    var type$f = utils.type;
     var pow$2 = Math.pow;
 
     var EPS = 1e-7;
     var MAX_ITER = 20;
 
     Color_1.prototype.luminance = function(lum) {
-        if (lum !== undefined && type$g(lum) === 'number') {
+        if (lum !== undefined && type$f(lum) === 'number') {
             if (lum === 0) {
                 // return pure black
                 return new Color_1([0,0,0,this._rgb[3]], 'rgb');
@@ -1840,7 +1837,7 @@
 
     var interpolator = {};
 
-    var type$h = utils.type;
+    var type$g = utils.type;
 
 
     var mix = function (col1, col2, f) {
@@ -1856,8 +1853,8 @@
         if (!interpolator[mode]) {
             throw new Error(("interpolation mode " + mode + " is not defined"));
         }
-        if (type$h(col1) !== 'object') { col1 = new Color_1(col1); }
-        if (type$h(col2) !== 'object') { col2 = new Color_1(col2); }
+        if (type$g(col1) !== 'object') { col1 = new Color_1(col1); }
+        if (type$g(col2) !== 'object') { col2 = new Color_1(col2); }
         return interpolator[mode](col1, col2, f)
             .alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
     };
@@ -1900,7 +1897,7 @@
     	return this.saturate(-amount);
     };
 
-    var type$i = utils.type;
+    var type$h = utils.type;
 
     Color_1.prototype.set = function(mc, value, mutate) {
         if ( mutate === void 0 ) mutate=false;
@@ -1912,7 +1909,7 @@
         if (channel) {
             var i = mode.indexOf(channel);
             if (i > -1) {
-                if (type$i(value) == 'string') {
+                if (type$h(value) == 'string') {
                     switch(value.charAt(0)) {
                         case '+': src[i] += +value; break;
                         case '-': src[i] += +value; break;
@@ -1920,7 +1917,7 @@
                         case '/': src[i] /= +(value.substr(1)); break;
                         default: src[i] = +value;
                     }
-                } else if (type$i(value) === 'number') {
+                } else if (type$h(value) === 'number') {
                     src[i] = value;
                 } else {
                     throw new Error("unsupported value for Color.set");
@@ -2180,16 +2177,17 @@
     // @requires utils color analyze
 
 
-    var type$j = utils.type;
+    var type$i = utils.type;
 
     var pow$5 = Math.pow;
 
-    var scale = function(colors, positions) {
+    var scale = function(colors) {
 
         // constructor
         var _mode = 'rgb';
         var _nacol = chroma_1('#ccc');
         var _spread = 0;
+        // const _fixed = false;
         var _domain = [0, 1];
         var _pos = [];
         var _padding = [0,0];
@@ -2207,11 +2205,11 @@
 
         var setColors = function(colors) {
             colors = colors || ['#fff', '#000'];
-            if (colors && type$j(colors) === 'string' && chroma_1.brewer &&
+            if (colors && type$i(colors) === 'string' && chroma_1.brewer &&
                 chroma_1.brewer[colors.toLowerCase()]) {
                 colors = chroma_1.brewer[colors.toLowerCase()];
             }
-            if (type$j(colors) === 'array') {
+            if (type$i(colors) === 'array') {
                 // handle single color
                 if (colors.length === 1) {
                     colors = [colors[0], colors[0]];
@@ -2292,7 +2290,7 @@
             if (_useCache && _colorCache[k]) {
                 col = _colorCache[k];
             } else {
-                if (type$j(_colors) === 'array') {
+                if (type$i(_colors) === 'array') {
                     //for i in [0.._pos.length-1]
                     for (var i=0; i<_pos.length; i++) {
                         var p = _pos[i];
@@ -2310,7 +2308,7 @@
                             break;
                         }
                     }
-                } else if (type$j(_colors) === 'function') {
+                } else if (type$i(_colors) === 'function') {
                     col = _colors(t);
                 }
                 if (_useCache) { _colorCache[k] = col; }
@@ -2331,7 +2329,7 @@
 
         f.classes = function(classes) {
             if (classes != null) {
-                if (type$j(classes) === 'array') {
+                if (type$i(classes) === 'array') {
                     _classes = classes;
                     _domain = [classes[0], classes[classes.length-1]];
                 } else {
@@ -2438,7 +2436,7 @@
 
         f.padding = function(p) {
             if (p != null) {
-                if (type$j(p) === 'number') {
+                if (type$i(p) === 'number') {
                     p = [p,p];
                 }
                 _padding = p;
@@ -2640,7 +2638,7 @@
     // based on D.A. Green "A colour scheme for the display of astronomical intensity images"
     // http://astron-soc.in/bulletin/11June/289392011.pdf
 
-    var type$k = utils.type;
+    var type$j = utils.type;
     var clip_rgb$3 = utils.clip_rgb;
     var TWOPI$2 = utils.TWOPI;
     var pow$6 = Math.pow;
@@ -2656,7 +2654,7 @@
         if ( lightness === void 0 ) lightness=[0,1];
 
         var dh = 0, dl;
-        if (type$k(lightness) === 'array') {
+        if (type$j(lightness) === 'array') {
             dl = lightness[1] - lightness[0];
         } else {
             dl = 0;
@@ -2697,7 +2695,7 @@
         f.hue = function(h) {
             if ((h == null)) { return hue; }
             hue = h;
-            if (type$k(hue) === 'array') {
+            if (type$j(hue) === 'array') {
                 dh = hue[1] - hue[0];
                 if (dh === 0) { hue = hue[1]; }
             } else {
@@ -2708,7 +2706,7 @@
 
         f.lightness = function(h) {
             if ((h == null)) { return lightness; }
-            if (type$k(h) === 'array') {
+            if (type$j(h) === 'array') {
                 lightness = h;
                 dl = h[1] - h[0];
             } else {
@@ -2741,6 +2739,7 @@
     var log$1 = Math.log;
     var pow$7 = Math.pow;
     var floor$3 = Math.floor;
+    var abs = Math.abs;
 
 
     var analyze = function (data, key) {
@@ -2797,8 +2796,8 @@
 
         if (mode.substr(0,1) === 'e') { // equal interval
             limits.push(min);
-            for (var i$1=1; i$1<num; i$1++) {
-                limits.push(min+((i$1/num)*(max-min)));
+            for (var i=1; i<num; i++) {
+                limits.push(min+((i/num)*(max-min)));
             }
             limits.push(max);
         }
@@ -2810,16 +2809,16 @@
             var min_log = Math.LOG10E * log$1(min);
             var max_log = Math.LOG10E * log$1(max);
             limits.push(min);
-            for (var i$2=1; i$2<num; i$2++) {
-                limits.push(pow$7(10, min_log + ((i$2/num) * (max_log - min_log))));
+            for (var i$1=1; i$1<num; i$1++) {
+                limits.push(pow$7(10, min_log + ((i$1/num) * (max_log - min_log))));
             }
             limits.push(max);
         }
 
         else if (mode.substr(0,1) === 'q') { // quantile scale
             limits.push(min);
-            for (var i$3=1; i$3<num; i$3++) {
-                var p = ((values.length-1) * i$3)/num;
+            for (var i$2=1; i$2<num; i$2++) {
+                var p = ((values.length-1) * i$2)/num;
                 var pb = floor$3(p);
                 if (pb === p) {
                     limits.push(values[pb]);
@@ -2849,51 +2848,52 @@
             // get seed values
             centroids = [];
             centroids.push(min);
-            for (var i$4=1; i$4<num; i$4++) {
-                centroids.push(min + ((i$4/num) * (max-min)));
+            for (var i$3=1; i$3<num; i$3++) {
+                centroids.push(min + ((i$3/num) * (max-min)));
             }
             centroids.push(max);
 
             while (repeat) {
                 // assignment step
-                for (var j$1=0; j$1<num; j$1++) {
-                    clusterSizes[j$1] = 0;
+                for (var j=0; j<num; j++) {
+                    clusterSizes[j] = 0;
                 }
-                for (var i$5=0; i$5<n; i$5++) {
-                    var value = values[i$5];
+                for (var i$4=0; i$4<n; i$4++) {
+                    var value = values[i$4];
                     var mindist = Number.MAX_VALUE;
-                    for (var j$2=0; j$2<num; j$2++) {
-                        var dist = abs(centroids[j$2]-value);
+                    var best = (void 0);
+                    for (var j$1=0; j$1<num; j$1++) {
+                        var dist = abs(centroids[j$1]-value);
                         if (dist < mindist) {
                             mindist = dist;
-                            best = j$2;
+                            best = j$1;
                         }
                         clusterSizes[best]++;
-                        assignments[i$5] = best;
+                        assignments[i$4] = best;
                     }
                 }
 
                 // update centroids step
                 var newCentroids = new Array(num);
-                for (var j$3=0; j$3<num; j$3++) {
-                    newCentroids[j$3] = null;
+                for (var j$2=0; j$2<num; j$2++) {
+                    newCentroids[j$2] = null;
                 }
-                for (var i$6=0; i$6<n; j++) {
-                    cluster = assignments[i$6];
+                for (var i$5=0; i$5<n; i$5++) {
+                    cluster = assignments[i$5];
                     if (newCentroids[cluster] === null) {
-                        newCentroids[cluster] = values[i$6];
+                        newCentroids[cluster] = values[i$5];
                     } else {
-                        newCentroids[cluster] += values[i$6];
+                        newCentroids[cluster] += values[i$5];
                     }
                 }
-                for (var j$4=0; j$4<num; j$4++) {
-                    newCentroids[j$4] *= 1/clusterSizes[j$4];
+                for (var j$3=0; j$3<num; j$3++) {
+                    newCentroids[j$3] *= 1/clusterSizes[j$3];
                 }
 
                 // check convergence
                 repeat = false;
-                for (var j$5=0; j$5<num; j$5++) {
-                    if (newCentroids[j$5] !== centroids[i]) {
+                for (var j$4=0; j$4<num; j$4++) {
+                    if (newCentroids[j$4] !== centroids[j$4]) {
                         repeat = true;
                         break;
                     }
@@ -2910,22 +2910,22 @@
             // finished k-means clustering
             // the next part is borrowed from gabrielflor.it
             var kClusters = {};
-            for (var j$6=0; j$6<num; j$6++) {
-                kClusters[j$6] = [];
+            for (var j$5=0; j$5<num; j$5++) {
+                kClusters[j$5] = [];
             }
-            for (var i$7=0; i$7<n; i$7++) {
-                cluster = assignments[i$7];
-                kClusters[cluster].push(values[i$7]);
+            for (var i$6=0; i$6<n; i$6++) {
+                cluster = assignments[i$6];
+                kClusters[cluster].push(values[i$6]);
             }
             var tmpKMeansBreaks = [];
-            for (var j$7=0; j$7<num; j$7++) {
-                tmpKMeansBreaks.push(kClusters[j$7][0]);
-                tmpKMeansBreaks.push(kClusters[j$7][kClusters[j$7].length-1]);
+            for (var j$6=0; j$6<num; j$6++) {
+                tmpKMeansBreaks.push(kClusters[j$6][0]);
+                tmpKMeansBreaks.push(kClusters[j$6][kClusters[j$6].length-1]);
             }
             tmpKMeansBreaks = tmpKMeansBreaks.sort(function (a,b){ return a-b; });
             limits.push(tmpKMeansBreaks[0]);
-            for (var i$8=1; i$8 < tmpKMeansBreaks.length; i$8+= 2) {
-                var v = tmpKMeansBreaks[i$8];
+            for (var i$7=1; i$7 < tmpKMeansBreaks.length; i$7+= 2) {
+                var v = tmpKMeansBreaks[i$7];
                 if (!isNaN(v) && (limits.indexOf(v) === -1)) {
                     limits.push(v);
                 }
@@ -3082,8 +3082,8 @@
     };
 
     // add lowercase aliases for case-insensitive matches
-    for (var i$2 = 0, list$1 = Object.keys(colorbrewer); i$2 < list$1.length; i$2 += 1) {
-        var key = list$1[i$2];
+    for (var i$1 = 0, list$1 = Object.keys(colorbrewer); i$1 < list$1.length; i$1 += 1) {
+        var key = list$1[i$1];
 
         colorbrewer[key.toLowerCase()] = colorbrewer[key];
     }

@@ -1,7 +1,7 @@
 ## Changelog
 
 ### 2.0.0
-* ported entire codebase from CoffeeScript to ES6
+* chroma.js has been ported from CoffeeScript to ES6! This means you can now import parts of chroma in your projects!
 * changed HCG input space from [0..360,0..100,0..100] to [0..360,0..1,0..1] (to be in line with HSL)
 * added new object unpacking (e.g. `hsl2rgb({h,s,l})`)
 * changed default interpolation to `lrgb` in mix/interpolate and average.
