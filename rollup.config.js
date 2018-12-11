@@ -2,6 +2,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import buble from 'rollup-plugin-buble';
 import license from 'rollup-plugin-license';
+import replace from 'rollup-plugin-replace';
 import path from 'path';
 
 import {uglify} from 'rollup-plugin-uglify';
@@ -19,6 +20,11 @@ module.exports = {
     plugins: [
         resolve(),
         commonjs(),
+
+	replace({
+            delimiters: ['@@', ''],
+            'version': require('./package.json').version
+    	}),
 
         // If we're building for production (npm run build
         // instead of npm run dev), transpile and minify
