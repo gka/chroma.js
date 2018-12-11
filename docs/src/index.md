@@ -70,9 +70,9 @@ chroma(330, 1, 0.6, 'hsl')
 **New (since 2.0):** you can also construct colors by passing an plain JS object with attributes corresponding to a color space supported by chroma.js:
 
 ```js
-chroma({h:300, s:0.5, l:0.75});
-chroma({h:300, c:25, l:75});
-chroma({c:0.5, m:0, y:0.75, k:0.25});
+chroma({ h:120, s:1, l:0.75});
+chroma({ l:80, c:25, h:200 });
+chroma({ c:1, m:0.5, y:0, k:0.2});
 ```
 
 ### chroma.valid

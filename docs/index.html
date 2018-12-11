@@ -46,9 +46,9 @@ chroma([255, 51, 153]);
 <pre><code class="lang-js">chroma(330, 1, 0.6, &#39;hsl&#39;)
 </code></pre>
 <p><strong>New (since 2.0):</strong> you can also construct colors by passing an plain JS object with attributes corresponding to a color space supported by chroma.js:</p>
-<pre><code class="lang-js">chroma({h:300, s:0.5, l:0.75});
-chroma({h:300, c:25, l:75});
-chroma({c:0.5, m:0, y:0.75, k:0.25});
+<pre><code class="lang-js">chroma({ h:120, s:1, l:0.75});
+chroma({ l:80, c:25, h:200 });
+chroma({ c:1, m:0.5, y:0, k:0.2});
 </code></pre>
 <h3 id="chroma-valid">chroma.valid</h3>
 <p>Also new: you can use <code>chroma.valid</code> to try if a color argument can be correctly parsed as color by chroma.js:</p>
