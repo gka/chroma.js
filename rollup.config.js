@@ -24,8 +24,8 @@ module.exports = {
         buble({
             transforms: { dangerousForOf: true }
         }),
-        // production && uglify({
-        //     mangle: true
+        // uglify({
+        //     mangle: false
         // }),
         license({
             sourceMap: true,

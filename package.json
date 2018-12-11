@@ -21,7 +21,7 @@
   },
   "main": "chroma.js",
   "scripts": {
-    "build": "rollup -c && uglifyjs --comments '' chroma.js > chroma.min.js ",
+    "build": "rollup -c && uglifyjs chroma.js -m --comments '/@preserve/' -o chroma.min.js ",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make && make preview",
     "test": "vows --dot-matrix test/*.js"
@@ -37,7 +37,6 @@
     "rollup-plugin-license": "^0.7.0",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-uglify": "^6.0.0",
-    "uglify-js": "^2.8.29",
     "vows": "^0.8.2"
   },
   "spm": {
