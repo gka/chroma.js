@@ -149,7 +149,7 @@
         var me = this;
         if (type$1(args[0]) === 'object' &&
             args[0].constructor &&
-            args[0].constructor.name === 'Color') {
+            args[0].constructor === this.constructor) {
             // the argument is already a Color instance
             return args[0];
         }
