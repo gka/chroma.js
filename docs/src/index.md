@@ -67,6 +67,26 @@ You can construct colors from different color spaces by passing the name of colo
 chroma(330, 1, 0.6, 'hsl')
 ```
 
+**New (since 2.0):** you can also construct colors by passing an plain JS object with attributes corresponding to a color space supported by chroma.js:
+
+```js
+chroma({h:300, s:0.5, l:0.75});
+chroma({h:300, c:25, l:75});
+chroma({c:0.5, m:0, y:0.75, k:0.25});
+```
+
+### chroma.valid
+
+Also new: you can use `chroma.valid` to try if a color argument can be correctly parsed as color by chroma.js:
+
+```js
+chroma.valid('red');
+chroma.valid('bread');
+chroma.valid('#F0000D');
+chroma.valid('#FOOOOD');
+```
+
+
 ### chroma.hsl
 #### (hue, saturation, lightness)
 

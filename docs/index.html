@@ -45,6 +45,18 @@ chroma([255, 51, 153]);
 <p>You can construct colors from different color spaces by passing the name of color space as the last argument. Here we define the same color in HSL by passing the h<em>ue angle (0-360) and percentages for </em>s<em>aturation and </em>l*ightness:</p>
 <pre><code class="lang-js">chroma(330, 1, 0.6, &#39;hsl&#39;)
 </code></pre>
+<p><strong>New (since 2.0):</strong> you can also construct colors by passing an plain JS object with attributes corresponding to a color space supported by chroma.js:</p>
+<pre><code class="lang-js">chroma({h:300, s:0.5, l:0.75});
+chroma({h:300, c:25, l:75});
+chroma({c:0.5, m:0, y:0.75, k:0.25});
+</code></pre>
+<h3 id="chroma-valid">chroma.valid</h3>
+<p>Also new: you can use <code>chroma.valid</code> to try if a color argument can be correctly parsed as color by chroma.js:</p>
+<pre><code class="lang-js">chroma.valid(&#39;red&#39;);
+chroma.valid(&#39;bread&#39;);
+chroma.valid(&#39;#F0000D&#39;);
+chroma.valid(&#39;#FOOOOD&#39;);
+</code></pre>
 <h3 id="chroma-hsl">chroma.hsl</h3>
 <h4 id="-hue-saturation-lightness-">(hue, saturation, lightness)</h4>
 <p>Alternatively, every color space has its own constructor function under the <code>chroma</code> namespace. For a list of all supported color spaces, check the <a href="#supported-color-spaces-and-output-formats">appendix</a>.</p>
@@ -531,12 +543,17 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 <h2 id="changelog">Changelog</h2>
+<h3 id="2-0-1">2.0.1</h3>
+<ul>
+<li>added <code>chroma.valid()</code> for checking if a color can be parsed by chroma.js</li>
+</ul>
 <h3 id="2-0-0">2.0.0</h3>
 <ul>
 <li>chroma.js has been ported from CoffeeScript to ES6! This means you can now import parts of chroma in your projects!</li>
 <li>changed HCG input space from [0..360,0..100,0..100] to [0..360,0..1,0..1] (to be in line with HSL)</li>
 <li>added new object unpacking (e.g. <code>hsl2rgb({h,s,l})</code>)</li>
 <li>changed default interpolation to <code>lrgb</code> in mix/interpolate and average.</li>
+<li>if colors can&#39;t be parsed correctly, chroma will now throw Errors instead of silently failing with console.errors</li>
 </ul>
 <h3 id="1-4-1">1.4.1</h3>
 <ul>

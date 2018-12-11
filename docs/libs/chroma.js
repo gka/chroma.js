@@ -3008,6 +3008,18 @@
         return Math.sqrt(sum_sq);
     };
 
+    var valid = function () {
+        var args = [], len = arguments.length;
+        while ( len-- ) args[ len ] = arguments[ len ];
+
+        try {
+            new (Function.prototype.bind.apply( Color_1, [ null ].concat( args) ));
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
     // some pre-defined color scales:
 
 
@@ -3146,6 +3158,7 @@
     chroma_1.deltaE = deltaE;
     chroma_1.distance = distance;
     chroma_1.limits = analyze_1.limits;
+    chroma_1.valid = valid;
 
     // scale
     chroma_1.scales = scales;
