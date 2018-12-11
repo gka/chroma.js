@@ -1,10 +1,14 @@
 ## Changelog
 
+### 2.0.1
+* added `chroma.valid()` for checking if a color can be parsed by chroma.js
+
 ### 2.0.0
 * chroma.js has been ported from CoffeeScript to ES6! This means you can now import parts of chroma in your projects!
 * changed HCG input space from [0..360,0..100,0..100] to [0..360,0..1,0..1] (to be in line with HSL)
 * added new object unpacking (e.g. `hsl2rgb({h,s,l})`)
 * changed default interpolation to `lrgb` in mix/interpolate and average.
+* if colors can't be parsed correctly, chroma will now throw Errors instead of silently failing with console.errors
 
 ### 1.4.1
 * chroma.scale() now interprets `null` as NaN and returns the fallback color. Before it had interpreted `null` as `0`
