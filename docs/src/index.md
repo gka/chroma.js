@@ -163,7 +163,7 @@ f = function(i) {
 ```
 
 ### chroma.mix
-#### (color1, color2, ratio=0.5, mode='rgb')
+#### (color1, color2, ratio=0.5, mode='lrgb')
 
 Mixes two colors. The mix *ratio* is a value between 0 and 1.
 
@@ -185,7 +185,7 @@ chroma.mix('red', 'blue', 0.5, 'lrgb');
 
 
 ### chroma.average
-#### (colors, mode='rgb')
+#### (colors, mode='lrgb')
 
 Similar to `chroma.mix`, but accepts more than two colors. Simple averaging of R,G,B components and the alpha channel.
 
