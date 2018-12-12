@@ -21,6 +21,7 @@
   },
   "main": "chroma.js",
   "scripts": {
+    "prepublish": "npm run build && npm test",
     "build": "rollup -c && DEV=1 rollup -c ",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make && make preview",
