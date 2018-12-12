@@ -1,7 +1,7 @@
 ## Changelog
 
 ### 2.0.2
-* use a more mangle-safe check for Color class constructor to fix issues with UglifyJS and Tenser
+* use a more mangle-safe check for Color class constructor to fix issues with uglifyjs and terser
 
 ### 2.0.1
 * added `chroma.valid()` for checking if a color can be parsed by chroma.js
