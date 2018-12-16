@@ -21,7 +21,6 @@
   },
   "main": "chroma.js",
   "scripts": {
-    "precommit": "eslint index.js src && npm test",
     "prepublish": "npm run build && npm test",
     "build": "rollup -c && DEV=1 rollup -c ",
     "docs": "cd docs && make",
@@ -51,5 +50,10 @@
       "doc",
       "test"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "eslint index.js src && npm test"
+    }
   }
 }
