@@ -21,6 +21,7 @@
   },
   "main": "chroma.js",
   "scripts": {
+    "precommit": "eslint index.js src && npm test",
     "prepublish": "npm run build && npm test",
     "build": "rollup -c && DEV=1 rollup -c ",
     "docs": "cd docs && make",
@@ -29,7 +30,9 @@
   },
   "devDependencies": {
     "es6-shim": "^0.18.0",
+    "eslint": "^5.10.0",
     "http-server": "^0.11.1",
+    "husky": "^1.2.1",
     "markdown-to-html": "0.0.13",
     "minimatch": "^3.0.4",
     "rollup": "^0.67.4",
