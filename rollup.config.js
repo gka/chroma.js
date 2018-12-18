@@ -36,7 +36,7 @@ module.exports = {
         }),
         license({
             sourceMap: true,
-            cwd: '.', // Default is process.cwd()
+            //cwd: '.', // Default is process.cwd()
 
             banner: {
                 file: path.join(__dirname, 'LICENSE'),

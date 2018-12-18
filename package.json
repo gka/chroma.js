@@ -28,6 +28,7 @@
     "test": "vows --dot-matrix test/*.js"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "es6-shim": "^0.18.0",
     "eslint": "^5.10.0",
     "http-server": "^0.11.1",
