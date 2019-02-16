@@ -1,5 +1,8 @@
 ## Changelog
 
+### 2.0.3
+* hsl2rgb will, like other x2rgb conversions now set the default alpha to 1
+
 ### 2.0.2
 * use a more mangle-safe check for Color class constructor to fix issues with uglifyjs and terser
 
