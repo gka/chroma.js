@@ -34,7 +34,7 @@ const hsl2rgb = (...args) => {
         // keep alpha channel
         return [r,g,b,args[3]];
     }
-    return [r,g,b];
+    return [r,g,b,1];
 }
 
 module.exports = hsl2rgb;

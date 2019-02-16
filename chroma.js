@@ -482,7 +482,7 @@
             // keep alpha channel
             return [r,g,b,args[3]];
         }
-        return [r,g,b];
+        return [r,g,b,1];
     };
 
     var hsl2rgb_1 = hsl2rgb;
