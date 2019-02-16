@@ -122,10 +122,10 @@ chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lrgb&#39;);
 <h4 id="-colors-mode-lrgb-">(colors, mode=&#39;lrgb&#39;)</h4>
 <p>Similar to <code>chroma.mix</code>, but accepts more than two colors. Simple averaging of R,G,B components and the alpha channel.</p>
 <pre><code class="lang-js">colors = [&#39;#ddd&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;teal&#39;];
-chroma.average(colors); // rgb
+chroma.average(colors); // lrgb
+chroma.average(colors, &#39;rgb&#39;);
 chroma.average(colors, &#39;lab&#39;);
 chroma.average(colors, &#39;lch&#39;);
-chroma.average(colors, &#39;lrgb&#39;);
 </code></pre>
 <p>Also works with alpha channels.</p>
 <pre><code class="lang-js">chroma.average([&#39;red&#39;, &#39;rgba(0,0,0,0.5)&#39;]).css();

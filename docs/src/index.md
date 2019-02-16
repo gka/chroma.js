@@ -191,10 +191,10 @@ Similar to `chroma.mix`, but accepts more than two colors. Simple averaging of R
 
 ```js
 colors = ['#ddd', 'yellow', 'red', 'teal'];
-chroma.average(colors); // rgb
+chroma.average(colors); // lrgb
+chroma.average(colors, 'rgb');
 chroma.average(colors, 'lab');
 chroma.average(colors, 'lch');
-chroma.average(colors, 'lrgb');
 ```
 
 Also works with alpha channels.
