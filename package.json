@@ -44,6 +44,7 @@
     "rollup-plugin-uglify": "^6.0.0",
     "vows": "^0.8.2"
   },
+  "license" : "(BSD-3-Clause AND Apache-2.0)",
   "spm": {
     "main": "chroma.js",
     "ignore": [
