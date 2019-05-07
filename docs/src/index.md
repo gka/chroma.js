@@ -34,26 +34,26 @@ chroma.js has a lot more to offer, but that's the gist of it.
 ### chroma
 #### (*color*)
 
-The first step is to get your color into chroma.js. That's what the generic constructor ``chroma()`` does. The function is trying to guess the color format for you. For instances, it will recognized any named color from the W3CX11 specification:
+The first step is to get your color into chroma.js. That's what the generic constructor ``chroma()`` does. This function attempts to guess the format of the input color for you. For instance, it will recognize any named color from the W3CX11 specification:
 
 ```js
 chroma('hotpink')
 ```
 
-If there's no matching named color chroma.js checks for a **hexadecimal string**. It ignores case, the `#` sign is optional, and the shorter three letter format is recognized as well. So any of these are valid hexadecimal representations: `#ff3399`, `FF3399`, `#f39`, etc.
+If there's no matching named color, chroma.js checks for a **hexadecimal string**. It ignores case, the `#` sign is optional, and it can  recognize the shorter three letter format as well. So, any of these are valid hexadecimal representations: `#ff3399`, `FF3399`, `#f39`, etc.
 
 ```js
 chroma('#ff3399');
 chroma('F39');
 ```
 
-In addition to hex strings, **hexadecimal numbers** (in fact, just any number between `0` and `16777215`), will be recognized, too.
+In addition to hex strings, **hexadecimal numbers** (in fact, just any number between `0` and `16777215`) will be recognized, too.
 
 ```js
 chroma(0xff3399)
 ```
 
-If you pass the RGB channels individually, too. Each parameter must be within `0..255`. You can pass the numbers as individual arguments or as array.
+You also can pass RGB values individually. Each parameter must be within `0..255`. You can pass the numbers as individual arguments or as an array.
 
 ```js
 chroma(0xff, 0x33, 0x99);
