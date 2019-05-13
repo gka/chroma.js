@@ -28,17 +28,17 @@
 <h2 id="api">API</h2>
 <h3 id="chroma">chroma</h3>
 <h4 id="-color-">(<em>color</em>)</h4>
-<p>The first step is to get your color into chroma.js. That&#39;s what the generic constructor <code>chroma()</code> does. The function is trying to guess the color format for you. For instances, it will recognized any named color from the W3CX11 specification:</p>
+<p>The first step is to get your color into chroma.js. That&#39;s what the generic constructor <code>chroma()</code> does. This function attempts to guess the format of the input color for you. For instance, it will recognize any named color from the W3CX11 specification:</p>
 <pre><code class="lang-js">chroma(&#39;hotpink&#39;)
 </code></pre>
-<p>If there&#39;s no matching named color chroma.js checks for a <strong>hexadecimal string</strong>. It ignores case, the <code>#</code> sign is optional, and the shorter three letter format is recognized as well. So any of these are valid hexadecimal representations: <code>#ff3399</code>, <code>FF3399</code>, <code>#f39</code>, etc.</p>
+<p>If there&#39;s no matching named color, chroma.js checks for a <strong>hexadecimal string</strong>. It ignores case, the <code>#</code> sign is optional, and it can  recognize the shorter three letter format as well. So, any of these are valid hexadecimal representations: <code>#ff3399</code>, <code>FF3399</code>, <code>#f39</code>, etc.</p>
 <pre><code class="lang-js">chroma(&#39;#ff3399&#39;);
 chroma(&#39;F39&#39;);
 </code></pre>
-<p>In addition to hex strings, <strong>hexadecimal numbers</strong> (in fact, just any number between <code>0</code> and <code>16777215</code>), will be recognized, too.</p>
+<p>In addition to hex strings, <strong>hexadecimal numbers</strong> (in fact, just any number between <code>0</code> and <code>16777215</code>) will be recognized, too.</p>
 <pre><code class="lang-js">chroma(0xff3399)
 </code></pre>
-<p>If you pass the RGB channels individually, too. Each parameter must be within <code>0..255</code>. You can pass the numbers as individual arguments or as array.</p>
+<p>You also can pass RGB values individually. Each parameter must be within <code>0..255</code>. You can pass the numbers as individual arguments or as an array.</p>
 <pre><code class="lang-js">chroma(0xff, 0x33, 0x99);
 chroma(255, 51, 153);
 chroma([255, 51, 153]);
@@ -544,6 +544,10 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 <h2 id="changelog">Changelog</h2>
+<h3 id="2-0-3">2.0.3</h3>
+<ul>
+<li>hsl2rgb will, like other x2rgb conversions now set the default alpha to 1</li>
+</ul>
 <h3 id="2-0-2">2.0.2</h3>
 <ul>
 <li>use a more mangle-safe check for Color class constructor to fix issues with uglifyjs and terser</li>
