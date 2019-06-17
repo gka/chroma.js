@@ -1,6 +1,5 @@
-const hex2rgb = require('../hex/hex2rgb');
 const hsl2rgb = require('../hsl/hsl2rgb');
-const w3cx11 = require('../../colors/w3cx11');
+const input = require('../input');
 
 const RE_RGB = /^rgb\(\s*(-?\d+),\s*(-?\d+)\s*,\s*(-?\d+)\s*\)$/;
 const RE_RGBA = /^rgba\(\s*(-?\d+),\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*([01]|[01]?\.\d+)\)$/;
@@ -13,11 +12,15 @@ const {round} = Math;
 
 const css2rgb = (css) => {
     css = css.toLowerCase().trim();
-    // named X11 colors
-    if (w3cx11[css]) {
-        return hex2rgb(w3cx11[css]);
-    }
     let m;
+
+    if (input.format.named) {
+        try {
+            return input.format.named(css);
+        } catch (e) {
+            // eslint-disable-next-line
+        }
+    }
 
     // rgb(250,20,0)
     if ((m = css.match(RE_RGB))) {
