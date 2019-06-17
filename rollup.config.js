@@ -10,38 +10,45 @@ import {uglify} from 'rollup-plugin-uglify';
 const minify = !process.env.ROLLUP_WATCH && !process.env.DEV;
 /** globals process, __dirname **/
 
-module.exports = {
-    input: 'index.js',
-    output: {
-        file: `chroma${minify ? '.min' : ''}.js`,
-        format: 'umd',
-        name: 'chroma',
-    },
-    plugins: [
-        resolve(),
-        commonjs(),
+module.exports = [
+    bundle('index.js', 'chroma'),
+    bundle('index-light.js', 'chroma-light'),
+];
 
-	replace({
-            delimiters: ['@@', ''],
-            'version': require('./package.json').version
-    	}),
+function bundle(input, target) {
+    return {
+        input,
+        output: {
+            file: `${target}${minify ? '.min' : ''}.js`,
+            format: 'umd',
+            name: 'chroma',
+        },
+        plugins: [
+            resolve(),
+            commonjs(),
 
-        // If we're building for production (npm run build
-        // instead of npm run dev), transpile and minify
-        buble({
-            transforms: { dangerousForOf: true }
-        }),
-        minify && uglify({
-             mangle: true
-        }),
-        license({
-            sourceMap: true,
-            //cwd: '.', // Default is process.cwd()
+        replace({
+                delimiters: ['@@', ''],
+                'version': require('./package.json').version
+            }),
 
-            banner: {
-                file: path.join(__dirname, 'LICENSE'),
-                encoding: 'utf-8', // Default is utf-8
-            }
-        }),
-    ]
-};
+            // If we're building for production (npm run build
+            // instead of npm run dev), transpile and minify
+            buble({
+                transforms: { dangerousForOf: true }
+            }),
+            minify && uglify({
+                 mangle: true
+            }),
+            license({
+                sourceMap: true,
+                //cwd: '.', // Default is process.cwd()
+
+                banner: {
+                    file: path.join(__dirname, 'LICENSE'),
+                    encoding: 'utf-8', // Default is utf-8
+                }
+            }),
+        ]
+    }
+}
