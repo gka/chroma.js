@@ -25,7 +25,8 @@
     "build": "rollup -c && DEV=1 rollup -c ",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make && make preview",
-    "test": "vows --dot-matrix test/*.js"
+    "test": "vows --dot-matrix test/*.js",
+    "lint": "eslint index.js index-light.js src"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
@@ -55,7 +56,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "eslint index.js src",
+      "pre-commit": "npm run lint",
       "pre-push": "npm test"
     }
   }
