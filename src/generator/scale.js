@@ -68,7 +68,8 @@ module.exports = function(colors) {
         return 0;
     };
 
-    let tmap = t => t;
+    let tMapLightness = t => t;
+    let tMapDomain = t => t;
 
     // const classifyValue = function(value) {
     //     let val = value;
@@ -101,8 +102,11 @@ module.exports = function(colors) {
             t = val;
         }
 
+        // domain map
+        t = tMapDomain(t);
+
         if (!bypassMap) {
-            t = tmap(t);  // lightness correction
+            t = tMapLightness(t);  // lightness correction
         }
 
         if (_gamma !== 1) { t = pow(t, _gamma); }
@@ -189,6 +193,22 @@ module.exports = function(colors) {
             for (let c=0; c<k; c++) {
                 _pos.push(c/(k-1));
             }
+            if (domain.length > 2) {
+                // set domain map
+                const tOut = domain.map((d,i) => i/(domain.length-1));
+                const tBreaks = domain.map(d => (d - _min) / (_max - _min));
+                if (!tBreaks.every((val, i) => tOut[i] === val)) {
+                    tMapDomain = (t) => {
+                        if (t <= 0 || t >= 1) return t;
+                        let i = 0;
+                        while (t >= tBreaks[i+1]) i++;
+                        const f = (t - tBreaks[i]) / (tBreaks[i+1] - tBreaks[i]);
+                        const out = tOut[i] + f * (tOut[i+1] - tOut[i])
+                        return out;
+                    }
+                }
+
+            }
         }
         _domain = [_min, _max];
         return f;
@@ -226,7 +246,7 @@ module.exports = function(colors) {
         _correctLightness = v;
         resetCache();
         if (_correctLightness) {
-            tmap = function(t) {
+            tMapLightness = function(t) {
                 const L0 = getColor(0, true).lab()[0];
                 const L1 = getColor(1, true).lab()[0];
                 const pol = L0 > L1;
@@ -253,7 +273,7 @@ module.exports = function(colors) {
                 return t;
             };
         } else {
-            tmap = t => t;
+            tMapLightness = t => t;
         }
         return f;
     };

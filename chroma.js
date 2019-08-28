@@ -2264,7 +2264,8 @@
             return 0;
         };
 
-        var tmap = function (t) { return t; };
+        var tMapLightness = function (t) { return t; };
+        var tMapDomain = function (t) { return t; };
 
         // const classifyValue = function(value) {
         //     let val = value;
@@ -2297,8 +2298,11 @@
                 t = val;
             }
 
+            // domain map
+            t = tMapDomain(t);
+
             if (!bypassMap) {
-                t = tmap(t);  // lightness correction
+                t = tMapLightness(t);  // lightness correction
             }
 
             if (_gamma !== 1) { t = pow$5(t, _gamma); }
@@ -2387,6 +2391,22 @@
                 for (var c=0; c<k; c++) {
                     _pos.push(c/(k-1));
                 }
+                if (domain.length > 2) {
+                    // set domain map
+                    var tOut = domain.map(function (d,i) { return i/(domain.length-1); });
+                    var tBreaks = domain.map(function (d) { return (d - _min) / (_max - _min); });
+                    if (!tBreaks.every(function (val, i) { return tOut[i] === val; })) {
+                        tMapDomain = function (t) {
+                            if (t <= 0 || t >= 1) { return t; }
+                            var i = 0;
+                            while (t >= tBreaks[i+1]) { i++; }
+                            var f = (t - tBreaks[i]) / (tBreaks[i+1] - tBreaks[i]);
+                            var out = tOut[i] + f * (tOut[i+1] - tOut[i]);
+                            return out;
+                        };
+                    }
+
+                }
             }
             _domain = [_min, _max];
             return f;
@@ -2424,7 +2444,7 @@
             _correctLightness = v;
             resetCache();
             if (_correctLightness) {
-                tmap = function(t) {
+                tMapLightness = function(t) {
                     var L0 = getColor(0, true).lab()[0];
                     var L1 = getColor(1, true).lab()[0];
                     var pol = L0 > L1;
@@ -2451,7 +2471,7 @@
                     return t;
                 };
             } else {
-                tmap = function (t) { return t; };
+                tMapLightness = function (t) { return t; };
             }
             return f;
         };

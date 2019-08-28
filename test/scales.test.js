@@ -216,4 +216,19 @@ vows
             'null --> nodata'(topic) { assert.equal(topic.f(null).hex(), '#cccccc'); },
             'undefined --> nodata'(topic) { assert.equal(topic.f(undefined).hex(), '#cccccc'); },
             'custom nodata color'(topic) { assert.equal(topic.f.nodata('#eee')(undefined).hex(), '#eeeeee'); }
-        }}).export(module);
+        },
+
+        'scale wrapped in a scale': {
+            topic: {
+                f1: scale('OrRd'),
+                f: scale('OrRd').domain([0,.25,1])
+            },
+            'start'(topic) { assert.equal(topic.f(0).hex(), topic.f1(0).hex()) },
+            'end'(topic) { assert.equal(topic.f(1).hex(), topic.f1(1).hex()) },
+            'center'(topic) { assert.equal(topic.f(0.125).hex(), topic.f1(0.25).hex()) },
+            'center2'(topic) { assert.equal(topic.f(0.25).hex(), topic.f1(0.5).hex()) },
+            'center3'(topic) { assert.equal(topic.f(0.625).hex(), topic.f1(0.75).hex()) },
+        },
+
+
+    }).export(module);
