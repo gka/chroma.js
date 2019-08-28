@@ -41,12 +41,13 @@ function bundle(input, target) {
                  mangle: true
             }),
             license({
-                sourceMap: true,
+                sourcemap: true,
                 //cwd: '.', // Default is process.cwd()
 
                 banner: {
-                    file: path.join(__dirname, 'LICENSE'),
-                    encoding: 'utf-8', // Default is utf-8
+                    content: {
+                        file: path.join(__dirname, 'LICENSE')
+                    }
                 }
             }),
         ]
