@@ -199,7 +199,7 @@
     };
 
     chroma.Color = Color_1;
-    chroma.version = '2.0.3';
+    chroma.version = '2.0.4';
 
     var chroma_1 = chroma;
 
@@ -459,7 +459,9 @@
         if (input.format.named) {
             try {
                 return input.format.named(css);
-            } catch (e) {}
+            } catch (e) {
+                // eslint-disable-next-line
+            }
         }
 
         // rgb(250,20,0)
