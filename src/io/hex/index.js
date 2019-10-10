@@ -15,7 +15,7 @@ input.format.hex = require('./hex2rgb');
 input.autodetect.push({
     p: 4,
     test: (h, ...rest) => {
-        if (!rest.length && type(h) === 'string' && [3,4,6,7,8,9].includes(h.length)) {
+        if (!rest.length && type(h) === 'string' && [3,4,5,6,7,8,9].includes(h.length)) {
             return 'hex';
         }
     }

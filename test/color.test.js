@@ -6,7 +6,7 @@ require('../index');
 const Color = require('../src/Color');
 
 const hexColors = {};
-['#ff9900', '#FF9900', '#F90', 'f90', 'FF9900', 'FF9900F0'].forEach(hex => {
+['#ff9900', '#FF9900', '#F90', 'f90', 'FF9900', 'FF9900F0', 'F90F', '#F90F'].forEach(hex => {
     hexColors[`detect hex ${hex}`] = {
         topic() { return () => { return new Color(hex) } },
         check: {
