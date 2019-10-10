@@ -25,7 +25,7 @@ const hex2rgb = (hex) => {
             // remove optional leading #
             hex = hex.substr(1);
         }
-        // expand short-notation to full six-digit
+        // expand short-notation to full eight-digit
         if (hex.length === 4) {
             hex = hex.split('');
             hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
