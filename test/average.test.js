@@ -46,6 +46,24 @@ vows
         'lrgb avergage': {
             topic: chroma.average(colors, 'lrgb'),
             'is ???'(topic) { assert.equal(topic.hex(), '#98689c') }
-        }
+        },
+        'three colors, weighted rgb average': {
+            topic: chroma.average(['blue', 'red', 'white'], 'rgb', [1,1,2]),
+            'is #bf80bf'(topic) {
+                assert.equal(topic.hex(), '#bf80bf')
+            }
+        },
+        'three colors, weighted lrgb average': {
+            topic: chroma.average(['blue', 'red', 'white'], 'lrgb', [1,3,2]),
+            'is #e993b4'(topic) {
+                assert.equal(topic.hex(), '#e993b4')
+            }
+        },
+        'three colors, weighted hsl average': {
+            topic: chroma.average(['blue', 'red', 'white'], 'hsl', [0.25,1,0.5]),
+            'is #e58263'(topic) {
+                assert.equal(topic.hex(), '#e58263')
+            }
+        },
     })
     .export(module)

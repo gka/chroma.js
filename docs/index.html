@@ -119,7 +119,7 @@ chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lch&#39;);
 chroma.mix(&#39;red&#39;, &#39;blue&#39;, 0.5, &#39;lrgb&#39;);
 </code></pre>
 <h3 id="chroma-average">chroma.average</h3>
-<h4 id="-colors-mode-lrgb-">(colors, mode=&#39;lrgb&#39;)</h4>
+<h4 id="-colors-mode-lrgb-weights-">(colors, mode=&#39;lrgb&#39;, weights=[])</h4>
 <p>Similar to <code>chroma.mix</code>, but accepts more than two colors. Simple averaging of R,G,B components and the alpha channel.</p>
 <pre><code class="lang-js">colors = [&#39;#ddd&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;teal&#39;];
 chroma.average(colors); // lrgb
@@ -129,6 +129,12 @@ chroma.average(colors, &#39;lch&#39;);
 </code></pre>
 <p>Also works with alpha channels.</p>
 <pre><code class="lang-js">chroma.average([&#39;red&#39;, &#39;rgba(0,0,0,0.5)&#39;]).css();
+</code></pre>
+<p>As of version 2.1 you can also provide an array of <code>weights</code> to<br>compute a <strong>weighted average</strong> of colors.</p>
+<pre><code class="lang-js">colors = [&#39;#ddd&#39;, &#39;yellow&#39;, &#39;red&#39;, &#39;teal&#39;];
+chroma.average(colors, &#39;lch&#39;); // unweighted
+chroma.average(colors, &#39;lch&#39;, [1,1,2,1]);
+chroma.average(colors, &#39;lch&#39;, [1.5,0.5,1,2.3]);
 </code></pre>
 <h3 id="chroma-blend">chroma.blend</h3>
 <h4 id="-color1-color2-mode-">(color1, color2, mode)</h4>

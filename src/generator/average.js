@@ -2,12 +2,16 @@ const Color = require('../Color');
 const {clip_rgb} = require('../utils');
 const {pow, sqrt, PI, cos, sin, atan2} = Math;
 
-module.exports = (colors, mode='lrgb') => {
+module.exports = (colors, mode='lrgb', weights=null) => {
     const l = colors.length;
+    if (!weights) weights = Array.from(new Array(l)).map(() => 1);
+    // normalize weights
+    const k = l / weights.reduce(function(a, b) { return a + b; });
+    weights.forEach((w,i) => { weights[i] *= k })
     // convert colors to Color objects
     colors = colors.map(c => new Color(c));
     if (mode === 'lrgb') {
-        return _average_lrgb(colors)
+        return _average_lrgb(colors, weights)
     }
     const first = colors.shift();
     const xyz = first.get(mode);
@@ -16,28 +20,28 @@ module.exports = (colors, mode='lrgb') => {
     let dy = 0;
     // initial color
     for (let i=0; i<xyz.length; i++) {
-        xyz[i] = xyz[i] || 0;
-        cnt.push(isNaN(xyz[i]) ? 0 : 1);
+        xyz[i] = (xyz[i] || 0) * weights[0];
+        cnt.push(isNaN(xyz[i]) ? 0 : weights[0]);
         if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
             const A = xyz[i] / 180 * PI;
-            dx += cos(A);
-            dy += sin(A);
+            dx += cos(A) * weights[0];
+            dy += sin(A) * weights[0];
         }
     }
 
-    let alpha = first.alpha();
-    colors.forEach(c => {
+    let alpha = first.alpha() * weights[0];
+    colors.forEach((c,ci) => {
         const xyz2 = c.get(mode);
-        alpha += c.alpha();
+        alpha += c.alpha() * weights[ci+1];
         for (let i=0; i<xyz.length; i++) {
             if (!isNaN(xyz2[i])) {
-                cnt[i]++;
+                cnt[i] += weights[ci+1];
                 if (mode.charAt(i) === 'h') {
                     const A = xyz2[i] / 180 * PI;
-                    dx += cos(A);
-                    dy += sin(A);
+                    dx += cos(A) * weights[ci+1];
+                    dy += sin(A) * weights[ci+1];
                 } else {
-                    xyz[i] += xyz2[i];
+                    xyz[i] += xyz2[i] * weights[ci+1];
                 }
             }
         }
@@ -58,11 +62,12 @@ module.exports = (colors, mode='lrgb') => {
 };
 
 
-const _average_lrgb = (colors) => {
+const _average_lrgb = (colors, weights) => {
     const l = colors.length;
-    const f = 1/l;
     const xyz = [0,0,0,0];
-    for (let col of colors) {
+    for (let i=0; i < colors.length; i++) {
+        const col = colors[i];
+        const f = weights[i] / l;
         const rgb = col._rgb;
         xyz[0] += pow(rgb[0],2) * f;
         xyz[1] += pow(rgb[1],2) * f;
