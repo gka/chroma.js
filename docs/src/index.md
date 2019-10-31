@@ -185,7 +185,7 @@ chroma.mix('red', 'blue', 0.5, 'lrgb');
 
 
 ### chroma.average
-#### (colors, mode='lrgb')
+#### (colors, mode='lrgb', weights=[])
 
 Similar to `chroma.mix`, but accepts more than two colors. Simple averaging of R,G,B components and the alpha channel.
 
@@ -201,6 +201,16 @@ Also works with alpha channels.
 
 ```js
 chroma.average(['red', 'rgba(0,0,0,0.5)']).css();
+```
+
+As of version 2.1 you can also provide an array of `weights` to
+compute a **weighted average** of colors.
+
+```js
+colors = ['#ddd', 'yellow', 'red', 'teal'];
+chroma.average(colors, 'lch'); // unweighted
+chroma.average(colors, 'lch', [1,1,2,1]);
+chroma.average(colors, 'lch', [1.5,0.5,1,2.3]);
 ```
 
 
