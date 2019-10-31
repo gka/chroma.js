@@ -740,7 +740,7 @@
     var rgb2hex_1 = rgb2hex;
 
     var RE_HEX = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-    var RE_HEXA = /^#?([A-Fa-f0-9]{8})$/;
+    var RE_HEXA = /^#?([A-Fa-f0-9]{8}|[A-Fa-f0-9]{4})$/;
 
     var hex2rgb = function (hex) {
         if (hex.match(RE_HEX)) {
@@ -762,9 +762,14 @@
 
         // match rgba hex format, eg #FF000077
         if (hex.match(RE_HEXA)) {
-            if (hex.length === 9) {
+            if (hex.length === 5 || hex.length === 9) {
                 // remove optional leading #
                 hex = hex.substr(1);
+            }
+            // expand short-notation to full eight-digit
+            if (hex.length === 4) {
+                hex = hex.split('');
+                hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
             }
             var u$1 = parseInt(hex, 16);
             var r$1 = u$1 >> 24 & 0xFF;
@@ -806,7 +811,7 @@
             var rest = [], len = arguments.length - 1;
             while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
 
-            if (!rest.length && type$5(h) === 'string' && [3,4,6,7,8,9].includes(h.length)) {
+            if (!rest.length && type$5(h) === 'string' && [3,4,5,6,7,8,9].indexOf(h.length) >= 0) {
                 return 'hex';
             }
         }
@@ -2116,14 +2121,19 @@
     var sin$1 = Math.sin;
     var atan2$1 = Math.atan2;
 
-    var average = function (colors, mode) {
+    var average = function (colors, mode, weights) {
         if ( mode === void 0 ) mode='lrgb';
+        if ( weights === void 0 ) weights=null;
 
         var l = colors.length;
+        if (!weights) { weights = Array.from(new Array(l)).map(function () { return 1; }); }
+        // normalize weights
+        var k = l / weights.reduce(function(a, b) { return a + b; });
+        weights.forEach(function (w,i) { weights[i] *= k; });
         // convert colors to Color objects
         colors = colors.map(function (c) { return new Color_1(c); });
         if (mode === 'lrgb') {
-            return _average_lrgb(colors)
+            return _average_lrgb(colors, weights)
         }
         var first = colors.shift();
         var xyz = first.get(mode);
@@ -2132,28 +2142,28 @@
         var dy = 0;
         // initial color
         for (var i=0; i<xyz.length; i++) {
-            xyz[i] = xyz[i] || 0;
-            cnt.push(isNaN(xyz[i]) ? 0 : 1);
+            xyz[i] = (xyz[i] || 0) * weights[0];
+            cnt.push(isNaN(xyz[i]) ? 0 : weights[0]);
             if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
                 var A = xyz[i] / 180 * PI$1;
-                dx += cos$2(A);
-                dy += sin$1(A);
+                dx += cos$2(A) * weights[0];
+                dy += sin$1(A) * weights[0];
             }
         }
 
-        var alpha = first.alpha();
-        colors.forEach(function (c) {
+        var alpha = first.alpha() * weights[0];
+        colors.forEach(function (c,ci) {
             var xyz2 = c.get(mode);
-            alpha += c.alpha();
+            alpha += c.alpha() * weights[ci+1];
             for (var i=0; i<xyz.length; i++) {
                 if (!isNaN(xyz2[i])) {
-                    cnt[i]++;
+                    cnt[i] += weights[ci+1];
                     if (mode.charAt(i) === 'h') {
                         var A = xyz2[i] / 180 * PI$1;
-                        dx += cos$2(A);
-                        dy += sin$1(A);
+                        dx += cos$2(A) * weights[ci+1];
+                        dy += sin$1(A) * weights[ci+1];
                     } else {
-                        xyz[i] += xyz2[i];
+                        xyz[i] += xyz2[i] * weights[ci+1];
                     }
                 }
             }
@@ -2174,13 +2184,12 @@
     };
 
 
-    var _average_lrgb = function (colors) {
+    var _average_lrgb = function (colors, weights) {
         var l = colors.length;
-        var f = 1/l;
         var xyz = [0,0,0,0];
-        for (var i = 0, list = colors; i < list.length; i += 1) {
-            var col = list[i];
-
+        for (var i=0; i < colors.length; i++) {
+            var col = colors[i];
+            var f = weights[i] / l;
             var rgb = col._rgb;
             xyz[0] += pow$4(rgb[0],2) * f;
             xyz[1] += pow$4(rgb[1],2) * f;

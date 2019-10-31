@@ -1,22 +1,22 @@
 /**
  * chroma.js - JavaScript library for color conversions
- * 
+ *
  * Copyright (c) 2011-2019, Gregor Aisch
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * 3. The name Gregor Aisch may not be used to endorse or promote products
  * derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,31 +27,31 @@
  * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * -------------------------------------------------------
- * 
+ *
  * chroma.js includes colors from colorbrewer2.org, which are released under
  * the following license:
- * 
+ *
  * Copyright (c) 2002 Cynthia Brewer, Mark Harrower,
  * and The Pennsylvania State University.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
- * 
+ *
  * ------------------------------------------------------
- * 
+ *
  * Named colors are taken from X11 Color Names.
  * http://www.w3.org/TR/css3-color/#svg-color
- * 
+ *
  * @preserve
  */
 
@@ -515,7 +515,7 @@
     var rgb2hex_1 = rgb2hex;
 
     var RE_HEX = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-    var RE_HEXA = /^#?([A-Fa-f0-9]{8})$/;
+    var RE_HEXA = /^#?([A-Fa-f0-9]{8}|[A-Fa-f0-9]{4})$/;
 
     var hex2rgb = function (hex) {
         if (hex.match(RE_HEX)) {
@@ -537,9 +537,14 @@
 
         // match rgba hex format, eg #FF000077
         if (hex.match(RE_HEXA)) {
-            if (hex.length === 9) {
+            if (hex.length === 5 || hex.length === 9) {
                 // remove optional leading #
                 hex = hex.substr(1);
+            }
+            // expand short-notation to full eight-digit
+            if (hex.length === 4) {
+                hex = hex.split('');
+                hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
             }
             var u$1 = parseInt(hex, 16);
             var r$1 = u$1 >> 24 & 0xFF;
@@ -581,7 +586,7 @@
             var rest = [], len = arguments.length - 1;
             while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
 
-            if (!rest.length && type$3(h) === 'string' && [3,4,6,7,8,9].indexOf(h.length) >= 0) {
+            if (!rest.length && type$3(h) === 'string' && [3,4,5,6,7,8,9].indexOf(h.length) >= 0) {
                 return 'hex';
             }
         }

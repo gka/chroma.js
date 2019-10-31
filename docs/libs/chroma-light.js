@@ -515,7 +515,7 @@
     var rgb2hex_1 = rgb2hex;
 
     var RE_HEX = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-    var RE_HEXA = /^#?([A-Fa-f0-9]{8})$/;
+    var RE_HEXA = /^#?([A-Fa-f0-9]{8}|[A-Fa-f0-9]{4})$/;
 
     var hex2rgb = function (hex) {
         if (hex.match(RE_HEX)) {
@@ -537,9 +537,14 @@
 
         // match rgba hex format, eg #FF000077
         if (hex.match(RE_HEXA)) {
-            if (hex.length === 9) {
+            if (hex.length === 5 || hex.length === 9) {
                 // remove optional leading #
                 hex = hex.substr(1);
+            }
+            // expand short-notation to full eight-digit
+            if (hex.length === 4) {
+                hex = hex.split('');
+                hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
             }
             var u$1 = parseInt(hex, 16);
             var r$1 = u$1 >> 24 & 0xFF;
@@ -581,7 +586,7 @@
             var rest = [], len = arguments.length - 1;
             while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
 
-            if (!rest.length && type$3(h) === 'string' && [3,4,6,7,8,9].includes(h.length)) {
+            if (!rest.length && type$3(h) === 'string' && [3,4,5,6,7,8,9].indexOf(h.length) >= 0) {
                 return 'hex';
             }
         }
