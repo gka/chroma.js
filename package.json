@@ -22,7 +22,7 @@
   "main": "chroma.js",
   "scripts": {
     "prepublishOnly": "npm run build && npm test",
-    "build": "rollup -c && DEV=1 rollup -c ",
+    "build": "rollup -c && cross-env DEV=1 rollup -c ",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make && make preview",
     "test": "vows --dot-matrix test/*.js",
@@ -59,5 +59,8 @@
       "pre-commit": "npm run lint",
       "pre-push": "npm test"
     }
+  },
+  "dependencies": {
+    "cross-env": "^6.0.3"
   }
 }
