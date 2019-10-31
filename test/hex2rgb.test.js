@@ -56,12 +56,36 @@ vows
             cyan(t)     { return assert.deepEqual(hex2rgb(t[6]), [0,255,255,1]); },
             magenta(t)  { return assert.deepEqual(hex2rgb(t[7]), [255,0,255,1]); }
         },
-        'parse different #rrggbb HEX colors with alpha': {
+        'parse different #rrggbbaa HEX colors': {
             topic: ['#00000000','#ffffff80','#ff000040','#00FF00C0','#FF00FFFF'],
             black(t)    { return assert.deepEqual(hex2rgb(t[0]), [0,0,0,0]); },
             white(t)    { return assert.deepEqual(hex2rgb(t[1]), [255,255,255,0.5]); },
             red(t)      { return assert.deepEqual(hex2rgb(t[2]), [255,0,0,0.25]); },
             green(t)    { return assert.deepEqual(hex2rgb(t[3]), [0,255,0,0.75]); },
+            magenta(t)  { return assert.deepEqual(hex2rgb(t[4]), [255,0,255,1]); }
+        },
+        'parse different rrggbbaa HEX colors without #': {
+            topic: ['00000000','ffffff80','ff000040','00FF00C0','FF00FFFF'],
+            black(t)    { return assert.deepEqual(hex2rgb(t[0]), [0,0,0,0]); },
+            white(t)    { return assert.deepEqual(hex2rgb(t[1]), [255,255,255,0.5]); },
+            red(t)      { return assert.deepEqual(hex2rgb(t[2]), [255,0,0,0.25]); },
+            green(t)    { return assert.deepEqual(hex2rgb(t[3]), [0,255,0,0.75]); },
+            magenta(t)  { return assert.deepEqual(hex2rgb(t[4]), [255,0,255,1]); }
+        },
+        'parse different #rgba HEX colors': {
+            topic: ['#0000','#fff8','#f004','#0F0C','#F0FF'],
+            black(t)    { return assert.deepEqual(hex2rgb(t[0]), [0,0,0,0]); },
+            white(t)    { return assert.deepEqual(hex2rgb(t[1]), [255,255,255,0.53]); },
+            red(t)      { return assert.deepEqual(hex2rgb(t[2]), [255,0,0,0.27]); },
+            green(t)    { return assert.deepEqual(hex2rgb(t[3]), [0,255,0,0.8]); },
+            magenta(t)  { return assert.deepEqual(hex2rgb(t[4]), [255,0,255,1]); }
+        },
+        'parse different rgba HEX colors without #': {
+            topic: ['0000','fff8','f004','0F0C','F0FF'],
+            black(t)    { return assert.deepEqual(hex2rgb(t[0]), [0,0,0,0]); },
+            white(t)    { return assert.deepEqual(hex2rgb(t[1]), [255,255,255,0.53]); },
+            red(t)      { return assert.deepEqual(hex2rgb(t[2]), [255,0,0,0.27]); },
+            green(t)    { return assert.deepEqual(hex2rgb(t[3]), [0,255,0,0.8]); },
             magenta(t)  { return assert.deepEqual(hex2rgb(t[4]), [255,0,255,1]); }
         },
     })

@@ -1,5 +1,5 @@
 const RE_HEX = /^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-const RE_HEXA = /^#?([A-Fa-f0-9]{8})$/;
+const RE_HEXA = /^#?([A-Fa-f0-9]{8}|[A-Fa-f0-9]{4})$/;
 
 const hex2rgb = (hex) => {
     if (hex.match(RE_HEX)) {
@@ -21,9 +21,14 @@ const hex2rgb = (hex) => {
 
     // match rgba hex format, eg #FF000077
     if (hex.match(RE_HEXA)) {
-        if (hex.length === 9) {
+        if (hex.length === 5 || hex.length === 9) {
             // remove optional leading #
             hex = hex.substr(1);
+        }
+        // expand short-notation to full eight-digit
+        if (hex.length === 4) {
+            hex = hex.split('');
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
         }
         const u = parseInt(hex, 16);
         const r = u >> 24 & 0xFF;
