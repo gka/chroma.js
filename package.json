@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "cross-env": "^6.0.3",
     "es6-shim": "^0.18.0",
     "eslint": "^5.10.0",
     "http-server": "^0.11.1",
@@ -59,8 +60,5 @@
       "pre-commit": "npm run lint",
       "pre-push": "npm test"
     }
-  },
-  "dependencies": {
-    "cross-env": "^6.0.3"
   }
 }
