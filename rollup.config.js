@@ -13,6 +13,7 @@ const minify = !process.env.ROLLUP_WATCH && !process.env.DEV;
 module.exports = [
     bundle('index.js', 'chroma'),
     bundle('index-light.js', 'chroma-light'),
+    bundle('index-tablekit.js', 'chroma-tablekit'),
 ];
 
 function bundle(input, target) {
