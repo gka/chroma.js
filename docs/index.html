@@ -234,6 +234,13 @@ chroma(&#39;slategray&#39;).saturate(3);
 chroma(&#39;hotpink&#39;).desaturate(2);
 chroma(&#39;hotpink&#39;).desaturate(3);
 </code></pre>
+<h3 id="color-mix">color.mix</h3>
+<h4 id="-targetcolor-ratio-0-5-">(targetcolor, ratio=0.5)</h4>
+<p>Mix this color with a target color. The mix <em>ratio</em> is a value between 0 and 1.<br>This is the same as <code>chroma.mix</code> but with the first parameter already set.<br>As such, the color space used can be adjusted.</p>
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).mix(&#39;blue&#39;);
+chroma(&#39;hotpink&#39;).mix(&#39;blue&#39;, 0.25);
+chroma(&#39;hotpink&#39;).mix(&#39;blue&#39;, 0.75);
+</code></pre>
 <h3 id="color-set">color.set</h3>
 <h4 id="-channel-value-">(channel, value)</h4>
 <p>Changes a single channel and returns the result a new <code>chroma</code> object.</p>
