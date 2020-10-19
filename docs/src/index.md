@@ -386,6 +386,32 @@ chroma('hotpink').mix('blue', 0.25);
 chroma('hotpink').mix('blue', 0.75);
 ```
 
+### color.shade
+#### (ratio=0.5)
+
+Produce a shade of the color.
+This is syntactic sugar for `color.mix` with a target color of black.
+
+```js
+chroma('hotpink').shade();
+chroma('hotpink').shade(0.25);
+chroma('hotpink').shade(0.75);
+chroma('hotpink').shade(1);
+```
+
+### color.tint
+#### (ratio=0.5)
+
+Produce a tint of the color.
+This is syntactic sugar for `color.mix` with a target color of white.
+
+```js
+chroma('hotpink').tint();
+chroma('hotpink').tint(0.25);
+chroma('hotpink').tint(0.75);
+chroma('hotpink').tint(1);
+```
+
 
 ### color.set
 #### (channel, value)

@@ -21,7 +21,13 @@ vows
             'saturate'(topic) { return assert.equal(topic.saturate().hex(), '#ff0000'); },
             'desaturate'(topic) { return assert.equal(topic.desaturate().hex(), '#ee3a20'); },
             'desaturate more'(topic) { return assert.equal(topic.desaturate(2).hex(), '#db5136'); },
-            'desaturate too much'(topic) { return assert.equal(topic.desaturate(400).hex(), '#7f7f7f'); }
+            'desaturate too much'(topic) { return assert.equal(topic.desaturate(400).hex(), '#7f7f7f'); },
+            'shade'(topic) { return assert.equal(topic.shade().hex(), '#b40000'); },
+            'shade more'(topic) { return assert.equal(topic.shade(0.75).hex(), '#800000'); },
+            'shade too much'(topic) { return assert.equal(topic.shade(1.5).hex(), '#000000'); },
+            'tint'(topic) { return assert.equal(topic.tint().hex(), '#ffb4b4'); },
+            'tint more'(topic) { return assert.equal(topic.tint(0.75).hex(), '#ffdddd'); },
+            'tint too much'(topic) { return assert.equal(topic.tint(1.5).hex(), '#ffffff'); }
         },
 
         'premultiply': {
