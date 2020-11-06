@@ -5,7 +5,7 @@ const {pow} = Math;
 const EPS = 1e-7;
 const MAX_ITER = 20;
 
-Color.prototype.luminance = function(lum, mode) {
+Color.prototype.luminance = function(lum, ...rest) {
     if (lum !== undefined && type(lum) === 'number') {
         if (lum === 0) {
             // return pure black
@@ -17,7 +17,7 @@ Color.prototype.luminance = function(lum, mode) {
         }
         // compute new color using...
         let cur_lum = this.luminance();
-        mode = mode || 'rgb';
+        let mode = rest[0] || 'rgb';
         let max_iter = MAX_ITER;
 
         const test = (low, high) => {

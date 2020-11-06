@@ -199,7 +199,7 @@
     };
 
     chroma.Color = Color_1;
-    chroma.version = '2.1.0';
+    chroma.version = '2.1.0-249';
 
     var chroma_1 = chroma;
 
@@ -1817,6 +1817,9 @@
     var MAX_ITER = 20;
 
     Color_1.prototype.luminance = function(lum) {
+        var rest = [], len = arguments.length - 1;
+        while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
+
         if (lum !== undefined && type$g(lum) === 'number') {
             if (lum === 0) {
                 // return pure black
@@ -1828,7 +1831,7 @@
             }
             // compute new color using...
             var cur_lum = this.luminance();
-            var mode = 'rgb';
+            var mode = rest[0] || 'rgb';
             var max_iter = MAX_ITER;
 
             var test = function (low, high) {
