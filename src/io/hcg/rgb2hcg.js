@@ -1,12 +1,12 @@
 const {unpack} = require('../../utils');
 
 const rgb2hcg = (...args) => {
-    const [r,g,b] = unpack(args, 'rgb');
+    const [r,g,b] = unpack(args, 'rgb').map(x => x / 255);
     const min = Math.min(r, g, b);
     const max = Math.max(r, g, b);
     const delta = max - min;
-    const c = delta * 100 / 255;
-    const _g = min / (255 - delta) * 100;
+    // const c = delta;
+    const _g = min / (1 - delta);
     let h;
     if (delta === 0) {
         h = Number.NaN
@@ -17,7 +17,7 @@ const rgb2hcg = (...args) => {
         h *= 60;
         if (h < 0) h += 360
     }
-    return [h, c, _g];
+    return [h, delta, _g]; // eliminate c and just replace with delta
 }
 
 module.exports = rgb2hcg;
