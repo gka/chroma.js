@@ -641,21 +641,6 @@
         }
     });
 
-    var type$5 = utils.type;
-
-    Color_1.prototype.alpha = function(a, mutate) {
-        if ( mutate === void 0 ) mutate=false;
-
-        if (a !== undefined && type$5(a) === 'number') {
-            if (mutate) {
-                this._rgb[3] = a;
-                return this;
-            }
-            return new Color_1([this._rgb[0], this._rgb[1], this._rgb[2], a], 'rgb');
-        }
-        return this._rgb[3];
-    };
-
     var labConstants = {
         // Corresponds roughly to RGB brighter/darker
         Kn: 18,
@@ -756,7 +741,7 @@
     var lab2rgb_1 = lab2rgb;
 
     var unpack$9 = utils.unpack;
-    var type$6 = utils.type;
+    var type$5 = utils.type;
 
 
 
@@ -783,11 +768,26 @@
             while ( len-- ) args[ len ] = arguments[ len ];
 
             args = unpack$9(args, 'lab');
-            if (type$6(args) === 'array' && args.length === 3) {
+            if (type$5(args) === 'array' && args.length === 3) {
                 return 'lab';
             }
         }
     });
+
+    var type$6 = utils.type;
+
+    Color_1.prototype.alpha = function(a, mutate) {
+        if ( mutate === void 0 ) mutate=false;
+
+        if (a !== undefined && type$6(a) === 'number') {
+            if (mutate) {
+                this._rgb[3] = a;
+                return this;
+            }
+            return new Color_1([this._rgb[0], this._rgb[1], this._rgb[2], a], 'rgb');
+        }
+        return this._rgb[3];
+    };
 
     Color_1.prototype.darken = function(amount) {
     	if ( amount === void 0 ) amount=1;
@@ -971,6 +971,58 @@
     	return this.saturate(-amount);
     };
 
+    var type$8 = utils.type;
+    var pow$2 = Math.pow;
+
+    var EPS = 1e-7;
+    var MAX_ITER = 20;
+
+    Color_1.prototype.luminance = function(lum) {
+        if (lum !== undefined && type$8(lum) === 'number') {
+            if (lum === 0) {
+                // return pure black
+                return new Color_1([0,0,0,this._rgb[3]], 'rgb');
+            }
+            if (lum === 1) {
+                // return pure white
+                return new Color_1([255,255,255,this._rgb[3]], 'rgb');
+            }
+            // compute new color using...
+            var cur_lum = this.luminance();
+            var mode = 'rgb';
+            var max_iter = MAX_ITER;
+
+            var test = function (low, high) {
+                var mid = low.interpolate(high, 0.5, mode);
+                var lm = mid.luminance();
+                if (Math.abs(lum - lm) < EPS || !max_iter--) {
+                    // close enough
+                    return mid;
+                }
+                return lm > lum ? test(low, mid) : test(mid, high);
+            };
+
+            var rgb = (cur_lum > lum ? test(new Color_1([0,0,0]), this) : test(this, new Color_1([255,255,255]))).rgb();
+            return new Color_1(rgb.concat( [this._rgb[3]]));
+        }
+        return rgb2luminance.apply(void 0, (this._rgb).slice(0,3));
+    };
+
+
+    var rgb2luminance = function (r,g,b) {
+        // relative luminance
+        // see http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+        r = luminance_x(r);
+        g = luminance_x(g);
+        b = luminance_x(b);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+
+    var luminance_x = function (x) {
+        x /= 255;
+        return x <= 0.03928 ? x/12.92 : pow$2((x+0.055)/1.055, 2.4);
+    };
+
     Color_1.prototype.get = function(mc) {
         var ref = mc.split('.');
         var mode = ref[0];
@@ -987,7 +1039,7 @@
 
     var interpolator = {};
 
-    var type$8 = utils.type;
+    var type$9 = utils.type;
 
 
     var mix = function (col1, col2, f) {
@@ -1003,8 +1055,8 @@
         if (!interpolator[mode]) {
             throw new Error(("interpolation mode " + mode + " is not defined"));
         }
-        if (type$8(col1) !== 'object') { col1 = new Color_1(col1); }
-        if (type$8(col2) !== 'object') { col2 = new Color_1(col2); }
+        if (type$9(col1) !== 'object') { col1 = new Color_1(col1); }
+        if (type$9(col2) !== 'object') { col2 = new Color_1(col2); }
         return interpolator[mode](col1, col2, f)
             .alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
     };
@@ -1018,7 +1070,7 @@
     	return mix.apply(void 0, [ this, col2, f ].concat( rest ));
     };
 
-    var type$9 = utils.type;
+    var type$a = utils.type;
 
     Color_1.prototype.set = function(mc, value, mutate) {
         if ( mutate === void 0 ) mutate=false;
@@ -1030,7 +1082,7 @@
         if (channel) {
             var i = mode.indexOf(channel);
             if (i > -1) {
-                if (type$9(value) == 'string') {
+                if (type$a(value) == 'string') {
                     switch(value.charAt(0)) {
                         case '+': src[i] += +value; break;
                         case '-': src[i] += +value; break;
@@ -1038,7 +1090,7 @@
                         case '/': src[i] /= +(value.substr(1)); break;
                         default: src[i] = +value;
                     }
-                } else if (type$9(value) === 'number') {
+                } else if (type$a(value) === 'number') {
                     src[i] = value;
                 } else {
                     throw new Error("unsupported value for Color.set");
@@ -1057,7 +1109,7 @@
     };
 
     var sqrt$1 = Math.sqrt;
-    var pow$2 = Math.pow;
+    var pow$3 = Math.pow;
 
     var lrgb = function (col1, col2, f) {
         var ref = col1._rgb;
@@ -1069,9 +1121,9 @@
         var y2 = ref$1[1];
         var z2 = ref$1[2];
         return new Color_1(
-            sqrt$1(pow$2(x1,2) * (1-f) + pow$2(x2,2) * f),
-            sqrt$1(pow$2(y1,2) * (1-f) + pow$2(y2,2) * f),
-            sqrt$1(pow$2(z1,2) * (1-f) + pow$2(z2,2) * f),
+            sqrt$1(pow$3(x1,2) * (1-f) + pow$3(x2,2) * f),
+            sqrt$1(pow$3(y1,2) * (1-f) + pow$3(y2,2) * f),
+            sqrt$1(pow$3(z1,2) * (1-f) + pow$3(z2,2) * f),
             'rgb'
         )
     };
@@ -1099,7 +1151,9 @@
 
 
 
+
     // operators --> modify existing Colors
+
 
 
 

@@ -7,11 +7,13 @@ const chroma = require('./src/chroma');
 require('./src/io/css');
 require('./src/io/hex');
 require('./src/io/rgb');
+require('./src/io/lab');
 
 // operators --> modify existing Colors
 require('./src/ops/alpha');
 require('./src/ops/darken');
 require('./src/ops/saturate');
+require('./src/ops/luminance');
 require('./src/ops/get');
 require('./src/ops/mix');
 require('./src/ops/set');
