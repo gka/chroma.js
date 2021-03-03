@@ -1,0 +1,17 @@
+# .gitignore equivelant
+.git*
+readme (Autosaved).md
+m.txt
+.DS_Store
+license.coffee
+node_modules
+yarn.lock
+
+# Dev content
+test/
+src/
+docs/
+.eslintrc.js
+.travis.yml
+Gruntfile.js
+rollup.config.js
