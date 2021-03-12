@@ -6,6 +6,11 @@
 
 ### Usage
 
+How to install
+```javascript
+import chroma from "chroma-js";
+```
+
 Initiate and manipulate colors:
 
 ```javascript
