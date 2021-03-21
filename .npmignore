@@ -9,7 +9,6 @@ yarn.lock
 
 # Dev content
 test/
-src/
 docs/
 .eslintrc.js
 .travis.yml
