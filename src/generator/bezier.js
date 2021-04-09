@@ -42,6 +42,8 @@ const bezier = function(colors) {
                 return I1((t-0.5)*2);
             }
         };
+    } else {
+        throw new RangeError("Bezier can only accept between 2 to 5 colors; got `${colors.length}`.")
     }
     return I;
 };
