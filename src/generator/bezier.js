@@ -53,7 +53,7 @@ const bezier = function(colors) {
         row = binom_row(n);
         I = function (t) {
             const u = 1 - t;
-            const lab = ([0, 1, 2].map((i) => labs.reduce((sum, el, j) => (sum + row[j] * u ** (n - 1) * t ** n * el[i]), 0)))
+            const lab = ([0, 1, 2].map((i) => labs.reduce((sum, el, j) => (sum + row[j] * u ** (n - j) * t ** j * el[i]), 0)))
             return new Color(lab, 'lab');
         };
     } else {
