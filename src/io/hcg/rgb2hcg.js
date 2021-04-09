@@ -5,7 +5,6 @@ const rgb2hcg = (...args) => {
     const min = Math.min(r, g, b);
     const max = Math.max(r, g, b);
     const delta = max - min;
-    // const c = delta;
     const _g = min / (1 - delta);
     let h;
     if (delta === 0) {
@@ -17,7 +16,7 @@ const rgb2hcg = (...args) => {
         h *= 60;
         if (h < 0) h += 360
     }
-    return [h, delta, _g]; // eliminate c and just replace with delta
+    return [h, delta, _g];
 }
 
 module.exports = rgb2hcg;
