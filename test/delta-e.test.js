@@ -33,7 +33,7 @@ Object.keys(tests).forEach(key => {
             // avoid divide by zero and set to true.
             let result = deltaE(topic.in[0], topic.in[1]);
             let percent = Math.abs(result-topic.out)/topic.out;
-            assert.deepEqual((topic.out == 0 && result == 0) || percent < 0.1, true);
+            assert.deepEqual((topic.out == 0 && result == 0) || percent < 0.01, true);
         }
     }
 })
