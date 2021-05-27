@@ -199,7 +199,7 @@
     };
 
     chroma.Color = Color_1;
-    chroma.version = '2.1.0';
+    chroma.version = '2.1.1';
 
     var chroma_1 = chroma;
 
@@ -2998,17 +2998,30 @@
     };
 
     var sqrt$4 = Math.sqrt;
+    var pow$8 = Math.pow;
+    var min$2 = Math.min;
+    var max$2 = Math.max;
     var atan2$2 = Math.atan2;
     var abs$1 = Math.abs;
     var cos$4 = Math.cos;
+    var sin$3 = Math.sin;
+    var exp = Math.exp;
     var PI$2 = Math.PI;
 
-    var deltaE = function(a, b, L, C) {
-        if ( L === void 0 ) L=1;
-        if ( C === void 0 ) C=1;
+    var deltaE = function(a, b, Kl, Kc, Kh) {
+        if ( Kl === void 0 ) Kl=1;
+        if ( Kc === void 0 ) Kc=1;
+        if ( Kh === void 0 ) Kh=1;
 
-        // Delta E (CMC)
-        // see http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CMC.html
+        // Delta E (CIE 2000)
+        // see http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CIE2000.html
+        rad2deg = function(rad) {
+            return 360 * rad / (2 * PI$2);
+        };
+        deg2rad = function(deg) {
+            return (2 * PI$2 * deg) / 360;
+        };
+
         a = new Color_1(a);
         b = new Color_1(b);
         var ref = Array.from(a.lab());
@@ -3019,26 +3032,44 @@
         var L2 = ref$1[0];
         var a2 = ref$1[1];
         var b2 = ref$1[2];
-        var c1 = sqrt$4((a1 * a1) + (b1 * b1));
-        var c2 = sqrt$4((a2 * a2) + (b2 * b2));
-        var sl = L1 < 16.0 ? 0.511 : (0.040975 * L1) / (1.0 + (0.01765 * L1));
-        var sc = ((0.0638 * c1) / (1.0 + (0.0131 * c1))) + 0.638;
-        var h1 = c1 < 0.000001 ? 0.0 : (atan2$2(b1, a1) * 180.0) / PI$2;
-        while (h1 < 0) { h1 += 360; }
-        while (h1 >= 360) { h1 -= 360; }
-        var t = (h1 >= 164.0) && (h1 <= 345.0) ? (0.56 + abs$1(0.2 * cos$4((PI$2 * (h1 + 168.0)) / 180.0))) : (0.36 + abs$1(0.4 * cos$4((PI$2 * (h1 + 35.0)) / 180.0)));
-        var c4 = c1 * c1 * c1 * c1;
-        var f = sqrt$4(c4 / (c4 + 1900.0));
-        var sh = sc * (((f * t) + 1.0) - f);
-        var delL = L1 - L2;
-        var delC = c1 - c2;
-        var delA = a1 - a2;
-        var delB = b1 - b2;
-        var dH2 = ((delA * delA) + (delB * delB)) - (delC * delC);
-        var v1 = delL / (L * sl);
-        var v2 = delC / (C * sc);
-        var v3 = sh;
-        return sqrt$4((v1 * v1) + (v2 * v2) + (dH2 / (v3 * v3)));
+        var avgL = (L1 + L2)/2;
+        var C1 = sqrt$4(pow$8(a1, 2) + pow$8(b1, 2));
+        var C2 = sqrt$4(pow$8(a2, 2) + pow$8(b2, 2));
+        var avgC = (C1 + C2)/2;
+        var G = 0.5*(1-sqrt$4(pow$8(avgC, 7)/(pow$8(avgC, 7) + pow$8(25, 7))));
+        var a1p = a1*(1+G);
+        var a2p = a2*(1+G);
+        var C1p = sqrt$4(pow$8(a1p, 2) + pow$8(b1, 2));
+        var C2p = sqrt$4(pow$8(a2p, 2) + pow$8(b2, 2));
+        var avgCp = (C1p + C2p)/2;
+        
+        var arctan1 = rad2deg(atan2$2(b1, a1p));
+        var arctan2 = rad2deg(atan2$2(b2, a2p));
+
+        var h1p = arctan1 >= 0 ? arctan1 : arctan1 + 360;
+        var h2p = arctan2 >= 0 ? arctan2 : arctan2 + 360;
+
+        var avgHp = abs$1(h1p - h2p) > 180 ? (h1p + h2p + 360)/2 : (h1p + h2p)/2;
+
+        var T = 1 - 0.17*cos$4(deg2rad(avgHp - 30)) + 0.24*cos$4(deg2rad(2*avgHp)) + 0.32*cos$4(deg2rad(3*avgHp + 6)) - 0.2*cos$4(deg2rad(4*avgHp - 63));
+
+        var deltaHp = h2p - h1p;
+        deltaHp = abs$1(deltaHp) <= 180 ? deltaHp : h2p <= h1p ? deltaHp + 360 : deltaHp - 360;
+        deltaHp = 2*sqrt$4(C1p*C2p)*sin$3(deg2rad(deltaHp)/2);
+        var deltaL = L2 - L1;
+        var deltaCp = C2p - C1p;    
+
+        var sl = 1 + (0.015*pow$8(avgL - 50, 2))/sqrt$4(20 + pow$8(avgL - 50, 2));
+        var sc = 1 + 0.045*avgCp;
+        var sh = 1 + 0.015*avgCp*T;
+
+        var deltaTheta = 30*exp(-pow$8((avgHp - 275)/25, 2));
+
+        var Rc = 2*sqrt$4(pow$8(avgCp, 7)/(pow$8(avgCp, 7) + pow$8(25, 7)));
+        var Rt = -Rc*sin$3(2*deg2rad(deltaTheta));
+        console.log(Rt, Rc, deltaTheta, sh, sc, sl);
+        var result = sqrt$4(pow$8(deltaL/(Kl*sl), 2) + pow$8(deltaCp/(Kc*sc), 2) + pow$8(deltaHp/(Kh*sh), 2) + Rt*(deltaCp/(Kc*sc))*(deltaHp/(Kh*sh)));
+        return max$2(0, min$2(100, result));
     };
 
     // simple Euclidean distance
