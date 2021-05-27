@@ -3015,13 +3015,12 @@
 
         // Delta E (CIE 2000)
         // see http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CIE2000.html
-        rad2deg = function(rad) {
+        var rad2deg = function(rad) {
             return 360 * rad / (2 * PI$2);
         };
-        deg2rad = function(deg) {
+        var deg2rad = function(deg) {
             return (2 * PI$2 * deg) / 360;
         };
-
         a = new Color_1(a);
         b = new Color_1(b);
         var ref = Array.from(a.lab());
@@ -3042,32 +3041,23 @@
         var C1p = sqrt$4(pow$8(a1p, 2) + pow$8(b1, 2));
         var C2p = sqrt$4(pow$8(a2p, 2) + pow$8(b2, 2));
         var avgCp = (C1p + C2p)/2;
-        
         var arctan1 = rad2deg(atan2$2(b1, a1p));
         var arctan2 = rad2deg(atan2$2(b2, a2p));
-
         var h1p = arctan1 >= 0 ? arctan1 : arctan1 + 360;
         var h2p = arctan2 >= 0 ? arctan2 : arctan2 + 360;
-
         var avgHp = abs$1(h1p - h2p) > 180 ? (h1p + h2p + 360)/2 : (h1p + h2p)/2;
-
         var T = 1 - 0.17*cos$4(deg2rad(avgHp - 30)) + 0.24*cos$4(deg2rad(2*avgHp)) + 0.32*cos$4(deg2rad(3*avgHp + 6)) - 0.2*cos$4(deg2rad(4*avgHp - 63));
-
         var deltaHp = h2p - h1p;
         deltaHp = abs$1(deltaHp) <= 180 ? deltaHp : h2p <= h1p ? deltaHp + 360 : deltaHp - 360;
         deltaHp = 2*sqrt$4(C1p*C2p)*sin$3(deg2rad(deltaHp)/2);
         var deltaL = L2 - L1;
         var deltaCp = C2p - C1p;    
-
         var sl = 1 + (0.015*pow$8(avgL - 50, 2))/sqrt$4(20 + pow$8(avgL - 50, 2));
         var sc = 1 + 0.045*avgCp;
         var sh = 1 + 0.015*avgCp*T;
-
         var deltaTheta = 30*exp(-pow$8((avgHp - 275)/25, 2));
-
         var Rc = 2*sqrt$4(pow$8(avgCp, 7)/(pow$8(avgCp, 7) + pow$8(25, 7)));
         var Rt = -Rc*sin$3(2*deg2rad(deltaTheta));
-        console.log(Rt, Rc, deltaTheta, sh, sc, sl);
         var result = sqrt$4(pow$8(deltaL/(Kl*sl), 2) + pow$8(deltaCp/(Kc*sc), 2) + pow$8(deltaHp/(Kh*sh), 2) + Rt*(deltaCp/(Kc*sc))*(deltaHp/(Kh*sh)));
         return max$2(0, min$2(100, result));
     };
