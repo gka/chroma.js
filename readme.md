@@ -6,6 +6,18 @@
 
 ### Usage
 
+Install from npm
+
+```
+npm install chroma-js
+```
+
+Import package into project
+
+```javascript
+import chroma from "chroma-js";
+```
+
 Initiate and manipulate colors:
 
 ```javascript
