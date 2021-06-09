@@ -261,16 +261,18 @@ chroma.distance('#fff', '#f0f');
 ```
 
 ### chroma.deltaE
-#### (reference, sample, L=1, C=1)
+#### (color1, color2, Kl=1, Kc=1, Kh=1)
 
-Computes [color difference](https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_.281984.29) as developed by the Colour Measurement Committee of the Society of Dyers and Colourists (CMC) in 1984. The implementation is adapted from [Bruce Lindbloom](https://web.archive.org/web/20160306044036/http://www.brucelindbloom.com/javascript/ColorDiff.js). The parameters L and C are weighting factors for lightness and chromaticity.
+Computes [color difference](https://en.wikipedia.org/wiki/Color_difference#CIEDE2000) as developed by the International Commission on Illumination (CIE) in 2000. The implementation is based on the formula from [Bruce Lindbloom](http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CIE2000.html). Resulting values range from 0 (no difference) to 100 (maximum difference), and are a metric for how the human eye percieves color difference. The optional parameters Kl, Kc, and Kh may be used to adjust weightings of lightness, chroma, and hue.
 
 ```js
+chroma.deltaE('#ededee', '#ededee');
 chroma.deltaE('#ededee', '#edeeed');
 chroma.deltaE('#ececee', '#eceeec');
 chroma.deltaE('#e9e9ee', '#e9eee9');
 chroma.deltaE('#e4e4ee', '#e4eee4');
 chroma.deltaE('#e0e0ee', '#e0eee0');
+chroma.deltaE('#000000', '#ffffff');
 
 ```
 

@@ -167,13 +167,15 @@ chroma.distance(&#39;#fff&#39;, &#39;#ff0&#39;);
 chroma.distance(&#39;#fff&#39;, &#39;#f0f&#39;);
 </code></pre>
 <h3 id="chroma-deltae">chroma.deltaE</h3>
-<h4 id="-reference-sample-l-1-c-1-">(reference, sample, L=1, C=1)</h4>
-<p>Computes <a href="https://en.wikipedia.org/wiki/Color_difference#CMC_l:c_.281984.29">color difference</a> as developed by the Colour Measurement Committee of the Society of Dyers and Colourists (CMC) in 1984. The implementation is adapted from <a href="https://web.archive.org/web/20160306044036/http://www.brucelindbloom.com/javascript/ColorDiff.js">Bruce Lindbloom</a>. The parameters L and C are weighting factors for lightness and chromaticity.</p>
-<pre><code class="lang-js">chroma.deltaE(&#39;#ededee&#39;, &#39;#edeeed&#39;);
+<h4 id="-color1-color2-kl-1-kc-1-kh-1-">(color1, color2, Kl=1, Kc=1, Kh=1)</h4>
+<p>Computes <a href="https://en.wikipedia.org/wiki/Color_difference#CIEDE2000">color difference</a> as developed by the International Commission on Illumination (CIE) in 2000. The implementation is based on the formula from <a href="http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CIE2000.html">Bruce Lindbloom</a>. Resulting values range from 0 (no difference) to 100 (maximum difference), and are a metric for how the human eye percieves color difference. The optional parameters Kl, Kc, and Kh may be used to adjust weightings of lightness, chroma, and hue.</p>
+<pre><code class="lang-js">chroma.deltaE(&#39;#ededee&#39;, &#39;#ededee&#39;);
+chroma.deltaE(&#39;#ededee&#39;, &#39;#edeeed&#39;);
 chroma.deltaE(&#39;#ececee&#39;, &#39;#eceeec&#39;);
 chroma.deltaE(&#39;#e9e9ee&#39;, &#39;#e9eee9&#39;);
 chroma.deltaE(&#39;#e4e4ee&#39;, &#39;#e4eee4&#39;);
 chroma.deltaE(&#39;#e0e0ee&#39;, &#39;#e0eee0&#39;);
+chroma.deltaE(&#39;#000000&#39;, &#39;#ffffff&#39;);
 
 </code></pre>
 <h3 id="chroma-brewer">chroma.brewer</h3>
