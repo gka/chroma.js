@@ -29,6 +29,8 @@ require('./src/ops/mix');
 require('./src/ops/premultiply');
 require('./src/ops/saturate');
 require('./src/ops/set');
+require('./src/ops/shade');
+require('./src/ops/tint');
 
 // interpolators
 require('./src/interpolator/rgb');

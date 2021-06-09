@@ -16,6 +16,8 @@ require('./src/ops/darken');
 require('./src/ops/get');
 require('./src/ops/mix');
 require('./src/ops/set');
+require('./src/ops/shade');
+require('./src/ops/tint');
 
 // interpolators
 require('./src/interpolator/lrgb');
