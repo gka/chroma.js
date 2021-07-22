@@ -21,7 +21,7 @@ import chroma from "chroma-js";
 Initiate and manipulate colors:
 
 ```javascript
-chroma('#D4F880').darken().hex();  // #9BC04B
+chroma('#D4F880').darken().hex();  // #a1c550
 ```
 
 Working with color scales is easy, too:
