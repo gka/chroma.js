@@ -926,6 +926,22 @@
         }
     };
 
+    Color_1.prototype.shade = function(f) {
+    	if ( f === void 0 ) f=0.5;
+    	var rest = [], len = arguments.length - 1;
+    	while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
+
+    	return mix.apply(void 0, [ this, 'black', f ].concat( rest ));
+    };
+
+    Color_1.prototype.tint = function(f) {
+    	if ( f === void 0 ) f=0.5;
+    	var rest = [], len = arguments.length - 1;
+    	while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
+
+    	return mix.apply(void 0, [ this, 'white', f ].concat( rest ));
+    };
+
     var sqrt = Math.sqrt;
     var pow$2 = Math.pow;
 
@@ -972,6 +988,8 @@
 
 
     // operators --> modify existing Colors
+
+
 
 
 
