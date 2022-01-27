@@ -205,7 +205,7 @@
     };
 
     chroma$i.Color = Color_1;
-    chroma$i.version = '2.1.1';
+    chroma$i.version = '2.2.0';
 
     var chroma_1 = chroma$i;
 
@@ -2656,6 +2656,19 @@
 
     var scale$1 = scale$2;
 
+    // nth row of the pascal triangle
+    var binom_row = function(n) {
+        var row = [1, 1];
+        for (var i = 1; i < n; i++) {
+            var newrow = [1];
+            for (var j = 1; j <= row.length; j++) {
+                newrow[j] = (row[j] || 0) + row[j - 1];
+            }
+            row = newrow;
+        }
+        return row;
+    };
+
     var bezier = function(colors) {
         var assign, assign$1, assign$2;
 
@@ -2683,16 +2696,19 @@
                 var lab = ([0, 1, 2].map(function (i) { return ((1-t)*(1-t)*(1-t) * lab0[i]) + (3 * (1-t) * (1-t) * t * lab1[i]) + (3 * (1-t) * t * t * lab2[i]) + (t*t*t * lab3[i]); }));
                 return new Color$5(lab, 'lab');
             };
-        } else if (colors.length === 5) {
-            var I0 = bezier(colors.slice(0, 3));
-            var I1 = bezier(colors.slice(2, 5));
-            I = function(t) {
-                if (t < 0.5) {
-                    return I0(t*2);
-                } else {
-                    return I1((t-0.5)*2);
-                }
+        } else if (colors.length >= 5) {
+            // general case (degree n bezier)
+            var labs, row, n;
+            labs = colors.map(function (c) { return c.lab(); });
+            n = colors.length - 1;
+            row = binom_row(n);
+            I = function (t) {
+                var u = 1 - t;
+                var lab = ([0, 1, 2].map(function (i) { return labs.reduce(function (sum, el, j) { return (sum + row[j] * Math.pow( u, (n - j) ) * Math.pow( t, j ) * el[i]); }, 0); }));
+                return new Color$5(lab, 'lab');
             };
+        } else {
+            throw new RangeError("No point in running bezier with only one color.")
         }
         return I;
     };
