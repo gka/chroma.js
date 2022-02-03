@@ -91,20 +91,20 @@
 
         classToType[("[object " + name + "]")] = name.toLowerCase();
     }
-    var type$b = function(obj) {
+    var type$c = function(obj) {
         return classToType[Object.prototype.toString.call(obj)] || "object";
     };
 
-    var type$a = type$b;
+    var type$b = type$c;
 
-    var unpack$a = function (args, keyOrder) {
+    var unpack$d = function (args, keyOrder) {
         if ( keyOrder === void 0 ) keyOrder=null;
 
     	// if called with more than 3 arguments, we return the arguments
         if (args.length >= 3) { return Array.prototype.slice.call(args); }
         // with less than 3 args we check if first arg is object
         // and use the keyOrder string to extract and sort properties
-    	if (type$a(args[0]) == 'object' && keyOrder) {
+    	if (type$b(args[0]) == 'object' && keyOrder) {
     		return keyOrder.split('')
     			.filter(function (k) { return args[0][k] !== undefined; })
     			.map(function (k) { return args[0][k]; });
@@ -114,12 +114,12 @@
         return args[0];
     };
 
-    var type$9 = type$b;
+    var type$a = type$c;
 
     var last$4 = function (args) {
         if (args.length < 2) { return null; }
         var l = args.length-1;
-        if (type$9(args[l]) == 'string') { return args[l].toLowerCase(); }
+        if (type$a(args[l]) == 'string') { return args[l].toLowerCase(); }
         return null;
     };
 
@@ -128,8 +128,8 @@
     var utils = {
     	clip_rgb: clip_rgb$1,
     	limit: limit$1,
-    	type: type$b,
-    	unpack: unpack$a,
+    	type: type$c,
+    	unpack: unpack$d,
     	last: last$4,
     	PI: PI,
     	TWOPI: PI*2,
@@ -138,22 +138,22 @@
     	RAD2DEG: 180 / PI
     };
 
-    var input$5 = {
+    var input$6 = {
     	format: {},
     	autodetect: []
     };
 
     var last$3 = utils.last;
     var clip_rgb = utils.clip_rgb;
-    var type$8 = utils.type;
-    var _input = input$5;
+    var type$9 = utils.type;
+    var _input = input$6;
 
-    var Color$d = function Color() {
+    var Color$f = function Color() {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
         var me = this;
-        if (type$8(args[0]) === 'object' &&
+        if (type$9(args[0]) === 'object' &&
             args[0].constructor &&
             args[0].constructor === this.constructor) {
             // the argument is already a Color instance
@@ -190,26 +190,26 @@
         if (me._rgb.length === 3) { me._rgb.push(1); }
     };
 
-    Color$d.prototype.toString = function toString () {
-        if (type$8(this.hex) == 'function') { return this.hex(); }
+    Color$f.prototype.toString = function toString () {
+        if (type$9(this.hex) == 'function') { return this.hex(); }
         return ("[" + (this._rgb.join(',')) + "]");
     };
 
-    var Color_1 = Color$d;
+    var Color_1 = Color$f;
 
-    var chroma$6 = function () {
+    var chroma$7 = function () {
     	var args = [], len = arguments.length;
     	while ( len-- ) args[ len ] = arguments[ len ];
 
-    	return new (Function.prototype.bind.apply( chroma$6.Color, [ null ].concat( args) ));
+    	return new (Function.prototype.bind.apply( chroma$7.Color, [ null ].concat( args) ));
     };
 
-    chroma$6.Color = Color_1;
-    chroma$6.version = '2.3.0';
+    chroma$7.Color = Color_1;
+    chroma$7.version = '2.3.0';
 
-    var chroma_1 = chroma$6;
+    var chroma_1 = chroma$7;
 
-    var unpack$9 = utils.unpack;
+    var unpack$c = utils.unpack;
     var last$2 = utils.last;
     var rnd = function (a) { return Math.round(a*100)/100; };
 
@@ -225,7 +225,7 @@
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        var hsla = unpack$9(args, 'hsla');
+        var hsla = unpack$c(args, 'hsla');
         var mode = last$2(args) || 'lsa';
         hsla[0] = rnd(hsla[0] || 0);
         hsla[1] = rnd(hsla[1]*100) + '%';
@@ -241,7 +241,7 @@
 
     var hsl2css_1 = hsl2css$1;
 
-    var unpack$8 = utils.unpack;
+    var unpack$b = utils.unpack;
 
     /*
      * supported arguments:
@@ -255,7 +255,7 @@
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        args = unpack$8(args, 'rgba');
+        args = unpack$b(args, 'rgba');
         var r = args[0];
         var g = args[1];
         var b = args[2];
@@ -289,7 +289,7 @@
 
     var rgb2hsl_1 = rgb2hsl$2;
 
-    var unpack$7 = utils.unpack;
+    var unpack$a = utils.unpack;
     var last$1 = utils.last;
     var hsl2css = hsl2css_1;
     var rgb2hsl$1 = rgb2hsl_1;
@@ -307,7 +307,7 @@
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        var rgba = unpack$7(args, 'rgba');
+        var rgba = unpack$a(args, 'rgba');
         var mode = last$1(args) || 'rgb';
         if (mode.substr(0,3) == 'hsl') {
             return hsl2css(rgb2hsl$1(rgba), mode);
@@ -324,7 +324,7 @@
 
     var rgb2css_1 = rgb2css$1;
 
-    var unpack$6 = utils.unpack;
+    var unpack$9 = utils.unpack;
     var round$3 = Math.round;
 
     var hsl2rgb$1 = function () {
@@ -332,7 +332,7 @@
 
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
-        args = unpack$6(args, 'hsl');
+        args = unpack$9(args, 'hsl');
         var h = args[0];
         var s = args[1];
         var l = args[2];
@@ -457,40 +457,40 @@
 
     var css2rgb_1 = css2rgb$1;
 
-    var chroma$5 = chroma_1;
-    var Color$c = Color_1;
-    var input$4 = input$5;
-    var type$7 = utils.type;
+    var chroma$6 = chroma_1;
+    var Color$e = Color_1;
+    var input$5 = input$6;
+    var type$8 = utils.type;
 
     var rgb2css = rgb2css_1;
     var css2rgb = css2rgb_1;
 
-    Color$c.prototype.css = function(mode) {
+    Color$e.prototype.css = function(mode) {
         return rgb2css(this._rgb, mode);
     };
 
-    chroma$5.css = function () {
+    chroma$6.css = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        return new (Function.prototype.bind.apply( Color$c, [ null ].concat( args, ['css']) ));
+        return new (Function.prototype.bind.apply( Color$e, [ null ].concat( args, ['css']) ));
     };
 
-    input$4.format.css = css2rgb;
+    input$5.format.css = css2rgb;
 
-    input$4.autodetect.push({
+    input$5.autodetect.push({
         p: 5,
         test: function (h) {
             var rest = [], len = arguments.length - 1;
             while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
 
-            if (!rest.length && type$7(h) === 'string' && css2rgb.test(h)) {
+            if (!rest.length && type$8(h) === 'string' && css2rgb.test(h)) {
                 return 'css';
             }
         }
     });
 
-    var unpack$5 = utils.unpack;
+    var unpack$8 = utils.unpack;
     var last = utils.last;
     var round$1 = Math.round;
 
@@ -498,7 +498,7 @@
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        var ref = unpack$5(args, 'rgba');
+        var ref = unpack$8(args, 'rgba');
         var r = ref[0];
         var g = ref[1];
         var b = ref[2];
@@ -574,66 +574,66 @@
 
     var hex2rgb_1 = hex2rgb;
 
-    var chroma$4 = chroma_1;
-    var Color$b = Color_1;
-    var type$6 = utils.type;
-    var input$3 = input$5;
+    var chroma$5 = chroma_1;
+    var Color$d = Color_1;
+    var type$7 = utils.type;
+    var input$4 = input$6;
 
     var rgb2hex = rgb2hex_1;
 
-    Color$b.prototype.hex = function(mode) {
+    Color$d.prototype.hex = function(mode) {
         return rgb2hex(this._rgb, mode);
     };
 
-    chroma$4.hex = function () {
+    chroma$5.hex = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        return new (Function.prototype.bind.apply( Color$b, [ null ].concat( args, ['hex']) ));
+        return new (Function.prototype.bind.apply( Color$d, [ null ].concat( args, ['hex']) ));
     };
 
-    input$3.format.hex = hex2rgb_1;
-    input$3.autodetect.push({
+    input$4.format.hex = hex2rgb_1;
+    input$4.autodetect.push({
         p: 4,
         test: function (h) {
             var rest = [], len = arguments.length - 1;
             while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
 
-            if (!rest.length && type$6(h) === 'string' && [3,4,5,6,7,8,9].indexOf(h.length) >= 0) {
+            if (!rest.length && type$7(h) === 'string' && [3,4,5,6,7,8,9].indexOf(h.length) >= 0) {
                 return 'hex';
             }
         }
     });
 
-    var unpack$4 = utils.unpack;
-    var type$5 = utils.type;
-    var chroma$3 = chroma_1;
-    var Color$a = Color_1;
-    var input$2 = input$5;
+    var unpack$7 = utils.unpack;
+    var type$6 = utils.type;
+    var chroma$4 = chroma_1;
+    var Color$c = Color_1;
+    var input$3 = input$6;
 
     var rgb2hsl = rgb2hsl_1;
 
-    Color$a.prototype.hsl = function() {
+    Color$c.prototype.hsl = function() {
         return rgb2hsl(this._rgb);
     };
 
-    chroma$3.hsl = function () {
+    chroma$4.hsl = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        return new (Function.prototype.bind.apply( Color$a, [ null ].concat( args, ['hsl']) ));
+        return new (Function.prototype.bind.apply( Color$c, [ null ].concat( args, ['hsl']) ));
     };
 
-    input$2.format.hsl = hsl2rgb_1;
+    input$3.format.hsl = hsl2rgb_1;
 
-    input$2.autodetect.push({
+    input$3.autodetect.push({
         p: 2,
         test: function () {
             var args = [], len = arguments.length;
             while ( len-- ) args[ len ] = arguments[ len ];
 
-            args = unpack$4(args, 'hsl');
-            if (type$5(args) === 'array' && args.length === 3) {
+            args = unpack$7(args, 'hsl');
+            if (type$6(args) === 'array' && args.length === 3) {
                 return 'hsl';
             }
         }
@@ -655,14 +655,14 @@
     };
 
     var LAB_CONSTANTS$2 = labConstants;
-    var unpack$3 = utils.unpack;
-    var pow$2 = Math.pow;
+    var unpack$6 = utils.unpack;
+    var pow$4 = Math.pow;
 
     var rgb2lab$1 = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        var ref = unpack$3(args, 'rgb');
+        var ref = unpack$6(args, 'rgb');
         var r = ref[0];
         var g = ref[1];
         var b = ref[2];
@@ -676,11 +676,11 @@
 
     var rgb_xyz = function (r) {
         if ((r /= 255) <= 0.04045) { return r / 12.92; }
-        return pow$2((r + 0.055) / 1.055, 2.4);
+        return pow$4((r + 0.055) / 1.055, 2.4);
     };
 
     var xyz_lab = function (t) {
-        if (t > LAB_CONSTANTS$2.t3) { return pow$2(t, 1 / 3); }
+        if (t > LAB_CONSTANTS$2.t3) { return pow$4(t, 1 / 3); }
         return t / LAB_CONSTANTS$2.t2 + LAB_CONSTANTS$2.t0;
     };
 
@@ -697,8 +697,8 @@
     var rgb2lab_1 = rgb2lab$1;
 
     var LAB_CONSTANTS$1 = labConstants;
-    var unpack$2 = utils.unpack;
-    var pow$1 = Math.pow;
+    var unpack$5 = utils.unpack;
+    var pow$3 = Math.pow;
 
     /*
      * L* [0..100]
@@ -709,7 +709,7 @@
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        args = unpack$2(args, 'lab');
+        args = unpack$5(args, 'lab');
         var l = args[0];
         var a = args[1];
         var b = args[2];
@@ -731,7 +731,7 @@
     };
 
     var xyz_rgb = function (r) {
-        return 255 * (r <= 0.00304 ? 12.92 * r : 1.055 * pow$1(r, 1 / 2.4) - 0.055)
+        return 255 * (r <= 0.00304 ? 12.92 * r : 1.055 * pow$3(r, 1 / 2.4) - 0.055)
     };
 
     var lab_xyz = function (t) {
@@ -740,55 +740,169 @@
 
     var lab2rgb_1 = lab2rgb;
 
-    var unpack$1 = utils.unpack;
-    var type$4 = utils.type;
-    var chroma$2 = chroma_1;
-    var Color$9 = Color_1;
-    var input$1 = input$5;
+    var unpack$4 = utils.unpack;
+    var type$5 = utils.type;
+    var chroma$3 = chroma_1;
+    var Color$b = Color_1;
+    var input$2 = input$6;
 
     var rgb2lab = rgb2lab_1;
 
-    Color$9.prototype.lab = function() {
+    Color$b.prototype.lab = function() {
         return rgb2lab(this._rgb);
     };
 
-    chroma$2.lab = function () {
+    chroma$3.lab = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        return new (Function.prototype.bind.apply( Color$9, [ null ].concat( args, ['lab']) ));
+        return new (Function.prototype.bind.apply( Color$b, [ null ].concat( args, ['lab']) ));
     };
 
-    input$1.format.lab = lab2rgb_1;
+    input$2.format.lab = lab2rgb_1;
 
-    input$1.autodetect.push({
+    input$2.autodetect.push({
         p: 2,
         test: function () {
             var args = [], len = arguments.length;
             while ( len-- ) args[ len ] = arguments[ len ];
 
-            args = unpack$1(args, 'lab');
-            if (type$4(args) === 'array' && args.length === 3) {
+            args = unpack$4(args, 'lab');
+            if (type$5(args) === 'array' && args.length === 3) {
                 return 'lab';
             }
         }
     });
 
+    var unpack$3 = utils.unpack;
+    var cbrt = Math.cbrt;
+    var pow$2 = Math.pow;
+    var sign$1 = Math.sign;
+
+    var rgb2oklab$1 = function () {
+        var args = [], len = arguments.length;
+        while ( len-- ) args[ len ] = arguments[ len ];
+
+        // OKLab color space implementation taken from
+        // https://bottosson.github.io/posts/oklab/
+        var ref = unpack$3(args, 'rgb');
+        var r = ref[0];
+        var g = ref[1];
+        var b = ref[2];
+        var ref$1 = [rgb2lrgb(r / 255), rgb2lrgb(g / 255), rgb2lrgb(b / 255)];
+        var lr = ref$1[0];
+        var lg = ref$1[1];
+        var lb = ref$1[2];
+        var l = cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
+        var m = cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
+        var s = cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
+
+        return [
+            0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+            1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+            0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
+        ];
+    };
+
+    var rgb2oklab_1 = rgb2oklab$1;
+
+    function rgb2lrgb(c) {
+        var abs = Math.abs(c);
+        if (abs < 0.04045) {
+            return c / 12.92;
+        }
+        return (sign$1(c) || 1) * pow$2((abs + 0.055) / 1.055, 2.4);
+    }
+
+    var unpack$2 = utils.unpack;
+    var pow$1 = Math.pow;
+    var sign = Math.sign;
+
+    /*
+     * L* [0..100]
+     * a [-100..100]
+     * b [-100..100]
+     */
+    var oklab2rgb = function () {
+        var args = [], len = arguments.length;
+        while ( len-- ) args[ len ] = arguments[ len ];
+
+        args = unpack$2(args, 'lab');
+        var L = args[0];
+        var a = args[1];
+        var b = args[2];
+
+        var l = pow$1(L + 0.3963377774 * a + 0.2158037573 * b, 3);
+        var m = pow$1(L - 0.1055613458 * a - 0.0638541728 * b, 3);
+        var s = pow$1(L - 0.0894841775 * a - 1.291485548 * b, 3);
+
+        return [
+            255 * lrgb2rgb(+4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+            255 * lrgb2rgb(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+            255 * lrgb2rgb(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
+            args.length > 3 ? args[3] : 1
+        ];
+    };
+
+    var oklab2rgb_1 = oklab2rgb;
+
+    function lrgb2rgb(c) {
+        var abs = Math.abs(c);
+        if (abs > 0.0031308) {
+            return (sign(c) || 1) * (1.055 * pow$1(abs, 1 / 2.4) - 0.055);
+        }
+        return c * 12.92;
+    }
+
+    var unpack$1 = utils.unpack;
+    var type$4 = utils.type;
+    var chroma$2 = chroma_1;
+    var Color$a = Color_1;
+    var input$1 = input$6;
+
+    var rgb2oklab = rgb2oklab_1;
+
+    Color$a.prototype.oklab = function () {
+        return rgb2oklab(this._rgb);
+    };
+
+    chroma$2.oklab = function () {
+        var args = [], len = arguments.length;
+        while ( len-- ) args[ len ] = arguments[ len ];
+
+        return new (Function.prototype.bind.apply( Color$a, [ null ].concat( args, ['oklab']) ));
+    };
+
+    input$1.format.oklab = oklab2rgb_1;
+
+    input$1.autodetect.push({
+        p: 3,
+        test: function () {
+            var args = [], len = arguments.length;
+            while ( len-- ) args[ len ] = arguments[ len ];
+
+            args = unpack$1(args, 'oklab');
+            if (type$4(args) === 'array' && args.length === 3) {
+                return 'oklab';
+            }
+        }
+    });
+
     var chroma$1 = chroma_1;
-    var Color$8 = Color_1;
-    var input = input$5;
+    var Color$9 = Color_1;
+    var input = input$6;
     var unpack = utils.unpack;
     var type$3 = utils.type;
     var round = Math.round;
 
-    Color$8.prototype.rgb = function(rnd) {
+    Color$9.prototype.rgb = function(rnd) {
         if ( rnd === void 0 ) rnd=true;
 
         if (rnd === false) { return this._rgb.slice(0,3); }
         return this._rgb.slice(0,3).map(round);
     };
 
-    Color$8.prototype.rgba = function(rnd) {
+    Color$9.prototype.rgba = function(rnd) {
         if ( rnd === void 0 ) rnd=true;
 
         return this._rgb.slice(0,4).map(function (v,i) {
@@ -800,7 +914,7 @@
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        return new (Function.prototype.bind.apply( Color$8, [ null ].concat( args, ['rgb']) ));
+        return new (Function.prototype.bind.apply( Color$9, [ null ].concat( args, ['rgb']) ));
     };
 
     input.format.rgb = function () {
@@ -826,10 +940,10 @@
         }
     });
 
-    var Color$7 = Color_1;
+    var Color$8 = Color_1;
     var type$2 = utils.type;
 
-    Color$7.prototype.alpha = function(a, mutate) {
+    Color$8.prototype.alpha = function(a, mutate) {
         if ( mutate === void 0 ) mutate=false;
 
         if (a !== undefined && type$2(a) === 'number') {
@@ -837,35 +951,35 @@
                 this._rgb[3] = a;
                 return this;
             }
-            return new Color$7([this._rgb[0], this._rgb[1], this._rgb[2], a], 'rgb');
+            return new Color$8([this._rgb[0], this._rgb[1], this._rgb[2], a], 'rgb');
         }
         return this._rgb[3];
     };
 
-    var Color$6 = Color_1;
+    var Color$7 = Color_1;
     var LAB_CONSTANTS = labConstants;
 
-    Color$6.prototype.darken = function(amount) {
+    Color$7.prototype.darken = function(amount) {
     	if ( amount === void 0 ) amount=1;
 
     	var me = this;
     	var lab = me.lab();
     	lab[0] -= LAB_CONSTANTS.Kn * amount;
-    	return new Color$6(lab, 'lab').alpha(me.alpha(), true);
+    	return new Color$7(lab, 'lab').alpha(me.alpha(), true);
     };
 
-    Color$6.prototype.brighten = function(amount) {
+    Color$7.prototype.brighten = function(amount) {
     	if ( amount === void 0 ) amount=1;
 
     	return this.darken(-amount);
     };
 
-    Color$6.prototype.darker = Color$6.prototype.darken;
-    Color$6.prototype.brighter = Color$6.prototype.brighten;
+    Color$7.prototype.darker = Color$7.prototype.darken;
+    Color$7.prototype.brighter = Color$7.prototype.brighten;
 
-    var Color$5 = Color_1;
+    var Color$6 = Color_1;
 
-    Color$5.prototype.get = function(mc) {
+    Color$6.prototype.get = function(mc) {
         var ref = mc.split('.');
         var mode = ref[0];
         var channel = ref[1];
@@ -881,7 +995,7 @@
 
     var interpolator$1 = {};
 
-    var Color$4 = Color_1;
+    var Color$5 = Color_1;
     var type$1 = utils.type;
     var interpolator = interpolator$1;
 
@@ -898,17 +1012,17 @@
         if (!interpolator[mode]) {
             throw new Error(("interpolation mode " + mode + " is not defined"));
         }
-        if (type$1(col1) !== 'object') { col1 = new Color$4(col1); }
-        if (type$1(col2) !== 'object') { col2 = new Color$4(col2); }
+        if (type$1(col1) !== 'object') { col1 = new Color$5(col1); }
+        if (type$1(col2) !== 'object') { col2 = new Color$5(col2); }
         return interpolator[mode](col1, col2, f)
             .alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
     };
 
-    var Color$3 = Color_1;
+    var Color$4 = Color_1;
     var mix = mix$1;
 
-    Color$3.prototype.mix =
-    Color$3.prototype.interpolate = function(col2, f) {
+    Color$4.prototype.mix =
+    Color$4.prototype.interpolate = function(col2, f) {
     	if ( f === void 0 ) f=0.5;
     	var rest = [], len = arguments.length - 2;
     	while ( len-- > 0 ) rest[ len ] = arguments[ len + 2 ];
@@ -916,10 +1030,10 @@
     	return mix.apply(void 0, [ this, col2, f ].concat( rest ));
     };
 
-    var Color$2 = Color_1;
+    var Color$3 = Color_1;
     var type = utils.type;
 
-    Color$2.prototype.set = function(mc, value, mutate) {
+    Color$3.prototype.set = function(mc, value, mutate) {
         if ( mutate === void 0 ) mutate=false;
 
         var ref = mc.split('.');
@@ -942,7 +1056,7 @@
                 } else {
                     throw new Error("unsupported value for Color.set");
                 }
-                var out = new Color$2(src, mode);
+                var out = new Color$3(src, mode);
                 if (mutate) {
                     this._rgb = out._rgb;
                     return this;
@@ -955,7 +1069,7 @@
         }
     };
 
-    var Color$1 = Color_1;
+    var Color$2 = Color_1;
     var sqrt = Math.sqrt;
     var pow = Math.pow;
 
@@ -968,7 +1082,7 @@
         var x2 = ref$1[0];
         var y2 = ref$1[1];
         var z2 = ref$1[2];
-        return new Color$1(
+        return new Color$2(
             sqrt(pow(x1,2) * (1-f) + pow(x2,2) * f),
             sqrt(pow(y1,2) * (1-f) + pow(y2,2) * f),
             sqrt(pow(z1,2) * (1-f) + pow(z2,2) * f),
@@ -978,6 +1092,22 @@
 
     // register interpolator
     interpolator$1.lrgb = lrgb;
+
+    var Color$1 = Color_1;
+
+    var oklab = function (col1, col2, f) {
+        var xyz0 = col1.oklab();
+        var xyz1 = col2.oklab();
+        return new Color$1(
+            xyz0[0] + f * (xyz1[0] - xyz0[0]),
+            xyz0[1] + f * (xyz1[1] - xyz0[1]),
+            xyz0[2] + f * (xyz1[2] - xyz0[2]),
+            'oklab'
+        );
+    };
+
+    // register interpolator
+    interpolator$1.oklab = oklab;
 
     var Color = Color_1;
 
@@ -1005,6 +1135,7 @@
 
 
 
+
     // operators --> modify existing Colors
 
 
@@ -1013,6 +1144,7 @@
 
 
     // interpolators
+
 
 
     // generators -- > create new colors

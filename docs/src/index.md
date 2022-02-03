@@ -114,6 +114,25 @@ chroma.hsl(330, 1, 0.6)
 ### chroma.lab
 #### (Lightness, a, b)
 
+CIELAB color space
+
+```js
+chroma.lab(40,-20,50);
+chroma.lab(50,-20,50);
+chroma.lab(80,-20,50);
+```
+
+### chroma.oklab
+#### (Lightness, a, b)
+
+[Oklab color space](https://bottosson.github.io/posts/oklab/)
+
+```js
+chroma.oklab(0.4,-0.2,0.5);
+chroma.oklab(0.5,-0.2,0.5);
+chroma.oklab(0.8,-0.2,0.5);
+```
+
 ### chroma.lch
 #### (Lightness, chroma, hue)
 
@@ -132,6 +151,14 @@ You can use **hcl** instead of Lch. Lightness and hue channels are switched to b
 ```js
 chroma.hcl(130, 40, 80);
 chroma(130, 40, 80, 'hcl');
+```
+
+### chroma.oklch
+#### (Lightness, chromacity, hue)
+
+```js
+chroma.oklch(0.5, 0.2, 240);
+chroma(0.8, 0.12, 60, 'oklch');
 ```
 
 ### chroma.cmyk
@@ -543,6 +570,14 @@ Returns an array with the **L**, **a**, and **b** components.
 chroma('orange').lab()
 ```
 
+### color.oklab
+
+Returns an array with the **L**, **a**, and **b** components.
+
+```js
+chroma('orange').oklab()
+```
+
 
 ### color.lch
 
@@ -558,6 +593,14 @@ Alias of [lch](#color-lch), but with the components in reverse order.
 
 ```js
 chroma('skyblue').hcl()
+```
+
+### color.oklch
+
+Returns an array with the **Lightness**, **chroma**, and **hue** components.
+
+```js
+chroma('skyblue').oklch()
 ```
 
 ### color.num

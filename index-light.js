@@ -8,6 +8,7 @@ require('./src/io/css');
 require('./src/io/hex');
 require('./src/io/hsl');
 require('./src/io/lab');
+require('./src/io/oklab');
 require('./src/io/rgb');
 
 // operators --> modify existing Colors
@@ -19,6 +20,7 @@ require('./src/ops/set');
 
 // interpolators
 require('./src/interpolator/lrgb');
+require('./src/interpolator/oklab');
 
 // generators -- > create new colors
 chroma.mix = chroma.interpolate = require('./src/generator/mix');

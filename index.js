@@ -18,6 +18,8 @@ require('./src/io/named');
 require('./src/io/num');
 require('./src/io/rgb');
 require('./src/io/temp');
+require('./src/io/oklab');
+require('./src/io/oklch');
 
 // operators --> modify existing Colors
 require('./src/ops/alpha');
@@ -40,6 +42,8 @@ require('./src/interpolator/hcg');
 require('./src/interpolator/hsi');
 require('./src/interpolator/hsl');
 require('./src/interpolator/hsv');
+require('./src/interpolator/oklab');
+require('./src/interpolator/oklch');
 
 // generators -- > create new colors
 chroma.average = require('./src/generator/average');

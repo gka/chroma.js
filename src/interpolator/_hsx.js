@@ -18,10 +18,13 @@ module.exports = (col1, col2, f, m) => {
         m = 'hcl';
         xyz0 = col1.hcl();
         xyz1 = col2.hcl();
+    } else if (m === 'oklch') {
+        xyz0 = col1.oklch().reverse();
+        xyz1 = col2.oklch().reverse();
     }
 
     let hue0, hue1, sat0, sat1, lbv0, lbv1;
-    if (m.substr(0, 1) === 'h') {
+    if (m.substr(0, 1) === 'h' || m === 'oklch') {
         [hue0, sat0, lbv0] = xyz0;
         [hue1, sat1, lbv1] = xyz1;
     }
@@ -31,10 +34,10 @@ module.exports = (col1, col2, f, m) => {
     if (!isNaN(hue0) && !isNaN(hue1)) {
         // both colors have hue
         if (hue1 > hue0 && hue1 - hue0 > 180) {
-            dh = hue1-(hue0+360);
+            dh = hue1 - (hue0 + 360);
         } else if (hue1 < hue0 && hue0 - hue1 > 180) {
-            dh = hue1+360-hue0;
-        } else{
+            dh = hue1 + 360 - hue0;
+        } else {
             dh = hue1 - hue0;
         }
         hue = hue0 + f * dh;
@@ -49,7 +52,6 @@ module.exports = (col1, col2, f, m) => {
     }
 
     if (sat === undefined) sat = sat0 + f * (sat1 - sat0);
-    lbv = lbv0 + f * (lbv1-lbv0)
-    return new Color([hue, sat, lbv], m);
-}
-
+    lbv = lbv0 + f * (lbv1 - lbv0);
+    return m === 'oklch' ? new Color([lbv, sat, hue], m) : new Color([hue, sat, lbv], m);
+};
