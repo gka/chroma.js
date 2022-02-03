@@ -1,19 +1,28 @@
 const Color = require('../Color');
-const {type} = require('../utils');
+const { type } = require('../utils');
 
-Color.prototype.set = function(mc, value, mutate=false) {
-    const [mode,channel] = mc.split('.');
+Color.prototype.set = function (mc, value, mutate = false) {
+    const [mode, channel] = mc.split('.');
     const src = this[mode]();
     if (channel) {
-        const i = mode.indexOf(channel);
+        const i = mode.indexOf(channel) - (mode.substr(0, 2) === 'ok' ? 2 : 0);
         if (i > -1) {
             if (type(value) == 'string') {
-                switch(value.charAt(0)) {
-                    case '+': src[i] += +value; break;
-                    case '-': src[i] += +value; break;
-                    case '*': src[i] *= +(value.substr(1)); break;
-                    case '/': src[i] /= +(value.substr(1)); break;
-                    default: src[i] = +value;
+                switch (value.charAt(0)) {
+                    case '+':
+                        src[i] += +value;
+                        break;
+                    case '-':
+                        src[i] += +value;
+                        break;
+                    case '*':
+                        src[i] *= +value.substr(1);
+                        break;
+                    case '/':
+                        src[i] /= +value.substr(1);
+                        break;
+                    default:
+                        src[i] = +value;
                 }
             } else if (type(value) === 'number') {
                 src[i] = value;
@@ -31,4 +40,4 @@ Color.prototype.set = function(mc, value, mutate=false) {
     } else {
         return src;
     }
-}
+};
