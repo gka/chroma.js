@@ -1,7 +1,7 @@
 {
   "name": "chroma-js",
   "description": "JavaScript library for color conversions",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "author": "Gregor Aisch",
   "type": "commonjs",
   "homepage": "https://github.com/gka/chroma.js",

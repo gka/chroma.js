@@ -205,7 +205,7 @@
     };
 
     chroma$7.Color = Color_1;
-    chroma$7.version = '2.4.1';
+    chroma$7.version = '2.4.2';
 
     var chroma_1 = chroma$7;
 
@@ -979,13 +979,13 @@
 
     var Color$6 = Color_1;
 
-    Color$6.prototype.get = function(mc) {
+    Color$6.prototype.get = function (mc) {
         var ref = mc.split('.');
         var mode = ref[0];
         var channel = ref[1];
         var src = this[mode]();
         if (channel) {
-            var i = mode.indexOf(channel);
+            var i = mode.indexOf(channel) - (mode.substr(0, 2) === 'ok' ? 2 : 0);
             if (i > -1) { return src[i]; }
             throw new Error(("unknown channel " + channel + " in mode " + mode));
         } else {
@@ -1033,23 +1033,32 @@
     var Color$3 = Color_1;
     var type = utils.type;
 
-    Color$3.prototype.set = function(mc, value, mutate) {
-        if ( mutate === void 0 ) mutate=false;
+    Color$3.prototype.set = function (mc, value, mutate) {
+        if ( mutate === void 0 ) mutate = false;
 
         var ref = mc.split('.');
         var mode = ref[0];
         var channel = ref[1];
         var src = this[mode]();
         if (channel) {
-            var i = mode.indexOf(channel);
+            var i = mode.indexOf(channel) - (mode.substr(0, 2) === 'ok' ? 2 : 0);
             if (i > -1) {
                 if (type(value) == 'string') {
-                    switch(value.charAt(0)) {
-                        case '+': src[i] += +value; break;
-                        case '-': src[i] += +value; break;
-                        case '*': src[i] *= +(value.substr(1)); break;
-                        case '/': src[i] /= +(value.substr(1)); break;
-                        default: src[i] = +value;
+                    switch (value.charAt(0)) {
+                        case '+':
+                            src[i] += +value;
+                            break;
+                        case '-':
+                            src[i] += +value;
+                            break;
+                        case '*':
+                            src[i] *= +value.substr(1);
+                            break;
+                        case '/':
+                            src[i] /= +value.substr(1);
+                            break;
+                        default:
+                            src[i] = +value;
                     }
                 } else if (type(value) === 'number') {
                     src[i] = value;
