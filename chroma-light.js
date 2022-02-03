@@ -205,7 +205,7 @@
     };
 
     chroma$7.Color = Color_1;
-    chroma$7.version = '2.3.0';
+    chroma$7.version = '2.4.0';
 
     var chroma_1 = chroma$7;
 
