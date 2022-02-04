@@ -1,7 +1,7 @@
 
 # chroma.js
 
-**chroma.js** is a [small-ish](https://bundlephobia.com/result?p=chroma-js) zero-dependency JavaScript library ([13.5kB](https://bundlephobia.com/result?p=chroma-js)) for all kinds of color conversions and color scales.
+**chroma.js** is a [small-ish](https://bundlephobia.com/result?p=chroma-js) zero-dependency JavaScript library ([14.8kB](https://bundlephobia.com/result?p=chroma-js)) for all kinds of color conversions and color scales.
 
 [![Build Status](https://api.travis-ci.com/gka/chroma.js.svg?branch=master)](https://travis-ci.com/gka/chroma.js)
 
