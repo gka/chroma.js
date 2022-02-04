@@ -20,7 +20,7 @@ module.exports = (colors, mode='lrgb', weights=null) => {
     let dy = 0;
     // initial color
     for (let i=0; i<xyz.length; i++) {
-        xyz[i] = (xyz[i] || 0) * weights[0];
+        xyz[i] = (xyz[i] || 0) * (mode.charAt(i) === 'h' ? 1 : weights[0]);
         cnt.push(isNaN(xyz[i]) ? 0 : weights[0]);
         if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
             const A = xyz[i] / 180 * PI;
