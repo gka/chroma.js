@@ -1422,7 +1422,6 @@
         chartreuse: '#7fff00',
         chocolate: '#d2691e',
         coral: '#ff7f50',
-        cornflower: '#6495ed',
         cornflowerblue: '#6495ed',
         cornsilk: '#fff8dc',
         crimson: '#dc143c',
