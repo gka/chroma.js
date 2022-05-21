@@ -52,6 +52,21 @@ ul.toc {
     list-style: none;
 }
 
+ul.toc div.scroll-progress-container {
+    position: fixed;
+    top: calc(112px + 70vh);
+    display: block;
+    width: 200px;
+    height: 3px;
+    background-color: white;
+}
+
+ul.toc div.scroll-progress-container div.scroll-progress {
+    width: 0;
+    height: 100%;
+    background-color: pink;
+    border-radius: 2.5px;
+}
 
 .toc li a {
     text-decoration: none;

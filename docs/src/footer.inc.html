@@ -179,6 +179,15 @@
             }
         });
 
+        function handleTocScroll(event) {
+            var tocScroll = toc.prop('scrollTop');
+            var tocHeight = toc.prop('scrollHeight') - toc.height();
+            var tocScrolled = tocScroll / tocHeight * 100;
+
+            tocScrollProgress.css('width', `${Math.floor(tocScrolled)}%`);
+        }
+
+        var tocContainer = $('<div>').addClass('toc-container')
         var toc = $('<ul />').addClass('toc');
 
         var hue = Math.random() * 360;
@@ -208,7 +217,17 @@
             el.previousElementSibling.appendChild(el);
         });
 
-        toc.appendTo($('<div>').addClass('toc-container').appendTo('.wrap'));
+        var tocScrollProgress = $('<div />')
+            .addClass('scroll-progress')
+            .appendTo($('<div />')
+                .addClass('scroll-progress-container')
+                .appendTo(toc));
+        
+        toc.scroll(handleTocScroll);
+
+        tocContainer
+            .append(toc)
+            .appendTo('.wrap');
     })(jQuery);
 </script>
 <a href="https://github.com/gka/chroma.js" class="github-corner"
