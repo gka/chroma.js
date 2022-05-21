@@ -299,7 +299,7 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 .cm-hidden-text {
     display:inline-block;
     width:1px;
-    // height:0px;
+    /** height:0px; **/
     opacity: 0;
     overflow:hidden;
 }
