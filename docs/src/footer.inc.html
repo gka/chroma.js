@@ -179,9 +179,7 @@
             }
         });
 
-        var toc = $('<ul />')
-            .addClass('toc')
-            .appendTo($('<div>').addClass('toc-container').appendTo('.wrap'));
+        var toc = $('<ul />').addClass('toc');
 
         var hue = Math.random() * 360;
         $('h2,h3').each(function () {
@@ -209,6 +207,8 @@
         $('h3+h4').each(function (i, el) {
             el.previousElementSibling.appendChild(el);
         });
+
+        toc.appendTo($('<div>').addClass('toc-container').appendTo('.wrap'));
     })(jQuery);
 </script>
 <a href="https://github.com/gka/chroma.js" class="github-corner"
