@@ -44,9 +44,11 @@ body {
 
 
 ul.toc {
-    position: absolute;
+    position: fixed;
     top: 90px;
     width: 200px;
+    height: 70vh;
+    overflow-y: scroll;
     list-style: none;
 }
 
