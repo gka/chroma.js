@@ -2450,7 +2450,7 @@
         for (var i=0; i<xyz.length; i++) {
             xyz[i] = (xyz[i] || 0) * weights[0];
             cnt.push(isNaN(xyz[i]) ? 0 : weights[0]);
-            if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
+            if (mode.replace('ok','').charAt(i) === 'h' && !isNaN(xyz[i])) {
                 var A = xyz[i] / 180 * PI$1;
                 dx += cos$2(A) * weights[0];
                 dy += sin$2(A) * weights[0];
@@ -2464,7 +2464,7 @@
             for (var i=0; i<xyz.length; i++) {
                 if (!isNaN(xyz2[i])) {
                     cnt[i] += weights[ci+1];
-                    if (mode.charAt(i) === 'h') {
+                    if (mode.replace('ok','').charAt(i) === 'h') {
                         var A = xyz2[i] / 180 * PI$1;
                         dx += cos$2(A) * weights[ci+1];
                         dy += sin$2(A) * weights[ci+1];
@@ -2476,7 +2476,7 @@
         });
 
         for (var i$1=0; i$1<xyz.length; i$1++) {
-            if (mode.charAt(i$1) === 'h') {
+            if (mode.replace('ok','').charAt(i$1) === 'h') {
                 var A$1 = atan2$1(dy / cnt[i$1], dx / cnt[i$1]) / PI$1 * 180;
                 while (A$1 < 0) { A$1 += 360; }
                 while (A$1 >= 360) { A$1 -= 360; }
@@ -3392,8 +3392,9 @@
     var Color$1 = Color_1;
 
     // simple Euclidean distance
-    var distance = function(a, b, mode) {
+    var distance = function(a, b, mode, weights) {
         if ( mode === void 0 ) mode='lab';
+        if ( weights === void 0 ) weights=[1, 1, 1, 1];//need 4 array items for CMYK color space
 
         // Delta E (CIE 1976)
         // see http://www.brucelindbloom.com/index.html?Equations.html
@@ -3403,7 +3404,13 @@
         var l2 = b.get(mode);
         var sum_sq = 0;
         for (var i in l1) {
-            var d = (l1[i] || 0) - (l2[i] || 0);
+            if (mode.replace('ok','').charAt(i) === 'h') {
+                var hueDifference = (l1[i]*weights[i] || 0) - (l2[i]*weights[i] || 0);
+                var d = (Math.abs(hueDifference) + 180) % 360 - 180;
+            }
+            else {
+                var d = (l1[i]*weights[i] || 0) - (l2[i]*weights[i] || 0);
+            }
             sum_sq += d*d;
         }
         return Math.sqrt(sum_sq);
