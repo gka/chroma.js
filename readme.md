@@ -102,8 +102,8 @@ Versions prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-
 
 ### Further reading
 
-* [How To Avoid Equidistant HSV Colors](https://vis4.net/blog/posts/avoid-equidistant-hsv-colors/)
-* [Mastering Multi-hued Color Scales with Chroma.js](https://vis4.net/blog/posts/mastering-multi-hued-color-scales/)
+* [How To Avoid Equidistant HSV Colors](https://www.vis4.net/blog/avoid-equidistant-hsv-colors/)
+* [Mastering Multi-hued Color Scales with Chroma.js](https://www.vis4.net/blog/mastering-multi-hued-color-scales/)
 
 ### FAQ
 
