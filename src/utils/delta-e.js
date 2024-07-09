@@ -1,7 +1,7 @@
-const Color = require('../Color');
+import Color from '../Color.js';
 const {sqrt, pow, min, max, atan2, abs, cos, sin, exp, PI} = Math;
 
-module.exports = function(a, b, Kl=1, Kc=1, Kh=1) {
+export default  function(a, b, Kl=1, Kc=1, Kh=1) {
     // Delta E (CIE 2000)
     // see http://www.brucelindbloom.com/index.html?Eqn_DeltaE_CIE2000.html
     var rad2deg = function(rad) {

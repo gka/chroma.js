@@ -1,4 +1,4 @@
-const { unpack } = require('../../utils');
+import { unpack } from '../../utils/index.js';
 const { cbrt, pow, sign } = Math;
 
 const rgb2oklab = (...args) => {
@@ -17,7 +17,7 @@ const rgb2oklab = (...args) => {
     ];
 };
 
-module.exports = rgb2oklab;
+export default  rgb2oklab;
 
 function rgb2lrgb(c) {
     const abs = Math.abs(c);

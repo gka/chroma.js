@@ -66,4 +66,4 @@ for (let key of Object.keys(colorbrewer)) {
     colorbrewer[key.toLowerCase()] = colorbrewer[key];
 }
 
-module.exports = colorbrewer;
+export default colorbrewer;

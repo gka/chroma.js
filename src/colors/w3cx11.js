@@ -162,4 +162,4 @@ const w3cx11 = {
     yellowgreen: '#9acd32'
 }
 
-module.exports = w3cx11;
+export default w3cx11;

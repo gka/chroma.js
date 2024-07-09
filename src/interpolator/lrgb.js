@@ -1,5 +1,6 @@
-const Color = require('../Color');
+import Color from '../Color.js';
 const {sqrt,pow} = Math;
+import index from './index.js';
 
 const lrgb = (col1, col2, f) => {
     const [x1,y1,z1] = col1._rgb;
@@ -13,6 +14,6 @@ const lrgb = (col1, col2, f) => {
 }
 
 // register interpolator
-require('./index').lrgb = lrgb;
+index.lrgb = lrgb;
 
-module.exports = lrgb;
+export default  lrgb;

@@ -1,4 +1,4 @@
-const {unpack} = require('../../utils');
+import {unpack} from '../../utils/index.js';
 
 /*
  * supported arguments:
@@ -39,4 +39,4 @@ const rgb2hsl = (...args) => {
     return [h,s,l];
 }
 
-module.exports = rgb2hsl;
+export default  rgb2hsl;

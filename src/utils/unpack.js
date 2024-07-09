@@ -1,6 +1,6 @@
-const type = require('./type');
+import type from './type.js';
 
-module.exports = (args, keyOrder=null) => {
+export default  (args, keyOrder=null) => {
 	// if called with more than 3 arguments, we return the arguments
     if (args.length >= 3) return Array.prototype.slice.call(args);
     // with less than 3 args we check if first arg is object

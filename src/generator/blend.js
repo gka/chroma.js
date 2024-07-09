@@ -3,8 +3,8 @@
  * blend mode formulas taken from http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
  */
 
-require('../io/rgb');
-const chroma = require('../chroma');
+import '../io/rgb/index.js';
+import chroma from '../chroma.js';
 
 const blend = (bottom, top, mode) => {
     if (!blend[mode]) {
@@ -55,4 +55,4 @@ blend.dodge = blend_f(each(dodge));
 blend.burn = blend_f(each(burn));
 // blend.add = blend_f(each(add));
 
-module.exports = blend;
+export default blend;

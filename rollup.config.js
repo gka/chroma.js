@@ -1,15 +1,18 @@
-import resolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
 import buble from "@rollup/plugin-buble";
 import license from "rollup-plugin-license";
 import replace from "@rollup/plugin-replace";
 import path from "path";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 const minify = !process.env.ROLLUP_WATCH && !process.env.DEV;
 /** globals process, __dirname **/
 
-module.exports = [
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default [
   bundle("index.js", "chroma"),
   bundle("index-light.js", "chroma-light"),
 ];
@@ -18,18 +21,15 @@ function bundle(input, target) {
   return {
     input,
     output: {
-      file: `${target}${minify ? ".min" : ""}.js`,
+      file: `${target}${minify ? ".min" : ""}.cjs`,
       format: "umd",
       name: "chroma",
     },
     plugins: [
-      resolve(),
-      commonjs(),
-
       replace({
         delimiters: ["@@", ""],
         preventAssignment: true,
-        version: require("./package.json").version,
+        version: '0.4.2'
       }),
 
       // If we're building for production (npm run build

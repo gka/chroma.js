@@ -1,6 +1,6 @@
-require('../io/lab');
-
-const Color = require('../Color');
+import '../io/lab/index.js';
+import index from './index.js';
+import Color from '../Color.js';
 
 const lab = (col1, col2, f) => {
     const xyz0 = col1.lab();
@@ -14,6 +14,6 @@ const lab = (col1, col2, f) => {
 }
 
 // register interpolator
-require('./index').lab = lab;
+index.lab = lab;
 
-module.exports = lab;
+export default  lab;

@@ -1,4 +1,4 @@
-const {unpack} = require('../../utils');
+import {unpack} from '../../utils/index.js';
 const {floor} = Math;
 
 const hsv2rgb = (...args) => {
@@ -32,5 +32,5 @@ const hsv2rgb = (...args) => {
     return [r,g,b,args.length > 3?args[3]:1];
 }
 
-module.exports = hsv2rgb;
+export default  hsv2rgb;
 

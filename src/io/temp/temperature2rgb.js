@@ -20,4 +20,4 @@ const temperature2rgb = (kelvin) => {
     return [r,g,b,1];
 }
 
-module.exports = temperature2rgb;
+export default  temperature2rgb;

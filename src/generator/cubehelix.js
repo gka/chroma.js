@@ -1,12 +1,11 @@
 // cubehelix interpolation
 // based on D.A. Green "A colour scheme for the display of astronomical intensity images"
 // http://astron-soc.in/bulletin/11June/289392011.pdf
-
-const {type, clip_rgb, TWOPI} = require('../utils');
+import { type, clip_rgb, TWOPI } from '../utils/index.js';
+import chroma from '../chroma.js';
 const {pow,sin,cos} = Math;
-const chroma = require('../chroma');
 
-module.exports = function(start=300, rotations=-1.5, hue=1, gamma=1, lightness=[0,1]) {
+export default function(start=300, rotations=-1.5, hue=1, gamma=1, lightness=[0,1]) {
     let dh = 0, dl;
     if (type(lightness) === 'array') {
         dl = lightness[1] - lightness[0];
@@ -14,7 +13,6 @@ module.exports = function(start=300, rotations=-1.5, hue=1, gamma=1, lightness=[
         dl = 0;
         lightness = [lightness, lightness];
     }
-
     const f = function(fract) {
         const a = TWOPI * (((start+120)/360) + (rotations * fract));
         const l = pow(lightness[0] + (dl * fract), gamma);
@@ -27,25 +25,21 @@ module.exports = function(start=300, rotations=-1.5, hue=1, gamma=1, lightness=[
         const b = l + (amp * (+1.97294 * cos_a));
         return chroma(clip_rgb([r*255,g*255,b*255,1]));
     };
-
     f.start = function(s) {
         if ((s == null)) { return start; }
         start = s;
         return f;
     };
-
     f.rotations = function(r) {
         if ((r == null)) { return rotations; }
         rotations = r;
         return f;
     };
-
     f.gamma = function(g) {
         if ((g == null)) { return gamma; }
         gamma = g;
         return f;
     };
-
     f.hue = function(h) {
         if ((h == null)) { return hue; }
         hue = h;
@@ -57,7 +51,6 @@ module.exports = function(start=300, rotations=-1.5, hue=1, gamma=1, lightness=[
         }
         return f;
     };
-
     f.lightness = function(h) {
         if ((h == null)) { return lightness; }
         if (type(h) === 'array') {
@@ -69,10 +62,8 @@ module.exports = function(start=300, rotations=-1.5, hue=1, gamma=1, lightness=[
         }
         return f;
     };
-
     f.scale = () => chroma.scale(f);
-
     f.hue(hue);
-
     return f;
 };
+

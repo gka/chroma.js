@@ -1,8 +1,8 @@
-const type = require('./type');
+import type from './type.js';
+
 const {log, pow, floor, abs} = Math;
 
-
-const analyze = (data, key=null) => {
+export function analyze (data, key=null) {
     const r = {
         min: Number.MAX_VALUE,
         max: Number.MAX_VALUE*-1,
@@ -32,7 +32,7 @@ const analyze = (data, key=null) => {
 };
 
 
-const limits = (data, mode='equal', num=7) => {
+export function limits (data, mode='equal', num=7) {
     if (type(data) == 'array') {
         data = analyze(data);
     }
@@ -188,4 +188,3 @@ const limits = (data, mode='equal', num=7) => {
     return limits;
 }
 
-module.exports = {analyze, limits};

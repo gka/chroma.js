@@ -1,6 +1,6 @@
-const Color = require('../Color');
+import Color from '../Color.js';
 
-module.exports = (col1, col2, f, m) => {
+export default (col1, col2, f, m) => {
     let xyz0, xyz1;
     if (m === 'hsl') {
         xyz0 = col1.hsl();

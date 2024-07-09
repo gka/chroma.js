@@ -1,5 +1,5 @@
-const LAB_CONSTANTS = require('./lab-constants');
-const {unpack} = require('../../utils');
+import LAB_CONSTANTS from './lab-constants.js';
+import {unpack} from '../../utils/index.js';
 const {pow} = Math;
 
 const rgb2lab = (...args) => {
@@ -29,4 +29,4 @@ const rgb2xyz = (r,g,b) => {
     return [x,y,z];
 }
 
-module.exports = rgb2lab;
+export default  rgb2lab;

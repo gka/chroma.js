@@ -1,4 +1,4 @@
-const { unpack } = require('../../utils');
+import { unpack } from '../../utils/index.js';
 const { pow, sign } = Math;
 
 /*
@@ -22,7 +22,7 @@ const oklab2rgb = (...args) => {
     ];
 };
 
-module.exports = oklab2rgb;
+export default  oklab2rgb;
 
 function lrgb2rgb(c) {
     const abs = Math.abs(c);

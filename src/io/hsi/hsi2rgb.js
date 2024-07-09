@@ -1,4 +1,4 @@
-const {unpack, limit, TWOPI, PITHIRD} = require('../../utils');
+import {unpack, limit, TWOPI, PITHIRD} from '../../utils/index.js';
 const {cos} = Math;
 
 /*
@@ -42,4 +42,4 @@ const hsi2rgb = (...args) => {
     return [r*255, g*255, b*255, args.length > 3 ? args[3] : 1];
 }
 
-module.exports = hsi2rgb;
+export default  hsi2rgb;

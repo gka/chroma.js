@@ -1,4 +1,4 @@
-const Color = require('../Color');
+import Color from '../Color.js';
 
 Color.prototype.get = function (mc) {
     const [mode, channel] = mc.split('.');

@@ -1,4 +1,4 @@
-const {type} = require('../../utils');
+import {type} from '../../utils/index.js';
 
 const num2rgb = (num) => {
     if (type(num) == "number" && num >= 0 && num <= 0xFFFFFF) {
@@ -10,4 +10,4 @@ const num2rgb = (num) => {
     throw new Error("unknown num color: "+num);
 }
 
-module.exports = num2rgb;
+export default  num2rgb;

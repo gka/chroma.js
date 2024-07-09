@@ -1,4 +1,4 @@
-const {unpack} = require('../../utils');
+import {unpack} from '../../utils/index.js';
 
 const cmyk2rgb = (...args) => {
     args = unpack(args, 'cmyk');
@@ -13,4 +13,4 @@ const cmyk2rgb = (...args) => {
     ];
 }
 
-module.exports = cmyk2rgb;
+export default cmyk2rgb;

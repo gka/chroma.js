@@ -1,4 +1,4 @@
-const {unpack, DEG2RAD} = require('../../utils');
+import {unpack, DEG2RAD} from '../../utils/index.js';
 const {sin, cos} = Math;
 
 const lch2lab = (...args) => {
@@ -15,4 +15,4 @@ const lch2lab = (...args) => {
     return [l, cos(h) * c, sin(h) * c]
 }
 
-module.exports = lch2lab;
+export default  lch2lab;

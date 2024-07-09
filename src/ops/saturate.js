@@ -1,6 +1,6 @@
-require('../io/lch');
-const Color = require('../Color');
-const LAB_CONSTANTS = require('../io/lab/lab-constants');
+import '../io/lch/index.js';
+import Color from '../Color.js';
+import LAB_CONSTANTS from '../io/lab/lab-constants.js';
 
 Color.prototype.saturate = function(amount=1) {
 	const me = this;

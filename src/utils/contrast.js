@@ -1,7 +1,7 @@
-const Color = require('../Color');
-require('../ops/luminance');
+import Color from '../Color.js';
+import '../ops/luminance.js';
 
-module.exports = (a, b) => {
+export default  (a, b) => {
     // WCAG contrast ratio
     // see http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef
     a = new Color(a);

@@ -1,5 +1,5 @@
-const Color = require('../Color');
-const { type } = require('../utils');
+import Color from '../Color.js';
+import { type } from '../utils/index.js';
 
 Color.prototype.set = function (mc, value, mutate = false) {
     const [mode, channel] = mc.split('.');

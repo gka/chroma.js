@@ -1,5 +1,5 @@
-const hsl2rgb = require('../hsl/hsl2rgb');
-const input = require('../input');
+import hsl2rgb from '../hsl/hsl2rgb.js';
+import input from '../input.js';
 
 const RE_RGB = /^rgb\(\s*(-?\d+),\s*(-?\d+)\s*,\s*(-?\d+)\s*\)$/;
 const RE_RGBA = /^rgba\(\s*(-?\d+),\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*([01]|[01]?\.\d+)\)$/;
@@ -91,4 +91,4 @@ css2rgb.test = (s) => {
         RE_HSLA.test(s);
 }
 
-module.exports = css2rgb;
+export default  css2rgb;

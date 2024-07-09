@@ -45,4 +45,4 @@ const hex2rgb = (hex) => {
     throw new Error(`unknown hex color: ${hex}`);
 }
 
-module.exports = hex2rgb;
+export default  hex2rgb;

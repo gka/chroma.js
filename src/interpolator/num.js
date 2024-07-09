@@ -1,6 +1,7 @@
-require('../io/num');
+import '../io/num/index.js';
+import index from './index.js';
 
-const Color = require('../Color');
+import Color from '../Color.js';
 
 const num = (col1, col2, f) => {
     const c1 = col1.num();
@@ -9,6 +10,6 @@ const num = (col1, col2, f) => {
 }
 
 // register interpolator
-require('./index').num = num;
+index.num = num;
 
-module.exports = num;
+export default  num;

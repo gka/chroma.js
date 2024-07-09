@@ -1,6 +1,6 @@
-const {unpack, last} = require('../../utils');
-const hsl2css = require('./hsl2css');
-const rgb2hsl = require('../hsl/rgb2hsl');
+import {unpack, last} from '../../utils/index.js';
+import hsl2css from './hsl2css.js';
+import rgb2hsl from '../hsl/rgb2hsl.js';
 const {round} = Math;
 
 /*
@@ -27,4 +27,4 @@ const rgb2css = (...args) => {
     return `${mode}(${rgba.slice(0,mode==='rgb'?3:4).join(',')})`;
 }
 
-module.exports = rgb2css;
+export default  rgb2css;

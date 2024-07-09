@@ -1,9 +1,9 @@
-const {unpack, type} = require('../../utils');
-const chroma = require('../../chroma');
-const Color = require('../../Color');
-const input = require('../input');
-
-const rgb2hcg = require('./rgb2hcg');
+import {unpack, type} from '../../utils/index.js';
+import chroma from '../../chroma.js';
+import Color from '../../Color.js';
+import input from '../input.js';
+import hcg2rgb from './hcg2rgb.js';
+import rgb2hcg from './rgb2hcg.js';
 
 Color.prototype.hcg = function() {
     return rgb2hcg(this._rgb);
@@ -11,7 +11,7 @@ Color.prototype.hcg = function() {
 
 chroma.hcg = (...args) => new Color(...args, 'hcg');
 
-input.format.hcg = require('./hcg2rgb');
+input.format.hcg = hcg2rgb;
 
 input.autodetect.push({
     p: 1,

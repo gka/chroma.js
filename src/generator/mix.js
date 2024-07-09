@@ -1,8 +1,8 @@
-const Color = require('../Color');
-const {type} = require('../utils');
-const interpolator = require('../interpolator');
+import Color from '../Color.js';
+import { type } from '../utils/index.js';
+import interpolator from '../interpolator/index.js';
 
-module.exports = (col1, col2, f=0.5, ...rest) => {
+export default (col1, col2, f=0.5, ...rest) => {
     let mode = rest[0] || 'lrgb';
     if (!interpolator[mode] && !rest.length) {
         // fall back to the first supported mode

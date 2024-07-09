@@ -1,8 +1,7 @@
-const {last, clip_rgb, type} = require('./utils');
-const _input = require('./io/input');
+import { last, clip_rgb, type } from './utils/index.js';
+import _input from './io/input';
 
 class Color {
-
     constructor(...args) {
         const me = this;
         if (type(args[0]) === 'object' &&
@@ -11,15 +10,13 @@ class Color {
             // the argument is already a Color instance
             return args[0];
         }
-
         // last argument could be the mode
         let mode = last(args);
         let autodetect = false;
-
         if (!mode) {
             autodetect = true;
             if (!_input.sorted) {
-                _input.autodetect = _input.autodetect.sort((a,b) => b.p - a.p);
+                _input.autodetect = _input.autodetect.sort((a, b) => b.p - a.p);
                 _input.sorted = true;
             }
             // auto-detect format
@@ -28,23 +25,18 @@ class Color {
                 if (mode) break;
             }
         }
-
         if (_input.format[mode]) {
-            const rgb = _input.format[mode].apply(null, autodetect ? args : args.slice(0,-1));
+            const rgb = _input.format[mode].apply(null, autodetect ? args : args.slice(0, -1));
             me._rgb = clip_rgb(rgb);
         } else {
-            throw new Error('unknown format: '+args);
+            throw new Error('unknown format: ' + args);
         }
-
         // add alpha channel
         if (me._rgb.length === 3) me._rgb.push(1);
     }
-
     toString() {
         if (type(this.hex) == 'function') return this.hex();
         return `[${this._rgb.join(',')}]`;
     }
-
 }
-
-module.exports = Color;
+export default Color;

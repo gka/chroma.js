@@ -3,9 +3,9 @@
 //
 
 // @requires utils lab
-const Color = require('../Color');
-require('../io/lab');
-const scale = require('./scale');
+import Color from '../Color.js';
+import '../io/lab/index.js';
+import scale from './scale.js';
 
 // nth row of the pascal triangle
 const binom_row = function(n) {
@@ -62,7 +62,7 @@ const bezier = function(colors) {
     return I;
 };
 
-module.exports = (colors) => {
+export default (colors) => {
     const f = bezier(colors);
     f.scale = () => scale(f);
     return f;

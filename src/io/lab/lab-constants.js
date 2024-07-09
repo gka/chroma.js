@@ -1,5 +1,5 @@
 
-module.exports = {
+export default  {
     // Corresponds roughly to RGB brighter/darker
     Kn: 18,
 

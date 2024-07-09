@@ -1,4 +1,4 @@
-const {unpack} = require('../../utils');
+import {unpack} from '../../utils/index.js';
 const {floor} = Math;
 
 /*
@@ -40,4 +40,4 @@ const hcg2rgb = (...args) => {
     return [r, g, b, args.length > 3 ? args[3] : 1];
 }
 
-module.exports = hcg2rgb;
+export default  hcg2rgb;

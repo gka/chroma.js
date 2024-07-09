@@ -1,6 +1,6 @@
-const {unpack} = require('../../utils');
-const lch2lab = require('./lch2lab');
-const lab2rgb = require('../lab/lab2rgb');
+import {unpack} from '../../utils/index.js';
+import lch2lab from './lch2lab.js';
+import lab2rgb from '../lab/lab2rgb.js';
 
 const lch2rgb = (...args) => {
     args = unpack(args, 'lch');
@@ -10,4 +10,4 @@ const lch2rgb = (...args) => {
     return [r, g, b, args.length > 3 ? args[3] : 1];
 }
 
-module.exports = lch2rgb;
+export default  lch2rgb;

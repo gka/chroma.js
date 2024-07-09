@@ -1,10 +1,10 @@
-const Color = require('../../Color');
-const input = require('../input');
-const {type} = require('../../utils');
+import Color from '../../Color.js';
+import input from '../input.js';
+import {type} from '../../utils/index.js';
 
-const w3cx11 = require('../../colors/w3cx11');
-const hex2rgb = require('../hex/hex2rgb');
-const rgb2hex = require('../hex/rgb2hex');
+import w3cx11 from '../../colors/w3cx11.js';
+import hex2rgb from '../hex/hex2rgb.js';
+import rgb2hex from '../hex/rgb2hex.js';
 
 Color.prototype.name = function() {
     const hex = rgb2hex(this._rgb, 'rgb');

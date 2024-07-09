@@ -1,6 +1,6 @@
-const { unpack } = require('../../utils');
-const lch2lab = require('../lch/lch2lab');
-const oklab2rgb = require('../oklab/oklab2rgb');
+import { unpack } from '../../utils/index.js';
+import lch2lab from '../lch/lch2lab.js';
+import oklab2rgb from '../oklab/oklab2rgb.js';
 
 const oklch2rgb = (...args) => {
     args = unpack(args, 'lch');
@@ -10,4 +10,4 @@ const oklch2rgb = (...args) => {
     return [r, g, b, args.length > 3 ? args[3] : 1];
 };
 
-module.exports = oklch2rgb;
+export default  oklch2rgb;

@@ -3,8 +3,8 @@
  * https://github.com/neilbartlett/color-temperature
  **/
 
-const temperature2rgb = require('./temperature2rgb');
-const {unpack} = require('../../utils');
+import temperature2rgb from './temperature2rgb.js';
+import {unpack} from '../../utils/index.js';
 const {round} = Math;
 
 const rgb2temperature = (...args) => {
@@ -26,4 +26,4 @@ const rgb2temperature = (...args) => {
     return round(temp);
 }
 
-module.exports = rgb2temperature;
+export default  rgb2temperature;

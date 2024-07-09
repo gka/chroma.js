@@ -1,4 +1,4 @@
-const {unpack} = require('../../utils');
+import {unpack} from '../../utils/index.js';
 const {round} = Math;
 
 const hsl2rgb = (...args) => {
@@ -37,4 +37,4 @@ const hsl2rgb = (...args) => {
     return [r,g,b,1];
 }
 
-module.exports = hsl2rgb;
+export default  hsl2rgb;

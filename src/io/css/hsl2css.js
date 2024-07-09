@@ -1,4 +1,4 @@
-const {unpack, last} = require('../../utils');
+import {unpack, last} from '../../utils/index.js';
 const rnd = (a) => Math.round(a*100)/100;
 
 /*
@@ -24,5 +24,5 @@ const hsl2css = (...args) => {
     return `${mode}(${hsla.join(',')})`;
 }
 
-module.exports = hsl2css;
+export default  hsl2css;
 

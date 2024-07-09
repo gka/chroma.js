@@ -1,4 +1,4 @@
-const Color = require('../Color');
+import Color from '../Color.js';
 
 Color.prototype.premultiply = function(mutate=false) {
 	const rgb = this._rgb;
