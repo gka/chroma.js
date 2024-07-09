@@ -89,6 +89,8 @@ To preview the docs locally you can use
 * [GrapeFruit](https://github.com/xav/Grapefruit) (Python)
 * [colors.py](https://github.com/mattrobenolt/colors.py) (Python)
 * [d3.js](https://github.com/mbostock/d3)
+* [Color Art](https://github.com/JiatLn/color-art) (Rust)
+
 
 
 ### Author
