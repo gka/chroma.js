@@ -22,7 +22,7 @@ const oklab2rgb = (...args) => {
     ];
 };
 
-export default  oklab2rgb;
+export default oklab2rgb;
 
 function lrgb2rgb(c) {
     const abs = Math.abs(c);

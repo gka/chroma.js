@@ -1,12 +1,12 @@
 import chroma from '../../chroma.js';
 import Color from '../../Color.js';
 import input from '../input.js';
-import {type} from '../../utils/index.js';
+import { type } from '../../utils/index.js';
 
 import rgb2css from './rgb2css.js';
 import css2rgb from './css2rgb.js';
 
-Color.prototype.css = function(mode) {
+Color.prototype.css = function (mode) {
     return rgb2css(this._rgb, mode);
 };
 
@@ -21,6 +21,4 @@ input.autodetect.push({
             return 'css';
         }
     }
-})
-
-
+});

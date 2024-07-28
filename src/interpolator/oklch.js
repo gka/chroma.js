@@ -9,4 +9,4 @@ const oklch = (col1, col2, f) => {
 // register interpolator
 index.oklch = oklch;
 
-export default  oklch;
+export default oklch;

@@ -1,4 +1,4 @@
-import {unpack} from '../../utils/index.js';
+import { unpack } from '../../utils/index.js';
 
 /*
  * supported arguments:
@@ -10,7 +10,7 @@ import {unpack} from '../../utils/index.js';
  */
 const rgb2hsl = (...args) => {
     args = unpack(args, 'rgba');
-    let [r,g,b] = args;
+    let [r, g, b] = args;
 
     r /= 255;
     g /= 255;
@@ -22,7 +22,7 @@ const rgb2hsl = (...args) => {
     const l = (max + min) / 2;
     let s, h;
 
-    if (max === min){
+    if (max === min) {
         s = 0;
         h = Number.NaN;
     } else {
@@ -35,8 +35,8 @@ const rgb2hsl = (...args) => {
 
     h *= 60;
     if (h < 0) h += 360;
-    if (args.length>3 && args[3]!==undefined) return [h,s,l,args[3]];
-    return [h,s,l];
-}
+    if (args.length > 3 && args[3] !== undefined) return [h, s, l, args[3]];
+    return [h, s, l];
+};
 
-export default  rgb2hsl;
+export default rgb2hsl;

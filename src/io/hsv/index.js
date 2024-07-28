@@ -1,11 +1,11 @@
-import {unpack, type} from '../../utils/index.js';
+import { unpack, type } from '../../utils/index.js';
 import chroma from '../../chroma.js';
 import Color from '../../Color.js';
 import input from '../input.js';
 import hsv2rgb from './hsv2rgb.js';
 import rgb2hsv from './rgb2hsv.js';
 
-Color.prototype.hsv = function() {
+Color.prototype.hsv = function () {
     return rgb2hsv(this._rgb);
 };
 

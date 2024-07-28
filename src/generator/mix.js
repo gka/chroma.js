@@ -2,7 +2,7 @@ import Color from '../Color.js';
 import { type } from '../utils/index.js';
 import interpolator from '../interpolator/index.js';
 
-export default (col1, col2, f=0.5, ...rest) => {
+export default (col1, col2, f = 0.5, ...rest) => {
     let mode = rest[0] || 'lrgb';
     if (!interpolator[mode] && !rest.length) {
         // fall back to the first supported mode
@@ -13,6 +13,7 @@ export default (col1, col2, f=0.5, ...rest) => {
     }
     if (type(col1) !== 'object') col1 = new Color(col1);
     if (type(col2) !== 'object') col2 = new Color(col2);
-    return interpolator[mode](col1, col2, f)
-        .alpha(col1.alpha() + f * (col2.alpha() - col1.alpha()));
-}
+    return interpolator[mode](col1, col2, f).alpha(
+        col1.alpha() + f * (col2.alpha() - col1.alpha())
+    );
+};

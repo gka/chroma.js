@@ -8,4 +8,4 @@ const rgb2oklch = (...args) => {
     return lab2lch(l, a, b_);
 };
 
-export default  rgb2oklch;
+export default rgb2oklch;

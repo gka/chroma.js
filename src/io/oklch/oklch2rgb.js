@@ -10,4 +10,4 @@ const oklch2rgb = (...args) => {
     return [r, g, b, args.length > 3 ? args[3] : 1];
 };
 
-export default  oklch2rgb;
+export default oklch2rgb;

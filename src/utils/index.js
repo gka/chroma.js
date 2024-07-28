@@ -12,5 +12,3 @@ const DEG2RAD = PI / 180;
 const RAD2DEG = 180 / PI;
 
 export { PI, TWOPI, PITHIRD, DEG2RAD, RAD2DEG };
-
-

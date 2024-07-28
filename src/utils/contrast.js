@@ -9,4 +9,4 @@ export default (a, b) => {
     const l1 = a.luminance();
     const l2 = b.luminance();
     return l1 > l2 ? (l1 + 0.05) / (l2 + 0.05) : (l2 + 0.05) / (l1 + 0.05);
-}
+};

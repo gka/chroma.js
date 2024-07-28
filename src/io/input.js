@@ -1,4 +1,4 @@
-export default  {
-	format: {},
-	autodetect: []
-}
+export default {
+    format: {},
+    autodetect: []
+};

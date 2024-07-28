@@ -1,6 +1,6 @@
 import Color from '../Color.js';
 
-export default  (...args) => {
+export default (...args) => {
     try {
         new Color(...args);
         return true;

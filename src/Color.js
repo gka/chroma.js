@@ -4,9 +4,11 @@ import _input from './io/input';
 class Color {
     constructor(...args) {
         const me = this;
-        if (type(args[0]) === 'object' &&
+        if (
+            type(args[0]) === 'object' &&
             args[0].constructor &&
-            args[0].constructor === this.constructor) {
+            args[0].constructor === this.constructor
+        ) {
             // the argument is already a Color instance
             return args[0];
         }
@@ -26,7 +28,10 @@ class Color {
             }
         }
         if (_input.format[mode]) {
-            const rgb = _input.format[mode].apply(null, autodetect ? args : args.slice(0, -1));
+            const rgb = _input.format[mode].apply(
+                null,
+                autodetect ? args : args.slice(0, -1)
+            );
             me._rgb = clip_rgb(rgb);
         } else {
             throw new Error('unknown format: ' + args);

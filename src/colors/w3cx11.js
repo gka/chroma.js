@@ -160,6 +160,6 @@ const w3cx11 = {
     whitesmoke: '#f5f5f5',
     yellow: '#ffff00',
     yellowgreen: '#9acd32'
-}
+};
 
 export default w3cx11;

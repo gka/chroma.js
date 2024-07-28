@@ -1,7 +1,7 @@
 import Color from '../Color.js';
 
 // simple Euclidean distance
-export default  function(a, b, mode='lab') {
+export default function (a, b, mode = 'lab') {
     // Delta E (CIE 1976)
     // see http://www.brucelindbloom.com/index.html?Equations.html
     a = new Color(a);
@@ -11,7 +11,7 @@ export default  function(a, b, mode='lab') {
     let sum_sq = 0;
     for (let i in l1) {
         const d = (l1[i] || 0) - (l2[i] || 0);
-        sum_sq += d*d;
+        sum_sq += d * d;
     }
     return Math.sqrt(sum_sq);
-};
+}

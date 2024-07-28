@@ -28,7 +28,8 @@
     "docs-preview": "cd docs && make && make preview",
     "test": "vitest test/*.js",
     "test:old": "vows --dot-matrix test/*.cjs",
-    "lint": "eslint index.js index-light.js src"
+    "lint": "eslint index.js index-light.js src",
+    "format": "prettier --write index.js index-light.js src *.config.js"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.24.7",
@@ -42,6 +43,7 @@
     "husky": "^9.0.11",
     "markdown-to-html": "0.0.13",
     "minimatch": "^10.0.1",
+    "prettier": "^3.3.3",
     "rollup": "^4.18.1",
     "rollup-plugin-license": "^3.5.2",
     "vitest": "^2.0.4",
@@ -55,15 +57,6 @@
       "doc",
       "test"
     ]
-  },
-  "prettier": {
-    "arrowParens": "avoid",
-    "printWidth": 100,
-    "semi": true,
-    "singleQuote": true,
-    "tabWidth": 4,
-    "trailingComma": "none",
-    "svelteSortOrder": "options-scripts-styles-markup"
   },
   "husky": {
     "hooks": {

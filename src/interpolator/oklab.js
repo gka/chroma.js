@@ -16,4 +16,4 @@ const oklab = (col1, col2, f) => {
 // register interpolator
 index.oklab = oklab;
 
-export default  oklab;
+export default oklab;
