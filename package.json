@@ -29,7 +29,8 @@
     "test": "vitest test/*.js",
     "test:old": "vows --dot-matrix test/*.cjs",
     "lint": "eslint index.js index-light.js src",
-    "format": "prettier --write index.js index-light.js src *.config.js"
+    "format": "prettier --write index.js index-light.js src *.config.js",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.0",
@@ -57,11 +58,5 @@
       "doc",
       "test"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint",
-      "pre-push": "npm test"
-    }
   }
 }
