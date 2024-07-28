@@ -60,10 +60,10 @@
     factory();
 })((function () { 'use strict';
 
-    function limit (x, min, max) {
-        if ( max === void 0 ) max = 1;
+    function limit (x, low, high) {
+        if ( high === void 0 ) high = 1;
 
-        return x < min ? min : x > max ? max : x;
+        return min(max(low, x), high);
     }
 
     function clip_rgb (rgb) {
@@ -125,6 +125,9 @@
         if (type(args[l]) == 'string') { return args[l].toLowerCase(); }
         return null;
     }
+
+    var min = Math.min;
+    var max = Math.max;
 
     var input = {
         format: {},
@@ -237,22 +240,25 @@
         g /= 255;
         b /= 255;
 
-        var min = Math.min(r, g, b);
-        var max = Math.max(r, g, b);
+        var minRgb = min(r, g, b);
+        var maxRgb = max(r, g, b);
 
-        var l = (max + min) / 2;
+        var l = (maxRgb + minRgb) / 2;
         var s, h;
 
-        if (max === min) {
+        if (maxRgb === minRgb) {
             s = 0;
             h = Number.NaN;
         } else {
-            s = l < 0.5 ? (max - min) / (max + min) : (max - min) / (2 - max - min);
+            s =
+                l < 0.5
+                    ? (maxRgb - minRgb) / (maxRgb + minRgb)
+                    : (maxRgb - minRgb) / (2 - maxRgb - minRgb);
         }
 
-        if (r == max) { h = (g - b) / (max - min); }
-        else if (g == max) { h = 2 + (b - r) / (max - min); }
-        else if (b == max) { h = 4 + (r - g) / (max - min); }
+        if (r == maxRgb) { h = (g - b) / (maxRgb - minRgb); }
+        else if (g == maxRgb) { h = 2 + (b - r) / (maxRgb - minRgb); }
+        else if (b == maxRgb) { h = 4 + (r - g) / (maxRgb - minRgb); }
 
         h *= 60;
         if (h < 0) { h += 360; }
@@ -350,9 +356,8 @@
         if (input.format.named) {
             try {
                 return input.format.named(css);
-            } catch (e) {
                 // eslint-disable-next-line
-            }
+            } catch (e) {}
         }
 
         // rgb(250,20,0)

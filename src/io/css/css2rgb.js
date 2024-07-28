@@ -23,7 +23,7 @@ const css2rgb = (css) => {
         try {
             return input.format.named(css);
             // eslint-disable-next-line
-        } catch {}
+        } catch (e) {}
     }
 
     // rgb(250,20,0)

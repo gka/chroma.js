@@ -61,11 +61,11 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.chroma = factory());
 })(this, (function () { 'use strict';
 
-    function limit (x, min, max) {
-        if ( min === void 0 ) min = 0;
-        if ( max === void 0 ) max = 1;
+    function limit (x, low, high) {
+        if ( low === void 0 ) low = 0;
+        if ( high === void 0 ) high = 1;
 
-        return x < min ? min : x > max ? max : x;
+        return min$3(max$3(low, x), high);
     }
 
     function clip_rgb (rgb) {
@@ -129,6 +129,8 @@
     }
 
     var PI$2 = Math.PI;
+    var min$3 = Math.min;
+    var max$3 = Math.max;
 
     var TWOPI = PI$2 * 2;
     var PITHIRD = PI$2 / 3;
@@ -312,22 +314,25 @@
         g /= 255;
         b /= 255;
 
-        var min = Math.min(r, g, b);
-        var max = Math.max(r, g, b);
+        var minRgb = min$3(r, g, b);
+        var maxRgb = max$3(r, g, b);
 
-        var l = (max + min) / 2;
+        var l = (maxRgb + minRgb) / 2;
         var s, h;
 
-        if (max === min) {
+        if (maxRgb === minRgb) {
             s = 0;
             h = Number.NaN;
         } else {
-            s = l < 0.5 ? (max - min) / (max + min) : (max - min) / (2 - max - min);
+            s =
+                l < 0.5
+                    ? (maxRgb - minRgb) / (maxRgb + minRgb)
+                    : (maxRgb - minRgb) / (2 - maxRgb - minRgb);
         }
 
-        if (r == max) { h = (g - b) / (max - min); }
-        else if (g == max) { h = 2 + (b - r) / (max - min); }
-        else if (b == max) { h = 4 + (r - g) / (max - min); }
+        if (r == maxRgb) { h = (g - b) / (maxRgb - minRgb); }
+        else if (g == maxRgb) { h = 2 + (b - r) / (maxRgb - minRgb); }
+        else if (b == maxRgb) { h = 4 + (r - g) / (maxRgb - minRgb); }
 
         h *= 60;
         if (h < 0) { h += 360; }
@@ -425,9 +430,8 @@
         if (input.format.named) {
             try {
                 return input.format.named(css);
-            } catch (e) {
                 // eslint-disable-next-line
-            }
+            } catch (e) {}
         }
 
         // rgb(250,20,0)
@@ -616,18 +620,18 @@
         var r = ref[0];
         var g = ref[1];
         var b = ref[2];
-        var min = Math.min(r, g, b);
-        var max = Math.max(r, g, b);
-        var delta = max - min;
+        var minRgb = min$3(r, g, b);
+        var maxRgb = max$3(r, g, b);
+        var delta = maxRgb - minRgb;
         var c = (delta * 100) / 255;
-        var _g = (min / (255 - delta)) * 100;
+        var _g = (minRgb / (255 - delta)) * 100;
         var h;
         if (delta === 0) {
             h = Number.NaN;
         } else {
-            if (r === max) { h = (g - b) / delta; }
-            if (g === max) { h = 2 + (b - r) / delta; }
-            if (b === max) { h = 4 + (r - g) / delta; }
+            if (r === maxRgb) { h = (g - b) / delta; }
+            if (g === maxRgb) { h = 2 + (b - r) / delta; }
+            if (b === maxRgb) { h = 4 + (r - g) / delta; }
             h *= 60;
             if (h < 0) { h += 360; }
         }
@@ -1877,7 +1881,9 @@
     var EPS = 1e-7;
     var MAX_ITER = 20;
 
-    Color.prototype.luminance = function (lum) {
+    Color.prototype.luminance = function (lum, mode) {
+        if ( mode === void 0 ) mode = 'rgb';
+
         if (lum !== undefined && type(lum) === 'number') {
             if (lum === 0) {
                 // return pure black
@@ -1889,7 +1895,6 @@
             }
             // compute new color using...
             var cur_lum = this.luminance();
-            var mode = 'rgb';
             var max_iter = MAX_ITER;
 
             var test = function (low, high) {
@@ -2423,7 +2428,7 @@
 
             t = _padding[0] + t * (1 - _padding[0] - _padding[1]);
 
-            t = Math.min(1, Math.max(0, t));
+            t = limit(t, 0, 1);
 
             var k = Math.floor(t * 10000);
 
@@ -3251,6 +3256,7 @@
         try {
             new (Function.prototype.bind.apply( Color, [ null ].concat( args) ));
             return true;
+        // eslint-disable-next-line no-empty
         } catch (e) {
             return false;
         }

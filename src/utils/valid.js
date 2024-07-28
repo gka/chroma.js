@@ -4,7 +4,8 @@ export default (...args) => {
     try {
         new Color(...args);
         return true;
-    } catch {
+        // eslint-disable-next-line
+    } catch (e) {
         return false;
     }
 };
