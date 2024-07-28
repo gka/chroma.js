@@ -20,7 +20,13 @@
     "type": "git",
     "url": "git://github.com/gka/chroma.js.git"
   },
-  "main": "chroma.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./dist/chroma.cjs"
+    }
+  },
+  "main": "./index.js",
   "scripts": {
     "prepublishOnly": "npm run build && npm test",
     "build": "rollup -c && cross-env DEV=1 rollup -c ",

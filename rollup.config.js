@@ -21,7 +21,7 @@ function bundle(input, target) {
     return {
         input,
         output: {
-            file: `${target}${minify ? '.min' : ''}.cjs`,
+            file: `dist/${target}${minify ? '.min' : ''}.cjs`,
             format: 'umd',
             name: 'chroma'
         },

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import cmyk2rgb from '../src/io/cmyk/cmyk2rgb.js';
-import { rgb } from '../chroma.cjs';
+import '../index.js';
 
 const cmykColors = [[0, 0, 0, 1], [0, 0, 0, 0], [0, 1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 0, 0]];
 const rgbColors = [[0, 0, 0, 1], [255, 255, 255, 1], [255, 0, 0, 1], [0, 255, 0, 1], [0, 0, 255, 1], [255, 255, 0, 1], [0, 255, 255, 1], [255, 0, 255, 1]];
