@@ -61,7 +61,7 @@ describe('Testing cubehelix colors', () => {
     });
 
     it('red helix - no saturation', () => {
-        const color = cubehelix(0, 1, 0, 1, [0,1]);
+        const color = cubehelix(0, 1, 0, 1, [0, 1]);
         // starts in black
         expect(color(0).hex()).toBe('#000000');
         // at 0.25
@@ -73,7 +73,6 @@ describe('Testing cubehelix colors', () => {
         // ends in white
         expect(color(1).hex()).toBe('#ffffff');
     });
-
 
     it('red helix - saturation range', () => {
         const color = cubehelix(0, 1, [1, 0], 1);
@@ -100,6 +99,4 @@ describe('Testing cubehelix colors', () => {
         // ends
         expect(color(1).hex()).toBe('#519d60');
     });
-
 });
-

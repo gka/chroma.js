@@ -2,11 +2,29 @@ import { describe, it, expect } from 'vitest';
 import cmyk2rgb from '../src/io/cmyk/cmyk2rgb.js';
 import '../index.js';
 
-const cmykColors = [[0, 0, 0, 1], [0, 0, 0, 0], [0, 1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 0, 0]];
-const rgbColors = [[0, 0, 0, 1], [255, 255, 255, 1], [255, 0, 0, 1], [0, 255, 0, 1], [0, 0, 255, 1], [255, 255, 0, 1], [0, 255, 255, 1], [255, 0, 255, 1]];
+const cmykColors = [
+    [0, 0, 0, 1],
+    [0, 0, 0, 0],
+    [0, 1, 1, 0],
+    [1, 0, 1, 0],
+    [1, 1, 0, 0],
+    [0, 0, 1, 0],
+    [1, 0, 0, 0],
+    [0, 1, 0, 0]
+];
+const rgbColors = [
+    [0, 0, 0, 1],
+    [255, 255, 255, 1],
+    [255, 0, 0, 1],
+    [0, 255, 0, 1],
+    [0, 0, 255, 1],
+    [255, 255, 0, 1],
+    [0, 255, 255, 1],
+    [255, 0, 255, 1]
+];
 
 describe('Testing CMYK color conversions', () => {
-    describe('parse simple CMYK colors', () => { 
+    describe('parse simple CMYK colors', () => {
         it('black', () => {
             expect(cmyk2rgb(cmykColors[0])).toEqual(rgbColors[0]);
         });

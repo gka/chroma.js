@@ -22,9 +22,8 @@ const css2rgb = (css) => {
     if (input.format.named) {
         try {
             return input.format.named(css);
-        } catch (e) {
             // eslint-disable-next-line
-        }
+        } catch {}
     }
 
     // rgb(250,20,0)

@@ -11,6 +11,12 @@ importers:
       '@babel/eslint-parser':
         specifier: ^7.25.0
         version: 7.25.0(@babel/core@7.24.9)(eslint@9.8.0)
+      '@eslint/eslintrc':
+        specifier: ^3.1.0
+        version: 3.1.0
+      '@eslint/js':
+        specifier: ^9.8.0
+        version: 9.8.0
       '@rollup/plugin-buble':
         specifier: ^1.0.3
         version: 1.0.3(rollup@4.19.1)
@@ -29,6 +35,9 @@ importers:
       eslint:
         specifier: ^9.8.0
         version: 9.8.0
+      globals:
+        specifier: ^15.8.0
+        version: 15.8.0
       http-server:
         specifier: ^14.1.1
         version: 14.1.1
@@ -912,6 +921,10 @@ packages:
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
+    engines: {node: '>=18'}
+
+  globals@15.8.0:
+    resolution: {integrity: sha512-VZAJ4cewHTExBWDHR6yptdIBlx9YSSZuwojj9Nt5mBRXQzrKakDsVKQ1J63sklLvzAJm0X5+RpO4i3Y2hcOnFw==}
     engines: {node: '>=18'}
 
   gopd@1.0.1:
@@ -2462,6 +2475,8 @@ snapshots:
   globals@11.12.0: {}
 
   globals@14.0.0: {}
+
+  globals@15.8.0: {}
 
   gopd@1.0.1:
     dependencies:

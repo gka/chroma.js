@@ -30,7 +30,7 @@ describe('Tests for average color', () => {
     });
 
     it('average same color', () => {
-        const result = chroma.average(["#02c03a", "#02c03a"], 'hsl');
+        const result = chroma.average(['#02c03a', '#02c03a'], 'hsl');
         expect(result.hex()).toBe('#02c03a');
     });
 

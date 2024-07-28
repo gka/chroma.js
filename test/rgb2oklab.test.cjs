@@ -5,9 +5,9 @@ require('es6-shim');
 import limit from '../src/utils/limit.js';
 import rgb2oklab from '../src/io/oklab/rgb2oklab.js';
 
-const round = digits => {
+const round = (digits) => {
     const d = Math.pow(10, digits);
-    return v => {
+    return (v) => {
         if (v > -1e-3 && v < 1e-3) v = 0;
         return Math.round(v * d) / d;
     };
@@ -29,12 +29,15 @@ vows.describe('Testing OKLab color conversions')
                 magenta: { out: [0.702, 0.275, -0.169], in: [255, 0, 255, 1] }
             },
             lab_arr(topic) {
-                Object.keys(topic).forEach(key => {
-                    assert.deepEqual(rgb2oklab(topic[key].in).map(rnd), topic[key].out);
+                Object.keys(topic).forEach((key) => {
+                    assert.deepEqual(
+                        rgb2oklab(topic[key].in).map(rnd),
+                        topic[key].out
+                    );
                 });
             },
             lab_args(topic) {
-                Object.keys(topic).forEach(key => {
+                Object.keys(topic).forEach((key) => {
                     assert.deepEqual(
                         rgb2oklab.apply(null, topic[key].in).map(rnd),
                         topic[key].out,
@@ -43,9 +46,13 @@ vows.describe('Testing OKLab color conversions')
                 });
             },
             lab_obj(topic) {
-                Object.keys(topic).forEach(key => {
+                Object.keys(topic).forEach((key) => {
                     const [r, g, b] = topic[key].in;
-                    assert.deepEqual(rgb2oklab({ r, g, b }).map(rnd), topic[key].out, key);
+                    assert.deepEqual(
+                        rgb2oklab({ r, g, b }).map(rnd),
+                        topic[key].out,
+                        key
+                    );
                 });
             }
         }

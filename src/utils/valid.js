@@ -4,7 +4,7 @@ export default (...args) => {
     try {
         new Color(...args);
         return true;
-    } catch (e) {
+    } catch {
         return false;
     }
 };

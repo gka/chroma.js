@@ -4,11 +4,11 @@ import chroma from '../index.js';
 describe('Testing color conversions', () => {
     for (const colorName in chroma.colors) {
         const hexValue = chroma.colors[colorName];
-        
+
         it(`should convert ${colorName} to hsl and back`, () => {
             expect(chroma.hsl(chroma(hexValue).hsl()).hex()).toBe(hexValue);
         });
-        
+
         it(`should convert ${colorName} to cmyk and back`, () => {
             expect(chroma.cmyk(chroma(hexValue).cmyk()).hex()).toBe(hexValue);
         });

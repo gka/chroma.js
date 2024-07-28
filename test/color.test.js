@@ -3,9 +3,7 @@ import chroma from '../index.js';
 
 const Color = chroma.Color;
 
-const hexColors = [
-    '#ff9900', '#FF9900', '#F90', 'f90', 'FF9900', 'FF9900F0', 'F90F', '#F90F'
-];
+const hexColors = ['#ff9900', '#FF9900', '#F90', 'f90', 'FF9900', 'FF9900F0', 'F90F', '#F90F'];
 
 describe('Testing Color', () => {
     it('re-use existing color instance', () => {
@@ -25,7 +23,7 @@ describe('Testing Color', () => {
     });
 
     describe('autodetect correct hex colors', () => {
-        hexColors.forEach(hex => {
+        hexColors.forEach((hex) => {
             it(`detect hex ${hex}`, () => {
                 const createColor = () => new Color(hex);
                 expect(createColor).not.toThrow();

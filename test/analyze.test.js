@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {analyze} from '../src/utils/analyze.js';
+import { analyze } from '../src/utils/analyze.js';
 
 describe('Some tests for analyze()', () => {
     it('analyze an array of numbers', () => {
@@ -30,7 +30,17 @@ describe('Some tests for analyze()', () => {
     });
 
     it('analyze an object of objects', () => {
-        const result = analyze({ a: { k: 1 }, b: { k: 2 }, c: { k: 2 }, d: { k: 3 }, e: { k: 4 }, f: { k: 5 }}, 'k');
+        const result = analyze(
+            {
+                a: { k: 1 },
+                b: { k: 2 },
+                c: { k: 2 },
+                d: { k: 3 },
+                e: { k: 4 },
+                f: { k: 5 }
+            },
+            'k'
+        );
         expect(result.sum).toBe(17);
         expect(result.count).toBe(6);
         expect(result.max).toBe(5);

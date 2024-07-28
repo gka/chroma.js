@@ -5,7 +5,7 @@ require('es6-shim');
 import limit from '../src/utils/limit.js';
 import lab2rgb from '../src/io/lab/lab2rgb.js';
 
-const round = v => limit(Math.round(v), 0, 255);
+const round = (v) => limit(Math.round(v), 0, 255);
 
 vows.describe('Testing CMYK color conversions')
     .addBatch({
@@ -22,12 +22,15 @@ vows.describe('Testing CMYK color conversions')
                 magenta: { in: [60.32, 98.23, -60.82], out: [255, 0, 255, 1] }
             },
             lab_arr(topic) {
-                Object.keys(topic).forEach(key => {
-                    assert.deepEqual(lab2rgb(topic[key].in).map(round), topic[key].out);
+                Object.keys(topic).forEach((key) => {
+                    assert.deepEqual(
+                        lab2rgb(topic[key].in).map(round),
+                        topic[key].out
+                    );
                 });
             },
             lab_args(topic) {
-                Object.keys(topic).forEach(key => {
+                Object.keys(topic).forEach((key) => {
                     assert.deepEqual(
                         lab2rgb.apply(null, topic[key].in).map(round),
                         topic[key].out,
@@ -36,9 +39,13 @@ vows.describe('Testing CMYK color conversions')
                 });
             },
             lab_obj(topic) {
-                Object.keys(topic).forEach(key => {
+                Object.keys(topic).forEach((key) => {
                     const [l, a, b] = topic[key].in;
-                    assert.deepEqual(lab2rgb({ l, a, b }).map(round), topic[key].out, key);
+                    assert.deepEqual(
+                        lab2rgb({ l, a, b }).map(round),
+                        topic[key].out,
+                        key
+                    );
                 });
             }
         }

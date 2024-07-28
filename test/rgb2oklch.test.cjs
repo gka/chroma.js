@@ -16,9 +16,9 @@ const tests = {
     magenta: { oklch: [0.702, 0.322, 328.363], rgb: [255, 0, 255, 1] }
 };
 
-const round = digits => {
+const round = (digits) => {
     const d = Math.pow(10, digits);
-    return v => {
+    return (v) => {
         if (v > -1e-3 && v < 1e-3) v = 0;
         return Math.round(v * d) / d;
     };
@@ -27,7 +27,7 @@ const rnd = round(3);
 
 const batch = {};
 
-Object.keys(tests).forEach(key => {
+Object.keys(tests).forEach((key) => {
     batch[`rgb2oklch ${key}`] = {
         topic: tests[key],
         array(topic) {
@@ -35,12 +35,20 @@ Object.keys(tests).forEach(key => {
         },
         obj(topic) {
             let [r, g, b] = topic.rgb;
-            assert.deepStrictEqual(rgb2oklch({ r, g, b }).map(rnd), topic.oklch);
+            assert.deepStrictEqual(
+                rgb2oklch({ r, g, b }).map(rnd),
+                topic.oklch
+            );
         },
         args(topic) {
-            assert.deepStrictEqual(rgb2oklch.apply(null, topic.rgb).map(rnd), topic.oklch);
+            assert.deepStrictEqual(
+                rgb2oklch.apply(null, topic.rgb).map(rnd),
+                topic.oklch
+            );
         }
     };
 });
 
-vows.describe('Test rgb2oklch color conversions').addBatch(batch).export(module);
+vows.describe('Test rgb2oklch color conversions')
+    .addBatch(batch)
+    .export(module);

@@ -16,6 +16,12 @@ const config = {
             options: {
                 printWidth: 160
             }
+        },
+        {
+            files: 'test/*.js',
+            options: {
+                printWidth: 160
+            }
         }
     ]
 };
