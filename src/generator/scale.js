@@ -2,7 +2,7 @@
 
 // @requires utils color analyze
 import chroma from '../chroma.js';
-import { type } from '../utils/index.js';
+import { limit, type } from '../utils/index.js';
 
 const { pow } = Math;
 
@@ -121,7 +121,7 @@ export default function (colors) {
 
         t = _padding[0] + t * (1 - _padding[0] - _padding[1]);
 
-        t = Math.min(1, Math.max(0, t));
+        t = limit(t, 0, 1);
 
         const k = Math.floor(t * 10000);
 
