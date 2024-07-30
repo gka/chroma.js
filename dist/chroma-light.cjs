@@ -1,7 +1,7 @@
 /**
  * chroma.js - JavaScript library for color conversions
  *
- * Copyright (c) 2011-2019, Gregor Aisch
+ * Copyright (c) 2011-2024, Gregor Aisch
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -182,7 +182,7 @@
     };
 
     // this gets updated automatically
-    var version = '2.5.0-3';
+    var version = '2.5.0-4';
 
     var chroma = function () {
         var args = [], len = arguments.length;
