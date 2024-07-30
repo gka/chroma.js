@@ -28,7 +28,7 @@
   },
   "main": "./index.js",
   "scripts": {
-    "prepublishOnly": "npm run build && npm test -- --run",
+    "prepublishOnly": "npm test -- --run && node update-version.js && npm run build",
     "build": "rollup -c && cross-env DEV=1 rollup -c ",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make && make preview",
@@ -43,7 +43,6 @@
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.8.0",
     "@rollup/plugin-buble": "^1.0.3",
-    "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-terser": "^0.4.4",
     "cross-env": "^7.0.3",
     "es6-shim": "^0.35.8",

@@ -1,6 +1,5 @@
 import buble from '@rollup/plugin-buble';
 import license from 'rollup-plugin-license';
-import replace from '@rollup/plugin-replace';
 import path from 'path';
 import terser from '@rollup/plugin-terser';
 import { fileURLToPath } from 'url';
@@ -26,12 +25,6 @@ function bundle(input, target) {
             name: 'chroma'
         },
         plugins: [
-            replace({
-                delimiters: ['@@', ''],
-                preventAssignment: true,
-                version: '0.4.2'
-            }),
-
             // If we're building for production (npm run build
             // instead of npm run dev), transpile and minify
             buble({

@@ -181,6 +181,9 @@
         return ("[" + (this._rgb.join(',')) + "]");
     };
 
+    // this gets updated automatically
+    var version = '2.5.0-3';
+
     var chroma = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
@@ -189,7 +192,7 @@
     };
 
     chroma.Color = Color;
-    chroma.version = '0.4.2';
+    chroma.version = version;
 
     var rnd = function (a) { return Math.round(a * 100) / 100; };
 
