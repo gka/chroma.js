@@ -1,4 +1,4 @@
-import Color from './Color';
+import Color from './Color.js';
 
 const chroma = (...args) => {
     return new chroma.Color(...args);
