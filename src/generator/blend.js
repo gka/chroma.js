@@ -1,6 +1,6 @@
 /*
  * interpolates between a set of colors uzing a bezier spline
- * blend mode formulas taken from http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
+ * blend mode formulas taken from https://web.archive.org/web/20180110014946/http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
  */
 
 import '../io/rgb/index.js';
