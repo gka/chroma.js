@@ -190,7 +190,7 @@
     };
 
     // this gets updated automatically
-    var version = '2.5.0-4';
+    var version = '2.5.0';
 
     var chroma = function () {
         var args = [], len = arguments.length;
