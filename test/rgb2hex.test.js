@@ -1,7 +1,4 @@
-const vows = require('vows');
-const assert = require('assert');
-require('es6-shim');
-
+import { describe, it, expect } from 'vitest';
 import rgb2hex from '../src/io/hex/rgb2hex.js';
 
 const tests = {
@@ -19,35 +16,28 @@ const tests = {
     force_rgb: { rgb: [255, 0, 255, 0.5], mode: 'rgb', hex: '#ff00ff' }
 };
 
-const batch = {};
+describe('Test rgb2hex color conversions', () => {
+    Object.keys(tests).forEach((key) => {
+        const { rgb, mode, hex } = tests[key];
 
-Object.keys(tests).forEach((key) => {
-    batch[`rgb2hex ${key}`] = {
-        topic: tests[key],
-        array(topic) {
-            assert.deepStrictEqual(
-                rgb2hex(topic.rgb, topic.mode || 'auto'),
-                topic.hex
-            );
-        },
-        obj(topic) {
-            let [r, g, b] = topic.rgb;
-            let obj = {
+        it(`rgb2hex ${key} converts array`, () => {
+            expect(rgb2hex(rgb, mode || 'auto')).toBe(hex);
+        });
+
+        it(`rgb2hex ${key} converts object`, () => {
+            const [r, g, b, a] = rgb;
+            const obj = {
                 r,
                 g,
                 b,
-                ...(topic.rgb.length > 3 ? { a: topic.rgb[3] } : {})
+                ...(a !== undefined ? { a } : {})
             };
-            assert.deepStrictEqual(
-                rgb2hex(obj, topic.mode || 'auto'),
-                topic.hex
-            );
-        },
-        args(topic) {
-            if (topic.mode != 'auto') return;
-            assert.deepStrictEqual(rgb2hex.apply(null, topic.rgb), topic.hex);
-        }
-    };
-});
+            expect(rgb2hex(obj, mode || 'auto')).toBe(hex);
+        });
 
-vows.describe('Test rgb2hex color conversions').addBatch(batch).export(module);
+        it(`rgb2hex ${key} converts arguments`, () => {
+            if (mode !== 'auto') return;
+            expect(rgb2hex(...rgb)).toBe(hex);
+        });
+    });
+});
