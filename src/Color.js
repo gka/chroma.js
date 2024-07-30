@@ -1,5 +1,5 @@
 import { last, clip_rgb, type } from './utils/index.js';
-import _input from './io/input';
+import _input from './io/input.js';
 
 class Color {
     constructor(...args) {
