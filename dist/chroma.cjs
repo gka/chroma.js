@@ -3256,7 +3256,7 @@
         try {
             new (Function.prototype.bind.apply( Color, [ null ].concat( args) ));
             return true;
-        // eslint-disable-next-line no-empty
+            // eslint-disable-next-line
         } catch (e) {
             return false;
         }

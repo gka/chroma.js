@@ -56,19 +56,19 @@ import scale from './src/generator/scale.js';
 
 // other utility methods
 import { analyze } from './src/utils/analyze.js';
-import contrast from './src/utils/contrast';
-import deltaE from './src/utils/delta-e';
-import distance from './src/utils/distance';
+import contrast from './src/utils/contrast.js';
+import deltaE from './src/utils/delta-e.js';
+import distance from './src/utils/distance.js';
 import { limits } from './src/utils/analyze.js';
 import valid from './src/utils/valid.js';
 import input from './src/io/input.js';
 
 // scale
-import scales from './src/utils/scales';
+import scales from './src/utils/scales.js';
 
 // colors
-import colors from './src/colors/w3cx11';
-import brewer from './src/colors/colorbrewer';
+import colors from './src/colors/w3cx11.js';
+import brewer from './src/colors/colorbrewer.js';
 
 Object.assign(chroma, {
     average,
