@@ -1,7 +1,7 @@
-const Color = require('../../Color');
-const chroma = require('../../chroma');
-const input = require('../input');
-const {unpack} = require('../../utils');
+import Color from '../../Color.js';
+import chroma from '../../chroma.js';
+import input from '../input.js';
+import { unpack } from '../../utils/index.js';
 
 input.format.gl = (...args) => {
     const rgb = unpack(args, 'rgba');
@@ -9,11 +9,11 @@ input.format.gl = (...args) => {
     rgb[1] *= 255;
     rgb[2] *= 255;
     return rgb;
-}
+};
 
 chroma.gl = (...args) => new Color(...args, 'gl');
 
-Color.prototype.gl = function() {
+Color.prototype.gl = function () {
     const rgb = this._rgb;
-    return [rgb[0]/255, rgb[1]/255, rgb[2]/255, rgb[3]];
+    return [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, rgb[3]];
 };

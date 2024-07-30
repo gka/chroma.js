@@ -1,6 +1,6 @@
-require('../io/oklab');
-
-const Color = require('../Color');
+import '../io/oklab/index.js';
+import index from './index.js';
+import Color from '../Color.js';
 
 const oklab = (col1, col2, f) => {
     const xyz0 = col1.oklab();
@@ -14,6 +14,6 @@ const oklab = (col1, col2, f) => {
 };
 
 // register interpolator
-require('./index').oklab = oklab;
+index.oklab = oklab;
 
-module.exports = oklab;
+export default oklab;

@@ -1,13 +1,13 @@
-const {type} = require('../../utils');
+import { type } from '../../utils/index.js';
 
 const num2rgb = (num) => {
-    if (type(num) == "number" && num >= 0 && num <= 0xFFFFFF) {
+    if (type(num) == 'number' && num >= 0 && num <= 0xffffff) {
         const r = num >> 16;
-        const g = (num >> 8) & 0xFF;
-        const b = num & 0xFF;
-        return [r,g,b,1];
+        const g = (num >> 8) & 0xff;
+        const b = num & 0xff;
+        return [r, g, b, 1];
     }
-    throw new Error("unknown num color: "+num);
-}
+    throw new Error('unknown num color: ' + num);
+};
 
-module.exports = num2rgb;
+export default num2rgb;

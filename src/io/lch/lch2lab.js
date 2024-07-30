@@ -1,5 +1,5 @@
-const {unpack, DEG2RAD} = require('../../utils');
-const {sin, cos} = Math;
+import { unpack, DEG2RAD } from '../../utils/index.js';
+const { sin, cos } = Math;
 
 const lch2lab = (...args) => {
     /*
@@ -9,10 +9,10 @@ const lch2lab = (...args) => {
 
     A saturation multiplier was added by Gregor Aisch
     */
-    let [l,c,h] = unpack(args, 'lch');
+    let [l, c, h] = unpack(args, 'lch');
     if (isNaN(h)) h = 0;
     h = h * DEG2RAD;
-    return [l, cos(h) * c, sin(h) * c]
-}
+    return [l, cos(h) * c, sin(h) * c];
+};
 
-module.exports = lch2lab;
+export default lch2lab;

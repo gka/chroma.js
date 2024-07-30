@@ -1,9 +1,11 @@
+import Color from './Color.js';
+import { version } from './version.js';
 
 const chroma = (...args) => {
-	return new chroma.Color(...args);
+    return new chroma.Color(...args);
 };
 
-chroma.Color = require('./Color');
-chroma.version = '@@version'
+chroma.Color = Color;
+chroma.version = version;
 
-module.exports = chroma;
+export default chroma;

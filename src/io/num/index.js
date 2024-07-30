@@ -1,24 +1,28 @@
-const chroma = require('../../chroma');
-const Color = require('../../Color');
-const input = require('../input');
-const {type} = require('../../utils');
+import chroma from '../../chroma.js';
+import Color from '../../Color.js';
+import input from '../input.js';
+import { type } from '../../utils/index.js';
+import num2rgb from './num2rgb.js';
+import rgb2num from './rgb2num.js';
 
-const rgb2num = require('./rgb2num');
-
-Color.prototype.num = function() {
+Color.prototype.num = function () {
     return rgb2num(this._rgb);
 };
 
 chroma.num = (...args) => new Color(...args, 'num');
 
-input.format.num = require('./num2rgb');
+input.format.num = num2rgb;
 
 input.autodetect.push({
     p: 5,
     test: (...args) => {
-        if (args.length === 1 && type(args[0]) === 'number' && args[0] >= 0 && args[0] <= 0xFFFFFF) {
+        if (
+            args.length === 1 &&
+            type(args[0]) === 'number' &&
+            args[0] >= 0 &&
+            args[0] <= 0xffffff
+        ) {
             return 'num';
         }
     }
 });
-

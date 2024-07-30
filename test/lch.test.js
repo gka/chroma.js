@@ -1,49 +1,60 @@
-require('es6-shim');
-const vows = require('vows');
-const assert = require('assert');
-const chroma = require('../index');
+import { describe, it, expect } from 'vitest';
+import chroma from '../index.js';
 
-vows
-    .describe('Some tests for chroma.lch()')
+describe('Some tests for chroma.lch()', () => {
+    describe('lch grayscale', () => {
+        const grays = [
+            { l: 0, hex: '#000000' },
+            { l: 25, hex: '#3b3b3b' },
+            { l: 50, hex: '#777777' },
+            { l: 75, hex: '#b9b9b9' },
+            { l: 100, hex: '#ffffff' }
+        ];
 
-    .addBatch({
+        for (const { l, hex } of grays) {
+            it(`l = ${l}`, () => {
+                expect(chroma.lch(l, 0, 0).hex()).toEqual(hex);
+            });
+        }
+    });
 
-        'lch grayscale': {
-            topic: (((() => {
-                const result = [];
-                for (let l of [0,100,25,50,75]) {
-                    result.push([l,0,0]);
-                }
-                return result;
-            })())),
-            'black'(t) { return assert.equal(chroma.lch(t[0]).hex(), '#000000'); },
-            'white'(t) { return assert.equal(chroma.lch(t[1]).hex(), '#ffffff'); },
-            'gray 1'(t) { return assert.equal(chroma.lch(t[2]).hex(), '#3b3b3b'); },
-            'gray 2'(t) { return assert.equal(chroma.lch(t[3]).hex(), '#777777'); },
-            'gray 3'(t) { return assert.equal(chroma.lch(t[4]).hex(), '#b9b9b9'); }
-        },
+    describe('lch hues', () => {
+        const hues = [
+            { h: 0, hex: '#dc2c7a' },
+            { h: 60, hex: '#bd5c00' },
+            { h: 120, hex: '#548400' },
+            { h: 180, hex: '#009175' },
+            { h: 240, hex: '#008cde' },
+            { h: 300, hex: '#6f67df' },
+            { h: 360, hex: '#dc2c7a' }
+        ];
 
-        'lch hues': {
-            topic: (([0,60,120,180,240,300].map((h) => [50,70,h]))),
-            'red-ish'(t) { return assert.equal(chroma.lch(t[0]).hex(), '#dc2c7a'); },
-            'yellow-ish'(t) { return assert.equal(chroma.lch(t[1]).hex(), '#bd5c00'); },
-            'green-ish'(t) { return assert.equal(chroma.lch(t[2]).hex(), '#548400'); },
-            'teal-ish'(t) { return assert.equal(chroma.lch(t[3]).hex(), '#009175'); },
-            'blue-ish'(t) { return assert.equal(chroma.lch(t[4]).hex(), '#008cde'); },
-            'purple-ish'(t) { return assert.equal(chroma.lch(t[5]).hex(), '#6f67df'); }
-        },
+        for (const { h, hex } of hues) {
+            it(`h = ${h}`, () => {
+                expect(chroma.lch(50, 70, h).hex()).toEqual(hex);
+            });
+        }
+    });
 
-        'clipping': {
-            topic: (((() => {
-                const result1 = [];
-                for (l of [20,40,60,80,100]) {
-                    result1.push(chroma.hcl(50, 40, l));
-                }
-                return result1;
-            })())),
-            '20-clipped'(t) { return assert.equal(t[0].clipped(), true); },
-            '40-not clipped'(t) { return assert.equal(t[1].clipped(), false); },
-            '60-not clipped'(t) { return assert.equal(t[2].clipped(), false); },
-            '80-clipped'(t) { return assert.equal(t[3].clipped(), true); },
-            '100-clipped'(t) { return assert.equal(t[4].clipped(), true); }
-        }}).export(module);
+    describe('lch clipping', () => {
+        it('20 not clipped', () => {
+            expect(chroma.lch(90, 20, 80).clipped()).toEqual(false);
+        });
+
+        it('40 clipped', () => {
+            expect(chroma.lch(90, 40, 80).clipped()).toEqual(true);
+        });
+
+        it('60 clipped', () => {
+            expect(chroma.lch(90, 60, 80).clipped()).toEqual(true);
+        });
+
+        it('80 clipped', () => {
+            expect(chroma.lch(90, 80, 80).clipped()).toEqual(true);
+        });
+
+        it('100 clipped', () => {
+            expect(chroma.lch(90, 100, 80).clipped()).toEqual(true);
+        });
+    });
+});

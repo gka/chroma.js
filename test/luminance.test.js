@@ -1,75 +1,92 @@
-require('es6-shim');
-const vows = require('vows');
-const assert = require('assert');
-const chroma = require('../index');
+import { describe, it, expect } from 'vitest';
+import chroma from '../index.js';
 
-
-const rnd = function(f,d) {
-    d = Math.pow(10,d);
-    return Math.round(f*d) / d;
+const rnd = function (f, d) {
+    d = Math.pow(10, d);
+    return Math.round(f * d) / d;
 };
 
-vows
-    .describe('Testing relative luminance')
-
-    .addBatch({
-
-        'black': {
+describe('Testing relative luminance', () => {
+    const testCases = [
+        {
+            name: 'black',
             topic: chroma('black'),
-            'lum = 0'(topic) { return assert.equal(topic.luminance(), 0); }
+            expectedLuminance: 0
         },
-
-        'white': {
+        {
+            name: 'white',
             topic: chroma('white'),
-            'lum = 1'(topic) { return assert.equal(topic.luminance(), 1); }
+            expectedLuminance: 1
         },
-
-        'red': {
+        {
+            name: 'red',
             topic: chroma('red'),
-            'lum = 0.21'(topic) { return assert.equal(topic.luminance(), 0.2126); }
+            precision: 4,
+            expectedLuminance: 0.2126
         },
-
-        'yellow brighter than blue': {
+        {
+            name: 'yellow brighter than blue',
             topic: [chroma('yellow').luminance(), chroma('blue').luminance()],
-            'yellow > blue'(topic) { return assert(topic[0] > topic[1]); }
+            comparison: 'greater'
         },
-
-        'green darker than red': {
+        {
+            name: 'green darker than red',
             topic: [chroma('green').luminance(), chroma('red').luminance()],
-            'green < red'(topic) { return assert(topic[0] < topic[1]); }
+            comparison: 'less'
         },
-
-        // setting luminance
-        'set red luminance to 0.4': {
+        {
+            name: 'set red luminance to 0.4',
             topic: chroma('red').luminance(0.4),
-            'lum = 0.4'(topic) { return assert.equal(rnd(topic.luminance(),3), 0.4); }
+            expectedLuminance: 0.4,
+            precision: 3
         },
-
-        // setting luminance
-        'set red luminance to 0': {
+        {
+            name: 'set red luminance to 0',
             topic: chroma('red').luminance(0),
-            'lum = 0'(topic) { return assert.equal(rnd(topic.luminance(),2), 0); },
-            'hex = #000'(topic) { return assert.equal(topic.hex(), '#000000'); }
+            expectedLuminance: 0,
+            precision: 2,
+            expectedHex: '#000000'
         },
-
-        // setting luminance
-        'set black luminance to 0.5': {
+        {
+            name: 'set black luminance to 0.5',
             topic: chroma('black').luminance(0.5),
-            'lum = 0.5'(topic) { return assert.equal(rnd(topic.luminance(), 2), 0.5); },
-            'hex'(topic) { return assert.equal('#bcbcbc', topic.hex()); }
+            expectedLuminance: 0.5,
+            expectedHex: '#bcbcbc'
         },
-
-            // setting luminance
-        'set black luminance to 0.5 (lab)': {
+        {
+            name: 'set black luminance to 0.5 (lab)',
             topic: chroma('black').luminance(0.5, 'lab'),
-            'lum = 0.5'(topic) { return assert.equal(rnd(topic.luminance(),2), 0.5); },
-            'hex'(topic) { return assert.equal('#bcbcbc', topic.hex()); }
-        },
+            expectedLuminance: 0.5,
+            expectedHex: '#bcbcbc'
+        }
+    ];
 
-        'setting luminance returns new color': {
-            topic: chroma('red'),
-            'red luminance is 0.21'(topic) { return assert.equal(rnd(topic.luminance(),2), 0.21); },
-            'set luminance to 0.4'(topic) { return assert.equal(topic.luminance(0.4).hex(), '#ff8686'); },
-            'old luminance is still 0.21'(topic) { return assert.equal(rnd(topic.luminance(),2), 0.21); },
-            'old color is still red'(topic) { return assert.equal(topic.hex(), '#ff0000'); }
-        }}).export(module);
+    testCases.forEach(({ name, topic, expectedLuminance, expectedHex, precision = 2, comparison, steps }) => {
+        if (comparison) {
+            it(`${name}`, () => {
+                if (comparison === 'greater') {
+                    expect(topic[0]).toBeGreaterThan(topic[1]);
+                } else if (comparison === 'less') {
+                    expect(topic[0]).toBeLessThan(topic[1]);
+                }
+            });
+        } else {
+            it(`${name}: luminance = ${expectedLuminance}`, () => {
+                expect(rnd(topic.luminance(), precision)).toBe(expectedLuminance);
+            });
+            if (expectedHex) {
+                it(`${name}: hex = ${expectedHex}`, () => {
+                    expect(topic.hex()).toBe(expectedHex);
+                });
+            }
+        }
+    });
+
+    it('setting luminance returns new color', () => {
+        const red = chroma('red');
+        expect(rnd(red.luminance(), 2)).toBe(0.21);
+        expect(red.hex()).toBe('#ff0000');
+        const red2 = red.luminance(0.4);
+        expect(red2.hex()).toBe('#ff8686');
+    });
+});

@@ -1,4 +1,4 @@
-module.exports = {
-	format: {},
-	autodetect: []
-}
+export default {
+    format: {},
+    autodetect: []
+};

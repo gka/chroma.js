@@ -1,11 +1,12 @@
-require('../io/hsv');
-const interpolate_hsx = require('./_hsx');
+import '../io/hsv/index.js';
+import interpolate_hsx from './_hsx.js';
+import index from './index.js';
 
 const hsv = (col1, col2, f) => {
-	return interpolate_hsx(col1, col2, f, 'hsv');
-}
+    return interpolate_hsx(col1, col2, f, 'hsv');
+};
 
 // register interpolator
-require('./index').hsv = hsv;
+index.hsv = hsv;
 
-module.exports = hsv;
+export default hsv;

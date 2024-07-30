@@ -1,3 +1,5 @@
-module.exports = (x, min=0, max=1) => {
-    return x < min ? min : x > max ? max : x;
-}
+import { min, max } from './index.js';
+
+export default (x, low = 0, high = 1) => {
+    return min(max(low, x), high);
+};

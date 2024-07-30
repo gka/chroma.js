@@ -1,6 +1,6 @@
-const Color = require('../Color');
+import Color from '../Color.js';
 
-module.exports = (col1, col2, f, m) => {
+export default (col1, col2, f, m) => {
     let xyz0, xyz1;
     if (m === 'hsl') {
         xyz0 = col1.hsl();
@@ -53,5 +53,7 @@ module.exports = (col1, col2, f, m) => {
 
     if (sat === undefined) sat = sat0 + f * (sat1 - sat0);
     lbv = lbv0 + f * (lbv1 - lbv0);
-    return m === 'oklch' ? new Color([lbv, sat, hue], m) : new Color([hue, sat, lbv], m);
+    return m === 'oklch'
+        ? new Color([lbv, sat, hue], m)
+        : new Color([hue, sat, lbv], m);
 };

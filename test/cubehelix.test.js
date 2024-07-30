@@ -1,73 +1,102 @@
-require('es6-shim');
-const vows = require('vows');
-const assert = require('assert');
-const cubehelix = require('../src/generator/cubehelix');
+import { describe, it, expect } from 'vitest';
+import chroma from '../index.js';
 
+const cubehelix = chroma.cubehelix;
 
-vows
-    .describe('Testing cubehelix scales')
+describe('Testing cubehelix colors', () => {
+    it('default helix', () => {
+        const color = cubehelix();
+        // starts in black
+        expect(color(0).hex()).toBe('#000000');
+        // at 0.25
+        expect(color(0.25).hex()).toBe('#16534c');
+        // at 0.5
+        expect(color(0.5).hex()).toBe('#a07949');
+        // at 0.75
+        expect(color(0.75).hex()).toBe('#c7b3ed');
+        // ends in white
+        expect(color(1).hex()).toBe('#ffffff');
+    });
 
-    .addBatch({
+    it('red helix', () => {
+        const color = cubehelix(0, 1, 1, 1);
+        // starts in black
+        expect(color(0).hex()).toBe('#000000');
+        // at 0.25
+        expect(color(0.25).hex()).toBe('#2e5117');
+        // at 0.5
+        expect(color(0.5).hex()).toBe('#4c949f');
+        // at 0.75
+        expect(color(0.75).hex()).toBe('#d1aee8');
+        // ends in white
+        expect(color(1).hex()).toBe('#ffffff');
+    });
 
-        'default helix': {
-            topic() { return cubehelix(); },
-            'starts in black'(t) { return assert.equal(t(0).hex(), '#000000'); },
-            'at 0.25'(t) { return assert.equal(t(0.25).hex(), '#16534c'); },
-            'at 0.5'(t) { return assert.equal(t(0.5).hex(), '#a07949'); },
-            'at 0.75'(t) { return assert.equal(t(0.75).hex(), '#c7b3ed'); },
-            'ends in white'(t) { return assert.equal(t(1).hex(), '#ffffff'); }
-        },
+    it('red helix - partial l range', () => {
+        const color = cubehelix(0, 1, 1, 1, [0.25, 0.75]);
+        // starts
+        expect(color(0).hex()).toBe('#663028');
+        // at 0.25
+        expect(color(0.25).hex()).toBe('#49752d');
+        // at 0.5
+        expect(color(0.5).hex()).toBe('#4c949f');
+        // at 0.75
+        expect(color(0.75).hex()).toBe('#b68ad2');
+        // ends
+        expect(color(1).hex()).toBe('#e6b0a8');
+    });
 
-        'red helix': {
-            topic() { return cubehelix(0, 1, 1, 1); },
-            'starts in black'(t) { return assert.equal(t(0).hex(), '#000000'); },
-            'at 0.25'(t) { return assert.equal(t(0.25).hex(), '#2e5117'); },
-            'at 0.5'(t) { return assert.equal(t(0.5).hex(), '#4c949f'); },
-            'at 0.75'(t) { return assert.equal(t(0.75).hex(), '#d1aee8'); },
-            'ends in white'(t) { return assert.equal(t(1).hex(), '#ffffff'); }
-        },
+    it('red helix - gamma', () => {
+        const color = cubehelix(0, 1, 1, 0.8);
+        // starts in black
+        expect(color(0).hex()).toBe('#000000');
+        // at 0.25
+        expect(color(0.25).hex()).toBe('#3f6824');
+        // at 0.5
+        expect(color(0.5).hex()).toBe('#60a6b1');
+        // at 0.75
+        expect(color(0.75).hex()).toBe('#dabcee');
+        // ends in white
+        expect(color(1).hex()).toBe('#ffffff');
+    });
 
-        'red helix - partial l range': {
-            topic() { return cubehelix(0, 1, 1, 1, [0.25, 0.75]); },
-            'starts'(t) { return assert.equal(t(0).hex(), '#663028'); },
-            'at 0.25'(t) { return assert.equal(t(0.25).hex(), '#49752d'); },
-            'at 0.5'(t) { return assert.equal(t(0.5).hex(), '#4c949f'); },
-            'at 0.75'(t) { return assert.equal(t(0.75).hex(), '#b68ad2'); },
-            'ends'(t) { return assert.equal(t(1).hex(), '#e6b0a8'); }
-        },
+    it('red helix - no saturation', () => {
+        const color = cubehelix(0, 1, 0, 1, [0, 1]);
+        // starts in black
+        expect(color(0).hex()).toBe('#000000');
+        // at 0.25
+        expect(color(0.25).hex()).toBe('#404040');
+        // at 0.5
+        expect(color(0.5).hex()).toBe('#808080');
+        // at 0.75
+        expect(color(0.75).hex()).toBe('#bfbfbf');
+        // ends in white
+        expect(color(1).hex()).toBe('#ffffff');
+    });
 
-        'red helix - gamma': {
-            topic() { return cubehelix(0, 1, 1, 0.8, [0,1]); },
-            'starts in black'(t) { return assert.equal(t(0).hex(), '#000000'); },
-            'at 0.25'(t) { return assert.equal(t(0.25).hex(), '#3f6824'); },
-            'at 0.5'(t) { return assert.equal(t(0.5).hex(), '#60a6b1'); },
-            'at 0.75'(t) { return assert.equal(t(0.75).hex(), '#dabcee'); },
-            'ends in white'(t) { return assert.equal(t(1).hex(), '#ffffff'); }
-        },
+    it('red helix - saturation range', () => {
+        const color = cubehelix(0, 1, [1, 0], 1);
+        // starts in black
+        expect(color(0).hex()).toBe('#000000');
+        // at 0.25
+        expect(color(0.25).hex()).toBe('#324c21');
+        // at 0.5
+        expect(color(0.5).hex()).toBe('#668a8f');
+        // at 0.75
+        expect(color(0.75).hex()).toBe('#c4bbc9');
+        // ends in white
+        expect(color(1).hex()).toBe('#ffffff');
+        // saturation decreases
+        expect(color(0.33).hsl()[1]).toBeGreaterThan(color(0.66).hsl()[1]);
+    });
 
-        'red helix - no saturation': {
-            topic() { return cubehelix(0, 1, 0, 1, [0,1]); },
-            'starts in black'(t) { return assert.equal(t(0).hex(), '#000000'); },
-            'at 0.25'(t) { return assert.equal(t(0.25).hex(), '#404040'); },
-            'at 0.5'(t) { return assert.equal(t(0.5).hex(), '#808080'); },
-            'at 0.75'(t) { return assert.equal(t(0.75).hex(), '#bfbfbf'); },
-            'ends in white'(t) { return assert.equal(t(1).hex(), '#ffffff'); }
-        },
-
-        'red helix - saturation range': {
-            topic() { return cubehelix(0, 1, [1,0], 1, [0,1]); },
-            'starts in black'(t) { return assert.equal(t(0).hex(), '#000000'); },
-            'at 0.25'(t) { return assert.equal(t(0.25).hex(), '#324c21'); },
-            'at 0.5'(t) { return assert.equal(t(0.5).hex(), '#668a8f'); },
-            'at 0.75'(t) { return assert.equal(t(0.75).hex(), '#c4bbc9'); },
-            'ends in white'(t) { return assert.equal(t(1).hex(), '#ffffff'); },
-            'saturation decreases'(t) { return assert(t(0.33).hsl()[1] > t(0.66).hsl()[1]); }
-        },
-
-        'non-array lightness': {
-            topic() { return cubehelix(300, -1.5, 1, 1, 0.5); },
-            'start'(t) { return assert.equal(t(0).hex(), '#ae629f'); },
-            'at 0.5'(t) { return assert.equal(t(0.5).hex(), '#a07949'); },
-            'end'(t) { return assert.equal(t(1).hex(), '#519d60'); }
-        }})
-    .export(module);
+    it('non-array lightness', () => {
+        const color = cubehelix(300, -1.5, 1, 1, 0.5);
+        // starts
+        expect(color(0).hex()).toBe('#ae629f');
+        // at 0.5
+        expect(color(0.5).hex()).toBe('#a07949');
+        // ends
+        expect(color(1).hex()).toBe('#519d60');
+    });
+});

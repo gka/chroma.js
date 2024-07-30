@@ -1,20 +1,12 @@
-require('es6-shim');
-const vows = require('vows');
-const assert = require('assert');
-const chroma = require('../index');
+import { describe, it, expect } from 'vitest';
+import chroma from '../index.js';
 
+describe('Some tests for chroma.valid', () => {
+    it('valid color', () => {
+        expect(chroma.valid('red')).toBe(true);
+    });
 
-vows
-    .describe('Some tests for chroma.valid')
-
-    .addBatch({
-        'valid color': {
-            topic: chroma.valid('red'),
-            'is true'(topic) { return assert(topic); }
-        },
-        'invalid color': {
-            topic: chroma.valid('bread'),
-            'is false'(topic) { return assert(!topic); }
-        }
-    })
-    .export(module);
+    it('invalid color', () => {
+        expect(chroma.valid('bread')).toBe(false);
+    });
+});

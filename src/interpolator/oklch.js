@@ -1,11 +1,12 @@
-require('../io/lch');
-const interpolate_hsx = require('./_hsx');
+import '../io/lch/index.js';
+import interpolate_hsx from './_hsx.js';
+import index from './index.js';
 
 const oklch = (col1, col2, f) => {
     return interpolate_hsx(col1, col2, f, 'oklch');
 };
 
 // register interpolator
-require('./index').oklch = oklch;
+index.oklch = oklch;
 
-module.exports = oklch;
+export default oklch;

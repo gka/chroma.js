@@ -1,4 +1,4 @@
-const {unpack} = require('../../utils');
+import { unpack, min, max } from '../../utils/index.js';
 
 /*
  * supported arguments:
@@ -10,33 +10,36 @@ const {unpack} = require('../../utils');
  */
 const rgb2hsl = (...args) => {
     args = unpack(args, 'rgba');
-    let [r,g,b] = args;
+    let [r, g, b] = args;
 
     r /= 255;
     g /= 255;
     b /= 255;
 
-    const min = Math.min(r, g, b);
-    const max = Math.max(r, g, b);
+    const minRgb = min(r, g, b);
+    const maxRgb = max(r, g, b);
 
-    const l = (max + min) / 2;
+    const l = (maxRgb + minRgb) / 2;
     let s, h;
 
-    if (max === min){
+    if (maxRgb === minRgb) {
         s = 0;
         h = Number.NaN;
     } else {
-        s = l < 0.5 ? (max - min) / (max + min) : (max - min) / (2 - max - min);
+        s =
+            l < 0.5
+                ? (maxRgb - minRgb) / (maxRgb + minRgb)
+                : (maxRgb - minRgb) / (2 - maxRgb - minRgb);
     }
 
-    if (r == max) h = (g - b) / (max - min);
-    else if (g == max) h = 2 + (b - r) / (max - min);
-    else if (b == max) h = 4 + (r - g) / (max - min);
+    if (r == maxRgb) h = (g - b) / (maxRgb - minRgb);
+    else if (g == maxRgb) h = 2 + (b - r) / (maxRgb - minRgb);
+    else if (b == maxRgb) h = 4 + (r - g) / (maxRgb - minRgb);
 
     h *= 60;
     if (h < 0) h += 360;
-    if (args.length>3 && args[3]!==undefined) return [h,s,l,args[3]];
-    return [h,s,l];
-}
+    if (args.length > 3 && args[3] !== undefined) return [h, s, l, args[3]];
+    return [h, s, l];
+};
 
-module.exports = rgb2hsl;
+export default rgb2hsl;

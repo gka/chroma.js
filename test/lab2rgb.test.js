@@ -1,46 +1,31 @@
-const vows = require('vows');
-const assert = require('assert');
-require('es6-shim');
+import { describe, it, expect } from 'vitest';
+import lab2rgb from '../src/io/lab/lab2rgb.js';
+import limit from '../src/utils/limit.js';
 
-const limit = require('../src/utils/limit');
-const lab2rgb = require('../src/io/lab/lab2rgb');
+const round = (v) => limit(Math.round(v), +0, 255);
 
-const round = v => limit(Math.round(v), 0, 255);
+describe('Testing LAB to RGB color conversions', () => {
+    const testCases = [
+        { name: 'black', lab: [0, 0, 0], rgb: [0, 0, 0, 1] },
+        { name: 'white', lab: [100, 0, 0], rgb: [255, 255, 255, 1] },
+        { name: 'gray', lab: [53.59, 0, 0], rgb: [128, 128, 128, 1] },
+        { name: 'red', lab: [53.24, 80.09, 67.2], rgb: [255, 0, 0, 1] },
+        { name: 'yellow', lab: [97.14, -21.55, 94.48], rgb: [255, 255, 0, 1] },
+        { name: 'green', lab: [87.73, -86.18, 83.18], rgb: [0, 255, 0, 1] },
+        { name: 'cyan', lab: [91.11, -48.09, -14.13], rgb: [0, 255, 255, 1] },
+        { name: 'blue', lab: [32.3, 79.19, -107.86], rgb: [0, 0, 255, 1] },
+        { name: 'magenta', lab: [60.32, 98.23, -60.82], rgb: [255, 0, 255, 1] }
+    ];
 
-vows.describe('Testing CMYK color conversions')
-    .addBatch({
-        'parse simple HSI colors': {
-            topic: {
-                black: { in: [0, 0, 0], out: [0, 0, 0, 1] },
-                white: { in: [100, 0, 0], out: [255, 255, 255, 1] },
-                gray: { in: [53.59, 0, 0], out: [128, 128, 128, 1] },
-                red: { in: [53.24, 80.09, 67.2], out: [255, 0, 0, 1] },
-                yellow: { in: [97.14, -21.55, 94.48], out: [255, 255, 0, 1] },
-                green: { in: [87.73, -86.18, 83.18], out: [0, 255, 0, 1] },
-                cyan: { in: [91.11, -48.09, -14.13], out: [0, 255, 255, 1] },
-                blue: { in: [32.3, 79.19, -107.86], out: [0, 0, 255, 1] },
-                magenta: { in: [60.32, 98.23, -60.82], out: [255, 0, 255, 1] }
-            },
-            lab_arr(topic) {
-                Object.keys(topic).forEach(key => {
-                    assert.deepEqual(lab2rgb(topic[key].in).map(round), topic[key].out);
-                });
-            },
-            lab_args(topic) {
-                Object.keys(topic).forEach(key => {
-                    assert.deepEqual(
-                        lab2rgb.apply(null, topic[key].in).map(round),
-                        topic[key].out,
-                        key
-                    );
-                });
-            },
-            lab_obj(topic) {
-                Object.keys(topic).forEach(key => {
-                    const [l, a, b] = topic[key].in;
-                    assert.deepEqual(lab2rgb({ l, a, b }).map(round), topic[key].out, key);
-                });
-            }
-        }
-    })
-    .export(module);
+    testCases.forEach(({ name, lab, rgb }) => {
+        it(`${name}: should convert ${lab} to ${rgb}`, () => {
+            expect(lab2rgb(lab).map(round)).toStrictEqual(rgb);
+        });
+    });
+
+    testCases.forEach(({ name, lab, rgb }) => {
+        it(`${name}: should convert unpacked arguments ${lab} to ${rgb}`, () => {
+            expect(lab2rgb(...lab).map(round)).toStrictEqual(rgb);
+        });
+    });
+});

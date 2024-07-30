@@ -1,234 +1,408 @@
-require('es6-shim');
-const vows = require('vows');
-const assert = require('assert');
-const chroma = require('../index');
-const scale = require('../src/generator/scale');
+import { describe, it, expect } from 'vitest';
+import chroma from '../index.js';
+import scale from '../src/generator/scale.js';
 
+describe('Some tests for scale()', () => {
+    describe('simple rgb scale (white-->black)', () => {
+        const f = scale(['white', 'black']);
 
-vows
-    .describe('Some tests for scale()')
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#ffffff');
+        });
 
-    .addBatch({
+        it('mid gray', () => {
+            expect(f(0.5).hex()).toBe('#808080');
+        });
 
-        'simple rgb scale (white-->black)': {
-            topic: {
-                f: scale(['white','black'])
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#ffffff'); },
-            'mid gray'(topic) { assert.equal(topic.f(0.5).hex(), '#808080'); },
-            'ends black'(topic) { assert.equal(topic.f(1).hex(), '#000000'); }
-        },
+        it('ends black', () => {
+            expect(f(1).hex()).toBe('#000000');
+        });
+    });
 
-        'simple hsv scale (white-->black)': {
-            topic: {
-                f: scale(['white','black']).mode('hsv')
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#ffffff'); },
-            'mid gray'(topic) { assert.equal(topic.f(0.5).hex(), '#808080'); },
-            'ends black'(topic) { assert.equal(topic.f(1).hex(), '#000000'); },
-            'colors'(topic) { assert.deepEqual(topic.f.colors(), ['#ffffff', '#000000']); },
-            'colors start and end'(topic) { assert.deepEqual(topic.f.colors(2), ['#ffffff', '#000000']); },
-            'color mode'(topic) { assert.deepEqual(topic.f.colors(2, 'rgb')[1], [0,0,0]); },
-            'color mode null len'(topic) { assert.equal(topic.f.colors(2, null).length, 2); },
-            'color mode null'(topic) { assert(topic.f.colors(2, null)[0]._rgb); }
-        },
+    describe('simple hsv scale (white-->black)', () => {
+        const f = scale(['white', 'black']).mode('hsv');
 
-        'simple hsv scale (white-->black), classified': {
-            topic: {
-                f: scale(['white','black']).classes(7).mode('hsv')
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#ffffff'); },
-            'mid gray'(topic) { assert.equal(topic.f(0.5).hex(), '#808080'); },
-            'ends black'(topic) { assert.equal(topic.f(1).hex(), '#000000'); },
-            'colors'(topic) { assert.deepEqual(topic.f.colors(7), ['#ffffff', '#d5d5d5', '#aaaaaa', '#808080', '#555555', '#2a2a2a', '#000000']); }
-        },
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#ffffff');
+        });
 
-        'simple lab scale (white-->black)': {
-            topic: {
-                f: scale(['white','black']).mode('lab')
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#ffffff'); },
-            'mid gray'(topic) { assert.equal(topic.f(0.5).hex(), '#777777'); },
-            'ends black'(topic) { assert.equal(topic.f(1).hex(), '#000000'); }
-        },
+        it('mid gray', () => {
+            expect(f(0.5).hex()).toBe('#808080');
+        });
 
-        'colorbrewer scale': {
-            topic: {
-                f: scale('RdYlGn')
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#a50026'); },
-            'mid gray'(topic) { assert.equal(topic.f(0.5).hex(), '#ffffbf'); },
-            'ends black'(topic) { assert.equal(topic.f(1).hex(), '#006837'); }
-        },
+        it('ends black', () => {
+            expect(f(1).hex()).toBe('#000000');
+        });
 
-        'colorbrewer scale - domained': {
-            topic: {
-                f: scale('RdYlGn').domain([0, 100])
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#a50026'); },
-            'foo'(topic) { assert.notEqual(topic.f(10).hex(), '#ffffbf'); },
-            'mid gray'(topic) { assert.equal(topic.f(50).hex(), '#ffffbf'); },
-            'ends black'(topic) { assert.equal(topic.f(100).hex(), '#006837'); }
-        },
+        it('colors', () => {
+            expect(f.colors()).toEqual(['#ffffff', '#000000']);
+        });
 
-        'colorbrewer scale - lowercase': {
-            topic: {
-                f: scale('rdylgn')
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#a50026'); },
-            'mid gray'(topic) { assert.equal(topic.f(0.5).hex(), '#ffffbf'); },
-            'ends black'(topic) { assert.equal(topic.f(1).hex(), '#006837'); }
-        },
+        it('colors start and end', () => {
+            expect(f.colors(2)).toEqual(['#ffffff', '#000000']);
+        });
 
-        'colorbrewer scale - domained - classified': {
-            topic: {
-                f: scale('RdYlGn').domain([0, 100]).classes(5)
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#a50026'); },
-            '10'(topic) { assert.equal(topic.f(10).hex(), '#a50026'); },
-            'mid gray'(topic) { assert.equal(topic.f(50).hex(), '#ffffbf'); },
-            'ends black'(topic) { assert.equal(topic.f(100).hex(), '#006837'); },
-            'get colors'(topic) { assert.deepEqual(topic.f.colors(5), ['#a50026', '#f98e52', '#ffffbf', '#86cb67', '#006837']); }
-        },
+        it('color mode', () => {
+            expect(f.colors(2, 'rgb')[1]).toEqual([0, 0, 0]);
+        });
 
-        'calling domain with no arguments': {
-            topic: {
-                f: scale('RdYlGn').domain([0, 100]).classes(5)
-            },
-            'returns domain'(topic) { assert.deepEqual(topic.f.domain(), [0, 100]); },
-            'returns classes'(topic) { assert.deepEqual(topic.f.classes(), [0, 20, 40, 60, 80, 100]); }
-        },
+        it('color mode null len', () => {
+            expect(f.colors(2, null).length).toBe(2);
+        });
 
-        'source array keeps untouched': {
-            topic: chroma.brewer.Blues.slice(0),
-            'colors are an array'(colors) {
-                assert.equal(colors.length, 9);
-            },
-            'colors are strings'(colors) {
-                assert.equal(typeof colors[0], 'string');
-            },
-            'creating a color scale'(colors) {
-                scale(colors);
-                assert(true);
-            },
-            'colors are still strings'(colors) {
-                assert.equal(typeof colors[0], 'string');
-            }
-        },
+        it('color mode null', () => {
+            expect(f.colors(2, null)[0]._rgb).toBeDefined();
+        });
+    });
 
+    describe('simple hsv scale (white-->black), classified', () => {
+        const f = scale(['white', 'black']).classes(7).mode('hsv');
 
-        'domain with same min and max': {
-            topic: {
-                f: scale(['white','black']).domain([1, 1])
-            },
-            'returns color'(topic) { assert.deepEqual(topic.f(1).hex(), '#000000'); }
-        },
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#ffffff');
+        });
 
-        'simple num scale (white-->black)': {
-            topic: {
-                f: scale(['white','black']).mode('num')
-            },
-            'starts white'(topic) { assert.equal(topic.f(0).hex(), '#ffffff'); },
-            '25%'(topic) { assert.equal(topic.f(0.25).hex(), '#bfffff'); },
-            '50%'(topic) { assert.equal(topic.f(0.5).hex(), '#7fffff'); },
-            '75%'(topic) { assert.equal(topic.f(0.75).hex(), '#3fffff'); },
-            '95%'(topic) { assert.equal(topic.f(0.95).hex(), '#0ccccc'); },
-            'ends black'(topic) { assert.equal(topic.f(1).hex(), '#000000'); }
-        },
+        it('mid gray', () => {
+            expect(f(0.5).hex()).toBe('#808080');
+        });
 
-        'css rgb colors': {
-            topic: scale("YlGnBu")(0.3).css(),
-            'have rounded rgb() values'(topic) { assert.equal(topic, 'rgb(170,222,183)'); }
-        },
+        it('ends black', () => {
+            expect(f(1).hex()).toBe('#000000');
+        });
 
-        'css rgba colors': {
-            topic: scale("YlGnBu")(0.3).alpha(0.675).css(),
-            'dont round alpha value'(topic) { assert.equal(topic, 'rgba(170,222,183,0.675)'); }
-        },
+        it('colors', () => {
+            expect(f.colors(7)).toEqual(['#ffffff', '#d5d5d5', '#aaaaaa', '#808080', '#555555', '#2a2a2a', '#000000']);
+        });
+    });
 
-        'get colors from a scale': {
-            topic: {
-                f: scale(['yellow','darkgreen'])
-            },
-            'just colors'(topic) { assert.deepEqual(topic.f.colors(), ['#ffff00', '#006400']); },
-            'five hex colors'(topic) { assert.deepEqual(topic.f.colors(5), ['#ffff00','#bfd800','#80b200','#408b00','#006400']); },
-            'three css colors'(topic) { assert.deepEqual(topic.f.colors(3,'css'), ['rgb(255,255,0)', 'rgb(128,178,0)', 'rgb(0,100,0)' ]); }
-        },
+    describe('simple lab scale (white-->black)', () => {
+        const f = scale(['white', 'black']).mode('lab');
 
-        'get colors from a scale with more than two colors': {
-            topic: {
-                f: scale(['yellow','orange', 'darkgreen'])
-            },
-            'just origianl colors'(topic) { assert.deepEqual(topic.f.colors(), ['#ffff00', '#ffa500', '#006400']); }
-        },
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#ffffff');
+        });
 
-        'test example in readme': {
-            topic: {
-                f: scale('RdYlGn')
-            },
-            'five hex colors (new)'(topic) { assert.deepEqual(topic.f.colors(5), ['#a50026','#f98e52','#ffffbf','#86cb67','#006837']); }
-        },
+        it('mid gray', () => {
+            expect(f(0.5).hex()).toBe('#777777');
+        });
 
-        'weird result': {
-            topic: {
-                f: scale([[ 0, 0, 0, 1 ], [ 255, 255, 255, 1 ]]).domain([0,10]).mode('rgb')
-            },
-            'has hex function at 0.5'(topic) { assert.equal(typeof topic.f(0.5).hex, 'function'); },
-            'has hex function at 0'(topic) { assert.equal(typeof topic.f(0).hex, 'function'); }
-        },
+        it('ends black', () => {
+            expect(f(1).hex()).toBe('#000000');
+        });
+    });
 
-        'scale padding, simple': {
-            topic: {
-                f: scale('RdYlBu').padding(0.15)
-            },
-            '0'(topic) { assert.equal(topic.f(0).hex(), '#e64f35'); },
-            '0.5'(topic) { assert.equal(topic.f(0.5).hex(), '#ffffbf'); },
-            '1'(topic) { assert.equal(topic.f(1).hex(), '#5d91c3'); }
-        },
+    describe('colorbrewer scale', () => {
+        const f = scale('RdYlGn');
 
-        'scale padding, one-sided': {
-            topic: {
-                f: scale('OrRd').padding([0.2, 0])
-            },
-            '0'(topic) { assert.equal(topic.f(0).hex(), '#fddcaf'); },
-            '0.5'(topic) { assert.equal(topic.f(0.5).hex(), '#f26d4b'); },
-            '1'(topic) { assert.equal(topic.f(1).hex(), '#7f0000'); }
-        },
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#a50026');
+        });
 
-        'colors return original colors': {
-            topic: {
-                f: scale(['red', 'white', 'blue'])
-            },
-            'same colors'(topic) { assert.deepEqual(topic.f.colors(), ['#ff0000', '#ffffff', '#0000ff']); }
-        },
+        it('mid gray', () => {
+            expect(f(0.5).hex()).toBe('#ffffbf');
+        });
 
-        'scale with one color': {
-            topic: {
-                f: scale(['red'])
-            },
-            'should return that color'(topic) { assert.equal(topic.f(0.3).hex(), '#ff0000'); }
-        },
+        it('ends black', () => {
+            expect(f(1).hex()).toBe('#006837');
+        });
+    });
 
-        'scale() no data color': {
-            topic: {
-                f: scale('OrRd')
-            },
-            'null --> nodata'(topic) { assert.equal(topic.f(null).hex(), '#cccccc'); },
-            'undefined --> nodata'(topic) { assert.equal(topic.f(undefined).hex(), '#cccccc'); },
-            'custom nodata color'(topic) { assert.equal(topic.f.nodata('#eee')(undefined).hex(), '#eeeeee'); }
-        },
+    describe('colorbrewer scale - domained', () => {
+        const f = scale('RdYlGn').domain([0, 100]);
 
-        'scale wrapped in a scale': {
-            topic: {
-                f1: scale('OrRd'),
-                f: scale('OrRd').domain([0,.25,1])
-            },
-            'start'(topic) { assert.equal(topic.f(0).hex(), topic.f1(0).hex()) },
-            'end'(topic) { assert.equal(topic.f(1).hex(), topic.f1(1).hex()) },
-            'center'(topic) { assert.equal(topic.f(0.125).hex(), topic.f1(0.25).hex()) },
-            'center2'(topic) { assert.equal(topic.f(0.25).hex(), topic.f1(0.5).hex()) },
-            'center3'(topic) { assert.equal(topic.f(0.625).hex(), topic.f1(0.75).hex()) },
-        },
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#a50026');
+        });
 
+        it('foo', () => {
+            expect(f(10).hex()).not.toBe('#ffffbf');
+        });
 
-    }).export(module);
+        it('mid gray', () => {
+            expect(f(50).hex()).toBe('#ffffbf');
+        });
+
+        it('ends black', () => {
+            expect(f(100).hex()).toBe('#006837');
+        });
+    });
+
+    describe('colorbrewer scale - lowercase', () => {
+        const f = scale('rdylgn');
+
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#a50026');
+        });
+
+        it('mid gray', () => {
+            expect(f(0.5).hex()).toBe('#ffffbf');
+        });
+
+        it('ends black', () => {
+            expect(f(1).hex()).toBe('#006837');
+        });
+    });
+
+    describe('colorbrewer scale - domained - classified', () => {
+        const f = scale('RdYlGn').domain([0, 100]).classes(5);
+
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#a50026');
+        });
+
+        it('10', () => {
+            expect(f(10).hex()).toBe('#a50026');
+        });
+
+        it('mid gray', () => {
+            expect(f(50).hex()).toBe('#ffffbf');
+        });
+
+        it('ends black', () => {
+            expect(f(100).hex()).toBe('#006837');
+        });
+
+        it('get colors', () => {
+            expect(f.colors(5)).toEqual(['#a50026', '#f98e52', '#ffffbf', '#86cb67', '#006837']);
+        });
+    });
+
+    describe('calling domain with no arguments', () => {
+        const f = scale('RdYlGn').domain([0, 100]).classes(5);
+
+        it('returns domain', () => {
+            expect(f.domain()).toEqual([0, 100]);
+        });
+
+        it('returns classes', () => {
+            expect(f.classes()).toEqual([0, 20, 40, 60, 80, 100]);
+        });
+    });
+
+    describe('source array keeps untouched', () => {
+        const colors = chroma.brewer.Blues.slice(0);
+
+        it('colors are an array', () => {
+            expect(colors.length).toBe(9);
+        });
+
+        it('colors are strings', () => {
+            expect(typeof colors[0]).toBe('string');
+        });
+
+        it('creating a color scale', () => {
+            scale(colors);
+            expect(true).toBe(true);
+        });
+
+        it('colors are still strings', () => {
+            expect(typeof colors[0]).toBe('string');
+        });
+    });
+
+    describe('domain with same min and max', () => {
+        const f = scale(['white', 'black']).domain([1, 1]);
+
+        it('returns color', () => {
+            expect(f(1).hex()).toBe('#000000');
+        });
+    });
+
+    describe('simple num scale (white-->black)', () => {
+        const f = scale(['white', 'black']).mode('num');
+
+        it('starts white', () => {
+            expect(f(0).hex()).toBe('#ffffff');
+        });
+
+        it('25%', () => {
+            expect(f(0.25).hex()).toBe('#bfffff');
+        });
+
+        it('50%', () => {
+            expect(f(0.5).hex()).toBe('#7fffff');
+        });
+
+        it('75%', () => {
+            expect(f(0.75).hex()).toBe('#3fffff');
+        });
+
+        it('95%', () => {
+            expect(f(0.95).hex()).toBe('#0ccccc');
+        });
+
+        it('ends black', () => {
+            expect(f(1).hex()).toBe('#000000');
+        });
+    });
+
+    describe('css rgb colors', () => {
+        const color = scale('YlGnBu')(0.3).css();
+
+        it('have rounded rgb() values', () => {
+            expect(color).toBe('rgb(170,222,183)');
+        });
+    });
+
+    describe('css rgba colors', () => {
+        const color = scale('YlGnBu')(0.3).alpha(0.675).css();
+
+        it('dont round alpha value', () => {
+            expect(color).toBe('rgba(170,222,183,0.675)');
+        });
+    });
+
+    describe('get colors from a scale', () => {
+        const f = scale(['yellow', 'darkgreen']);
+
+        it('just colors', () => {
+            expect(f.colors()).toEqual(['#ffff00', '#006400']);
+        });
+
+        it('five hex colors', () => {
+            expect(f.colors(5)).toEqual(['#ffff00', '#bfd800', '#80b200', '#408b00', '#006400']);
+        });
+
+        it('three css colors', () => {
+            expect(f.colors(3, 'css')).toEqual(['rgb(255,255,0)', 'rgb(128,178,0)', 'rgb(0,100,0)']);
+        });
+    });
+
+    describe('get colors from a scale', () => {
+        const f = scale(['yellow', 'darkgreen']);
+
+        it('just colors', () => {
+            expect(f.colors()).toEqual(['#ffff00', '#006400']);
+        });
+
+        it('five hex colors', () => {
+            expect(f.colors(5)).toEqual(['#ffff00', '#bfd800', '#80b200', '#408b00', '#006400']);
+        });
+
+        it('three css colors', () => {
+            expect(f.colors(3, 'css')).toEqual(['rgb(255,255,0)', 'rgb(128,178,0)', 'rgb(0,100,0)']);
+        });
+    });
+
+    describe('get colors from a scale with more than two colors', () => {
+        const f = scale(['yellow', 'orange', 'darkgreen']);
+
+        it('just original colors', () => {
+            expect(f.colors()).toEqual(['#ffff00', '#ffa500', '#006400']);
+        });
+    });
+
+    describe('test example in readme', () => {
+        const f = scale('RdYlGn');
+
+        it('five hex colors (new)', () => {
+            expect(f.colors(5)).toEqual(['#a50026', '#f98e52', '#ffffbf', '#86cb67', '#006837']);
+        });
+    });
+
+    describe('weird result', () => {
+        const f = scale([
+            [0, 0, 0, 1],
+            [255, 255, 255, 1]
+        ])
+            .domain([0, 10])
+            .mode('rgb');
+
+        it('has hex function at 0.5', () => {
+            expect(typeof f(0.5).hex).toBe('function');
+        });
+
+        it('has hex function at 0', () => {
+            expect(typeof f(0).hex).toBe('function');
+        });
+    });
+
+    describe('scale padding, simple', () => {
+        const f = scale('RdYlBu').padding(0.15);
+
+        it('0', () => {
+            expect(f(0).hex()).toBe('#e64f35');
+        });
+
+        it('0.5', () => {
+            expect(f(0.5).hex()).toBe('#ffffbf');
+        });
+
+        it('1', () => {
+            expect(f(1).hex()).toBe('#5d91c3');
+        });
+    });
+
+    describe('scale padding, one-sided', () => {
+        const f = scale('OrRd').padding([0.2, 0]);
+
+        it('0', () => {
+            expect(f(0).hex()).toBe('#fddcaf');
+        });
+
+        it('0.5', () => {
+            expect(f(0.5).hex()).toBe('#f26d4b');
+        });
+
+        it('1', () => {
+            expect(f(1).hex()).toBe('#7f0000');
+        });
+    });
+
+    describe('colors return original colors', () => {
+        const f = scale(['red', 'white', 'blue']);
+
+        it('same colors', () => {
+            expect(f.colors()).toEqual(['#ff0000', '#ffffff', '#0000ff']);
+        });
+    });
+
+    describe('scale with one color', () => {
+        const f = scale(['red']);
+
+        it('should return that color', () => {
+            expect(f(0.3).hex()).toBe('#ff0000');
+        });
+    });
+
+    describe('scale() no data color', () => {
+        const f = scale('OrRd');
+
+        it('null --> nodata', () => {
+            expect(f(null).hex()).toBe('#cccccc');
+        });
+
+        it('undefined --> nodata', () => {
+            expect(f(undefined).hex()).toBe('#cccccc');
+        });
+
+        it('custom nodata color', () => {
+            expect(f.nodata('#eee')(undefined).hex()).toBe('#eeeeee');
+        });
+    });
+
+    describe('scale wrapped in a scale', () => {
+        const f1 = scale('OrRd');
+        const f = scale('OrRd').domain([0, 0.25, 1]);
+
+        it('start', () => {
+            expect(f(0).hex()).toBe(f1(0).hex());
+        });
+
+        it('end', () => {
+            expect(f(1).hex()).toBe(f1(1).hex());
+        });
+
+        it('center', () => {
+            expect(f(0.125).hex()).toBe(f1(0.25).hex());
+        });
+
+        it('center2', () => {
+            expect(f(0.25).hex()).toBe(f1(0.5).hex());
+        });
+
+        it('center3', () => {
+            expect(f(0.625).hex()).toBe(f1(0.75).hex());
+        });
+    });
+});

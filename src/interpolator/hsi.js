@@ -1,11 +1,12 @@
-require('../io/hsi');
-const interpolate_hsx = require('./_hsx');
+import '../io/hsi/index.js';
+import interpolate_hsx from './_hsx.js';
+import index from './index.js';
 
 const hsi = (col1, col2, f) => {
-	return interpolate_hsx(col1, col2, f, 'hsi');
-}
+    return interpolate_hsx(col1, col2, f, 'hsi');
+};
 
 // register interpolator
-require('./index').hsi = hsi;
+index.hsi = hsi;
 
-module.exports = hsi;
+export default hsi;

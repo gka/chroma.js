@@ -1,9 +1,9 @@
-const limit = require('./limit');
+import limit from './limit.js';
 
-module.exports = (rgb) => {
+export default (rgb) => {
     rgb._clipped = false;
     rgb._unclipped = rgb.slice(0);
-    for (let i=0; i<=3; i++) {
+    for (let i = 0; i <= 3; i++) {
         if (i < 3) {
             if (rgb[i] < 0 || rgb[i] > 255) rgb._clipped = true;
             rgb[i] = limit(rgb[i], 0, 255);

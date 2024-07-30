@@ -1,11 +1,12 @@
-require('../io/hcg');
-const interpolate_hsx = require('./_hsx');
+import '../io/hcg/index.js';
+import interpolate_hsx from './_hsx.js';
+import index from './index.js';
 
 const hcg = (col1, col2, f) => {
-	return interpolate_hsx(col1, col2, f, 'hcg');
-}
+    return interpolate_hsx(col1, col2, f, 'hcg');
+};
 
 // register interpolator
-require('./index').hcg = hcg;
+index.hcg = hcg;
 
-module.exports = hcg;
+export default hcg;

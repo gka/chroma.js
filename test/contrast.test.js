@@ -1,26 +1,26 @@
-const vows = require('vows')
-const assert = require('assert');
-require('es6-shim');
+import { describe, it, expect } from 'vitest';
+import chroma from '../index.js';
 
-require('../src/io/named');
-const contrast = require('../src/utils/contrast');
+const contrast = chroma.contrast;
 
+describe('Testing contrast ratio', () => {
+    it('maximum contrast is 21:1', () => {
+        expect(contrast('black', 'white')).toBe(21);
+    });
 
-vows
-    .describe('Testing contrast ratio')
-    .addBatch({
-        'maximum contrast': {
-            topic: contrast('black', 'white'),
-            'is 21:1'(topic) { assert.equal(topic, 21) }
-        },
-        'minimum contrast': {
-            topic: contrast('white', 'white'),
-            'is 1:1'(topic) { assert.equal(topic, 1) }
-        },
-        'contrast between white and red': {
-            topic: contrast('red', 'white'),
-            'is 4:1'(topic) { assert.equal(Math.round(topic), 4) }
-        },
+    it('minimum contrast is 1:1', () => {
+        expect(contrast('white', 'white')).toBe(1);
+    });
 
-    })
-    .export(module)
+    it('contrast between white and red is 4:1', () => {
+        expect(contrast('white', 'red').toFixed(1)).toBe('4.0');
+    });
+
+    it('contrast between black and red is 5.25:1', () => {
+        expect(contrast('black', 'red').toFixed(2)).toBe('5.25');
+    });
+
+    it('contrast between black and darkgrey is 1.32:1', () => {
+        expect(contrast('black', '#222').toFixed(2)).toBe('1.32');
+    });
+});

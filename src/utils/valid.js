@@ -1,9 +1,10 @@
-const Color = require('../Color');
+import Color from '../Color.js';
 
-module.exports = (...args) => {
+export default (...args) => {
     try {
         new Color(...args);
         return true;
+        // eslint-disable-next-line
     } catch (e) {
         return false;
     }

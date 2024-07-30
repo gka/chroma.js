@@ -1,211 +1,131 @@
+import { describe, it, expect } from 'vitest';
+import chroma from '../index.js';
 
-require('es6-shim');
+describe('Tests for the alpha channel', () => {
+    it('setting & getting alpha channel', () => {
+        const color = chroma('red');
+        expect(color.alpha()).toBe(1);
+        expect(color.alpha(0.5).alpha()).toBe(0.5);
+        expect(color.alpha()).toBe(1);
+    });
 
-const vows = require('vows');
-const assert = require('assert');
-const chroma = require('../index');
+    it('interpolating alpha channel', () => {
+        const color = chroma.mix(chroma('white').alpha(0), chroma('black').alpha(1), 0.3, 'rgb');
+        expect(color.hex('rgb')).toBe('#b3b3b3');
+        expect(color.hex()).toBe('#b3b3b34d');
+        expect(color.alpha()).toBe(0.3);
+    });
 
-vows.describe('Tests for the alpha channel').addBatch({
-    'setting & getting alpha channel': {
-        topic: chroma('red'),
-        'no arguments gets alpha': function(topic) {
-            return assert.equal(topic.alpha(), 1);
-        },
-        'setting alpha to 0.5': function(topic) {
-            return assert.equal(topic.alpha(0.5).alpha(), 0.5);
-        },
-        'alpha is unchanged': function(topic) {
-            return assert.equal(topic.alpha(), 1);
-        }
-    },
-    'interpolating alpha channel': {
-        topic: chroma.mix(chroma('white').alpha(0), chroma('black').alpha(1), 0.3, 'rgb'),
-        'hex is #b3b3b3': function(topic) {
-            return assert.equal(topic.hex('rgb'), '#b3b3b3');
-        },
-        'hex with alpha': function(topic) {
-            return assert.equal(topic.hex(), '#b3b3b34d');
-        },
-        'alpha is 30%': function(topic) {
-            return assert.equal(topic.alpha(), 0.3);
-        }
-    },
-    'constructing rgba color': {
-        topic: new chroma.Color(255, 0, 0, 0.5, 'rgb'),
-        'alpha is 50%': function(topic) {
-            return assert.equal(topic.alpha(), 0.5);
-        }
-    },
-    'constructing rgba color, rgb shorthand': {
-        topic: chroma.rgb(255, 0, 0, 0.5),
-        'alpha is 50%': function(topic) {
-            return assert.equal(topic.alpha(), 0.5);
-        }
-    },
-    'constructing rgba color, hsl shorthand': {
-        topic: chroma.hsl(0, 1, 0.5).alpha(0.5),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 50%': function(topic) {
-            return assert.equal(topic.alpha(), 0.5);
-        }
-    },
-    'parsing hex rgba colors': {
-        topic: chroma('#ff00004d'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 30%': function(topic) {
-            return assert.equal(topic.alpha(), 0.3);
-        },
-        'rgba output': function(topic) {
-            return assert.deepEqual(topic.rgba(), [255, 0, 0, 0.3]);
-        }
-    },
-    'parsing rgba colors': {
-        topic: chroma.css('rgba(255,0,0,.3)'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 30%': function(topic) {
-            return assert.equal(topic.alpha(), 0.3);
-        },
-        'rgba output': function(topic) {
-            return assert.deepEqual(topic.rgba(), [255, 0, 0, 0.3]);
-        }
-    },
-    'parsing rgba colors (percentage)': {
-        topic: chroma.css('rgba(100%,0%,0%,0.2)'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 20%': function(topic) {
-            return assert.equal(topic.alpha(), 0.2);
-        },
-        'rgb output': function(topic) {
-            return assert.deepEqual(topic.rgb(), [255, 0, 0]);
-        },
-        'rgba output': function(topic) {
-            return assert.deepEqual(topic.rgba(), [255, 0, 0, 0.2]);
-        }
-    },
-    'parsing hsla colors': {
-        topic: chroma.css('hsla(0,100%,50%,0.25)'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 25%': function(topic) {
-            return assert.equal(topic.alpha(), 0.25);
-        },
-        'rgb output': function(topic) {
-            return assert.deepEqual(topic.rgb(), [255, 0, 0]);
-        },
-        'rgba output': function(topic) {
-            return assert.deepEqual(topic.rgba(), [255, 0, 0, 0.25]);
-        }
-    },
-    'constructing hsla color': {
-        topic: chroma(0, 1, 0.5, 0.25, 'hsl'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 25%': function(topic) {
-            return assert.equal(topic.alpha(), 0.25);
-        }
-    },
-    'constructing hsva color': {
-        topic: chroma(0, 1, 1, 0.25, 'hsv'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 25%': function(topic) {
-            return assert.equal(topic.alpha(), 0.25);
-        }
-    },
-    'constructing hsia color': {
-        topic: chroma(0, 1, 0.3333334, 0.25, 'hsi'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 25%': function(topic) {
-            return assert.equal(topic.alpha(), 0.25);
-        }
-    },
-    'constructing laba color': {
-        topic: chroma(53.24079414130722, 80.09245959641109, 67.20319651585301, 0.25, 'lab'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 25%': function(topic) {
-            return assert.equal(topic.alpha(), 0.25);
-        }
-    },
-    'constructing lcha color': {
-        topic: chroma(53.24079414130722, 104.55176567686985, 39.99901061253297, 0.25, 'lch'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 25%': function(topic) {
-            return assert.equal(topic.alpha(), 0.25);
-        }
-    },
-    'constructing cmyka color': {
-        topic: chroma(0, 1, 1, 0, 0.25, 'cmyk'),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 25%': function(topic) {
-            return assert.equal(topic.alpha(), 0.25);
-        }
-    },
-    'gl output': {
-        topic: chroma.gl(1, 0, 0, 0.25),
-        'color is red': function(topic) {
-            return assert.equal(topic.name(), 'red');
-        },
-        'alpha is 25%': function(topic) {
-            return assert.equal(topic.alpha(), 0.25);
-        },
-        'gloutput': function(topic) {
-            return assert.deepEqual(topic.gl(), [1, 0, 0, 0.25]);
-        }
-    },
-    'rgba css output': {
-        topic: chroma.css('hsla(0,100%,50%,0.25)'),
-        'cssoutput': function() {
-            return function(topic) {
-                return assert.equal(topic.css(), 'rgba(255,0,0,0.25)');
-            };
-        }
-    },
-    'hex output': {
-        topic: chroma.gl(1, 0, 0, 0.25),
-        'hex': function(topic) {
-            return assert.equal(topic.hex(), '#ff000040');
-        },
-        'rgb': function(topic) {
-            return assert.equal(topic.hex('rgb'), '#ff0000');
-        },
-        'rgba': function(topic) {
-            return assert.equal(topic.hex('rgba'), '#ff000040');
-        },
-        'argb': function(topic) {
-            return assert.equal(topic.hex('argb'), '#40ff0000');
-        }
-    },
-    'num output': {
-        topic: chroma.gl(1, 0, 0, 0.25),
-        'num ignores alpha': function(topic) {
-            return assert.equal(topic.num(), 0xff0000);
-        }
-    },
-    'setting alpha returns new instance': {
-        topic: chroma('red'),
-        'set alpha to 0.5': function(topic) {
-            topic.alpha(0.5);
-            return assert.equal(topic.alpha(), 1);
-        }
-    }
-})
-.export(module);
+    it('constructing rgba color', () => {
+        const color = new chroma.Color(255, 0, 0, 0.5, 'rgb');
+        expect(color.alpha()).toBe(0.5);
+    });
+
+    it('constructing rgba color, rgb shorthand', () => {
+        const color = chroma.rgb(255, 0, 0, 0.5);
+        expect(color.alpha()).toBe(0.5);
+    });
+
+    it('constructing rgba color, hsl shorthand', () => {
+        const color = chroma.hsl(0, 1, 0.5).alpha(0.5);
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.5);
+    });
+
+    it('parsing hex rgba colors', () => {
+        const color = chroma('#ff00004d');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.3);
+        expect(color.rgba()).toEqual([255, 0, 0, 0.3]);
+    });
+
+    it('parsing rgba colors', () => {
+        const color = chroma.css('rgba(255,0,0,.3)');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.3);
+        expect(color.rgba()).toEqual([255, 0, 0, 0.3]);
+    });
+
+    it('parsing rgba colors (percentage)', () => {
+        const color = chroma.css('rgba(100%,0%,0%,0.2)');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.2);
+        expect(color.rgb()).toEqual([255, 0, 0]);
+        expect(color.rgba()).toEqual([255, 0, 0, 0.2]);
+    });
+
+    it('parsing hsla colors', () => {
+        const color = chroma.css('hsla(0,100%,50%,0.25)');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.25);
+        expect(color.rgb()).toEqual([255, 0, 0]);
+        expect(color.rgba()).toEqual([255, 0, 0, 0.25]);
+    });
+
+    it('constructing hsla color', () => {
+        const color = chroma(0, 1, 0.5, 0.25, 'hsl');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.25);
+    });
+
+    it('constructing hsva color', () => {
+        const color = chroma(0, 1, 1, 0.25, 'hsv');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.25);
+    });
+
+    it('constructing hsia color', () => {
+        const color = chroma(0, 1, 0.3333334, 0.25, 'hsi');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.25);
+    });
+
+    it('constructing laba color', () => {
+        const color = chroma(53.24079414130722, 80.09245959641109, 67.20319651585301, 0.25, 'lab');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.25);
+    });
+
+    it('constructing lcha color', () => {
+        const color = chroma(53.24079414130722, 104.55176567686985, 39.99901061253297, 0.25, 'lch');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.25);
+    });
+
+    it('constructing cmyka color', () => {
+        const color = chroma(0, 1, 1, 0, 0.25, 'cmyk');
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.25);
+    });
+
+    it('gl output', () => {
+        const color = chroma.gl(1, 0, 0, 0.25);
+        expect(color.name()).toBe('red');
+        expect(color.alpha()).toBe(0.25);
+        expect(color.gl()).toEqual([1, 0, 0, 0.25]);
+    });
+
+    it('rgba css output', () => {
+        const color = chroma.css('hsla(0,100%,50%,0.25)');
+        expect(color.css()).toBe('rgba(255,0,0,0.25)');
+    });
+
+    it('hex output', () => {
+        const color = chroma.gl(1, 0, 0, 0.25);
+        expect(color.hex()).toBe('#ff000040');
+        expect(color.hex('rgb')).toBe('#ff0000');
+        expect(color.hex('rgba')).toBe('#ff000040');
+        expect(color.hex('argb')).toBe('#40ff0000');
+    });
+
+    it('num output', () => {
+        const color = chroma.gl(1, 0, 0, 0.25);
+        expect(color.num()).toBe(0xff0000);
+    });
+
+    it('setting alpha returns new instance', () => {
+        const color = chroma('red');
+        color.alpha(0.5);
+        expect(color.alpha()).toBe(1);
+    });
+});

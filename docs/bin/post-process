@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-var fs = require('fs');
+import fs from 'fs';
 
-var index = fs.readFileSync('index.html', 'utf-8'),
-	footer = fs.readFileSync('src/footer.inc.html', 'utf-8');
+const index = fs.readFileSync('index.html', 'utf-8');
+const footer = fs.readFileSync('src/footer.inc.html', 'utf-8');
 
-index = index.replace('</body>', '\n'+footer+'\n</body>');
-index = index.replace('</head>', '  <link rel="me" href="https://vis.social/@gka">\n</head>');
-index = index.replace('<body>', '<body><div class="wrap">');
-index = index.replace('</body>', '</div></body>');
+let modifiedIndex = index.replace('</body>', '\n'+footer+'\n</body>');
+modifiedIndex = modifiedIndex.replace('</head>', '  <link rel="me" href="https://vis.social/@gka">\n</head>');
+modifiedIndex = modifiedIndex.replace('<body>', '<body><div class="wrap">');
+modifiedIndex = modifiedIndex.replace('</body>', '</div></body>');
 
-fs.writeFileSync('index.html', index);
+fs.writeFileSync('index.html', modifiedIndex);

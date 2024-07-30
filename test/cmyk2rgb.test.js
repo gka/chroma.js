@@ -1,33 +1,94 @@
-const vows = require('vows')
-const assert = require('assert');
-require('es6-shim');
+import { describe, it, expect } from 'vitest';
+import cmyk2rgb from '../src/io/cmyk/cmyk2rgb.js';
+import '../index.js';
 
-const cmyk2rgb = require('../src/io/cmyk/cmyk2rgb');
+const cmykColors = [
+    [0, 0, 0, 1],
+    [0, 0, 0, 0],
+    [0, 1, 1, 0],
+    [1, 0, 1, 0],
+    [1, 1, 0, 0],
+    [0, 0, 1, 0],
+    [1, 0, 0, 0],
+    [0, 1, 0, 0]
+];
+const rgbColors = [
+    [0, 0, 0, 1],
+    [255, 255, 255, 1],
+    [255, 0, 0, 1],
+    [0, 255, 0, 1],
+    [0, 0, 255, 1],
+    [255, 255, 0, 1],
+    [0, 255, 255, 1],
+    [255, 0, 255, 1]
+];
 
-vows
-    .describe('Testing CMYK color conversions')
-    .addBatch({
-        'parse simple CMYK colors': {
-            topic: [[0,0,0,1],[0,0,0,0],[0,1,1,0],[1,0,1,0],[1,1,0,0],[0,0,1,0],[1,0,0,0],[0,1,0,0]],
-            black(t)    { return assert.deepEqual(cmyk2rgb(t[0]), [0,0,0,1]); },
-            white(t)    { return assert.deepEqual(cmyk2rgb(t[1]), [255,255,255,1]); },
-            red(t)      { return assert.deepEqual(cmyk2rgb(t[2]), [255,0,0,1]); },
-            green(t)    { return assert.deepEqual(cmyk2rgb(t[3]), [0,255,0,1]); },
-            blue(t)     { return assert.deepEqual(cmyk2rgb(t[4]), [0,0,255,1]); },
-            yellow(t)   { return assert.deepEqual(cmyk2rgb(t[5]), [255,255,0,1]); },
-            cyan(t)     { return assert.deepEqual(cmyk2rgb(t[6]), [0,255,255,1]); },
-            magenta(t)  { return assert.deepEqual(cmyk2rgb(t[7]), [255,0,255,1]); }
-        },
-        'test unpacked arguments': {
-            topic: [[0,0,0,1],[0,0,0,0],[0,1,1,0],[1,0,1,0],[1,1,0,0],[0,0,1,0],[1,0,0,0],[0,1,0,0]],
-            black(t)    { return assert.deepEqual(cmyk2rgb.apply(null, t[0]), [0,0,0,1]); },
-            white(t)    { return assert.deepEqual(cmyk2rgb.apply(null, t[1]), [255,255,255,1]); },
-            red(t)      { return assert.deepEqual(cmyk2rgb.apply(null, t[2]), [255,0,0,1]); },
-            green(t)    { return assert.deepEqual(cmyk2rgb.apply(null, t[3]), [0,255,0,1]); },
-            blue(t)     { return assert.deepEqual(cmyk2rgb.apply(null, t[4]), [0,0,255,1]); },
-            yellow(t)   { return assert.deepEqual(cmyk2rgb.apply(null, t[5]), [255,255,0,1]); },
-            cyan(t)     { return assert.deepEqual(cmyk2rgb.apply(null, t[6]), [0,255,255,1]); },
-            magenta(t)  { return assert.deepEqual(cmyk2rgb.apply(null, t[7]), [255,0,255,1]); }
-        }
-    })
-    .export(module);
+describe('Testing CMYK color conversions', () => {
+    describe('parse simple CMYK colors', () => {
+        it('black', () => {
+            expect(cmyk2rgb(cmykColors[0])).toEqual(rgbColors[0]);
+        });
+
+        it('white', () => {
+            expect(cmyk2rgb(cmykColors[1])).toEqual(rgbColors[1]);
+        });
+
+        it('red', () => {
+            expect(cmyk2rgb(cmykColors[2])).toEqual(rgbColors[2]);
+        });
+
+        it('green', () => {
+            expect(cmyk2rgb(cmykColors[3])).toEqual(rgbColors[3]);
+        });
+
+        it('blue', () => {
+            expect(cmyk2rgb(cmykColors[4])).toEqual(rgbColors[4]);
+        });
+
+        it('yellow', () => {
+            expect(cmyk2rgb(cmykColors[5])).toEqual(rgbColors[5]);
+        });
+
+        it('cyan', () => {
+            expect(cmyk2rgb(cmykColors[6])).toEqual(rgbColors[6]);
+        });
+
+        it('magenta', () => {
+            expect(cmyk2rgb(cmykColors[7])).toEqual(rgbColors[7]);
+        });
+    });
+
+    describe('test unpacked arguments', () => {
+        it('black', () => {
+            expect(cmyk2rgb(...cmykColors[0])).toEqual(rgbColors[0]);
+        });
+
+        it('white', () => {
+            expect(cmyk2rgb(...cmykColors[1])).toEqual(rgbColors[1]);
+        });
+
+        it('red', () => {
+            expect(cmyk2rgb(...cmykColors[2])).toEqual(rgbColors[2]);
+        });
+
+        it('green', () => {
+            expect(cmyk2rgb(...cmykColors[3])).toEqual(rgbColors[3]);
+        });
+
+        it('blue', () => {
+            expect(cmyk2rgb(...cmykColors[4])).toEqual(rgbColors[4]);
+        });
+
+        it('yellow', () => {
+            expect(cmyk2rgb(...cmykColors[5])).toEqual(rgbColors[5]);
+        });
+
+        it('cyan', () => {
+            expect(cmyk2rgb(...cmykColors[6])).toEqual(rgbColors[6]);
+        });
+
+        it('magenta', () => {
+            expect(cmyk2rgb(...cmykColors[7])).toEqual(rgbColors[7]);
+        });
+    });
+});

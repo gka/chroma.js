@@ -1,8 +1,5 @@
-const vows = require('vows');
-const assert = require('assert');
-require('es6-shim');
-
-const rgb2oklch = require('../src/io/oklch/rgb2oklch');
+import { describe, it, expect } from 'vitest';
+import rgb2oklch from '../src/io/oklch/rgb2oklch.js';
 
 const tests = {
     black: { oklch: [0.0, 0.0, NaN], rgb: [0, 0, 0, 1] },
@@ -16,31 +13,32 @@ const tests = {
     magenta: { oklch: [0.702, 0.322, 328.363], rgb: [255, 0, 255, 1] }
 };
 
-const round = digits => {
+const round = (digits) => {
     const d = Math.pow(10, digits);
-    return v => {
+    return (v) => {
         if (v > -1e-3 && v < 1e-3) v = 0;
         return Math.round(v * d) / d;
     };
 };
 const rnd = round(3);
 
-const batch = {};
+describe('Test rgb2oklch color conversions', () => {
+    Object.keys(tests).forEach((key) => {
+        const test = tests[key];
 
-Object.keys(tests).forEach(key => {
-    batch[`rgb2oklch ${key}`] = {
-        topic: tests[key],
-        array(topic) {
-            assert.deepStrictEqual(rgb2oklch(topic.rgb).map(rnd), topic.oklch);
-        },
-        obj(topic) {
-            let [r, g, b] = topic.rgb;
-            assert.deepStrictEqual(rgb2oklch({ r, g, b }).map(rnd), topic.oklch);
-        },
-        args(topic) {
-            assert.deepStrictEqual(rgb2oklch.apply(null, topic.rgb).map(rnd), topic.oklch);
-        }
-    };
+        describe(`rgb2oklch ${key}`, () => {
+            it('converts array', () => {
+                expect(rgb2oklch(test.rgb).map(rnd)).toEqual(test.oklch);
+            });
+
+            it('converts object', () => {
+                const [r, g, b] = test.rgb;
+                expect(rgb2oklch({ r, g, b }).map(rnd)).toEqual(test.oklch);
+            });
+
+            it('converts arguments', () => {
+                expect(rgb2oklch.apply(null, test.rgb).map(rnd)).toEqual(test.oklch);
+            });
+        });
+    });
 });
-
-vows.describe('Test rgb2oklch color conversions').addBatch(batch).export(module);
