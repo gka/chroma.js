@@ -17,6 +17,7 @@ import './src/ops/darken.js';
 import './src/ops/get.js';
 import './src/ops/mix.js';
 import './src/ops/set.js';
+import './src/ops/shade.js';
 
 // interpolators
 import './src/interpolator/lrgb.js';

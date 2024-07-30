@@ -31,6 +31,7 @@ import './src/ops/mix.js';
 import './src/ops/premultiply.js';
 import './src/ops/saturate.js';
 import './src/ops/set.js';
+import './src/ops/shade.js';
 
 // interpolators
 import './src/interpolator/rgb.js';

@@ -1,7 +1,7 @@
 /**
  * chroma.js - JavaScript library for color conversions
  *
- * Copyright (c) 2011-2019, Gregor Aisch
+ * Copyright (c) 2011-2024, Gregor Aisch
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -181,6 +181,9 @@
         return ("[" + (this._rgb.join(',')) + "]");
     };
 
+    // this gets updated automatically
+    var version = '2.5.0';
+
     var chroma = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
@@ -189,7 +192,7 @@
     };
 
     chroma.Color = Color;
-    chroma.version = '0.4.2';
+    chroma.version = version;
 
     var rnd = function (a) { return Math.round(a * 100) / 100; };
 
@@ -1004,6 +1007,22 @@
         } else {
             return src;
         }
+    };
+
+    Color.prototype.tint = function (f) {
+        if ( f === void 0 ) f = 0.5;
+        var rest = [], len = arguments.length - 1;
+        while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
+
+        return mix.apply(void 0, [ this, 'white', f ].concat( rest ));
+    };
+
+    Color.prototype.shade = function (f) {
+        if ( f === void 0 ) f = 0.5;
+        var rest = [], len = arguments.length - 1;
+        while ( len-- > 0 ) rest[ len ] = arguments[ len + 1 ];
+
+        return mix.apply(void 0, [ this, 'black', f ].concat( rest ));
     };
 
     var sqrt = Math.sqrt;

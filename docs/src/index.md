@@ -414,6 +414,38 @@ chroma('hotpink').desaturate(2);
 chroma('hotpink').desaturate(3);
 ```
 
+### color.mix
+#### (targetcolor, ratio=0.5, mode='lrgb')
+
+Mix this color with a target color. The mix *ratio* is a value between 0 and 1. This is the same as `chroma.mix` but with the first parameter already set. As such, the color space used can be adjusted.
+
+```js
+chroma('hotpink').mix('blue');
+chroma('hotpink').mix('blue', 0.25);
+chroma('hotpink').mix('blue', 0.75, 'lab');
+```
+
+### color.shade
+#### (ratio=0.5, mode='lrgb')
+
+Produce a shade of the color. This is syntactic sugar for `color.mix` with a target color of black.
+
+```js
+chroma('hotpink').shade(0.25);
+chroma('hotpink').shade(0.5);
+chroma('hotpink').shade(0.75);
+```
+
+### color.tint
+#### (ratio=0.5, mode='lrgb')
+
+Produce a tint of the color. This is syntactic sugar for `color.mix` with a target color of white.
+
+```js
+chroma('hotpink').tint(0.25);
+chroma('hotpink').tint(0.5);
+chroma('hotpink').tint(0.75);
+```
 
 ### color.set
 #### (channel, value)

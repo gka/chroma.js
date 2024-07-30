@@ -259,6 +259,27 @@ chroma(&#39;slategray&#39;).saturate(3);
 chroma(&#39;hotpink&#39;).desaturate(2);
 chroma(&#39;hotpink&#39;).desaturate(3);
 </code></pre>
+<h3 id="color-mix">color.mix</h3>
+<h4 id="-targetcolor-ratio-0-5-mode-lrgb-">(targetcolor, ratio=0.5, mode=&#39;lrgb&#39;)</h4>
+<p>Mix this color with a target color. The mix <em>ratio</em> is a value between 0 and 1. This is the same as <code>chroma.mix</code> but with the first parameter already set. As such, the color space used can be adjusted.</p>
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).mix(&#39;blue&#39;);
+chroma(&#39;hotpink&#39;).mix(&#39;blue&#39;, 0.25);
+chroma(&#39;hotpink&#39;).mix(&#39;blue&#39;, 0.75, &#39;lab&#39;);
+</code></pre>
+<h3 id="color-shade">color.shade</h3>
+<h4 id="-ratio-0-5-mode-lrgb-">(ratio=0.5, mode=&#39;lrgb&#39;)</h4>
+<p>Produce a shade of the color. This is syntactic sugar for <code>color.mix</code> with a target color of black.</p>
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).shade();
+chroma(&#39;hotpink&#39;).shade(0.25);
+chroma(&#39;hotpink&#39;).shade(0.75);
+</code></pre>
+<h3 id="color-tint">color.tint</h3>
+<h4 id="-ratio-0-5-mode-lrgb-">(ratio=0.5, mode=&#39;lrgb&#39;)</h4>
+<p>Produce a tint of the color. This is syntactic sugar for <code>color.mix</code> with a target color of white.</p>
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).tint();
+chroma(&#39;hotpink&#39;).tint(0.25);
+chroma(&#39;hotpink&#39;).tint(0.75);
+</code></pre>
 <h3 id="color-set">color.set</h3>
 <h4 id="-channel-value-">(channel, value)</h4>
 <p>Changes a single channel and returns the result a new <code>chroma</code> object.</p>
