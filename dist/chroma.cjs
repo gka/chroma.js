@@ -190,7 +190,7 @@
     };
 
     // this gets updated automatically
-    var version = '2.5.0';
+    var version = '2.6.0';
 
     var chroma = function () {
         var args = [], len = arguments.length;
@@ -2802,7 +2802,7 @@
 
     /*
      * interpolates between a set of colors uzing a bezier spline
-     * blend mode formulas taken from http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
+     * blend mode formulas taken from https://web.archive.org/web/20180110014946/http://www.venture-ware.com/kevin/coding/lets-learn-math-photoshop-blend-modes/
      */
 
 
