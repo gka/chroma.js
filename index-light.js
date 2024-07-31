@@ -24,9 +24,11 @@ import './src/interpolator/lrgb.js';
 import './src/interpolator/oklab.js';
 
 // generators -- > create new colors
-chroma.mix = chroma.interpolate = require('./src/generator/mix');
+import mix from './src/generator/mix';
+chroma.mix = chroma.interpolate = mix;
 
 // other utility methods
-chroma.valid = require('./src/utils/valid');
+import valid from './src/utils/valid';
+chroma.valid = valid;
 
-module.exports = chroma;
+export default chroma;
