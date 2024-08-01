@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { analyze } from '../src/utils/analyze.js';
+import chroma from '../dist/index.mjs';
+
+const analyze = chroma.analyze;
 
 describe('Some tests for analyze()', () => {
     it('analyze an array of numbers', () => {

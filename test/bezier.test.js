@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import chroma from '../index.js';
+import chroma from '../dist/index.mjs';
+
+const bezier = chroma.bezier;
 
 describe('Testing bezier interpolation', () => {
     describe('simple two color linear interpolation', () => {
-        const f = chroma.bezier(['white', 'black']);
+        const f = bezier(['white', 'black']);
 
         it('starts from white', () => {
             expect(f(0).hex()).toBe('#ffffff');
@@ -19,7 +21,7 @@ describe('Testing bezier interpolation', () => {
     });
 
     describe('three color quadratic bezier interpolation', () => {
-        const f = chroma.bezier(['white', 'red', 'black']);
+        const f = bezier(['white', 'red', 'black']);
 
         it('starts from white', () => {
             expect(f(0).hex()).toBe('#ffffff');
@@ -35,7 +37,7 @@ describe('Testing bezier interpolation', () => {
     });
 
     describe('four color cubic bezier interpolation', () => {
-        const f = chroma.bezier(['white', 'yellow', 'red', 'black']);
+        const f = bezier(['white', 'yellow', 'red', 'black']);
 
         it('starts from white', () => {
             expect(f(0).hex()).toBe('#ffffff');
@@ -59,7 +61,7 @@ describe('Testing bezier interpolation', () => {
     });
 
     describe('five color diverging quadratic bezier interpolation', () => {
-        const f = chroma.bezier(['darkred', 'orange', 'snow', 'lightgreen', 'royalblue']);
+        const f = bezier(['darkred', 'orange', 'snow', 'lightgreen', 'royalblue']);
 
         it('starts from darkred', () => {
             expect(f(0).hex()).toBe('#8b0000');
@@ -84,7 +86,7 @@ describe('Testing bezier interpolation', () => {
 
     describe('using bezier in a chroma.scale', () => {
         const f = chroma
-            .scale(chroma.bezier(['darkred', 'orange', 'snow', 'lightgreen', 'royalblue']))
+            .scale(bezier(['darkred', 'orange', 'snow', 'lightgreen', 'royalblue']))
             .domain([0, 1], 5)
             .out('hex');
 

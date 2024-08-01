@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import chroma_ from '../index.js';
-import fs from 'fs';
+import fs from 'node:fs';
+import chroma_ from '../dist/index.mjs';
 
 const DOCS = fs.readFileSync(__dirname + '/../docs/src/index.md', 'utf-8');
 

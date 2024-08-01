@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import chroma from '../index.js';
+import chroma from '../dist/index.mjs';
 
 describe('Some tests for random colors', () => {
     it('should generate valid hex codes for random colors', () => {
