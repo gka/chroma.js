@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import chroma from '../dist/index.mjs';
+import chroma from '../dist/index.js';
 
 describe('Testing color conversions', () => {
     for (const colorName in chroma.colors) {
