@@ -52,7 +52,7 @@
     "@rollup/plugin-buble": "^1.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "cross-env": "^7.0.3",
-    "esbuild-plugin-license": "^1.2.2",
+    "esbuild-plugin-license": "^1.2.3",
     "eslint": "^9.8.0",
     "globals": "^15.8.0",
     "http-server": "^14.1.1",
@@ -62,8 +62,8 @@
     "prettier": "^3.3.3",
     "rollup": "^4.19.1",
     "rollup-plugin-license": "^3.5.2",
-    "vitest": "^2.0.4",
-    "tsup": "^8.2.3"
+    "tsup": "^8.2.3",
+    "vitest": "^2.0.4"
   },
   "license": "(BSD-3-Clause AND Apache-2.0)",
   "spm": {

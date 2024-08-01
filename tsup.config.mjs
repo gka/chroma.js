@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup'
+import license from 'esbuild-plugin-license'
 
 export default defineConfig({
   entry: [
@@ -8,4 +9,5 @@ export default defineConfig({
   clean: true,
   format: ['esm', 'cjs'],
   minify: true,
+  esbuildPlugins: [license()]
 })
