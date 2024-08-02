@@ -18,6 +18,7 @@ export default [...compat.extends("eslint:recommended"), {
         globals: {
             ...globals.browser,
             ...globals.commonjs,
+            '__dirname': 'readonly',
         },
 
         parser: babelParser,
