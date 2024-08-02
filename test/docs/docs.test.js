@@ -6,10 +6,7 @@ import chroma_ from '../../dist/index.js';
 const docsPath = path.resolve(__dirname, '../../docs/src/index.md');
 const DOCS = fs.readFileSync(docsPath, 'utf-8');
 
-console.log('DOCS', DOCS);
-console.log('regex', /^```js$\n(^[^`].+$\n)+/gm);
-
-const snippets = DOCS.match(/^```js$\n(^[^`].+$\n)+/gm).map((s) =>
+const snippets = DOCS.match(/^```js$[\r\n](^[^`].+$[\r\n])+/gm).map((s) =>
     s.split('\n').slice(1).join('\n')
 );
 
