@@ -1,13 +1,20 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
-import chroma_ from '../dist/index.js';
+import path from 'node:path';
+import chroma_ from '../../dist/index.js';
 
-const DOCS = fs.readFileSync(__dirname + '/../docs/src/index.md', 'utf-8');
+const docsPath = path.resolve(__dirname, '../../docs/src/index.md');
+const DOCS = fs.readFileSync(docsPath, 'utf-8');
 
-const snippets = DOCS.match(/^```js$\n(^[^`].+$\n)+/gm).map((s) => s.split('\n').slice(1).join('\n'));
+const snippets = DOCS.match(/^```js$\n(^[^`].+$\n)+/gm).map((s) =>
+    s.split('\n').slice(1).join('\n')
+);
 
 // is used in eval;
-const data = [2.0, 3.5, 3.6, 3.8, 3.8, 4.1, 4.3, 4.4, 4.6, 4.9, 5.2, 5.3, 5.4, 5.7, 5.8, 5.9, 6.2, 6.5, 6.8, 7.2, 8];
+const data = [
+    2.0, 3.5, 3.6, 3.8, 3.8, 4.1, 4.3, 4.4, 4.6, 4.9, 5.2, 5.3, 5.4, 5.7, 5.8,
+    5.9, 6.2, 6.5, 6.8, 7.2, 8
+];
 
 describe('Tests all snippets in the documentation', () => {
     // referenced in code snippets

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import hsl2rgb from '../src/io/hsl/hsl2rgb.js';
+import hsl2rgb from '../../src/io/hsl/hsl2rgb.js';
 
 describe('Testing HSL to RGB color conversions', () => {
     const testCases = [

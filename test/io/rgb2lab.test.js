@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import rgb2lab from '../src/io/lab/rgb2lab.js';
+import rgb2lab from '../../src/io/lab/rgb2lab.js';
 
 const round = (digits) => {
     const d = Math.pow(10, digits);

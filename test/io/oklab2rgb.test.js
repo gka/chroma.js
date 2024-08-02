@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import limit from '../src/utils/limit.js';
-import oklab2rgb from '../src/io/oklab/oklab2rgb.js';
+import limit from '../../src/utils/limit.js';
+import oklab2rgb from '../../src/io/oklab/oklab2rgb.js';
 
 const round = (v) => limit(Math.round(v), 0, 255);
 

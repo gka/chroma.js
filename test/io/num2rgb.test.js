@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import num2rgb from '../src/io/num/num2rgb.js';
+import num2rgb from '../../src/io/num/num2rgb.js';
 
 describe('Testing num2rgb color conversions', () => {
     const testCases = {

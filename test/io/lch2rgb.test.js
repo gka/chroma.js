@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import limit from '../src/utils/limit.js';
-import lch2rgb from '../src/io/lch/lch2rgb.js';
+import limit from '../../src/utils/limit.js';
+import lch2rgb from '../../src/io/lch/lch2rgb.js';
 
 const testCases = [
     { name: 'black', in: [0, 0, NaN], out: [0, 0, 0, 1] },

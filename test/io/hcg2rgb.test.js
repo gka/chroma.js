@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import hcg2rgb from '../src/io/hcg/hcg2rgb.js';
+import hcg2rgb from '../../src/io/hcg/hcg2rgb.js';
 
 describe('Testing HCG color conversions', () => {
     const colors = {

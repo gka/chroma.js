@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import rgb2hex from '../src/io/hex/rgb2hex.js';
+import rgb2hex from '../../src/io/hex/rgb2hex.js';
 
 const tests = {
     black: { rgb: [0, 0, 0, 1], mode: 'auto', hex: '#000000' },

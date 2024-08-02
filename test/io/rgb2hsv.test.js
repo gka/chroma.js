@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import rgb2hsv from '../src/io/hsv/rgb2hsv.js';
+import rgb2hsv from '../../src/io/hsv/rgb2hsv.js';
 
 const tests = {
     black: { hsv: [NaN, 0, 0], rgb: [0, 0, 0, 1] },

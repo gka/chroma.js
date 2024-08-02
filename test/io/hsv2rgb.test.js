@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import hsv2rgb from '../src/io/hsv/hsv2rgb.js';
+import hsv2rgb from '../../src/io/hsv/hsv2rgb.js';
 
 describe('Testing HSV to RGB color conversions', () => {
     const testCases = [
