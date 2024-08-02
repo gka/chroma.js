@@ -2,6 +2,7 @@
   "name": "chroma-js",
   "description": "JavaScript library for color conversions",
   "version": "2.6.0",
+  "packageManager": "pnpm@9.6.0",
   "author": "Gregor Aisch",
   "type": "module",
   "homepage": "https://github.com/gka/chroma.js",
