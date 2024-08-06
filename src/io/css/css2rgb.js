@@ -71,6 +71,9 @@ const css2rgb = (css) => {
         hsl[1] *= 0.01;
         hsl[2] *= 0.01;
         const rgb = hsl2rgb(hsl);
+        for (let i = 0; i < 3; i++) {
+            rgb[i] = round(rgb[i]);
+        }
         rgb[3] = 1;
         return rgb;
     }
@@ -81,6 +84,9 @@ const css2rgb = (css) => {
         hsl[1] *= 0.01;
         hsl[2] *= 0.01;
         const rgb = hsl2rgb(hsl);
+        for (let i = 0; i < 3; i++) {
+            rgb[i] = round(rgb[i]);
+        }
         rgb[3] = +m[4]; // default alpha = 1
         return rgb;
     }

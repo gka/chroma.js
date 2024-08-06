@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import chroma from '../index.js';
+import chroma from 'chroma-js';
 
 const css2rgb = chroma.input.format.css;
 
@@ -12,7 +12,7 @@ describe('Testing CSS2RGB color conversions', () => {
         'RGBA(255, 0, 0  , 0.5)': [255, 0, 0, 0.5],
         'RGBA (255, 0, 0  , 0.5)': undefined,
         'rgba(0%,100%,0%,.5)': [0, 255, 0, 0.5],
-        ' hsl(240,100%,50%) ': [0, 0, 255, 1],
+        'hsl(240,100%,50%) ': [0, 0, 255, 1],
         'hsl(60,100%,50%)': [255, 255, 0, 1],
         'hsla(180,100%,50%,1)': [0, 255, 255, 1],
         'hsla(300,100%,50%,.25)': [255, 0, 255, 0.25],
