@@ -46,7 +46,6 @@
     "@rollup/plugin-buble": "^1.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "cross-env": "^7.0.3",
-    "esbuild-plugin-license": "^1.2.3",
     "eslint": "^9.8.0",
     "globals": "^15.8.0",
     "http-server": "^14.1.1",
