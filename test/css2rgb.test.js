@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import chroma from 'chroma-js';
+import chroma from '../index.js';
 
 const css2rgb = chroma.input.format.css;
 
