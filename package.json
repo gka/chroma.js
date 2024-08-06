@@ -23,21 +23,14 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./index-light": {
-      "import": "./dist/index-light.js",
-      "require": "./dist/index-light.cjs"
+      "import": "./index.js",
+      "require": "./dist/chroma.cjs"
     }
   },
-  "main": "./dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "main": "./index.js",
   "scripts": {
     "prepublishOnly": "npm test -- --run && node .bin/update-version.cjs && npm run build",
-    "build": "tsup",
+    "build": "rollup -c && cross-env DEV=1 rollup -c ",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make && make preview",
     "test": "vitest",
@@ -50,6 +43,8 @@
     "@babel/eslint-parser": "^7.25.0",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.8.0",
+    "@rollup/plugin-buble": "^1.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "cross-env": "^7.0.3",
     "esbuild-plugin-license": "^1.2.3",
     "eslint": "^9.8.0",
@@ -59,7 +54,8 @@
     "markdown-to-html": "0.0.13",
     "minimatch": "^10.0.1",
     "prettier": "^3.3.3",
-    "tsup": "^8.2.3",
+    "rollup": "^4.19.1",
+    "rollup-plugin-license": "^3.5.2",
     "vitest": "^2.0.4"
   },
   "license": "(BSD-3-Clause AND Apache-2.0)",

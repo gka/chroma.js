@@ -7,7 +7,7 @@ const r = (p) => resolve(__dirname, p)
 export default defineConfig({
   resolve: {
     alias: {
-      [name]: r('./dist/index.js'),
+      [name]: r('./index.js'),
     },
   },
 })
