@@ -876,7 +876,7 @@ chroma.brewer.OrRd
 ### chroma.bezier
 #### (colors)
 
-`chroma.bezier` returns a function that [bezier-interpolates between colors](https://www.vis4.net/blog/posts/mastering-multi-hued-color-scales/) in `Lab` space. The input range of the function is `[0..1]`.
+`chroma.bezier` returns a function that [bezier-interpolates between colors](https://www.vis4.net/blog/mastering-multi-hued-color-scales/) in `Lab` space. The input range of the function is `[0..1]`.
 
 ```js
 // linear interpolation
