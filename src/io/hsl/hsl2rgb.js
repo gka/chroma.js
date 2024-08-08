@@ -1,5 +1,4 @@
 import { unpack } from '../../utils/index.js';
-const { round } = Math;
 
 const hsl2rgb = (...args) => {
     args = unpack(args, 'hsl');
@@ -24,7 +23,7 @@ const hsl2rgb = (...args) => {
             else if (3 * t3[i] < 2) c[i] = t1 + (t2 - t1) * (2 / 3 - t3[i]) * 6;
             else c[i] = t1;
         }
-        [r, g, b] = [round(c[0] * 255), round(c[1] * 255), round(c[2] * 255)];
+        [r, g, b] = [c[0] * 255, c[1] * 255, c[2] * 255];
     }
     if (args.length > 3) {
         // keep alpha channel
