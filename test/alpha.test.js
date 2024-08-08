@@ -107,7 +107,7 @@ describe('Tests for the alpha channel', () => {
 
     it('rgba css output', () => {
         const color = chroma.css('hsla(0,100%,50%,0.25)');
-        expect(color.css()).toBe('rgba(255,0,0,0.25)');
+        expect(color.css()).toBe('rgba(255 0 0 / 0.25)');
     });
 
     it('hex output', () => {

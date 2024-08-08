@@ -13,5 +13,5 @@ export default (args, keyOrder = null) => {
     }
     // otherwise we just return the first argument
     // (which we suppose is an array of args)
-    return args[0];
+    return args[0].slice(0);
 };
