@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import '../index.js';
-import deltaE from '../src/utils/delta-e.js';
+import chroma from 'chroma-js';
+
+const deltaE = chroma.deltaE;
 
 // due to floating-point arithmetic on different devices, differences in decimals may be found.
 // Running http://www.brucelindbloom.com/index.html?ColorDifferenceCalc.html JS code locally

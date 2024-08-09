@@ -1,12 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import chroma from '../index.js';
+import chroma from 'chroma-js';
+
+const valid = chroma.valid;
 
 describe('Some tests for chroma.valid', () => {
     it('valid color', () => {
-        expect(chroma.valid('red')).toBe(true);
+        expect(valid('red')).toBe(true);
     });
 
     it('invalid color', () => {
-        expect(chroma.valid('bread')).toBe(false);
+        expect(valid('bread')).toBe(false);
     });
 });

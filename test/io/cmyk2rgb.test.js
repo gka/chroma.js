@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import cmyk2rgb from '../src/io/cmyk/cmyk2rgb.js';
-import '../index.js';
+import cmyk2rgb from '../../src/io/cmyk/cmyk2rgb.js';
 
 const cmykColors = [
     [0, 0, 0, 1],

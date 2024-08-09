@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import rgb2oklch from '../src/io/oklch/rgb2oklch.js';
+import rgb2oklch from '../../src/io/oklch/rgb2oklch.js';
 
 const tests = {
     black: { oklch: [0.0, 0.0, NaN], rgb: [0, 0, 0, 1] },
@@ -37,7 +37,9 @@ describe('Test rgb2oklch color conversions', () => {
             });
 
             it('converts arguments', () => {
-                expect(rgb2oklch.apply(null, test.rgb).map(rnd)).toEqual(test.oklch);
+                expect(rgb2oklch.apply(null, test.rgb).map(rnd)).toEqual(
+                    test.oklch
+                );
             });
         });
     });

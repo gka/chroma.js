@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import chroma from '../index.js';
+import chroma from 'chroma-js';
 
 describe('autodetect color', () => {
     it('autodetect named color', () => {

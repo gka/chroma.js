@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import rgb2hsi from '../src/io/hsi/rgb2hsi.js';
+import rgb2hsi from '../../src/io/hsi/rgb2hsi.js';
 
 const tests = {
     black2: { hsi: [NaN, 0, 0], rgb: [0, 0, 0, 1] },

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import chroma from '../index.js';
-import scale from '../src/generator/scale.js';
+import chroma from 'chroma-js';
+
+const scale = chroma.scale;
 
 describe('Some tests for scale()', () => {
     describe('simple rgb scale (white-->black)', () => {

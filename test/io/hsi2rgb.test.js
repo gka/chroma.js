@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import hsi2rgb from '../src/io/hsi/hsi2rgb.js';
+import hsi2rgb from '../../src/io/hsi/hsi2rgb.js';
 
 const round = (digits) => {
     const d = Math.pow(10, digits);

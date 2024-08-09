@@ -55,10 +55,11 @@
  * @preserve
  */
 
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    factory();
-})((function () { 'use strict';
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.chroma = factory());
+})(this, (function () { 'use strict';
 
     function limit (x, low, high) {
         if ( high === void 0 ) high = 1;
@@ -1062,12 +1063,22 @@
     // register interpolator
     index.oklab = oklab;
 
-    // generators -- > create new colors
-    chroma.mix = chroma.interpolate = require('./src/generator/mix');
+    function valid () {
+        var args = [], len = arguments.length;
+        while ( len-- ) args[ len ] = arguments[ len ];
 
-    // other utility methods
-    chroma.valid = require('./src/utils/valid');
+        try {
+            new (Function.prototype.bind.apply( Color, [ null ].concat( args) ));
+            return true;
+            // eslint-disable-next-line
+        } catch (e) {
+            return false;
+        }
+    }
 
-    module.exports = chroma;
+    chroma.mix = chroma.interpolate = mix;
+    chroma.valid = valid;
+
+    return chroma;
 
 }));
