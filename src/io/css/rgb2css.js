@@ -29,7 +29,7 @@ const rgb2css = (...args) => {
         rgba[3] = '/ ' + (rgba.length > 3 ? rgba[3] : 1);
         mode = 'rgba';
     }
-    return `${mode}(${rgba.slice(0, mode === 'rgb' ? 3 : 4).join(' ')})`;
+    return `${mode.substr(0, 3)}(${rgba.slice(0, mode === 'rgb' ? 3 : 4).join(' ')})`;
 };
 
 export default rgb2css;

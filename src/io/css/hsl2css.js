@@ -21,7 +21,7 @@ const hsl2css = (...args) => {
     } else {
         hsla.length = 3;
     }
-    return `${mode}(${hsla.join(' ')})`;
+    return `${mode.substr(0, 3)}(${hsla.join(' ')})`;
 };
 
 export default hsl2css;
