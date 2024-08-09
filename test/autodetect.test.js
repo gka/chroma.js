@@ -37,11 +37,16 @@ describe('autodetect color', () => {
 
     it('autodetect rgba color', () => {
         const result = chroma(255, 0, 0, 0.5);
-        expect(result.css()).toBe('rgba(255,0,0,0.5)');
+        expect(result.css()).toBe('rgba(255 0 0 / 0.5)');
     });
 
-    it('autodetect hsl color', () => {
+    it('autodetect legacy hsl color', () => {
         const result = chroma('hsl(120, 100%, 50%)');
+        expect(result.name()).toBe('lime');
+    });
+
+    it('autodetect modern hsl color', () => {
+        const result = chroma('hsl(120deg 100% 50%)');
         expect(result.name()).toBe('lime');
     });
 });

@@ -5,6 +5,15 @@ const css2rgb = chroma.input.format.css;
 
 describe('Testing CSS2RGB color conversions', () => {
     const testCases = {
+        // modern css colors
+        'rgb(0 0 0)': [0, 0, 0, 1],
+        'rgb(0% 0% 0%)': [0, 0, 0, 1],
+        'rgb(0% 100% 100%)': [0, 255, 255, 1],
+        'rgb(0% 100% 100% / 0.5)': [0, 255, 255, 0.5],
+        'rgb(0% 100% 100%/0.5)': [0, 255, 255, 0.5],
+        'rgba(0% 100% 100%/0.5)': [0, 255, 255, 0.5],
+
+        // legacy css colors
         'rgb(0,0,0)': [0, 0, 0, 1],
         'rgb(100%,100%,100%)': [255, 255, 255, 1],
         'foobarrgb(100%,100%,100%)': undefined,
@@ -16,6 +25,7 @@ describe('Testing CSS2RGB color conversions', () => {
         'hsl(60,100%,50%)': [255, 255, 0, 1],
         'hsla(180,100%,50%,1)': [0, 255, 255, 1],
         'hsla(300,100%,50%,.25)': [255, 0, 255, 0.25],
+        'rgba(32, 48, 96, 0.5)': [32, 48, 96, 0.5],
         blanchedalmond: [255, 235, 205, 1],
         blue: [0, 0, 255, 1],
         BlueViolet: [138, 43, 226, 1],

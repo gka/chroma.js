@@ -241,7 +241,7 @@ describe('Some tests for scale()', () => {
         const color = scale('YlGnBu')(0.3).css();
 
         it('have rounded rgb() values', () => {
-            expect(color).toBe('rgb(170,222,183)');
+            expect(color).toBe('rgb(170 222 183)');
         });
     });
 
@@ -249,7 +249,7 @@ describe('Some tests for scale()', () => {
         const color = scale('YlGnBu')(0.3).alpha(0.675).css();
 
         it('dont round alpha value', () => {
-            expect(color).toBe('rgba(170,222,183,0.675)');
+            expect(color).toBe('rgba(170 222 183 / 0.675)');
         });
     });
 
@@ -265,7 +265,7 @@ describe('Some tests for scale()', () => {
         });
 
         it('three css colors', () => {
-            expect(f.colors(3, 'css')).toEqual(['rgb(255,255,0)', 'rgb(128,178,0)', 'rgb(0,100,0)']);
+            expect(f.colors(3, 'css')).toEqual(['rgb(255 255 0)', 'rgb(128 178 0)', 'rgb(0 100 0)']);
         });
     });
 
@@ -281,7 +281,7 @@ describe('Some tests for scale()', () => {
         });
 
         it('three css colors', () => {
-            expect(f.colors(3, 'css')).toEqual(['rgb(255,255,0)', 'rgb(128,178,0)', 'rgb(0,100,0)']);
+            expect(f.colors(3, 'css')).toEqual(['rgb(255 255 0)', 'rgb(128 178 0)', 'rgb(0 100 0)']);
         });
     });
 
