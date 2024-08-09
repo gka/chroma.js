@@ -6,16 +6,16 @@ const tests = {
     red: { rgb: [255, 0, 0], css: 'rgb(255 0 0)' },
     auto_rgba: { rgb: [255, 0, 0, 0.25], css: 'rgb(255 0 0 / 0.25)' },
     force_rgba: { rgb: [255, 0, 0], mode: 'rgba', css: 'rgb(255 0 0 / 1)' },
-    hsl: { rgb: [255, 0, 0], mode: 'hsl', css: 'hsl(0 100% 50%)' },
+    hsl: { rgb: [255, 0, 0], mode: 'hsl', css: 'hsl(0deg 100% 50%)' },
     auto_hsla: {
         rgb: [255, 0, 0, 0.5],
         mode: 'hsl',
-        css: 'hsl(0 100% 50% / 0.5)'
+        css: 'hsl(0deg 100% 50% / 0.5)'
     },
     force_hsla: {
         rgb: [255, 255, 0, 0.75],
         mode: 'hsl',
-        css: 'hsl(60 100% 50% / 0.75)'
+        css: 'hsl(60deg 100% 50% / 0.75)'
     }
 };
 
