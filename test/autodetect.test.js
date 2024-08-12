@@ -37,7 +37,7 @@ describe('autodetect color', () => {
 
     it('autodetect rgba color', () => {
         const result = chroma(255, 0, 0, 0.5);
-        expect(result.css()).toBe('rgba(255 0 0 / 0.5)');
+        expect(result.css()).toBe('rgb(255 0 0 / 0.5)');
     });
 
     it('autodetect legacy hsl color', () => {

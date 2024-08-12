@@ -40,14 +40,14 @@ describe('Tests for the alpha channel', () => {
     });
 
     it('parsing rgba colors', () => {
-        const color = chroma.css('rgba(255,0,0,.3)');
+        const color = chroma.css('rgb(255 0 0 / 0.3)');
         expect(color.name()).toBe('red');
         expect(color.alpha()).toBe(0.3);
         expect(color.rgba()).toEqual([255, 0, 0, 0.3]);
     });
 
     it('parsing rgba colors (percentage)', () => {
-        const color = chroma.css('rgba(100%,0%,0%,0.2)');
+        const color = chroma.css('rgb(100% 0% 0% / 0.2)');
         expect(color.name()).toBe('red');
         expect(color.alpha()).toBe(0.2);
         expect(color.rgb()).toEqual([255, 0, 0]);
@@ -107,7 +107,7 @@ describe('Tests for the alpha channel', () => {
 
     it('rgba css output', () => {
         const color = chroma.css('hsla(0,100%,50%,0.25)');
-        expect(color.css()).toBe('rgba(255 0 0 / 0.25)');
+        expect(color.css()).toBe('rgb(255 0 0 / 0.25)');
     });
 
     it('hex output', () => {

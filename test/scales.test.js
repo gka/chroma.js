@@ -249,7 +249,7 @@ describe('Some tests for scale()', () => {
         const color = scale('YlGnBu')(0.3).alpha(0.675).css();
 
         it('dont round alpha value', () => {
-            expect(color).toBe('rgba(170 222 183 / 0.675)');
+            expect(color).toBe('rgb(170 222 183 / 0.675)');
         });
     });
 

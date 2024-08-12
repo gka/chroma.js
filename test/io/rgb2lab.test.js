@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import rgb2lab from '../../src/io/lab/rgb2lab.js';
+import chroma from 'chroma-js';
 
 const round = (digits) => {
     const d = Math.pow(10, digits);
@@ -38,5 +39,22 @@ describe('Test rgb2lab color conversions', () => {
         it(`rgb2lab ${key} converts arguments`, () => {
             expect(rgb2lab(...rgb).map(rnd)).toEqual(lab);
         });
+    });
+});
+
+describe('Test switching of Lab illuminant', () => {
+    it('defaults to D65', () => {
+        expect(chroma('yellow').lab().map(rnd)).toStrictEqual([
+            97.14, -21.55, 94.48
+        ]);
+    });
+
+    it('change to D50', () => {
+        expect(chroma('yellow').lab().map(rnd)).toEqual([97.14, -21.55, 94.48]);
+        chroma.setLabWhitePoint('d50');
+        expect(chroma('yellow').lab().map(rnd)).toEqual([97.61, -15.75, 93.39]);
+        // change back to not mess up other tests
+        chroma.setLabWhitePoint('d65');
+        expect(chroma('yellow').lab().map(rnd)).toEqual([97.14, -21.55, 94.48]);
     });
 });

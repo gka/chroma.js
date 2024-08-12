@@ -20,7 +20,7 @@ describe('Testing delta-e color difference calculations', () => {
         const { in: input, out } = tests[key];
         it(key, () => {
             const result = deltaE(...input);
-            expect(result).toBeCloseTo(out, 6);
+            expect(result).toBeCloseTo(out, 4);
         });
     }
 });

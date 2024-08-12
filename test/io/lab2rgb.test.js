@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import chroma from 'chroma-js';
 import lab2rgb from '../../src/io/lab/lab2rgb.js';
 import limit from '../../src/utils/limit.js';
 
@@ -27,5 +28,35 @@ describe('Testing LAB to RGB color conversions', () => {
         it(`${name}: should convert unpacked arguments ${lab} to ${rgb}`, () => {
             expect(lab2rgb(...lab).map(round)).toStrictEqual(rgb);
         });
+    });
+});
+
+describe('Test switching of Lab illuminant', () => {
+    it('defaults to D65', () => {
+        expect(chroma.lab(97.14, -21.55, 94.48).rgb()).toStrictEqual([
+            255, 255, 0
+        ]);
+    });
+
+    it('change to D50', () => {
+        expect(chroma.lab(97.14, -21.55, 94.48).rgb()).toStrictEqual([
+            255, 255, 0
+        ]);
+
+        chroma.setLabWhitePoint('d50');
+        // not D50 Lab yellow
+        expect(chroma.lab(97.14, -21.55, 94.48).rgb()).toStrictEqual([
+            243, 255, 0
+        ]);
+        // actual D50 Lab yellow
+        expect(chroma.lab(97.61, -15.75, 93.39).rgb()).toStrictEqual([
+            255, 255, 0
+        ]);
+
+        // change back to not mess up other tests
+        chroma.setLabWhitePoint('d65');
+        expect(chroma.lab(97.14, -21.55, 94.48).rgb()).toStrictEqual([
+            255, 255, 0
+        ]);
     });
 });
