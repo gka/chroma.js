@@ -16,6 +16,18 @@ const tests = {
         rgb: [255, 255, 0, 0.75],
         mode: 'hsl',
         css: 'hsl(60deg 100% 50% / 0.75)'
+    },
+    lab: { rgb: [255, 0, 0], mode: 'lab', css: 'lab(54.29% 80.81 69.89)' },
+    laba: {
+        rgb: [255, 0, 0, 0.5],
+        mode: 'lab',
+        css: 'lab(54.29% 80.81 69.89 / 0.5)'
+    },
+    lch: { rgb: [255, 0, 0], mode: 'lch', css: 'lch(54.29% 106.84 40.85deg)' },
+    lcha: {
+        rgb: [255, 0, 0, 0.25],
+        mode: 'lch',
+        css: 'lch(54.29% 106.84 40.85deg / 0.25)'
     }
 };
 

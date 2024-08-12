@@ -2,9 +2,10 @@ import LAB_CONSTANTS from './lab-constants.js';
 import { unpack } from '../../utils/index.js';
 
 const rgb2lab = (...args) => {
-    const [r, g, b] = unpack(args, 'rgb');
+    const [r, g, b, ...rest] = unpack(args, 'rgb');
     const [x, y, z] = rgb2xyz(r, g, b);
-    return xyz2lab(x, y, z);
+    const [L, a, b_] = xyz2lab(x, y, z);
+    return [L, a, b_, ...(rest.length > 0 && rest[0] < 1 ? [rest[0]] : [])];
 };
 
 function xyz2lab(x, y, z) {

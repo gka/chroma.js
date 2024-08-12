@@ -3,6 +3,8 @@ import hsl2css from './hsl2css.js';
 import rgb2hsl from '../hsl/rgb2hsl.js';
 import lab2css from './lab2css.js';
 import rgb2lab from '../lab/rgb2lab.js';
+import lch2css from './lch2css.js';
+import rgb2lch from '../lch/rgb2lch.js';
 import { getLabWhitePoint, setLabWhitePoint } from '../lab/lab-constants.js';
 const { round } = Math;
 
@@ -25,6 +27,14 @@ const rgb2css = (...args) => {
         const prevWhitePoint = getLabWhitePoint();
         setLabWhitePoint('d50');
         const cssColor = lab2css(rgb2lab(rgba), mode);
+        setLabWhitePoint(prevWhitePoint);
+        return cssColor;
+    }
+    if (mode.substr(0, 3) == 'lch') {
+        // change to D50 lab whitepoint since this is what W3C is using for CSS Lab colors
+        const prevWhitePoint = getLabWhitePoint();
+        setLabWhitePoint('d50');
+        const cssColor = lch2css(rgb2lch(rgba), mode);
         setLabWhitePoint(prevWhitePoint);
         return cssColor;
     }
