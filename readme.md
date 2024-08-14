@@ -59,6 +59,10 @@ You can use it in node.js, too!
 
 Or you can use it in SASS using [chromatic-sass](https://github.com/bugsnag/chromatic-sass)!
 
+### Want to contribute?
+
+Come over and say hi in our [Discord channel](https://discord.gg/5pB7WgDs)!
+
 ### Build instructions
 
 First clone the repository and install the dev dependencies:
