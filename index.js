@@ -70,26 +70,50 @@ import scales from './src/utils/scales.js';
 // colors
 import colors from './src/colors/w3cx11.js';
 import brewer from './src/colors/colorbrewer.js';
+import Color from './src/Color.js';
 
 Object.assign(chroma, {
+    analyze,
     average,
     bezier,
     blend,
-    cubehelix,
-    mix,
-    interpolate: mix,
-    random,
-    scale,
-    analyze,
+    brewer,
+    Color,
+    colors,
     contrast,
+    cubehelix,
     deltaE,
     distance,
-    limits,
-    valid,
-    scales,
     input,
-    colors,
-    brewer
+    interpolate: mix,
+    limits,
+    mix,
+    random,
+    scale,
+    scales,
+    valid
 });
 
 export default chroma;
+
+export {
+    analyze,
+    average,
+    bezier,
+    blend,
+    brewer,
+    Color,
+    colors,
+    contrast,
+    cubehelix,
+    deltaE,
+    distance,
+    input,
+    limits,
+    mix,
+    mix as interpolate,
+    random,
+    scale,
+    scales,
+    valid
+};
