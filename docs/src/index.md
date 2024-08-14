@@ -114,12 +114,46 @@ chroma.hsl(330, 1, 0.6)
 ### chroma.lab
 #### (Lightness, a, b)
 
-CIELAB color space
+CIE Lab color space. To calculate the lightness value of a color, the CIE Lab color space uses a reference white point. This reference white point defines what is considered to be "white" in the color space. By default chroma.js is using the D65 reference point.
 
 ```js
-chroma.lab(40,-20,50);
-chroma.lab(50,-20,50);
-chroma.lab(80,-20,50);
+chroma.lab(40, -20, 50);
+chroma.lab(50, -20, 50);
+chroma.lab(80, -20, 50);
+```
+
+### chroma.setLabWhitePoint
+#### (whitePoint)
+
+Sets the current CIE Lab white reference point. 
+
+Possible values:
+
+|  |                                                                                            |
+|-------------|-------------------------------------------------------------------------------------------------------|
+| `D50`         | Represents the color temperature of daylight at 5000K.  |
+| `D55`         | Represents mid-morning or mid-afternoon daylight at 5500K.             |
+| `D65`         | Represents average daylight at 6500K.   |
+| `A`           | Represents the color temperature of a typical incandescent light bulb at approximately 2856K.           |
+| `B`           | Represents noon daylight with a color temperature of approximately 4874K.                              |
+| `C`           | Represents average or north sky daylight; it's a theoretical construct, not often used in practical applications. |
+| `F2`          | Represents cool white fluorescent light.                                                              |
+| `F7`          | This is a broad-band fluorescent light source with a color temperature of approximately 6500K.         |
+| `F11`         | This is a narrow tri-band fluorescent light source with a color temperature of approximately 4000K.    |
+| `E`           | Represents an equal energy white point, where all wavelengths in the visible spectrum are equally represented. |
+
+```js
+chroma('hotpink').lab();
+chroma.setLabWhitePoint('F2');
+chroma('hotpink').lab();
+```
+
+### chroma.getLabWhitePoint
+
+Returns the name of the currently set CIE Lab white reference point. 
+
+```js
+chroma.getLabWhitePoint();
 ```
 
 ### chroma.oklab

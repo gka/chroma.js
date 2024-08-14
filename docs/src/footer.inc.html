@@ -37,15 +37,17 @@
                 // evaluate script
                 var src = cm.getDoc().getValue();
                 //resDisplay.html('');
+                chroma.setLabWhitePoint('D65');
                 try {
                     var s = src.split(';').map(eval);
                     resDisplay.html(
                         '<ol><li>' +
                             s
                                 .map(resRec)
-                                .filter(function (d) {
-                                    return d !== undefined;
-                                })
+                                .map(d => d || '&nbsp;')
+                                // .filter(function (d) {
+                                //     return d !== undefined;
+                                // })
                                 .join('</li><li>') +
                             '</li></ol>'
                     );

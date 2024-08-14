@@ -9,7 +9,7 @@ body {
     margin: 0 auto;
 }
 
-.wrap > h1, .wrap > h2, .wrap > h3, .wrap > h4, .wrap > p, .wrap > pre, .wrap > ul {
+.wrap > h1, .wrap > h2, .wrap > h3, .wrap > h4, .wrap > p, .wrap > pre, .wrap > ul, .wrap > table {
     position: relative;
     /*left: -80px;*/
     padding-left: 300px;
@@ -38,8 +38,21 @@ body {
     margin-left: 30px;
 }
 
-.wrap > p {
+.wrap > p, .wrap > table {
     margin-right: 200px;
+}
+
+table th {
+    font-weight: bold;
+    text-align: left;
+    font-size: 90%;
+}
+table td {
+    vertical-align: top;
+    font-size: 90%;
+}
+table td + td {
+    padding-left: 1em;
 }
 
 
