@@ -572,12 +572,15 @@ chroma('#ffa505').name();
 
 ### color.css
 
+Converts the color to a CSS representation. By default chroma is using the rgb() color space, but you can pass a color space name as first argument. Accepted color spaces are `rgb`, `hsl`, `lab`, `lch`, `oklab`, and `oklch`.
+
 Returns a `RGB()` or `HSL()` string representation that can be used as CSS-color definition.
 
 ```js
 chroma('teal').css();
 chroma('teal').alpha(0.5).css();
 chroma('teal').css('hsl');
+chroma('teal').css('oklab');
 ```
 
 ### color.rgb

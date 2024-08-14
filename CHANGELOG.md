@@ -1,5 +1,25 @@
 ## Changelog
 
+### 3.0.0
+* add support for modern CSS color spaces `lab()`, `lch()`, `oklab()`, `oklch()`.
+* chroma.css will no longer return legacy CSS colors like `rgb(255, 255, 0)` but modern CSS colors like `rgb(255 255 0)`.
+* you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces.
+
+### 2.6.0
+* add [`color.shade()`](#color-shade), [`color.tint()`](#color-shade).
+
+### 2.5.0
+* refactored code base to ES6 modules
+
+### 2.4.0
+* add support for Oklab and Oklch color spaces
+
+### 2.3.0
+* use binom of degree n in chroma.bezier
+
+### 2.2.0
+* use Delta e2000 for chroma.deltaE #269
+
 ### 2.0.3
 * hsl2rgb will, like other x2rgb conversions now set the default alpha to 1
 
