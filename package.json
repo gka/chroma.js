@@ -25,6 +25,10 @@
     ".": {
       "import": "./index.js",
       "require": "./dist/chroma.cjs"
+    },
+    "./light": {
+      "import": "./index-light.js",
+      "require": "./dist/chroma-light.cjs"
     }
   },
   "main": "./index.js",
