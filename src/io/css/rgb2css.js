@@ -5,6 +5,10 @@ import lab2css from './lab2css.js';
 import rgb2lab from '../lab/rgb2lab.js';
 import lch2css from './lch2css.js';
 import rgb2lch from '../lch/rgb2lch.js';
+import rgb2oklab from '../oklab/rgb2oklab.js';
+import oklab2css from './oklab2css.js';
+import rgb2oklch from '../oklch/rgb2oklch.js';
+import oklch2css from './oklch2css.js';
 import { getLabWhitePoint, setLabWhitePoint } from '../lab/lab-constants.js';
 const { round } = Math;
 
@@ -19,10 +23,10 @@ const { round } = Math;
 const rgb2css = (...args) => {
     const rgba = unpack(args, 'rgba');
     let mode = last(args) || 'rgb';
-    if (mode.substr(0, 3) == 'hsl') {
+    if (mode.substr(0, 3) === 'hsl') {
         return hsl2css(rgb2hsl(rgba), mode);
     }
-    if (mode.substr(0, 3) == 'lab') {
+    if (mode.substr(0, 3) === 'lab') {
         // change to D50 lab whitepoint since this is what W3C is using for CSS Lab colors
         const prevWhitePoint = getLabWhitePoint();
         setLabWhitePoint('d50');
@@ -30,13 +34,19 @@ const rgb2css = (...args) => {
         setLabWhitePoint(prevWhitePoint);
         return cssColor;
     }
-    if (mode.substr(0, 3) == 'lch') {
+    if (mode.substr(0, 3) === 'lch') {
         // change to D50 lab whitepoint since this is what W3C is using for CSS Lab colors
         const prevWhitePoint = getLabWhitePoint();
         setLabWhitePoint('d50');
         const cssColor = lch2css(rgb2lch(rgba), mode);
         setLabWhitePoint(prevWhitePoint);
         return cssColor;
+    }
+    if (mode.substr(0, 5) === 'oklab') {
+        return oklab2css(rgb2oklab(rgba));
+    }
+    if (mode.substr(0, 5) === 'oklch') {
+        return oklch2css(rgb2oklch(rgba));
     }
     rgba[0] = round(rgba[0]);
     rgba[1] = round(rgba[1]);

@@ -28,6 +28,26 @@ const tests = {
         rgb: [255, 0, 0, 0.25],
         mode: 'lch',
         css: 'lch(54.29% 106.84 40.85deg / 0.25)'
+    },
+    oklab: {
+        rgb: [212, 248, 128],
+        mode: 'oklab',
+        css: 'oklab(92.83% -0.08 0.13)'
+    },
+    oklaba: {
+        rgb: [212, 248, 128, 0.4],
+        mode: 'oklab',
+        css: 'oklab(92.83% -0.08 0.13 / 0.4)'
+    },
+    oklch: {
+        rgb: [212, 248, 128],
+        mode: 'oklch',
+        css: 'oklch(92.83% 0.15 123.13deg)'
+    },
+    oklcha: {
+        rgb: [212, 248, 128, 0.6],
+        mode: 'oklch',
+        css: 'oklch(92.83% 0.15 123.13deg / 0.6)'
     }
 };
 
