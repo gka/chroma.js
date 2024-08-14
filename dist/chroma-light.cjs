@@ -56,10 +56,10 @@
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.chroma = factory());
-})(this, (function () { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.chroma = {}));
+})(this, (function (exports) { 'use strict';
 
     function limit (x, low, high) {
         if ( high === void 0 ) high = 1;
@@ -183,16 +183,15 @@
     };
 
     // this gets updated automatically
-    var version = '2.6.0';
+    var version = '2.6.1-0';
 
     var chroma = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        return new (Function.prototype.bind.apply( chroma.Color, [ null ].concat( args) ));
+        return new (Function.prototype.bind.apply( Color, [ null ].concat( args) ));
     };
 
-    chroma.Color = Color;
     chroma.version = version;
 
     var rnd = function (a) { return Math.round(a * 100) / 100; };
@@ -270,7 +269,7 @@
         return [h, s, l];
     };
 
-    var round$4 = Math.round;
+    var round$3 = Math.round;
 
     /*
      * supported arguments:
@@ -289,17 +288,15 @@
         if (mode.substr(0, 3) == 'hsl') {
             return hsl2css(rgb2hsl(rgba), mode);
         }
-        rgba[0] = round$4(rgba[0]);
-        rgba[1] = round$4(rgba[1]);
-        rgba[2] = round$4(rgba[2]);
+        rgba[0] = round$3(rgba[0]);
+        rgba[1] = round$3(rgba[1]);
+        rgba[2] = round$3(rgba[2]);
         if (mode === 'rgba' || (rgba.length > 3 && rgba[3] < 1)) {
             rgba[3] = rgba.length > 3 ? rgba[3] : 1;
             mode = 'rgba';
         }
         return (mode + "(" + (rgba.slice(0, mode === 'rgb' ? 3 : 4).join(',')) + ")");
     };
-
-    var round$3 = Math.round;
 
     var hsl2rgb = function () {
         var assign;
@@ -330,7 +327,7 @@
                 else if (3 * t3[i] < 2) { c[i] = t1 + (t2 - t1) * (2 / 3 - t3[i]) * 6; }
                 else { c[i] = t1; }
             }
-            (assign = [round$3(c[0] * 255), round$3(c[1] * 255), round$3(c[2] * 255)], r = assign[0], g = assign[1], b = assign[2]);
+            (assign = [c[0] * 255, c[1] * 255, c[2] * 255], r = assign[0], g = assign[1], b = assign[2]);
         }
         if (args.length > 3) {
             // keep alpha channel
@@ -409,6 +406,9 @@
             hsl[1] *= 0.01;
             hsl[2] *= 0.01;
             var rgb$4 = hsl2rgb(hsl);
+            for (var i$4 = 0; i$4 < 3; i$4++) {
+                rgb$4[i$4] = round$2(rgb$4[i$4]);
+            }
             rgb$4[3] = 1;
             return rgb$4;
         }
@@ -419,6 +419,9 @@
             hsl$1[1] *= 0.01;
             hsl$1[2] *= 0.01;
             var rgb$5 = hsl2rgb(hsl$1);
+            for (var i$5 = 0; i$5 < 3; i$5++) {
+                rgb$5[i$5] = round$2(rgb$5[i$5]);
+            }
             rgb$5[3] = +m[4]; // default alpha = 1
             return rgb$5;
         }
@@ -1076,9 +1079,19 @@
         }
     }
 
-    chroma.mix = chroma.interpolate = mix;
-    chroma.valid = valid;
+    Object.assign(chroma, {
+        Color: Color,
+        valid: valid,
+        mix: mix,
+        interpolate: mix
+    });
 
-    return chroma;
+    exports.Color = Color;
+    exports.default = chroma;
+    exports.interpolate = mix;
+    exports.mix = mix;
+    exports.valid = valid;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
