@@ -601,7 +601,7 @@ chroma('aquamarine').luminance(0.5, 'hsl');
 ```
 
 ### color.hex
-#### (mode='auto|rgb|rgba')
+#### (mode='auto|rgb|rgba|argb')
 
 Finally, chroma.js allows you to output colors in various color spaces and formats. Most often you will want to output the color as hexadecimal string.
 
@@ -615,6 +615,12 @@ chroma('orange').hex()
 chroma('orange').hex();
 chroma('orange').alpha(0.5).hex();
 chroma('orange').alpha(0.5).hex('rgb');
+```
+
+You can use `.hex('argb')` in [case](https://developer.android.com/reference/android/graphics/Color) you need to encode the color with the alpha channel as first byte rather than the last:
+
+```js
+chroma('orange').hex('argb');; // '#ffffa500'
 ```
 
 ### color.name

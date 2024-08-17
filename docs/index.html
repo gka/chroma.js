@@ -415,7 +415,7 @@ chroma(&#39;aquamarine&#39;).luminance(0.5, &#39;lab&#39;);
 chroma(&#39;aquamarine&#39;).luminance(0.5, &#39;hsl&#39;);
 </code></pre>
 <h3 id="color-hex">color.hex</h3>
-<h4 id="-mode-auto-rgb-rgba-">(mode=&#39;auto|rgb|rgba&#39;)</h4>
+<h4 id="-mode-auto-rgb-rgba-argb-">(mode=&#39;auto|rgb|rgba|argb&#39;)</h4>
 <p>Finally, chroma.js allows you to output colors in various color spaces and formats. Most often you will want to output the color as hexadecimal string.</p>
 <pre><code class="lang-js">chroma(&#39;orange&#39;).hex()
 </code></pre>
@@ -423,6 +423,9 @@ chroma(&#39;aquamarine&#39;).luminance(0.5, &#39;hsl&#39;);
 <pre><code class="lang-js">chroma(&#39;orange&#39;).hex();
 chroma(&#39;orange&#39;).alpha(0.5).hex();
 chroma(&#39;orange&#39;).alpha(0.5).hex(&#39;rgb&#39;);
+</code></pre>
+<p>You can use <code>.hex(&#39;argb&#39;)</code> in <a href="https://developer.android.com/reference/android/graphics/Color">case</a> you need to encode the color with the alpha channel as first byte rather than the last:</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).hex(&#39;argb&#39;);; // &#39;#ffffa500&#39;
 </code></pre>
 <h3 id="color-name">color.name</h3>
 <p>Returns the named color. Falls back to hexadecimal RGB string, if the color isn&#39;t present.</p>
@@ -700,6 +703,12 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 <h2 id="changelog">Changelog</h2>
+<h3 id="3-1-0-pre-release-">3.1.0 (pre-release)</h3>
+<ul>
+<li>make it easier to access colorbrewer palette names - resolves <a href="https://github.com/gka/chroma.js/issues/314">#314</a></li>
+<li>docs: explain differences to official colorbrewer scales - resolves <a href="https://github.com/gka/chroma.js/issues/316">#316</a></li>
+<li>fix: correct parsing of modern css colors with percentage alpha - resolves <a href="https://github.com/gka/chroma.js/issues/297">#297</a></li>
+</ul>
 <h3 id="3-0-0">3.0.0</h3>
 <ul>
 <li>🎉 NEW: Add support for modern CSS color spaces. This means you can now export and parse CSS colors in <code>lab()</code>, <code>lch()</code>, <code>oklab()</code>, <code>oklch()</code> space.</li>
