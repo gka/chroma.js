@@ -30,7 +30,12 @@ describe('Testing CSS2RGB color conversions', () => {
         blue: [0, 0, 255, 1],
         BlueViolet: [138, 43, 226, 1],
         BROWN: [165, 42, 42, 1],
-        unknownColor: undefined
+        unknownColor: undefined,
+        'lab(47.99% -30.39 -8.98)': [0, 128, 128, 1],
+        'lab(47.99% -30.39 -8.98 / 0.25)': [0, 128, 128, 0.25],
+        'lab(47.99% -24.312% -7.13%)': [0, 128, 128, 1]
+        // 'oklab(92.83% -0.08 0.13)': [212, 248, 128, 1],
+        // 'oklab(92.83% -0.08 0.13 / 0.5)': [212, 248, 128, 0.5]
     };
 
     Object.keys(testCases).forEach((name) => {

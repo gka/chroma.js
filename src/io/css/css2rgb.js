@@ -1,5 +1,8 @@
 import hsl2rgb from '../hsl/hsl2rgb.js';
+import lab2rgb from '../lab/lab2rgb.js';
+// import oklab2rgb from '../oklab/oklab2rgb.js';
 import input from '../input.js';
+import limit from '../../utils/limit.js';
 
 const RE_RGB = /^rgb\(\s*(-?\d+) \s*(-?\d+)\s* \s*(-?\d+)\s*\)$/;
 const RE_RGB_LEGACY = /^rgb\(\s*(-?\d+),\s*(-?\d+)\s*,\s*(-?\d+)\s*\)$/;
@@ -29,7 +32,29 @@ const RE_HSLA =
 const RE_HSLA_LEGACY =
     /^hsla\(\s*(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)%\s*,\s*(-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)$/;
 
+const RE_LAB =
+    /^lab\(\s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
+// const RE_OKLAB =
+//     /^oklab\(\s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
+
 const { round } = Math;
+
+const roundRGB = (rgb) => {
+    return rgb.map((v, i) => (i <= 2 ? limit(round(v), 0, 255) : v));
+};
+
+const percentToAbsolute = (pct, min = 0, max = 100, signed = false) => {
+    if (pct.endsWith('%')) {
+        pct = parseFloat(pct.substr(0, pct.length - 1)) / 100;
+        if (signed) {
+            // signed percentages are in the range -100% to 100%
+            pct = min + (pct + 1) * 0.5 * (max - min);
+        } else {
+            pct = min + pct * (max - min);
+        }
+    }
+    return +pct;
+};
 
 const css2rgb = (css) => {
     css = css.toLowerCase().trim();
@@ -106,6 +131,26 @@ const css2rgb = (css) => {
         rgb[3] = +m[4]; // default alpha = 1
         return rgb;
     }
+
+    if ((m = css.match(RE_LAB))) {
+        const lab = m.slice(1, 4);
+        lab[0] = percentToAbsolute(lab[0], 0, 100);
+        lab[1] = percentToAbsolute(lab[1], -125, 125, true);
+        lab[2] = percentToAbsolute(lab[2], -125, 125, true);
+        const rgb = roundRGB(lab2rgb(lab));
+        rgb[3] = m[4] !== undefined ? +m[4] : 1;
+        return rgb;
+    }
+
+    // if ((m = css.match(RE_OKLAB))) {
+    //     const oklab = m.slice(1, 4);
+    //     oklab[0] = percentToAbsolute(oklab[0], 0, 1);
+    //     oklab[1] = percentToAbsolute(oklab[1], -0.4, 0.4, true);
+    //     oklab[2] = percentToAbsolute(oklab[2], -0.4, 0.4, true);
+    //     const rgb = roundRGB(oklab2rgb(oklab));
+    //     rgb[3] = m[4] !== undefined ? +m[4] : 1;
+    //     return rgb;
+    // }
 };
 
 css2rgb.test = (s) => {
@@ -117,6 +162,8 @@ css2rgb.test = (s) => {
         RE_RGBA_PCT.test(s) ||
         RE_HSL.test(s) ||
         RE_HSLA.test(s) ||
+        RE_LAB.test(s) ||
+        // RE_OKLAB.test(s) ||
         // legacy
         RE_RGB_LEGACY.test(s) ||
         RE_RGBA_LEGACY.test(s) ||
