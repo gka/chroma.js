@@ -1,6 +1,6 @@
 ## Changelog
 
-### 3.0.0
+### 3.0.0-0
 * 🎉 NEW: add support for modern CSS color spaces `lab()`, `lch()`, `oklab()`, `oklch()`.
 * 🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces via `setLabWhitePoint`.
 * chroma.css will no longer return legacy CSS colors like `rgb(255, 255, 0)` but modern CSS colors like `rgb(255 255 0)`.

@@ -64,3 +64,4 @@ const rgb2xyz = (r, g, b) => {
 };
 
 export default rgb2lab;
+export { rgb2xyz };

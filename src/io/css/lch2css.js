@@ -1,5 +1,4 @@
-import { unpack, last } from '../../utils/index.js';
-const rnd = (a) => Math.round(a * 100) / 100;
+import { unpack, last, rnd2 } from '../../utils/index.js';
 
 /*
  * supported arguments:
@@ -11,9 +10,9 @@ const rnd = (a) => Math.round(a * 100) / 100;
 const lch2css = (...args) => {
     const lcha = unpack(args, 'lch');
     let mode = last(args) || 'lab';
-    lcha[0] = rnd(lcha[0]) + '%';
-    lcha[1] = rnd(lcha[1]);
-    lcha[2] = rnd(lcha[2]) + 'deg'; // add deg unit to hue
+    lcha[0] = rnd2(lcha[0]) + '%';
+    lcha[1] = rnd2(lcha[1]);
+    lcha[2] = rnd2(lcha[2]) + 'deg'; // add deg unit to hue
     if (mode === 'lcha' || (lcha.length > 3 && lcha[3] < 1)) {
         lcha[3] = '/ ' + (lcha.length > 3 ? lcha[3] : 1);
     } else {
