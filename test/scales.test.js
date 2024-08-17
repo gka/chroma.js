@@ -126,6 +126,10 @@ describe('Some tests for scale()', () => {
         it('ends black', () => {
             expect(f(100).hex()).toBe('#006837');
         });
+
+        it('returns domain', () => {
+            expect(f.domain()).toEqual([0, 100]);
+        });
     });
 
     describe('colorbrewer scale - lowercase', () => {
