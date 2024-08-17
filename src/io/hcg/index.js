@@ -9,7 +9,8 @@ Color.prototype.hcg = function () {
     return rgb2hcg(this._rgb);
 };
 
-chroma.hcg = (...args) => new Color(...args, 'hcg');
+const hcg = (...args) => new Color(...args, 'hcg');
+chroma.hcg = hcg;
 
 input.format.hcg = hcg2rgb;
 
@@ -22,3 +23,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { hcg };

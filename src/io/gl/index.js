@@ -11,9 +11,12 @@ input.format.gl = (...args) => {
     return rgb;
 };
 
-chroma.gl = (...args) => new Color(...args, 'gl');
+const gl = (...args) => new Color(...args, 'gl');
+chroma.gl = gl;
 
 Color.prototype.gl = function () {
     const rgb = this._rgb;
     return [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, rgb[3]];
 };
+
+export { gl };

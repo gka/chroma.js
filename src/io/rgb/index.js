@@ -15,7 +15,8 @@ Color.prototype.rgba = function (rnd = true) {
     });
 };
 
-chroma.rgb = (...args) => new Color(...args, 'rgb');
+const rgb = (...args) => new Color(...args, 'rgb');
+Object.assign(chroma, { rgb });
 
 input.format.rgb = (...args) => {
     const rgba = unpack(args, 'rgba');
@@ -39,3 +40,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { rgb };

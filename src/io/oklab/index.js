@@ -9,12 +9,13 @@ Color.prototype.oklab = function () {
     return rgb2oklab(this._rgb);
 };
 
-chroma.oklab = (...args) => new Color(...args, 'oklab');
+const oklab = (...args) => new Color(...args, 'oklab');
+Object.assign(chroma, { oklab });
 
 input.format.oklab = oklab2rgb;
 
 input.autodetect.push({
-    p: 3,
+    p: 2,
     test: (...args) => {
         args = unpack(args, 'oklab');
         if (type(args) === 'array' && args.length === 3) {
@@ -22,3 +23,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { oklab };

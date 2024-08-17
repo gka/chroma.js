@@ -10,7 +10,8 @@ Color.prototype.css = function (mode) {
     return rgb2css(this._rgb, mode);
 };
 
-chroma.css = (...args) => new Color(...args, 'css');
+const css = (...args) => new Color(...args, 'css');
+chroma.css = css;
 
 input.format.css = css2rgb;
 
@@ -22,3 +23,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { css };

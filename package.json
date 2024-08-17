@@ -1,7 +1,7 @@
 {
   "name": "chroma-js",
   "description": "JavaScript library for color conversions",
-  "version": "2.6.1-0",
+  "version": "2.6.1-1",
   "packageManager": "pnpm@9.6.0",
   "author": "Gregor Aisch",
   "type": "module",
@@ -39,8 +39,8 @@
     "docs-preview": "cd docs && make && make preview",
     "test": "vitest",
     "test:update": "vitest -u",
-    "lint": "prettier --check index.js index-light.js src *.config.js test && eslint index.js index-light.js src",
-    "format": "prettier --write index.js index-light.js src *.config.js test",
+    "lint": "prettier --check index.js index.umd.js index.umd.light.js src *.config.js test && eslint index.js index.umd.js index.umd.light.js src",
+    "format": "prettier --write index.js index.umd.js index.umd.light.js src *.config.js test",
     "prepare": "husky"
   },
   "devDependencies": {

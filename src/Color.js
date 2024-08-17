@@ -17,10 +17,12 @@ class Color {
         let autodetect = false;
         if (!mode) {
             autodetect = true;
+
             if (!_input.sorted) {
                 _input.autodetect = _input.autodetect.sort((a, b) => b.p - a.p);
                 _input.sorted = true;
             }
+
             // auto-detect format
             for (let chk of _input.autodetect) {
                 mode = chk.test(...args);

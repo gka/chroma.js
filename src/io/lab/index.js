@@ -10,9 +10,8 @@ Color.prototype.lab = function () {
     return rgb2lab(this._rgb);
 };
 
-chroma.lab = (...args) => new Color(...args, 'lab');
-chroma.setLabWhitePoint = setLabWhitePoint;
-chroma.getLabWhitePoint = getLabWhitePoint;
+const lab = (...args) => new Color(...args, 'lab');
+Object.assign(chroma, { lab, getLabWhitePoint, setLabWhitePoint });
 
 input.format.lab = lab2rgb;
 
@@ -25,3 +24,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { lab, getLabWhitePoint, setLabWhitePoint };

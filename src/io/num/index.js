@@ -9,7 +9,9 @@ Color.prototype.num = function () {
     return rgb2num(this._rgb);
 };
 
-chroma.num = (...args) => new Color(...args, 'num');
+const num = (...args) => new Color(...args, 'num');
+
+Object.assign(chroma, { num });
 
 input.format.num = num2rgb;
 
@@ -26,3 +28,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { num };
