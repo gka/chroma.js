@@ -2,8 +2,9 @@
 
 ### 3.0.0
 * 🎉 NEW: add support for modern CSS color spaces `lab()`, `lch()`, `oklab()`, `oklch()`.
-* 🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces.
+* 🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces via `setLabWhitePoint`.
 * chroma.css will no longer return legacy CSS colors like `rgb(255, 255, 0)` but modern CSS colors like `rgb(255 255 0)`.
+* you can now use chroma.js both via the default export as well as named exports in ES6. 
 
 ### 2.6.0
 * 🎉 NEW: add [`color.shade()`](#color-shade), [`color.tint()`](#color-shade).
