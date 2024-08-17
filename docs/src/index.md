@@ -378,10 +378,39 @@ chroma.deltaE('#000000', '#ffffff');
 
 ### chroma.brewer
 
-chroma.brewer is an map of [ColorBrewer scales](http://colorbrewer2.org/) that are included in chroma.js for convenience. chroma.scale uses the colors to construct.
+chroma.brewer is an map of [ColorBrewer palettes](http://colorbrewer2.org/) that are included in chroma.js for convenience. chroma.scale uses the colors to construct. 
 
 ```js
 chroma.brewer.OrRd
+```
+
+Note that chroma.js only includes the 9-step versions of the palettes (11 steps for the diverging palettes). So for instance, if you use chroma.js them to construct a 5-color palette, they will be different from the "official" 5-color palettes in ColorBrewer (which have a decreased color contrast).
+
+```js
+chroma.scale('RdBu').colors(5);
+// offical 5-color RdBu:
+['#ca0020', '#f4a582', '#f7f7f7', '#92c5de', '#0571b0']
+```
+
+One way to compensate for this would be to "slice off" the extreme colors:
+
+```js
+chroma
+    .scale(chroma.brewer.RdBu.slice(1,-1))
+    .colors(5);
+```
+
+Of course you can also just construct the scale from the official 5-step colors that you can copy and paste from [colorbrewer2.org](https://colorbrewer2.org/#type=diverging&scheme=RdBu&n=5):
+
+```js
+chroma.scale(['#ca0020', '#f4a582', '#f7f7f7', '#92c5de', '#0571b0'])
+```
+
+You can access a list of all available palettes via `Object.keys(chroma.brewer)`:
+
+```js
+Object.keys(chroma.brewer)
+// ['OrRd', 'PuBu', 'BuPu', 'Oranges', 'BuGn', 'YlOrBr', 'YlGn', 'Reds', 'RdPu', 'Greens', 'YlGnBu', 'Purples', 'GnBu', 'Greys', 'YlOrRd', 'PuRd', 'Blues', 'PuBuGn', 'Viridis', 'Spectral', 'RdYlGn', 'RdBu', 'PiYG', 'PRGn', 'RdYlBu', 'BrBG', 'RdGy', 'PuOr', 'Set2', 'Accent', 'Set1', 'Set3', 'Dark2', 'Paired', 'Pastel2', 'Pastel1']
 ```
 
 ### chroma.limits

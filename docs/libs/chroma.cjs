@@ -84,7 +84,7 @@
 
     // ported from jQuery's $.type
     var classToType = {};
-    for (var i$1 = 0, list$1 = [
+    for (var i = 0, list = [
         'Boolean',
         'Number',
         'String',
@@ -94,8 +94,8 @@
         'RegExp',
         'Undefined',
         'Null'
-    ]; i$1 < list$1.length; i$1 += 1) {
-        var name = list$1[i$1];
+    ]; i < list.length; i += 1) {
+        var name = list[i];
 
         classToType[("[object " + name + "]")] = name.toLowerCase();
     }
@@ -3858,12 +3858,18 @@
         Pastel1: ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2']
     };
 
-    // add lowercase aliases for case-insensitive matches
-    for (var i = 0, list = Object.keys(colorbrewer); i < list.length; i += 1) {
-        var key = list[i];
+    var colorbrewerTypes = Object.keys(colorbrewer);
+    var typeMap = new Map(colorbrewerTypes.map(function (key) { return [key.toLowerCase(), key]; }));
 
-        colorbrewer[key.toLowerCase()] = colorbrewer[key];
-    }
+    var colorbrewerProxy = new Proxy(colorbrewer, {
+        get: function get(target, prop) {
+            var lower = prop.toLowerCase();
+            if (typeMap.has(lower)) {
+                return target[typeMap.get(lower)];
+            }
+        },
+        getOwnPropertyNames: function getOwnPropertyNames() { return Object.getOwnPropertyNames(colorbrewerTypes); },
+    });
 
     // feel free to comment out anything to rollup
     // a smaller chroma.js bundle
@@ -3873,7 +3879,7 @@
         average: average,
         bezier: bezier$1,
         blend: blend,
-        brewer: colorbrewer,
+        brewer: colorbrewerProxy,
         Color: Color,
         colors: w3cx11,
         contrast: contrast,

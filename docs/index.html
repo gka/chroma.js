@@ -277,8 +277,25 @@ chroma.deltaE(&#39;#000000&#39;, &#39;#ffffff&#39;);
 
 </code></pre>
 <h3 id="chroma-brewer">chroma.brewer</h3>
-<p>chroma.brewer is an map of <a href="http://colorbrewer2.org/">ColorBrewer scales</a> that are included in chroma.js for convenience. chroma.scale uses the colors to construct.</p>
+<p>chroma.brewer is an map of <a href="http://colorbrewer2.org/">ColorBrewer palettes</a> that are included in chroma.js for convenience. chroma.scale uses the colors to construct. </p>
 <pre><code class="lang-js">chroma.brewer.OrRd
+</code></pre>
+<p>Note that chroma.js only includes the 9-step versions of the palettes (11 steps for the diverging palettes). So for instance, if you use chroma.js them to construct a 5-color palette, they will be different from the &quot;official&quot; 5-color palettes in ColorBrewer (which have a decreased color contrast).</p>
+<pre><code class="lang-js">chroma.scale(&#39;RdBu&#39;).colors(5);
+// offical 5-color RdBu:
+[&#39;#ca0020&#39;, &#39;#f4a582&#39;, &#39;#f7f7f7&#39;, &#39;#92c5de&#39;, &#39;#0571b0&#39;]
+</code></pre>
+<p>One way to compensate for this would be to &quot;slice off&quot; the extreme colors:</p>
+<pre><code class="lang-js">chroma
+    .scale(chroma.brewer.RdBu.slice(1,-1))
+    .colors(5);
+</code></pre>
+<p>Of course you can also just construct the scale from the official 5-step colors that you can copy and paste from <a href="https://colorbrewer2.org/#type=diverging&amp;scheme=RdBu&amp;n=5">colorbrewer2.org</a>:</p>
+<pre><code class="lang-js">chroma.scale([&#39;#ca0020&#39;, &#39;#f4a582&#39;, &#39;#f7f7f7&#39;, &#39;#92c5de&#39;, &#39;#0571b0&#39;])
+</code></pre>
+<p>You can access a list of all available palettes via <code>Object.keys(chroma.brewer)</code>:</p>
+<pre><code class="lang-js">Object.keys(chroma.brewer)
+// [&#39;OrRd&#39;, &#39;PuBu&#39;, &#39;BuPu&#39;, &#39;Oranges&#39;, &#39;BuGn&#39;, &#39;YlOrBr&#39;, &#39;YlGn&#39;, &#39;Reds&#39;, &#39;RdPu&#39;, &#39;Greens&#39;, &#39;YlGnBu&#39;, &#39;Purples&#39;, &#39;GnBu&#39;, &#39;Greys&#39;, &#39;YlOrRd&#39;, &#39;PuRd&#39;, &#39;Blues&#39;, &#39;PuBuGn&#39;, &#39;Viridis&#39;, &#39;Spectral&#39;, &#39;RdYlGn&#39;, &#39;RdBu&#39;, &#39;PiYG&#39;, &#39;PRGn&#39;, &#39;RdYlBu&#39;, &#39;BrBG&#39;, &#39;RdGy&#39;, &#39;PuOr&#39;, &#39;Set2&#39;, &#39;Accent&#39;, &#39;Set1&#39;, &#39;Set3&#39;, &#39;Dark2&#39;, &#39;Paired&#39;, &#39;Pastel2&#39;, &#39;Pastel1&#39;]
 </code></pre>
 <h3 id="chroma-limits">chroma.limits</h3>
 <h4 id="-data-mode-n-">(data, mode, n)</h4>
