@@ -42,12 +42,12 @@ const tests = {
     oklch: {
         rgb: [212, 248, 128],
         mode: 'oklch',
-        css: 'oklch(92.83% 0.15 123.13deg)'
+        css: 'oklch(92.83% 0.15 123.12deg)'
     },
     oklcha: {
         rgb: [212, 248, 128, 0.6],
         mode: 'oklch',
-        css: 'oklch(92.83% 0.15 123.13deg / 0.6)'
+        css: 'oklch(92.83% 0.15 123.12deg / 0.6)'
     }
 };
 

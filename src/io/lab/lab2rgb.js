@@ -98,3 +98,4 @@ const xyz2rgb = (x, y, z) => {
 };
 
 export default lab2rgb;
+export { xyz2rgb };

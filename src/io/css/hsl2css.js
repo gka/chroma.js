@@ -1,5 +1,4 @@
-import { unpack, last } from '../../utils/index.js';
-const rnd = (a) => Math.round(a * 100) / 100;
+import { unpack, last, rnd2 } from '../../utils/index.js';
 
 /*
  * supported arguments:
@@ -12,9 +11,9 @@ const rnd = (a) => Math.round(a * 100) / 100;
 const hsl2css = (...args) => {
     const hsla = unpack(args, 'hsla');
     let mode = last(args) || 'lsa';
-    hsla[0] = rnd(hsla[0] || 0) + 'deg';
-    hsla[1] = rnd(hsla[1] * 100) + '%';
-    hsla[2] = rnd(hsla[2] * 100) + '%';
+    hsla[0] = rnd2(hsla[0] || 0) + 'deg';
+    hsla[1] = rnd2(hsla[1] * 100) + '%';
+    hsla[2] = rnd2(hsla[2] * 100) + '%';
     if (mode === 'hsla' || (hsla.length > 3 && hsla[3] < 1)) {
         hsla[3] = '/ ' + (hsla.length > 3 ? hsla[3] : 1);
         mode = 'hsla';

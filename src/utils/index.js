@@ -1,5 +1,8 @@
 const { PI, min, max } = Math;
 
+const rnd2 = (a) => Math.round(a * 100) / 100;
+const rnd3 = (a) => Math.round(a * 100) / 100;
+
 export { default as clip_rgb } from './clip_rgb.js';
 export { default as limit } from './limit.js';
 export { default as type } from './type.js';
@@ -11,4 +14,4 @@ const PITHIRD = PI / 3;
 const DEG2RAD = PI / 180;
 const RAD2DEG = 180 / PI;
 
-export { PI, TWOPI, PITHIRD, DEG2RAD, RAD2DEG, min, max };
+export { PI, TWOPI, PITHIRD, DEG2RAD, RAD2DEG, min, max, rnd2, rnd3 };
