@@ -31,4 +31,18 @@ describe('Testing Color', () => {
             });
         });
     });
+
+    it('create lch color from object', () => {
+        expect(new Color({ l: 80, c: 25, h: 200 }).hex()).toBe('#85d4d5');
+        expect(chroma({ l: 80, c: 25, h: 200 }).hex()).toBe('#85d4d5');
+        expect(chroma.lch(80, 25, 200).hex()).toBe('#85d4d5');
+        expect(chroma(80, 25, 200, 'lch').hex()).toBe('#85d4d5');
+    });
+
+    it('create hcl color from object', () => {
+        expect(new Color({ h: 200, c: 25, l: 80 }).hex()).toBe('#85d4d5');
+        expect(chroma({ h: 200, c: 25, l: 80 }).hex()).toBe('#85d4d5');
+        expect(chroma.hcl(200, 25, 80).hex()).toBe('#85d4d5');
+        expect(chroma(200, 25, 80, 'hcl').hex()).toBe('#85d4d5');
+    });
 });
