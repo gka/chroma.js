@@ -35,7 +35,7 @@ chroma('pink').darken().saturate(2).hex()
 Aside from that, chroma.js can also help you **generate nice colors** using various methods, for instance to be [used](https://www.vis4.net/blog/posts/avoid-equidistant-hsv-colors/) in color palette for maps or data visualization.
 
 ```js
-chroma.scale(['#fafa6e','#2A4858'])
+chroma.scale(['#fafa6e', '#2A4858'])
     .mode('lch').colors(6)
 ```
 
@@ -572,15 +572,18 @@ chroma('#ffa505').name();
 
 ### color.css
 
-Converts the color to a CSS representation. By default chroma is using the rgb() color space, but you can pass a color space name as first argument. Accepted color spaces are `rgb`, `hsl`, `lab`, `lch`, `oklab`, and `oklch`.
-
-Returns a `RGB()` or `HSL()` string representation that can be used as CSS-color definition.
+Returns a CSS string representation that can be used as CSS-color definition.
 
 ```js
 chroma('teal').css();
 chroma('teal').alpha(0.5).css();
+```
+
+By default chroma is using the rgb() color space, but you can pass a color space name as first argument. Accepted color spaces are `rgb`, `hsl`, `lab`, `lch`, `oklab`, and `oklch`.
+
+```js
 chroma('teal').css('hsl');
-chroma('teal').css('oklab');
+chroma('teal').css('lab');
 ```
 
 ### color.rgb
@@ -726,7 +729,7 @@ chroma.hcl(50, 40, 100)._rgb._unclipped;
 ## color scales
 
 ### chroma.scale
-#### (colors=['white','black'])
+#### (colors=['white', 'black'])
 
 A color scale, created with `chroma.scale`, is a function that maps numeric values to a color palette. The default scale has the domain `0..1` and goes from white to black.
 
@@ -812,9 +815,9 @@ chroma.scale('YlGn').gamma(2);
 This makes sure the lightness range is spread evenly across a color scale. Especially useful when working with [multi-hue color scales](https://www.vis4.net/blog/2013/09/mastering-multi-hued-color-scales/), where simple gamma correction can't help you very much.
 
 ```js
-chroma.scale(['black','red','yellow','white']);
+chroma.scale(['black', 'red', 'yellow', 'white']);
 
-chroma.scale(['black','red','yellow','white'])
+chroma.scale(['black', 'red', 'yellow', 'white'])
     .correctLightness();
 ```
 

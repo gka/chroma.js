@@ -5,6 +5,16 @@
 <script type="text/javascript" src="libs/codemirror/mode/javascript/javascript.js"></script>
 
 <script type="text/javascript">
+    function toggleMenu() {
+        const menu = document.querySelector('.toc-container');
+        menu.classList.toggle('open');
+        menu.addEventListener('click', function (e) {
+            if (e.target.tagName === 'A') {
+                menu.classList.remove('open');
+            }
+        });
+    }
+
     (function ($) {
         $('code.lang-js').each(function () {
             var code = this;
@@ -16,7 +26,9 @@
                 {
                     value: code.innerHTML.trim(),
                     indentUnit: 4,
-                    mode: 'javascript'
+                    mode: 'javascript',
+                    lineWrapping: true,
+                    scrollbarStyle: 'null',
                 }
             );
 
@@ -39,7 +51,7 @@
                 //resDisplay.html('');
                 chroma.setLabWhitePoint('D65');
                 try {
-                    var s = src.split(';').map(eval);
+                    var s = src.split(';').filter(d => d).map(eval);
                     resDisplay.html(
                         '<ol><li>' +
                             s
@@ -141,16 +153,20 @@
                 }
 
                 try {
-                    var col = chroma(val),
-                        l = col.oklch()[0];
-                    span.attr(
-                        'style',
-                        [
-                            'background-color:' + col.hex(),
-                            'color:' + (l < 0.7 ? 'white' : 'black'),
-                            'opacity:' + col.alpha()
-                        ].join(';')
-                    );
+                    if (chroma.valid(val)) {
+                        const col = chroma(val);
+                        const l = col.oklch()[0];
+                        const isCSS = /[a-z]+\([^\)]+\)/.test(val)
+                        span.attr(
+                            'style',
+                            [
+                                'background-color:' + (isCSS ? val : col.hex()),
+                                'color:' + (l < 0.7 ? 'white' : 'black'),
+                                'opacity:' + col.alpha()
+                            ].join(';')
+                        );
+                        
+                    }
                 } catch (e) {
                     //console.log(e);
                     span.attr('style', '');
