@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.1.0 (pre-release)
+* make it easier to access colorbrewer palette names - resolves #314
+* docs: explain differences to official colorbrewer scales - resolves #316
+
 ### 3.0.0
 * 🎉 NEW: Add support for modern CSS color spaces. This means you can now export and parse CSS colors in `lab()`, `lch()`, `oklab()`, `oklch()` space.
 * 🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces via `setLabWhitePoint`.
