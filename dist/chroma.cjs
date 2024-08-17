@@ -132,6 +132,9 @@
     var min$3 = Math.min;
     var max$3 = Math.max;
 
+    var rnd2 = function (a) { return Math.round(a * 100) / 100; };
+    var rnd3 = function (a) { return Math.round(a * 100) / 100; };
+
     var TWOPI = PI$2 * 2;
     var PITHIRD = PI$2 / 3;
     var DEG2RAD = PI$2 / 180;
@@ -192,7 +195,7 @@
     };
 
     // this gets updated automatically
-    var version = '3.0.0-0';
+    var version = '3.0.0';
 
     var chroma = function () {
         var args = [], len = arguments.length;
@@ -270,8 +273,6 @@
         }
     });
 
-    var rnd$4 = function (a) { return Math.round(a * 100) / 100; };
-
     /*
      * supported arguments:
      * - hsl2css(h,s,l)
@@ -286,9 +287,9 @@
 
         var hsla = unpack(args, 'hsla');
         var mode = last(args) || 'lsa';
-        hsla[0] = rnd$4(hsla[0] || 0) + 'deg';
-        hsla[1] = rnd$4(hsla[1] * 100) + '%';
-        hsla[2] = rnd$4(hsla[2] * 100) + '%';
+        hsla[0] = rnd2(hsla[0] || 0) + 'deg';
+        hsla[1] = rnd2(hsla[1] * 100) + '%';
+        hsla[2] = rnd2(hsla[2] * 100) + '%';
         if (mode === 'hsla' || (hsla.length > 3 && hsla[3] < 1)) {
             hsla[3] = '/ ' + (hsla.length > 3 ? hsla[3] : 1);
             mode = 'hsla';
@@ -345,8 +346,6 @@
         return [h, s, l];
     };
 
-    var rnd$3 = function (a) { return Math.round(a * 100) / 100; };
-
     /*
      * supported arguments:
      * - lab2css(l,a,b)
@@ -360,9 +359,9 @@
 
         var laba = unpack(args, 'lab');
         var mode = last(args) || 'lab';
-        laba[0] = rnd$3(laba[0]) + '%';
-        laba[1] = rnd$3(laba[1]);
-        laba[2] = rnd$3(laba[2]);
+        laba[0] = rnd2(laba[0]) + '%';
+        laba[1] = rnd2(laba[1]);
+        laba[2] = rnd2(laba[2]);
         if (mode === 'laba' || (laba.length > 3 && laba[3] < 1)) {
             laba[3] = '/ ' + (laba.length > 3 ? laba[3] : 1);
         } else {
@@ -576,8 +575,6 @@
         return [x, y, z];
     };
 
-    var rnd$2 = function (a) { return Math.round(a * 100) / 100; };
-
     /*
      * supported arguments:
      * - lab2css(l,a,b)
@@ -591,9 +588,9 @@
 
         var lcha = unpack(args, 'lch');
         var mode = last(args) || 'lab';
-        lcha[0] = rnd$2(lcha[0]) + '%';
-        lcha[1] = rnd$2(lcha[1]);
-        lcha[2] = rnd$2(lcha[2]) + 'deg'; // add deg unit to hue
+        lcha[0] = rnd2(lcha[0]) + '%';
+        lcha[1] = rnd2(lcha[1]);
+        lcha[2] = rnd2(lcha[2]) + 'deg'; // add deg unit to hue
         if (mode === 'lcha' || (lcha.length > 3 && lcha[3] < 1)) {
             lcha[3] = '/ ' + (lcha.length > 3 ? lcha[3] : 1);
         } else {
@@ -640,58 +637,89 @@
         return [L, c, h ].concat( (rest.length > 0 && rest[0] < 1 ? [rest[0]] : []));
     };
 
-    var cbrt = Math.cbrt;
-    var pow$8 = Math.pow;
-    var sign$1 = Math.sign;
+    // from https://www.w3.org/TR/css-color-4/multiply-matrices.js
+    function multiplyMatrices(A, B) {
+        var m = A.length;
+
+        if (!Array.isArray(A[0])) {
+            // A is vector, convert to [[a, b, c, ...]]
+            A = [A];
+        }
+
+        if (!Array.isArray(B[0])) {
+            // B is vector, convert to [[a], [b], [c], ...]]
+            B = B.map(function (x) { return [x]; });
+        }
+
+        var p = B[0].length;
+        var B_cols = B[0].map(function (_, i) { return B.map(function (x) { return x[i]; }); }); // transpose B
+        var product = A.map(function (row) { return B_cols.map(function (col) {
+                if (!Array.isArray(row)) {
+                    return col.reduce(function (a, c) { return a + c * row; }, 0);
+                }
+
+                return row.reduce(function (a, c, i) { return a + c * (col[i] || 0); }, 0);
+            }); }
+        );
+
+        if (m === 1) {
+            product = product[0]; // Avoid [[a, b, c, ...]]
+        }
+
+        if (p === 1) {
+            return product.map(function (x) { return x[0]; }); // Avoid [[a], [b], [c], ...]]
+        }
+
+        return product;
+    }
 
     var rgb2oklab = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        // OKLab color space implementation taken from
-        // https://bottosson.github.io/posts/oklab/
         var ref = unpack(args, 'rgb');
         var r = ref[0];
         var g = ref[1];
         var b = ref[2];
         var rest = ref.slice(3);
-        var ref$1 = [
-            rgb2lrgb(r / 255),
-            rgb2lrgb(g / 255),
-            rgb2lrgb(b / 255)
-        ];
-        var lr = ref$1[0];
-        var lg = ref$1[1];
-        var lb = ref$1[2];
-        var l = cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
-        var m = cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
-        var s = cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
-
-        return [
-            0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-            1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-            0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s ].concat( (rest.length > 0 && rest[0] < 1 ? [rest[0]] : [])
-        );
+        var xyz = rgb2xyz(r, g, b);
+        var oklab = XYZ_to_OKLab(xyz);
+        return oklab.concat( (rest.length > 0 && rest[0] < 1 ? [rest[0]] : []));
     };
 
-    function rgb2lrgb(c) {
-        var abs = Math.abs(c);
-        if (abs < 0.04045) {
-            return c / 12.92;
-        }
-        return (sign$1(c) || 1) * pow$8((abs + 0.055) / 1.055, 2.4);
-    }
+    // from https://www.w3.org/TR/css-color-4/#color-conversion-code
+    function XYZ_to_OKLab(XYZ) {
+        // Given XYZ relative to D65, convert to OKLab
+        var XYZtoLMS = [
+            [0.819022437996703, 0.3619062600528904, -0.1288737815209879],
+            [0.0329836539323885, 0.9292868615863434, 0.0361446663506424],
+            [0.0481771893596242, 0.2642395317527308, 0.6335478284694309]
+        ];
+        var LMStoOKLab = [
+            [0.210454268309314, 0.7936177747023054, -0.0040720430116193],
+            [1.9779985324311684, -2.4285922420485799, 0.450593709617411],
+            [0.0259040424655478, 0.7827717124575296, -0.8086757549230774]
+        ];
 
-    var rnd$1 = function (a) { return Math.round(a * 100) / 100; };
+        var LMS = multiplyMatrices(XYZtoLMS, XYZ);
+        // JavaScript Math.cbrt returns a sign-matched cube root
+        // beware if porting to other languages
+        // especially if tempted to use a general power function
+        return multiplyMatrices(
+            LMStoOKLab,
+            LMS.map(function (c) { return Math.cbrt(c); })
+        );
+        // L in range [0,1]. For use in CSS, multiply by 100 and add a percent
+    }
 
     var oklab2css$1 = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
         var laba = unpack(args, 'lab');
-        laba[0] = rnd$1(laba[0] * 100) + '%';
-        laba[1] = rnd$1(laba[1]);
-        laba[2] = rnd$1(laba[2]);
+        laba[0] = rnd2(laba[0] * 100) + '%';
+        laba[1] = rnd3(laba[1]);
+        laba[2] = rnd3(laba[2]);
         if (laba.length > 3 && laba[3] < 1) {
             laba[3] = '/ ' + (laba.length > 3 ? laba[3] : 1);
         } else {
@@ -720,16 +748,14 @@
         return [L, c, h ].concat( (rest.length > 0 && rest[0] < 1 ? [rest[0]] : []));
     };
 
-    var rnd = function (a) { return Math.round(a * 100) / 100; };
-
     var oklab2css = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
         var laba = unpack(args, 'lab');
-        laba[0] = rnd(laba[0] * 100) + '%';
-        laba[1] = rnd(laba[1]);
-        laba[2] = rnd(laba[2]) + 'deg';
+        laba[0] = rnd2(laba[0] * 100) + '%';
+        laba[1] = rnd3(laba[1]);
+        laba[2] = rnd2(laba[2]) + 'deg';
         if (laba.length > 3 && laba[3] < 1) {
             laba[3] = '/ ' + (laba.length > 3 ? laba[3] : 1);
         } else {
@@ -986,6 +1012,67 @@
         return [r, g, b, args.length > 3 ? args[3] : 1];
     };
 
+    var oklab2rgb = function () {
+        var args = [], len = arguments.length;
+        while ( len-- ) args[ len ] = arguments[ len ];
+
+        args = unpack(args, 'lab');
+        var L = args[0];
+        var a = args[1];
+        var b = args[2];
+        var rest = args.slice(3);
+        var ref = OKLab_to_XYZ([L, a, b]);
+        var X = ref[0];
+        var Y = ref[1];
+        var Z = ref[2];
+        var ref$1 = xyz2rgb(X, Y, Z);
+        var r = ref$1[0];
+        var g = ref$1[1];
+        var b_ = ref$1[2];
+        return [r, g, b_ ].concat( (rest.length > 0 && rest[0] < 1 ? [rest[0]] : []));
+    };
+
+    // from https://www.w3.org/TR/css-color-4/#color-conversion-code
+    function OKLab_to_XYZ(OKLab) {
+        // Given OKLab, convert to XYZ relative to D65
+        var LMStoXYZ = [
+            [1.2268798758459243, -0.5578149944602171, 0.2813910456659647],
+            [-0.0405757452148008, 1.112286803280317, -0.0717110580655164],
+            [-0.0763729366746601, -0.4214933324022432, 1.5869240198367816]
+        ];
+        var OKLabtoLMS = [
+            [1.0, 0.3963377773761749, 0.2158037573099136],
+            [1.0, -0.1055613458156586, -0.0638541728258133],
+            [1.0, -0.0894841775298119, -1.2914855480194092]
+        ];
+
+        var LMSnl = multiplyMatrices(OKLabtoLMS, OKLab);
+        return multiplyMatrices(
+            LMStoXYZ,
+            LMSnl.map(function (c) { return Math.pow( c, 3 ); })
+        );
+    }
+
+    var oklch2rgb = function () {
+        var args = [], len = arguments.length;
+        while ( len-- ) args[ len ] = arguments[ len ];
+
+        args = unpack(args, 'lch');
+        var l = args[0];
+        var c = args[1];
+        var h = args[2];
+        var rest = args.slice(3);
+        var ref = lch2lab(l, c, h);
+        var L = ref[0];
+        var a = ref[1];
+        var b_ = ref[2];
+        var ref$1 = oklab2rgb(L, a, b_);
+        var r = ref$1[0];
+        var g = ref$1[1];
+        var b = ref$1[2];
+        return [r, g, b ].concat( (rest.length > 0 && rest[0] < 1 ? [rest[0]] : []));
+    };
+
     var RE_RGB = /^rgb\(\s*(-?\d+) \s*(-?\d+)\s* \s*(-?\d+)\s*\)$/;
     var RE_RGB_LEGACY = /^rgb\(\s*(-?\d+),\s*(-?\d+)\s*,\s*(-?\d+)\s*\)$/;
 
@@ -1017,9 +1104,11 @@
     var RE_LAB =
         /^lab\(\s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
     var RE_LCH =
-        /^lch\(\s*(-?\d+(?:\.\d+)?%?) \s*(?:(-?\d+(?:\.\d+)?%?)|none) \s*(-?\d+(?:\.\d+)?(?:deg)?|none)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
-    // const RE_OKLAB =
-    //     /^oklab\(\s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
+        /^lch\(\s*(-?\d+(?:\.\d+)?%?) \s*((?:-?\d+(?:\.\d+)?%?)|none) \s*(-?\d+(?:\.\d+)?(?:deg)?|none)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
+    var RE_OKLAB =
+        /^oklab\(\s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
+    var RE_OKLCH =
+        /^oklch\(\s*(-?\d+(?:\.\d+)?%?) \s*(?:(-?\d+(?:\.\d+)?%?)|none) \s*(-?\d+(?:\.\d+)?(?:deg)?|none)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
 
     var round$3 = Math.round;
 
@@ -1032,8 +1121,8 @@
         if ( max === void 0 ) max = 100;
         if ( signed === void 0 ) signed = false;
 
-        if (pct.endsWith('%')) {
-            pct = parseFloat(pct.substr(0, pct.length - 1)) / 100;
+        if (typeof pct === 'string' && pct.endsWith('%')) {
+            pct = parseFloat(pct.substring(0, pct.length - 1)) / 100;
             if (signed) {
                 // signed percentages are in the range -100% to 100%
                 pct = min + (pct + 1) * 0.5 * (max - min);
@@ -1129,7 +1218,12 @@
             lab[0] = percentToAbsolute(lab[0], 0, 100);
             lab[1] = percentToAbsolute(lab[1], -125, 125, true);
             lab[2] = percentToAbsolute(lab[2], -125, 125, true);
+            // convert to D50 Lab whitepoint
+            var wp = getLabWhitePoint();
+            setLabWhitePoint('d50');
             var rgb$6 = roundRGB(lab2rgb(lab));
+            // convert back to original Lab whitepoint
+            setLabWhitePoint(wp);
             rgb$6[3] = m[4] !== undefined ? +m[4] : 1;
             return rgb$6;
         }
@@ -1139,20 +1233,35 @@
             lch[0] = percentToAbsolute(lch[0], 0, 100);
             lch[1] = percentToAbsolute(noneToValue(lch[1], 0), 0, 150, false);
             lch[2] = +noneToValue(lch[2].replace('deg', ''), 0);
+            // convert to D50 Lab whitepoint
+            var wp$1 = getLabWhitePoint();
+            setLabWhitePoint('d50');
             var rgb$7 = roundRGB(lch2rgb(lch));
+            // convert back to original Lab whitepoint
+            setLabWhitePoint(wp$1);
             rgb$7[3] = m[4] !== undefined ? +m[4] : 1;
             return rgb$7;
         }
 
-        // if ((m = css.match(RE_OKLAB))) {
-        //     const oklab = m.slice(1, 4);
-        //     oklab[0] = percentToAbsolute(oklab[0], 0, 1);
-        //     oklab[1] = percentToAbsolute(oklab[1], -0.4, 0.4, true);
-        //     oklab[2] = percentToAbsolute(oklab[2], -0.4, 0.4, true);
-        //     const rgb = roundRGB(oklab2rgb(oklab));
-        //     rgb[3] = m[4] !== undefined ? +m[4] : 1;
-        //     return rgb;
-        // }
+        if ((m = css.match(RE_OKLAB))) {
+            var oklab = m.slice(1, 4);
+            oklab[0] = percentToAbsolute(oklab[0], 0, 1);
+            oklab[1] = percentToAbsolute(oklab[1], -0.4, 0.4, true);
+            oklab[2] = percentToAbsolute(oklab[2], -0.4, 0.4, true);
+            var rgb$8 = roundRGB(oklab2rgb(oklab));
+            rgb$8[3] = m[4] !== undefined ? +m[4] : 1;
+            return rgb$8;
+        }
+
+        if ((m = css.match(RE_OKLCH))) {
+            var oklch = m.slice(1, 4);
+            oklch[0] = percentToAbsolute(oklch[0], 0, 1);
+            oklch[1] = percentToAbsolute(noneToValue(oklch[1], 0), 0, 0.4, false);
+            oklch[2] = +noneToValue(oklch[2].replace('deg', ''), 0);
+            var rgb$9 = roundRGB(oklch2rgb(oklch));
+            rgb$9[3] = m[4] !== undefined ? +m[4] : 1;
+            return rgb$9;
+        }
     };
 
     css2rgb.test = function (s) {
@@ -1165,7 +1274,9 @@
             RE_HSL.test(s) ||
             RE_HSLA.test(s) ||
             RE_LAB.test(s) ||
-            // RE_OKLAB.test(s) ||
+            RE_LCH.test(s) ||
+            RE_OKLAB.test(s) ||
+            RE_OKLCH.test(s) ||
             // legacy
             RE_RGB_LEGACY.test(s) ||
             RE_RGBA_LEGACY.test(s) ||
@@ -1977,43 +2088,6 @@
         input.format.temperature =
             temperature2rgb;
 
-    var pow$7 = Math.pow;
-    var sign = Math.sign;
-
-    /*
-     * L* [0..100]
-     * a [-100..100]
-     * b [-100..100]
-     */
-    var oklab2rgb = function () {
-        var args = [], len = arguments.length;
-        while ( len-- ) args[ len ] = arguments[ len ];
-
-        args = unpack(args, 'lab');
-        var L = args[0];
-        var a = args[1];
-        var b = args[2];
-
-        var l = pow$7(L + 0.3963377774 * a + 0.2158037573 * b, 3);
-        var m = pow$7(L - 0.1055613458 * a - 0.0638541728 * b, 3);
-        var s = pow$7(L - 0.0894841775 * a - 1.291485548 * b, 3);
-
-        return [
-            255 * lrgb2rgb(+4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
-            255 * lrgb2rgb(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
-            255 * lrgb2rgb(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
-            args.length > 3 ? args[3] : 1
-        ];
-    };
-
-    function lrgb2rgb(c) {
-        var abs = Math.abs(c);
-        if (abs > 0.0031308) {
-            return (sign(c) || 1) * (1.055 * pow$7(abs, 1 / 2.4) - 0.055);
-        }
-        return c * 12.92;
-    }
-
     Color.prototype.oklab = function () {
         return rgb2oklab(this._rgb);
     };
@@ -2040,25 +2114,6 @@
             }
         }
     });
-
-    var oklch2rgb = function () {
-        var args = [], len = arguments.length;
-        while ( len-- ) args[ len ] = arguments[ len ];
-
-        args = unpack(args, 'lch');
-        var l = args[0];
-        var c = args[1];
-        var h = args[2];
-        var ref = lch2lab(l, c, h);
-        var L = ref[0];
-        var a = ref[1];
-        var b_ = ref[2];
-        var ref$1 = oklab2rgb(L, a, b_);
-        var r = ref$1[0];
-        var g = ref$1[1];
-        var b = ref$1[2];
-        return [r, g, b, args.length > 3 ? args[3] : 1];
-    };
 
     Color.prototype.oklch = function () {
         return rgb2oklch(this._rgb);

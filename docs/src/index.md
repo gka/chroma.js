@@ -584,6 +584,7 @@ By default chroma is using the rgb() color space, but you can pass a color space
 ```js
 chroma('teal').css('hsl');
 chroma('teal').css('lab');
+chroma('teal').css('oklch');
 ```
 
 ### color.rgb

@@ -1,10 +1,11 @@
 ## Changelog
 
-### 3.0.0-0
-* 🎉 NEW: add support for modern CSS color spaces `lab()`, `lch()`, `oklab()`, `oklch()`.
+### 3.0.0
+* 🎉 NEW: Add support for modern CSS color spaces. This means you can now export and parse CSS colors in `lab()`, `lch()`, `oklab()`, `oklch()` space.
 * 🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces via `setLabWhitePoint`.
-* chroma.css will no longer return legacy CSS colors like `rgb(255, 255, 0)` but modern CSS colors like `rgb(255 255 0)`.
-* you can now use chroma.js both via the default export as well as named exports in ES6. 
+* Breaking: `color.css()` will no longer return [legacy CSS colors](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb#legacy_syntax_comma-separated_values) like `rgb(255, 255, 0)` but use modern CSS colors like `rgb(255 255 0)` instead.
+* fix: you can now use chroma.js both via the default export as well as named exports in ES6. 
+* fix: switch to W3C implementation of OKLab color space
 
 ### 2.6.0
 * 🎉 NEW: add [`color.shade()`](#color-shade), [`color.tint()`](#color-shade).

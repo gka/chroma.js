@@ -4,8 +4,9 @@
   <title>chroma.js api docs!</title>
   <link rel="stylesheet" href="src/index.css">
   <link rel="me" href="https://vis.social/@gka">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
-<body><div class="wrap">
+<body><div class="wrap"><button class="menu-button" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 <h1 id="chroma-js">chroma.js</h1>
 <p><strong>chroma.js</strong> is a <a href="https://bundlephobia.com/result?p=chroma-js">small-ish</a> zero-dependency JavaScript library (<a href="https://bundlephobia.com/result?p=chroma-js">13.5kB</a>) for all kinds of color conversions and color scales.</p>
 <p><a href="https://travis-ci.com/gka/chroma.js"><img src="https://api.travis-ci.com/gka/chroma.js.svg?branch=master" alt="Build Status"></a></p>
@@ -27,7 +28,7 @@
 <pre><code class="lang-js">chroma(&#39;pink&#39;).darken().saturate(2).hex()
 </code></pre>
 <p>Aside from that, chroma.js can also help you <strong>generate nice colors</strong> using various methods, for instance to be <a href="https://www.vis4.net/blog/posts/avoid-equidistant-hsv-colors/">used</a> in color palette for maps or data visualization.</p>
-<pre><code class="lang-js">chroma.scale([&#39;#fafa6e&#39;,&#39;#2A4858&#39;])
+<pre><code class="lang-js">chroma.scale([&#39;#fafa6e&#39;, &#39;#2A4858&#39;])
     .mode(&#39;lch&#39;).colors(6)
 </code></pre>
 <p>chroma.js has a lot more to offer, but that&#39;s the gist of it.</p>
@@ -73,10 +74,72 @@ chroma.valid(&#39;#FOOOOD&#39;);
 <h4 id="-hue-saturation-value-">(hue, saturation, value)</h4>
 <h3 id="chroma-lab">chroma.lab</h3>
 <h4 id="-lightness-a-b-">(Lightness, a, b)</h4>
-<p>CIELAB color space</p>
-<pre><code class="lang-js">chroma.lab(40,-20,50);
-chroma.lab(50,-20,50);
-chroma.lab(80,-20,50);
+<p>CIE Lab color space. To calculate the lightness value of a color, the CIE Lab color space uses a reference white point. This reference white point defines what is considered to be &quot;white&quot; in the color space. By default chroma.js is using the D65 reference point.</p>
+<pre><code class="lang-js">chroma.lab(40, -20, 50);
+chroma.lab(50, -20, 50);
+chroma.lab(80, -20, 50);
+</code></pre>
+<h3 id="chroma-setlabwhitepoint">chroma.setLabWhitePoint</h3>
+<h4 id="-whitepoint-">(whitePoint)</h4>
+<p>Sets the current CIE Lab white reference point. </p>
+<p>Possible values:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>D50</code></td>
+<td>Represents the color temperature of daylight at 5000K.</td>
+</tr>
+<tr>
+<td><code>D55</code></td>
+<td>Represents mid-morning or mid-afternoon daylight at 5500K.</td>
+</tr>
+<tr>
+<td><code>D65</code></td>
+<td>Represents average daylight at 6500K.</td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>Represents the color temperature of a typical incandescent light bulb at approximately 2856K.</td>
+</tr>
+<tr>
+<td><code>B</code></td>
+<td>Represents noon daylight with a color temperature of approximately 4874K.</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>Represents average or north sky daylight; it&#39;s a theoretical construct, not often used in practical applications.</td>
+</tr>
+<tr>
+<td><code>F2</code></td>
+<td>Represents cool white fluorescent light.</td>
+</tr>
+<tr>
+<td><code>F7</code></td>
+<td>This is a broad-band fluorescent light source with a color temperature of approximately 6500K.</td>
+</tr>
+<tr>
+<td><code>F11</code></td>
+<td>This is a narrow tri-band fluorescent light source with a color temperature of approximately 4000K.</td>
+</tr>
+<tr>
+<td><code>E</code></td>
+<td>Represents an equal energy white point, where all wavelengths in the visible spectrum are equally represented.</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).lab();
+chroma.setLabWhitePoint(&#39;F2&#39;);
+chroma(&#39;hotpink&#39;).lab();
+</code></pre>
+<h3 id="chroma-getlabwhitepoint">chroma.getLabWhitePoint</h3>
+<p>Returns the name of the currently set CIE Lab white reference point. </p>
+<pre><code class="lang-js">chroma.getLabWhitePoint();
 </code></pre>
 <h3 id="chroma-oklab">chroma.oklab</h3>
 <h4 id="-lightness-a-b-">(Lightness, a, b)</h4>
@@ -269,15 +332,15 @@ chroma(&#39;hotpink&#39;).mix(&#39;blue&#39;, 0.75, &#39;lab&#39;);
 <h3 id="color-shade">color.shade</h3>
 <h4 id="-ratio-0-5-mode-lrgb-">(ratio=0.5, mode=&#39;lrgb&#39;)</h4>
 <p>Produce a shade of the color. This is syntactic sugar for <code>color.mix</code> with a target color of black.</p>
-<pre><code class="lang-js">chroma(&#39;hotpink&#39;).shade();
-chroma(&#39;hotpink&#39;).shade(0.25);
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).shade(0.25);
+chroma(&#39;hotpink&#39;).shade(0.5);
 chroma(&#39;hotpink&#39;).shade(0.75);
 </code></pre>
 <h3 id="color-tint">color.tint</h3>
 <h4 id="-ratio-0-5-mode-lrgb-">(ratio=0.5, mode=&#39;lrgb&#39;)</h4>
 <p>Produce a tint of the color. This is syntactic sugar for <code>color.mix</code> with a target color of white.</p>
-<pre><code class="lang-js">chroma(&#39;hotpink&#39;).tint();
-chroma(&#39;hotpink&#39;).tint(0.25);
+<pre><code class="lang-js">chroma(&#39;hotpink&#39;).tint(0.25);
+chroma(&#39;hotpink&#39;).tint(0.5);
 chroma(&#39;hotpink&#39;).tint(0.75);
 </code></pre>
 <h3 id="color-set">color.set</h3>
@@ -338,10 +401,14 @@ chroma(&#39;orange&#39;).alpha(0.5).hex(&#39;rgb&#39;);
 chroma(&#39;#ffa505&#39;).name();
 </code></pre>
 <h3 id="color-css">color.css</h3>
-<p>Returns a <code>RGB()</code> or <code>HSL()</code> string representation that can be used as CSS-color definition.</p>
+<p>Returns a CSS string representation that can be used as CSS-color definition.</p>
 <pre><code class="lang-js">chroma(&#39;teal&#39;).css();
 chroma(&#39;teal&#39;).alpha(0.5).css();
-chroma(&#39;teal&#39;).css(&#39;hsl&#39;);
+</code></pre>
+<p>By default chroma is using the rgb() color space, but you can pass a color space name as first argument. Accepted color spaces are <code>rgb</code>, <code>hsl</code>, <code>lab</code>, <code>lch</code>, <code>oklab</code>, and <code>oklch</code>.</p>
+<pre><code class="lang-js">chroma(&#39;teal&#39;).css(&#39;hsl&#39;);
+chroma(&#39;teal&#39;).css(&#39;lab&#39;);
+chroma(&#39;teal&#39;).css(&#39;oklch&#39;);
 </code></pre>
 <h3 id="color-rgb">color.rgb</h3>
 <h4 id="-round-true-">(round=true)</h4>
@@ -424,7 +491,7 @@ chroma.hcl(50, 40, 100)._rgb._unclipped;
 </code></pre>
 <h2 id="color-scales">color scales</h2>
 <h3 id="chroma-scale">chroma.scale</h3>
-<h4 id="-colors-white-black-">(colors=[&#39;white&#39;,&#39;black&#39;])</h4>
+<h4 id="-colors-white-black-">(colors=[&#39;white&#39;, &#39;black&#39;])</h4>
 <p>A color scale, created with <code>chroma.scale</code>, is a function that maps numeric values to a color palette. The default scale has the domain <code>0..1</code> and goes from white to black.</p>
 <pre><code class="lang-js">f = chroma.scale();
 f(0.25);
@@ -474,9 +541,9 @@ chroma.scale(&#39;YlGn&#39;).gamma(2);
 </code></pre>
 <h3 id="scale-correctlightness">scale.correctLightness</h3>
 <p>This makes sure the lightness range is spread evenly across a color scale. Especially useful when working with <a href="https://www.vis4.net/blog/2013/09/mastering-multi-hued-color-scales/">multi-hue color scales</a>, where simple gamma correction can&#39;t help you very much.</p>
-<pre><code class="lang-js">chroma.scale([&#39;black&#39;,&#39;red&#39;,&#39;yellow&#39;,&#39;white&#39;]);
+<pre><code class="lang-js">chroma.scale([&#39;black&#39;, &#39;red&#39;, &#39;yellow&#39;, &#39;white&#39;]);
 
-chroma.scale([&#39;black&#39;,&#39;red&#39;,&#39;yellow&#39;,&#39;white&#39;])
+chroma.scale([&#39;black&#39;, &#39;red&#39;, &#39;yellow&#39;, &#39;white&#39;])
     .correctLightness();
 </code></pre>
 <h3 id="scale-cache">scale.cache</h3>
@@ -604,6 +671,35 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 <h2 id="changelog">Changelog</h2>
+<h3 id="3-0-0">3.0.0</h3>
+<ul>
+<li>🎉 NEW: Add support for modern CSS color spaces. This means you can now export and parse CSS colors in <code>lab()</code>, <code>lch()</code>, <code>oklab()</code>, <code>oklch()</code> space.</li>
+<li>🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces via <code>setLabWhitePoint</code>.</li>
+<li>Breaking: <code>color.css()</code> will no longer return <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb#legacy_syntax_comma-separated_values">legacy CSS colors</a> like <code>rgb(255, 255, 0)</code> but use modern CSS colors like <code>rgb(255 255 0)</code> instead.</li>
+<li>fix: you can now use chroma.js both via the default export as well as named exports in ES6. </li>
+<li>fix: switch to W3C implementation of OKLab color space</li>
+</ul>
+<h3 id="2-6-0">2.6.0</h3>
+<ul>
+<li>🎉 NEW: add <a href="#color-shade"><code>color.shade()</code></a>, <a href="#color-shade"><code>color.tint()</code></a>.</li>
+<li>fix: remove false w3c color cornflower</li>
+</ul>
+<h3 id="2-5-0">2.5.0</h3>
+<ul>
+<li>refactored code base to ES6 modules</li>
+</ul>
+<h3 id="2-4-0">2.4.0</h3>
+<ul>
+<li>add support for Oklab and Oklch color spaces</li>
+</ul>
+<h3 id="2-3-0">2.3.0</h3>
+<ul>
+<li>use binom of degree n in chroma.bezier</li>
+</ul>
+<h3 id="2-2-0">2.2.0</h3>
+<ul>
+<li>use Delta e2000 for chroma.deltaE #269</li>
+</ul>
 <h3 id="2-0-3">2.0.3</h3>
 <ul>
 <li>hsl2rgb will, like other x2rgb conversions now set the default alpha to 1</li>
@@ -697,6 +793,16 @@ chroma.cubehelix().lightness([0.3,0.7]);
 <script type="text/javascript" src="libs/codemirror/mode/javascript/javascript.js"></script>
 
 <script type="text/javascript">
+    function toggleMenu() {
+        const menu = document.querySelector('.toc-container');
+        menu.classList.toggle('open');
+        menu.addEventListener('click', function (e) {
+            if (e.target.tagName === 'A') {
+                menu.classList.remove('open');
+            }
+        });
+    }
+
     (function ($) {
         $('code.lang-js').each(function () {
             var code = this;
@@ -708,7 +814,9 @@ chroma.cubehelix().lightness([0.3,0.7]);
                 {
                     value: code.innerHTML.trim(),
                     indentUnit: 4,
-                    mode: 'javascript'
+                    mode: 'javascript',
+                    lineWrapping: true,
+                    scrollbarStyle: 'null',
                 }
             );
 
@@ -729,15 +837,17 @@ chroma.cubehelix().lightness([0.3,0.7]);
                 // evaluate script
                 var src = cm.getDoc().getValue();
                 //resDisplay.html('');
+                chroma.setLabWhitePoint('D65');
                 try {
-                    var s = src.split(';').map(eval);
+                    var s = src.split(';').filter(d => d).map(eval);
                     resDisplay.html(
                         '<ol><li>' +
                             s
                                 .map(resRec)
-                                .filter(function (d) {
-                                    return d !== undefined;
-                                })
+                                .map(d => d || '&nbsp;')
+                                // .filter(function (d) {
+                                //     return d !== undefined;
+                                // })
                                 .join('</li><li>') +
                             '</li></ol>'
                     );
@@ -831,16 +941,20 @@ chroma.cubehelix().lightness([0.3,0.7]);
                 }
 
                 try {
-                    var col = chroma(val),
-                        l = col.oklch()[0];
-                    span.attr(
-                        'style',
-                        [
-                            'background-color:' + col.hex(),
-                            'color:' + (l < 0.7 ? 'white' : 'black'),
-                            'opacity:' + col.alpha()
-                        ].join(';')
-                    );
+                    if (chroma.valid(val)) {
+                        const col = chroma(val);
+                        const l = col.oklch()[0];
+                        const isCSS = /[a-z]+\([^\)]+\)/.test(val)
+                        span.attr(
+                            'style',
+                            [
+                                'background-color:' + (isCSS ? val : col.hex()),
+                                'color:' + (l < 0.7 ? 'white' : 'black'),
+                                'opacity:' + col.alpha()
+                            ].join(';')
+                        );
+                        
+                    }
                 } catch (e) {
                     //console.log(e);
                     span.attr('style', '');
