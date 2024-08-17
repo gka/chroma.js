@@ -384,7 +384,7 @@ chroma.brewer is an map of [ColorBrewer palettes](http://colorbrewer2.org/) that
 chroma.brewer.OrRd
 ```
 
-Note that chroma.js only includes the 9-step versions of the palettes (11 steps for the diverging palettes). So for instance, if you use chroma.js them to construct a 5-color palette, they will be different from the "official" 5-color palettes in ColorBrewer (which have a decreased color contrast).
+Note that chroma.js only includes the 9-step versions of the palettes (11 steps for the diverging palettes). So, for instance, if you use chroma.js to construct a 5-color palette, they will be different from the "official" 5-color palettes in ColorBrewer (which have lower contrast).
 
 ```js
 chroma.scale('RdBu').colors(5);
