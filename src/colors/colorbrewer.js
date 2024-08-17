@@ -62,16 +62,20 @@ const colorbrewer = {
 const colorbrewerTypes = Object.keys(colorbrewer);
 const typeMap = new Map(colorbrewerTypes.map((key) => [key.toLowerCase(), key]));
 
-const colorbrewerProxy = new Proxy(colorbrewer, {
-    get(target, prop) {
-        const lower = prop.toLowerCase();
-        if (typeMap.has(lower)) {
-            return target[typeMap.get(lower)];
-        }
-    },
-    getOwnPropertyNames() {
-        return Object.getOwnPropertyNames(colorbrewerTypes);
-    }
-});
+// use Proxy to allow case-insensitive access to palettes
+const colorbrewerProxy =
+    typeof Proxy === 'function'
+        ? new Proxy(colorbrewer, {
+              get(target, prop) {
+                  const lower = prop.toLowerCase();
+                  if (typeMap.has(lower)) {
+                      return target[typeMap.get(lower)];
+                  }
+              },
+              getOwnPropertyNames() {
+                  return Object.getOwnPropertyNames(colorbrewerTypes);
+              }
+          })
+        : colorbrewer;
 
 export default colorbrewerProxy;
