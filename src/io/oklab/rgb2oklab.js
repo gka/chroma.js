@@ -4,7 +4,7 @@ const { cbrt, pow, sign } = Math;
 const rgb2oklab = (...args) => {
     // OKLab color space implementation taken from
     // https://bottosson.github.io/posts/oklab/
-    const [r, g, b] = unpack(args, 'rgb');
+    const [r, g, b, ...rest] = unpack(args, 'rgb');
     const [lr, lg, lb] = [
         rgb2lrgb(r / 255),
         rgb2lrgb(g / 255),
@@ -17,7 +17,8 @@ const rgb2oklab = (...args) => {
     return [
         0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
         1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-        0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
+        0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+        ...(rest.length > 0 && rest[0] < 1 ? [rest[0]] : [])
     ];
 };
 

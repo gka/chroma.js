@@ -6,7 +6,8 @@ const footer = fs.readFileSync('src/footer.inc.html', 'utf-8');
 
 let modifiedIndex = index.replace('</body>', '\n'+footer+'\n</body>');
 modifiedIndex = modifiedIndex.replace('</head>', '  <link rel="me" href="https://vis.social/@gka">\n</head>');
-modifiedIndex = modifiedIndex.replace('<body>', '<body><div class="wrap">');
+modifiedIndex = modifiedIndex.replace('</head>', '  <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n</head>');
+modifiedIndex = modifiedIndex.replace('<body>', '<body><div class="wrap"><button class="menu-button" onclick="toggleMenu()"><span></span><span></span><span></span></button>');
 modifiedIndex = modifiedIndex.replace('</body>', '</div></body>');
 
 fs.writeFileSync('index.html', modifiedIndex);

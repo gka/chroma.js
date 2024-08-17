@@ -1,7 +1,7 @@
 ﻿@import 'https://fonts.googleapis.com/css?family=Roboto:100,300,400,700';
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: -apple-system, BlinkMacSystemFont, 'Roboto', "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 .wrap {
@@ -9,37 +9,60 @@ body {
     margin: 0 auto;
 }
 
-.wrap > h1, .wrap > h2, .wrap > h3, .wrap > h4, .wrap > p, .wrap > pre, .wrap > ul {
+.wrap>h1,
+.wrap>h2,
+.wrap>h3,
+.wrap>h4,
+.wrap>p,
+.wrap>pre,
+.wrap>ul,
+.wrap>table {
     position: relative;
     /*left: -80px;*/
     padding-left: 300px;
 }
 
-.wrap > h2,
-.wrap > h3 {
+.wrap>h2,
+.wrap>h3 {
     padding-top: 10px;
 }
 
-.wrap > h2 a,
-.wrap > h3 a {
+.wrap>h2 a,
+.wrap>h3 a {
     color: #000;
     text-decoration: none;
 }
 
-.wrap > h2 a:hover:before,
-.wrap > h3 a:hover:before {
+.wrap>h2 a:hover:before,
+.wrap>h3 a:hover:before {
     content: '#';
     color: #ddd;
     position: absolute;
     left: 280px;
 }
 
-.wrap > ul {
+.wrap>ul {
     margin-left: 30px;
 }
 
-.wrap > p {
+.wrap>p,
+.wrap>table {
     margin-right: 200px;
+}
+
+table th {
+    font-weight: bold;
+    text-align: left;
+    font-size: 90%;
+}
+
+table td {
+    vertical-align: top;
+    font-size: 90%;
+}
+
+table td+td {
+    padding-left: 1em;
 }
 
 
@@ -53,7 +76,7 @@ ul.toc {
 
 .toc li a {
     text-decoration: none;
-        margin-bottom: 5px;
+    margin-bottom: 5px;
     font-size: 13px;
     border-bottom: 1px dotted white;
     padding-bottom: 5px;
@@ -62,7 +85,7 @@ ul.toc {
 }
 
 .toc li.level-1 a {
-    margin-top: 15px;    
+    margin-top: 15px;
     font-weight: bold;
     font-size: 17px;
 }
@@ -83,25 +106,26 @@ ul.toc {
 }
 
 
-.wrap > h1 {
+.wrap>h1 {
     font-weight: 100;
     font-size: 48px;
     letter-spacing: -2px;
 }
 
-.wrap > h2 {
+.wrap>h2 {
     padding-top: 30px;
     margin-top: 20px;
 }
 
-.wrap > h3 h4 {
+.wrap>h3 h4 {
     font-weight: 400;
     display: inline-block;
     color: #999;
     margin: 0 0 0 3px;
 }
 
-.wrap p code, .wrap li code {
+.wrap p code,
+.wrap li code {
     font-size: 15px;
     margin-left: 2px;
     margin-right: 2px;
@@ -109,8 +133,8 @@ ul.toc {
 }
 
 html .cm-s-default .cm-comment {
-  color: #B3A9A9;
-  font-style: italic;
+    color: #B3A9A9;
+    font-style: italic;
 }
 
 pre {
@@ -124,21 +148,22 @@ pre .CodeMirror {
     font-size: 16px;
     line-height: 22px;
     background: #f9f9f9;
-    box-shadow: inset 2px 2px 6px rgba(0,0,0,.1);
+    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, .1);
     border-radius: 10px;
     margin: -5px;
-    padding: 5px;   
+    padding: 5px;
     margin-right: 200px;
     margin-bottom: 20px;
 }
 
 
-pre .CodeMirror:hover, pre .CodeMirror:focus {
+pre .CodeMirror:hover,
+pre .CodeMirror:focus {
     background: #f6f6f0;
 }
 
 .result-display {
-    position: absolute; 
+    position: absolute;
     right: 0px;
     top: 4px;
     width: 180px;
@@ -172,15 +197,18 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     opacity: 0.99;
     z-index: -10;
 }
+
 .result-display li {
     line-height: 24px;
 }
+
 .result-display .cm-number {
     color: #164;
 }
 
-.CodeMirror, .CodeMirror .CodeMirror-scroll {
-    overflow: visible!important;
+.CodeMirror,
+.CodeMirror .CodeMirror-scroll {
+    overflow: visible !important;
 }
 
 .CodeMirror .cm-number {
@@ -192,6 +220,7 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     left: 50%;
     top: -15px;
 }
+
 .CodeMirror .cm-number .slider input[type="range"] {
     position: absolute;
     left: -50px;
@@ -226,8 +255,8 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     top: 2px;
     color: #bbb;
 }
-❯
-.result-display:before {
+
+❯ .result-display:before {
     content: "RESULT";
     position: absolute;
     left: 0;
@@ -252,6 +281,7 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     font-size: 11px;
     bottom: 3px;
 }
+
 .gradient .domain-med {
     position: absolute;
     right: 25%;
@@ -260,6 +290,7 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
     font-size: 11px;
     bottom: 3px;
 }
+
 .gradient .domain-max {
     position: absolute;
     right: 0;
@@ -280,9 +311,160 @@ pre .CodeMirror:hover, pre .CodeMirror:focus {
 }
 
 .cm-hidden-text {
-    display:inline-block;
-    width:1px;
+    display: inline-block;
+    width: 1px;
     // height:0px;
     opacity: 0;
-    overflow:hidden;
+    overflow: hidden;
+}
+
+.menu-button {
+    display: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+
+    .wrap>h1,
+    .wrap>h2,
+    .wrap>h3,
+    .wrap>h4,
+    .wrap>p,
+    .wrap>pre,
+    .wrap>ul,
+    .wrap>table {
+        padding-left: 0px;
+    }
+
+    .wrap>p,
+    .wrap>table,
+    pre .CodeMirror {
+        margin-right: 0px;
+    }
+
+    pre .CodeMirror {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .CodeMirror,
+    .CodeMirror .CodeMirror-scroll {
+        overflow: visible !important;
+    }
+
+    div.CodeMirror-scroll {
+        height: auto !important;
+        overflow: visible;
+    }
+
+    .result-display {
+        display: block;
+        position: static;
+    }
+
+    /* Base styles for the toc-container */
+    .toc-container {
+        position: relative;
+        max-width: 300px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: none;
+        /* Hidden by default */
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    /* Menu button */
+    .menu-button {
+        border: 0;
+        background: white;
+        padding: 10px;
+        display: block;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 10000;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    .github-corner {
+        display: none;
+    }
+
+    .menu-button span {
+        display: block;
+        width: 30px;
+        height: 3px;
+        margin-bottom: 5px;
+        position: relative;
+
+        background: #222222;
+        border-radius: 3px;
+
+        z-index: 1;
+
+        transform-origin: 4px 0px;
+
+        transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+            background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0),
+            opacity 0.55s ease;
+    }
+
+    .menu-button span:first-child {
+        transform-origin: 0% 0%;
+    }
+
+    .menu-button span:nth-last-child(2) {
+        transform-origin: 0% 100%;
+    }
+
+
+    /* Show the menu when toggled */
+    .toc-container.open {
+        display: flex;
+    }
+
+    /* Styling for the toc list */
+    .toc {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .toc li {
+        padding: 8px 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .toc li a {
+        text-decoration: none;
+        font-size: 16px;
+        color: inherit;
+        /* Use the inline color style */
+    }
+
+    /* Nested menu items */
+    .level-2 {
+        padding-left: 20px;
+        /* Indent for sub-menu items */
+    }
+
+    ul.toc {
+        position: static;
+        width: auto;
+        margin-right: 20px;
+    }
+
+    .toc-container {
+        width: 70%;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow-y: auto;
+    }
 }
