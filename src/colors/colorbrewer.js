@@ -59,9 +59,23 @@ const colorbrewer = {
     Pastel1: ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2']
 };
 
-// add lowercase aliases for case-insensitive matches
-for (let key of Object.keys(colorbrewer)) {
-    colorbrewer[key.toLowerCase()] = colorbrewer[key];
-}
+const colorbrewerTypes = Object.keys(colorbrewer);
+const typeMap = new Map(colorbrewerTypes.map((key) => [key.toLowerCase(), key]));
 
-export default colorbrewer;
+// use Proxy to allow case-insensitive access to palettes
+const colorbrewerProxy =
+    typeof Proxy === 'function'
+        ? new Proxy(colorbrewer, {
+              get(target, prop) {
+                  const lower = prop.toLowerCase();
+                  if (typeMap.has(lower)) {
+                      return target[typeMap.get(lower)];
+                  }
+              },
+              getOwnPropertyNames() {
+                  return Object.getOwnPropertyNames(colorbrewerTypes);
+              }
+          })
+        : colorbrewer;
+
+export default colorbrewerProxy;

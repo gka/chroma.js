@@ -61,10 +61,13 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.chroma = factory());
 })(this, (function () { 'use strict';
 
+    var min$1 = Math.min;
+    var max$1 = Math.max;
+
     function limit (x, low, high) {
         if ( high === void 0 ) high = 1;
 
-        return min(max(low, x), high);
+        return min$1(max$1(low, x), high);
     }
 
     function clip_rgb (rgb) {
