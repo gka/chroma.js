@@ -12,8 +12,12 @@
 <p><a href="https://travis-ci.com/gka/chroma.js"><img src="https://api.travis-ci.com/gka/chroma.js.svg?branch=master" alt="Build Status"></a></p>
 <h2 id="installation">Installation</h2>
 <p>For Node.js: Install the <code>chroma-js</code> npm module, <code>npm install chroma-js</code>. Then import the module into your JavaScript: <code>import chroma from &quot;chroma-js&quot;</code>.</p>
-<p>And for browsers, download <a href="https://raw.github.com/gka/chroma.js/master/chroma.min.js"><code>chroma.min.js</code></a> or use the <a href="https://cdnjs.com/libraries/chroma-js">hosted version on cdnjs.com</a>. Then, initiate and manipulate colors:</p>
+<p>And for browsers, download <a href="https://raw.github.com/gka/chroma.js/main/chroma.min.js"><code>chroma.min.js</code></a> or use the <a href="https://unpkg.com/chroma-js/dist/chroma.min.cjs">hosted version on unpkg.com</a>. Then, initiate and manipulate colors:</p>
 <pre><code class="lang-js">chroma(&#39;#D4F880&#39;).darken().hex();  // #9BC04B
+</code></pre>
+<p>You can also just import chroma.js as ES module, as demonstrated in this <a href="https://stackblitz.com/edit/stackblitz-starters-axiqsz?description=HTML/CSS/JS%20Starter&amp;file=script.js,styles.css&amp;terminalHeight=10&amp;title=Static%20Starter">StackBlitz</a>. </p>
+<p>To use chroma.js in <a href="https://observablehq.com/">Observable notebooks</a>, you can import it like this:</p>
+<pre><code class="lang-js">import { chroma } from &quot;@gka/chroma-js&quot;
 </code></pre>
 <p>The <a href="http://gka.github.io/chroma.js/">interactive documentation</a> continues below (and there&#39;s a <a href="https://github.com/gka/chroma.js/blob/master/docs/src/index.md">static version</a>, too) for usage examples. Or use it from SASS using <a href="https://github.com/bugsnag/chromatic-sass">chromatic-sass</a>!</p>
 <h2 id="quick-start">Quick-start</h2>

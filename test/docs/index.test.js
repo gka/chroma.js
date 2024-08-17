@@ -7,9 +7,9 @@ import chroma_ from '../../index.js';
 const docsPath = path.resolve(__dirname, '../../docs/src/index.md');
 const DOCS = fs.readFileSync(docsPath, 'utf-8');
 
-const snippets = Array.from(DOCS.matchAll(/```js([\s\S]+?)```/g)).map(
-    (m) => m[1]
-);
+const snippets = Array.from(DOCS.matchAll(/```js([\s\S]+?)```/g))
+    .map((m) => m[1])
+    .filter((s) => s.indexOf('import') === -1);
 
 // is used in eval;
 const data = [

@@ -191,7 +191,7 @@
     };
 
     // this gets updated automatically
-    var version = '3.0.0-0';
+    var version = '3.0.0';
 
     var chroma = function () {
         var args = [], len = arguments.length;

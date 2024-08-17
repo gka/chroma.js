@@ -9,13 +9,23 @@
 
 For Node.js: Install the `chroma-js` npm module, `npm install chroma-js`. Then import the module into your JavaScript: `import chroma from "chroma-js"`.
 
-And for browsers, download [`chroma.min.js`](https://raw.github.com/gka/chroma.js/master/chroma.min.js) or use the [hosted version on cdnjs.com](https://cdnjs.com/libraries/chroma-js). Then, initiate and manipulate colors:
+And for browsers, download [`chroma.min.js`](https://raw.github.com/gka/chroma.js/main/chroma.min.js) or use the [hosted version on unpkg.com](https://unpkg.com/chroma-js/dist/chroma.min.cjs). Then, initiate and manipulate colors:
 
 ```js
 chroma('#D4F880').darken().hex();  // #9BC04B
 ```
 
+You can also just import chroma.js as ES module, as demonstrated in this [StackBlitz](https://stackblitz.com/edit/stackblitz-starters-axiqsz?description=HTML/CSS/JS%20Starter&file=script.js,styles.css&terminalHeight=10&title=Static%20Starter). 
+
+To use chroma.js in [Observable notebooks](https://observablehq.com/), you can import it like this:
+
+```js
+import { chroma } from "@gka/chroma-js"
+```
+
+
 The [interactive documentation](http://gka.github.io/chroma.js/) continues below (and there's a [static version](https://github.com/gka/chroma.js/blob/master/docs/src/index.md), too) for usage examples. Or use it from SASS using [chromatic-sass](https://github.com/bugsnag/chromatic-sass)!
+
 
 ## Quick-start
 
