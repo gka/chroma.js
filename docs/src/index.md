@@ -5,27 +5,6 @@
 
 [![Build Status](https://api.travis-ci.com/gka/chroma.js.svg?branch=master)](https://travis-ci.com/gka/chroma.js)
 
-## Installation
-
-For Node.js: Install the `chroma-js` npm module, `npm install chroma-js`. Then import the module into your JavaScript: `import chroma from "chroma-js"`.
-
-And for browsers, download [`chroma.min.js`](https://raw.github.com/gka/chroma.js/main/chroma.min.js) or use the [hosted version on unpkg.com](https://unpkg.com/chroma-js/dist/chroma.min.cjs). Then, initiate and manipulate colors:
-
-```js
-chroma('#D4F880').darken().hex();  // #9BC04B
-```
-
-You can also just import chroma.js as ES module, as demonstrated in this [StackBlitz](https://stackblitz.com/edit/stackblitz-starters-axiqsz?description=HTML/CSS/JS%20Starter&file=script.js,styles.css&terminalHeight=10&title=Static%20Starter). 
-
-To use chroma.js in [Observable notebooks](https://observablehq.com/), you can import it like this:
-
-```js
-import { chroma } from "@gka/chroma-js"
-```
-
-
-The [interactive documentation](http://gka.github.io/chroma.js/) continues below (and there's a [static version](https://github.com/gka/chroma.js/blob/master/docs/src/index.md), too) for usage examples. Or use it from SASS using [chromatic-sass](https://github.com/bugsnag/chromatic-sass)!
-
 
 ## Quick-start
 
@@ -50,6 +29,44 @@ chroma.scale(['#fafa6e', '#2A4858'])
 ```
 
 chroma.js has a lot more to offer, but that's the gist of it.
+
+## Installation
+
+For Node.js: Install the `chroma-js` npm module using your favorite package manager:
+
+```shell
+npm install chroma-js
+# pnpm add chroma-js
+# yarn add chroma-js
+```
+
+Then import the module into your JavaScript:
+
+```js
+import chroma from 'chroma-js';
+```
+
+If you just want to use parts of chroma.js and not bundle the entire package, you can import directly from `chroma-js/src/*` to benefit from treeshaking. For instance, the following import would only result in a [1.24kB bundle increase](https://bundlejs.com/?q=chroma-js%2Fsrc%2Futils%2Fdelta-e.js&treeshake=%5B*+as+default%5D&config=%7B%22analysis%22%3A%22treemap%22%7D):
+
+```js
+import deltaE from 'chroma-js/src/utils/deltaE.js
+```
+
+And for browsers, download [`chroma.min.js`](https://unpkg.com/chroma-js/dist/chroma.min.cjs) or use the [hosted version on unpkg.com](https://unpkg.com/chroma-js/dist/chroma.min.cjs).
+
+You can also just import chroma.js as ES module, as demonstrated in this [StackBlitz](https://stackblitz.com/edit/stackblitz-starters-axiqsz?description=HTML/CSS/JS%20Starter&file=script.js,styles.css&terminalHeight=10&title=Static%20Starter). 
+
+
+To use chroma.js in [Observable notebooks](https://observablehq.com/), you can import it like this:
+
+```js
+import { chroma } from "@gka/chroma-js"
+```
+
+
+The [interactive documentation](http://gka.github.io/chroma.js/) continues below (and there's a [static version](https://github.com/gka/chroma.js/blob/master/docs/src/index.md), too) for usage examples. Or use it from SASS using [chromatic-sass](https://github.com/bugsnag/chromatic-sass)!
+
+
 
 ## API
 

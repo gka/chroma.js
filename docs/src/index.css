@@ -45,6 +45,10 @@ body {
     margin-left: 30px;
 }
 
+.wrap>p {
+    line-height: 1.5;
+}
+
 .wrap>p,
 .wrap>table {
     margin-right: 200px;

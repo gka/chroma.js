@@ -3,6 +3,7 @@
 <script type="text/javascript" src="libs/chroma.min.cjs"></script>
 <script type="text/javascript" src="libs/codemirror/lib/codemirror.js"></script>
 <script type="text/javascript" src="libs/codemirror/mode/javascript/javascript.js"></script>
+<script type="text/javascript" src="libs/codemirror/mode/shell/shell.js"></script>
 
 <script type="text/javascript">
     function toggleMenu() {
@@ -16,6 +17,23 @@
     }
 
     (function ($) {
+        $('code.lang-shell').each(function () {
+            var code = this;
+
+            var cm = CodeMirror(
+                function (elt) {
+                    code.parentNode.replaceChild(elt, code);
+                },
+                {
+                    value: code.innerHTML.trim(),
+                    indentUnit: 4,
+                    mode: 'shell',
+                    readOnly: true,
+                    lineWrapping: true,
+                    scrollbarStyle: 'null',
+                }
+            );
+        });
         $('code.lang-js').each(function () {
             var code = this;
 
@@ -28,7 +46,7 @@
                     indentUnit: 4,
                     mode: 'javascript',
                     lineWrapping: true,
-                    scrollbarStyle: 'null',
+                    scrollbarStyle: 'null'
                 }
             );
 
@@ -40,7 +58,7 @@
                 cm.display.wrapper.parentNode
             );
 
-            showColors(cm);
+            if (!cm.getDoc().getValue().includes('import')) showColors(cm);
 
             function showColors(cm) {
                 $('.cm-string', cm.display.wrapper).each(styleSpan);
