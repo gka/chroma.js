@@ -1,8 +1,9 @@
 ## Changelog
 
 ### 3.1.0 (pre-release)
-* make it easier to access colorbrewer palette names - resolves #314
-* docs: explain differences to official colorbrewer scales - resolves #316
+* make it easier to access colorbrewer palette names - resolves [#314](https://github.com/gka/chroma.js/issues/314)
+* docs: explain differences to official colorbrewer scales - resolves [#316](https://github.com/gka/chroma.js/issues/316)
+* fix: correct parsing of modern css colors with percentage alpha - resolves [#297](https://github.com/gka/chroma.js/issues/297)
 
 ### 3.0.0
 * 🎉 NEW: Add support for modern CSS color spaces. This means you can now export and parse CSS colors in `lab()`, `lch()`, `oklab()`, `oklch()` space.
