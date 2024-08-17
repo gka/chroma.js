@@ -9,7 +9,8 @@ Color.prototype.hsi = function () {
     return rgb2hsi(this._rgb);
 };
 
-chroma.hsi = (...args) => new Color(...args, 'hsi');
+const hsi = (...args) => new Color(...args, 'hsi');
+chroma.hsi = hsi;
 
 input.format.hsi = hsi2rgb;
 
@@ -22,3 +23,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { hsi };

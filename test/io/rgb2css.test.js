@@ -51,7 +51,7 @@ const tests = {
     }
 };
 
-describe.only('Testing rgb2css color conversions', () => {
+describe('Testing rgb2css color conversions', () => {
     Object.keys(tests).forEach((key) => {
         const { rgb, mode, css } = tests[key];
 

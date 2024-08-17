@@ -1,5 +1,6 @@
 import hsl2rgb from '../hsl/hsl2rgb.js';
 import lab2rgb from '../lab/lab2rgb.js';
+import lch2rgb from '../lch/lch2rgb.js';
 // import oklab2rgb from '../oklab/oklab2rgb.js';
 import input from '../input.js';
 import limit from '../../utils/limit.js';
@@ -34,6 +35,8 @@ const RE_HSLA_LEGACY =
 
 const RE_LAB =
     /^lab\(\s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
+const RE_LCH =
+    /^lch\(\s*(-?\d+(?:\.\d+)?%?) \s*(?:(-?\d+(?:\.\d+)?%?)|none) \s*(-?\d+(?:\.\d+)?(?:deg)?|none)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
 // const RE_OKLAB =
 //     /^oklab\(\s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?) \s*(-?\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?))?\)?$/;
 
@@ -54,6 +57,10 @@ const percentToAbsolute = (pct, min = 0, max = 100, signed = false) => {
         }
     }
     return +pct;
+};
+
+const noneToValue = (v, noneValue) => {
+    return v === 'none' ? noneValue : v;
 };
 
 const css2rgb = (css) => {
@@ -138,6 +145,16 @@ const css2rgb = (css) => {
         lab[1] = percentToAbsolute(lab[1], -125, 125, true);
         lab[2] = percentToAbsolute(lab[2], -125, 125, true);
         const rgb = roundRGB(lab2rgb(lab));
+        rgb[3] = m[4] !== undefined ? +m[4] : 1;
+        return rgb;
+    }
+
+    if ((m = css.match(RE_LCH))) {
+        const lch = m.slice(1, 4);
+        lch[0] = percentToAbsolute(lch[0], 0, 100);
+        lch[1] = percentToAbsolute(noneToValue(lch[1], 0), 0, 150, false);
+        lch[2] = +noneToValue(lch[2].replace('deg', ''), 0);
+        const rgb = roundRGB(lch2rgb(lch));
         rgb[3] = m[4] !== undefined ? +m[4] : 1;
         return rgb;
     }

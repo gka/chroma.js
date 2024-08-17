@@ -9,7 +9,8 @@ Color.prototype.hsl = function () {
     return rgb2hsl(this._rgb);
 };
 
-chroma.hsl = (...args) => new Color(...args, 'hsl');
+const hsl = (...args) => new Color(...args, 'hsl');
+chroma.hsl = hsl;
 
 input.format.hsl = hsl2rgb;
 
@@ -22,3 +23,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { hsl };

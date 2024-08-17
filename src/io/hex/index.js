@@ -1,5 +1,5 @@
-import chroma from '../../chroma.js';
 import Color from '../../Color.js';
+import chroma from '../../chroma.js';
 import { type } from '../../utils/index.js';
 import input from '../input.js';
 import hex2rgb from './hex2rgb.js';
@@ -9,7 +9,8 @@ Color.prototype.hex = function (mode) {
     return rgb2hex(this._rgb, mode);
 };
 
-chroma.hex = (...args) => new Color(...args, 'hex');
+const hex = (...args) => new Color(...args, 'hex');
+chroma.hex = hex;
 
 input.format.hex = hex2rgb;
 input.autodetect.push({
@@ -24,3 +25,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { hex };

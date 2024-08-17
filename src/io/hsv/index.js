@@ -9,7 +9,8 @@ Color.prototype.hsv = function () {
     return rgb2hsv(this._rgb);
 };
 
-chroma.hsv = (...args) => new Color(...args, 'hsv');
+const hsv = (...args) => new Color(...args, 'hsv');
+chroma.hsv = hsv;
 
 input.format.hsv = hsv2rgb;
 
@@ -22,3 +23,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { hsv };

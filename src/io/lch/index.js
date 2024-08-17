@@ -13,8 +13,10 @@ Color.prototype.hcl = function () {
     return rgb2lch(this._rgb).reverse();
 };
 
-chroma.lch = (...args) => new Color(...args, 'lch');
-chroma.hcl = (...args) => new Color(...args, 'hcl');
+const lch = (...args) => new Color(...args, 'lch');
+const hcl = (...args) => new Color(...args, 'hcl');
+
+Object.assign(chroma, { lch, hcl });
 
 input.format.lch = lch2rgb;
 input.format.hcl = hcl2rgb;
@@ -29,3 +31,5 @@ input.format.hcl = hcl2rgb;
         }
     })
 );
+
+export { lch, hcl };

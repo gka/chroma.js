@@ -9,12 +9,13 @@ Color.prototype.oklch = function () {
     return rgb2oklch(this._rgb);
 };
 
-chroma.oklch = (...args) => new Color(...args, 'oklch');
+const oklch = (...args) => new Color(...args, 'oklch');
+Object.assign(chroma, { oklch });
 
 input.format.oklch = oklch2rgb;
 
 input.autodetect.push({
-    p: 3,
+    p: 2,
     test: (...args) => {
         args = unpack(args, 'oklch');
         if (type(args) === 'array' && args.length === 3) {
@@ -22,3 +23,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { oklch };

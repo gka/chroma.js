@@ -11,12 +11,12 @@ Color.prototype.temp =
             return rgb2temperature(this._rgb);
         };
 
-chroma.temp =
-    chroma.kelvin =
-    chroma.temperature =
-        (...args) => new Color(...args, 'temp');
+const temp = (...args) => new Color(...args, 'temp');
+Object.assign(chroma, { temp, kelvin: temp, temperature: temp });
 
 input.format.temp =
     input.format.kelvin =
     input.format.temperature =
         temperature2rgb;
+
+export { temp, temp as kelvin, temp as temperature };

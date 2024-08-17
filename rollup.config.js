@@ -12,8 +12,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default [
-    bundle('index.js', 'chroma'),
-    bundle('index-light.js', 'chroma-light')
+    bundle('index.umd.js', 'chroma'),
+    bundle('index.umd.light.js', 'chroma-light')
 ];
 
 function bundle(input, target) {
@@ -22,6 +22,8 @@ function bundle(input, target) {
         output: {
             file: `dist/${target}${minify ? '.min' : ''}.cjs`,
             format: 'umd',
+            globals: {}, // If you have any external dependencies, list them here
+            exports: 'default',
             name: 'chroma'
         },
         plugins: [

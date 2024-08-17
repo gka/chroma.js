@@ -3,6 +3,22 @@
 import chroma from './src/chroma.js';
 
 // io --> convert colors
+import { cmyk } from './src/io/cmyk/index.js';
+import { css } from './src/io/css/index.js';
+import { gl } from './src/io/gl/index.js';
+import { hcg } from './src/io/hcg/index.js';
+import { hex } from './src/io/hex/index.js';
+import { hsi } from './src/io/hsi/index.js';
+import { hsl } from './src/io/hsl/index.js';
+import { hsv } from './src/io/hsv/index.js';
+import { lab, getLabWhitePoint, setLabWhitePoint } from './src/io/lab/index.js';
+import { lch, hcl } from './src/io/lch/index.js';
+import { num } from './src/io/num/index.js';
+import { rgb } from './src/io/rgb/index.js';
+import { temp, kelvin, temperature } from './src/io/temp/index.js';
+import { oklab } from './src/io/oklab/index.js';
+import { oklch } from './src/io/oklch/index.js';
+
 import './src/io/named/index.js';
 
 // operators --> modify existing Colors
@@ -75,45 +91,27 @@ Object.assign(chroma, {
     random,
     scale,
     scales,
-    valid
+    valid,
+    cmyk,
+    css,
+    gl,
+    hcg,
+    hex,
+    hsi,
+    hsl,
+    hsv,
+    lab,
+    lch,
+    hcl,
+    num,
+    rgb,
+    temp,
+    kelvin,
+    temperature,
+    oklab,
+    oklch,
+    getLabWhitePoint,
+    setLabWhitePoint
 });
 
 export default chroma;
-
-export {
-    analyze,
-    average,
-    bezier,
-    blend,
-    brewer,
-    Color,
-    colors,
-    contrast,
-    cubehelix,
-    deltaE,
-    distance,
-    input,
-    limits,
-    mix,
-    mix as interpolate,
-    random,
-    scale,
-    scales,
-    valid
-};
-
-export * from './src/io/cmyk/index.js';
-export * from './src/io/css/index.js';
-export * from './src/io/gl/index.js';
-export * from './src/io/hcg/index.js';
-export * from './src/io/hex/index.js';
-export * from './src/io/hsi/index.js';
-export * from './src/io/hsl/index.js';
-export * from './src/io/hsv/index.js';
-export * from './src/io/lab/index.js';
-export * from './src/io/lch/index.js';
-export * from './src/io/num/index.js';
-export * from './src/io/rgb/index.js';
-export * from './src/io/temp/index.js';
-export * from './src/io/oklab/index.js';
-export * from './src/io/oklch/index.js';

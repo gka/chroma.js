@@ -9,7 +9,8 @@ Color.prototype.cmyk = function () {
     return rgb2cmyk(this._rgb);
 };
 
-chroma.cmyk = (...args) => new Color(...args, 'cmyk');
+const cmyk = (...args) => new Color(...args, 'cmyk');
+Object.assign(chroma, { cmyk });
 
 input.format.cmyk = cmyk2rgb;
 
@@ -22,3 +23,5 @@ input.autodetect.push({
         }
     }
 });
+
+export { cmyk };
