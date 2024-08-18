@@ -45,7 +45,8 @@ describe('Testing CSS2RGB color conversions', () => {
         'lch(93.12% 39.2% 115.62deg)': [212, 248, 128, 1], // #d4f880
         'lch(93.12% none none)': [235, 235, 235, 1],
         'oklch(92.83% 0.15 123.12deg)': [212, 248, 130, 1],
-        'oklch(92.83% none none)': [231, 231, 231, 1]
+        'oklch(92.83% none none)': [231, 231, 231, 1],
+        transparent: [0, 0, 0, 0]
     };
 
     Object.keys(testCases).forEach((name) => {

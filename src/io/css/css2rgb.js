@@ -102,6 +102,11 @@ const noneToValue = (v, noneValue) => {
 
 const css2rgb = (css) => {
     css = css.toLowerCase().trim();
+
+    if (css === 'transparent') {
+        return [0, 0, 0, 0];
+    }
+
     let m;
 
     if (input.format.named) {
@@ -225,7 +230,8 @@ css2rgb.test = (s) => {
         RE_RGB_LEGACY.test(s) ||
         RE_RGBA_LEGACY.test(s) ||
         RE_HSL_LEGACY.test(s) ||
-        RE_HSLA_LEGACY.test(s)
+        RE_HSLA_LEGACY.test(s) ||
+        s === 'transparent'
     );
 };
 
