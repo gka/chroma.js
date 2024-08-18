@@ -153,13 +153,6 @@ chroma(&#39;hotpink&#39;).lab();
 <p>Returns the name of the currently set CIE Lab white reference point. </p>
 <pre><code class="lang-js">chroma.getLabWhitePoint();
 </code></pre>
-<h3 id="chroma-oklab">chroma.oklab</h3>
-<h4 id="-lightness-a-b-">(Lightness, a, b)</h4>
-<p><a href="https://bottosson.github.io/posts/oklab/">Oklab color space</a></p>
-<pre><code class="lang-js">chroma.oklab(0.4,-0.2,0.5);
-chroma.oklab(0.5,-0.2,0.5);
-chroma.oklab(0.8,-0.2,0.5);
-</code></pre>
 <h3 id="chroma-lch">chroma.lch</h3>
 <h4 id="-lightness-chroma-hue-">(Lightness, chroma, hue)</h4>
 <p>The range for <code>lightness</code> and <code>chroma</code> depend on the hue, but go roughly from 0..100-150. The range for <code>hue</code> is 0..360.</p>
@@ -171,6 +164,13 @@ chroma(80, 40, 130, &#39;lch&#39;);
 <p>You can use <strong>hcl</strong> instead of Lch. Lightness and hue channels are switched to be more consistent with HSL.</p>
 <pre><code class="lang-js">chroma.hcl(130, 40, 80);
 chroma(130, 40, 80, &#39;hcl&#39;);
+</code></pre>
+<h3 id="chroma-oklab">chroma.oklab</h3>
+<h4 id="-lightness-a-b-">(Lightness, a, b)</h4>
+<p><a href="https://bottosson.github.io/posts/oklab/">Oklab color space</a></p>
+<pre><code class="lang-js">chroma.oklab(0.4,-0.2,0.5);
+chroma.oklab(0.5,-0.2,0.5);
+chroma.oklab(0.8,-0.2,0.5);
 </code></pre>
 <h3 id="chroma-oklch">chroma.oklch</h3>
 <h4 id="-lightness-chromacity-hue-">(Lightness, chromacity, hue)</h4>
@@ -474,10 +474,6 @@ chroma(&#39;white&#39;).hsi();
 <p>Returns an array with the <strong>L</strong>, <strong>a</strong>, and <strong>b</strong> components.</p>
 <pre><code class="lang-js">chroma(&#39;orange&#39;).lab()
 </code></pre>
-<h3 id="color-oklab">color.oklab</h3>
-<p>Returns an array with the <strong>L</strong>, <strong>a</strong>, and <strong>b</strong> components.</p>
-<pre><code class="lang-js">chroma(&#39;orange&#39;).oklab()
-</code></pre>
 <h3 id="color-lch">color.lch</h3>
 <p>Returns an array with the <strong>Lightness</strong>, <strong>chroma</strong>, and <strong>hue</strong> components.</p>
 <pre><code class="lang-js">chroma(&#39;skyblue&#39;).lch()
@@ -486,8 +482,12 @@ chroma(&#39;white&#39;).hsi();
 <p>Alias of <a href="#color-lch">lch</a>, but with the components in reverse order.</p>
 <pre><code class="lang-js">chroma(&#39;skyblue&#39;).hcl()
 </code></pre>
+<h3 id="color-oklab">color.oklab</h3>
+<p>Returns an array with the <strong>L</strong>, <strong>a</strong>, and <strong>b</strong> components in the <a href="https://bottosson.github.io/posts/oklab/">OKLab</a> color space.</p>
+<pre><code class="lang-js">chroma(&#39;orange&#39;).oklab()
+</code></pre>
 <h3 id="color-oklch">color.oklch</h3>
-<p>Returns an array with the <strong>Lightness</strong>, <strong>chroma</strong>, and <strong>hue</strong> components.</p>
+<p>Returns an array with the <strong>Lightness</strong>, <strong>chroma</strong>, and <strong>hue</strong> components in the <a href="https://bottosson.github.io/posts/oklab/">OKLch</a> color space.</p>
 <pre><code class="lang-js">chroma(&#39;skyblue&#39;).oklch()
 </code></pre>
 <h3 id="color-num">color.num</h3>
@@ -705,6 +705,7 @@ chroma.cubehelix().lightness([0.3,0.7]);
 <h2 id="changelog">Changelog</h2>
 <h3 id="3-1-0-pre-release-">3.1.0 (pre-release)</h3>
 <ul>
+<li>feat: parse <code>&#39;transparent&#39;</code> as black with 0% opacity - resolves <a href="https://github.com/gka/chroma.js/issues/280">#280</a></li>
 <li>make it easier to access colorbrewer palette names - resolves <a href="https://github.com/gka/chroma.js/issues/314">#314</a></li>
 <li>docs: explain differences to official colorbrewer scales - resolves <a href="https://github.com/gka/chroma.js/issues/316">#316</a></li>
 <li>fix: correct parsing of modern css colors with percentage alpha - resolves <a href="https://github.com/gka/chroma.js/issues/297">#297</a></li>

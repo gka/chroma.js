@@ -183,17 +183,6 @@ Returns the name of the currently set CIE Lab white reference point.
 chroma.getLabWhitePoint();
 ```
 
-### chroma.oklab
-#### (Lightness, a, b)
-
-[Oklab color space](https://bottosson.github.io/posts/oklab/)
-
-```js
-chroma.oklab(0.4,-0.2,0.5);
-chroma.oklab(0.5,-0.2,0.5);
-chroma.oklab(0.8,-0.2,0.5);
-```
-
 ### chroma.lch
 #### (Lightness, chroma, hue)
 
@@ -214,6 +203,17 @@ chroma.hcl(130, 40, 80);
 chroma(130, 40, 80, 'hcl');
 ```
 
+### chroma.oklab
+#### (Lightness, a, b)
+
+[Oklab color space](https://bottosson.github.io/posts/oklab/)
+
+```js
+chroma.oklab(0.4,-0.2,0.5);
+chroma.oklab(0.5,-0.2,0.5);
+chroma.oklab(0.8,-0.2,0.5);
+```
+
 ### chroma.oklch
 #### (Lightness, chromacity, hue)
 
@@ -221,6 +221,7 @@ chroma(130, 40, 80, 'hcl');
 chroma.oklch(0.5, 0.2, 240);
 chroma(0.8, 0.12, 60, 'oklch');
 ```
+
 
 ### chroma.cmyk
 #### (cyan, magenta, yellow, black)
@@ -705,15 +706,6 @@ Returns an array with the **L**, **a**, and **b** components.
 chroma('orange').lab()
 ```
 
-### color.oklab
-
-Returns an array with the **L**, **a**, and **b** components.
-
-```js
-chroma('orange').oklab()
-```
-
-
 ### color.lch
 
 Returns an array with the **Lightness**, **chroma**, and **hue** components.
@@ -730,9 +722,17 @@ Alias of [lch](#color-lch), but with the components in reverse order.
 chroma('skyblue').hcl()
 ```
 
+### color.oklab
+
+Returns an array with the **L**, **a**, and **b** components in the [OKLab](https://bottosson.github.io/posts/oklab/) color space.
+
+```js
+chroma('orange').oklab()
+```
+
 ### color.oklch
 
-Returns an array with the **Lightness**, **chroma**, and **hue** components.
+Returns an array with the **Lightness**, **chroma**, and **hue** components in the [OKLch](https://bottosson.github.io/posts/oklab/) color space.
 
 ```js
 chroma('skyblue').oklch()
