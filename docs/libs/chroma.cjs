@@ -3689,18 +3689,17 @@
 
     /**
      * @license
-     * 
+     *
      * The APCA contrast prediction algorithm is based of the formulas published
      * in the APCA-1.0.98G specification by Myndex. The specification is available at:
      * https://raw.githubusercontent.com/Myndex/apca-w3/master/images/APCAw3_0.1.17_APCA0.0.98G.svg
-     * 
+     *
      * Note that the APCA implementation is still beta, so please update to
      * future versions of chroma.js when they become available.
-     * 
+     *
      * You can read more about the APCA Readability Criterion at
      * https://readtech.org/ARC/
      */
-
 
     // constants
     var W_offset = 0.027;
@@ -3721,25 +3720,36 @@
         var l_text = lum.apply(void 0, text.rgb());
         var l_bg = lum.apply(void 0, bg.rgb());
 
-        // soft clamp black levels 
-        var Y_text = l_text >= B_threshold ? l_text : l_text + Math.pow(B_threshold - l_text, B_exp);
-        var Y_bg = l_bg >= B_threshold ? l_bg : l_bg + Math.pow(B_threshold - l_bg, B_exp);
+        // soft clamp black levels
+        var Y_text =
+            l_text >= B_threshold
+                ? l_text
+                : l_text + Math.pow(B_threshold - l_text, B_exp);
+        var Y_bg =
+            l_bg >= B_threshold ? l_bg : l_bg + Math.pow(B_threshold - l_bg, B_exp);
 
         // normal polarity (dark text on light background)
         var S_norm = Math.pow(Y_bg, 0.56) - Math.pow(Y_text, 0.57);
         // reverse polarity (light text on dark background)
         var S_rev = Math.pow(Y_bg, 0.65) - Math.pow(Y_text, 0.62);
         // clamp noise then scale
-        var C = Math.abs(Y_bg - Y_text) < P_in ? 0 : Y_text < Y_bg ? S_norm * R_scale : S_rev * R_scale;
+        var C =
+            Math.abs(Y_bg - Y_text) < P_in
+                ? 0
+                : Y_text < Y_bg
+                  ? S_norm * R_scale
+                  : S_rev * R_scale;
         // clamp minimum contrast then offset
         var S_apc = Math.abs(C) < P_out ? 0 : C > 0 ? C - W_offset : C + W_offset;
         // scale to 100
         return S_apc * 100;
     }
-    function lum(r,g,b) {
-        return 0.2126729 * Math.pow(r / 255, 2.4) +
+    function lum(r, g, b) {
+        return (
+            0.2126729 * Math.pow(r / 255, 2.4) +
             0.7151522 * Math.pow(g / 255, 2.4) +
-            0.0721750 * Math.pow(b / 255, 2.4);
+            0.072175 * Math.pow(b / 255, 2.4)
+        );
     }
 
     var sqrt = Math.sqrt;

@@ -180,7 +180,7 @@
                             [
                                 'background-color:' + (isCSS ? val : col.hex()),
                                 'color:' + (l < 0.7 ? 'white' : 'black'),
-                                'opacity:' + col.alpha()
+                                ...(isCSS ? [] : ['opacity:' + col.alpha()])
                             ].join(';')
                         );
                         
