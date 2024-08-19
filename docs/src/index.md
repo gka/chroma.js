@@ -349,6 +349,19 @@ chroma.contrast('pink', 'hotpink');
 chroma.contrast('pink', 'purple');
 ```
 
+### chroma.contrastAPCA
+#### (text, background)
+
+**New (3.1):** Computes the [APCA contrast](https://www.myndex.com/APCA/) ratio of a text color against its background color. The basic idea is that you check the contrast between the text and background color and then use [this lookup table](https://raw.githubusercontent.com/Myndex/apca-w3/master/images/APCAlookupByContrast.jpeg) to find the minimum font size you're allowed to use (given the font weight and purpose of the text). 
+
+```js
+chroma.contrastAPCA('hotpink', 'pink');
+chroma.contrastAPCA('purple', 'pink');
+```
+
+Read more about how to interpret and use this metric at [APCA Readability Criterion](https://readtech.org/ARC). Please note that the APCA algorithm is still in beta and may change be subject to changes in the future.
+
+
 ### chroma.distance
 #### (color1, color2, mode='lab')
 

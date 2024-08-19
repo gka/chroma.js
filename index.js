@@ -42,6 +42,7 @@ import scale from './src/generator/scale.js';
 // other utility methods
 import { analyze } from './src/utils/analyze.js';
 import contrast from './src/utils/contrast.js';
+import contrastAPCA from './src/utils/contrastAPCA.js';
 import deltaE from './src/utils/delta-e.js';
 import distance from './src/utils/distance.js';
 import { limits } from './src/utils/analyze.js';
@@ -65,6 +66,7 @@ Object.assign(chroma, {
     Color,
     colors,
     contrast,
+    contrastAPCA,
     cubehelix,
     deltaE,
     distance,
@@ -89,6 +91,7 @@ export {
     Color,
     colors,
     contrast,
+    contrastAPCA,
     cubehelix,
     deltaE,
     distance,

@@ -256,6 +256,13 @@ chroma.contrast(&#39;pink&#39;, &#39;hotpink&#39;);
 // contrast greater than 4.5 = high enough
 chroma.contrast(&#39;pink&#39;, &#39;purple&#39;);
 </code></pre>
+<h3 id="chroma-contrastapca">chroma.contrastAPCA</h3>
+<h4 id="-text-background-">(text, background)</h4>
+<p><strong>New (3.1):</strong> Computes the <a href="https://www.myndex.com/APCA/">APCA contrast</a> ratio of a text color against its background color. The basic idea is that you check the contrast between the text and background color and then use <a href="https://raw.githubusercontent.com/Myndex/apca-w3/master/images/APCAlookupByContrast.jpeg">this lookup table</a> to find the minimum font size you&#39;re allowed to use (given the font weight and purpose of the text). </p>
+<pre><code class="lang-js">chroma.contrastAPCA(&#39;hotpink&#39;, &#39;pink&#39;);
+chroma.contrastAPCA(&#39;purple&#39;, &#39;pink&#39;);
+</code></pre>
+<p>Read more about how to interpret and use this metric at <a href="https://readtech.org/ARC">APCA Readability Criterion</a>. Please note that the APCA algorithm is still in beta and may change be subject to changes in the future.</p>
 <h3 id="chroma-distance">chroma.distance</h3>
 <h4 id="-color1-color2-mode-lab-">(color1, color2, mode=&#39;lab&#39;)</h4>
 <p>Computes the <a href="https://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions">Euclidean distance</a> between two colors in a given color space (default is <code>Lab</code>).</p>
@@ -1007,7 +1014,7 @@ chroma.cubehelix().lightness([0.3,0.7]);
                             [
                                 'background-color:' + (isCSS ? val : col.hex()),
                                 'color:' + (l < 0.7 ? 'white' : 'black'),
-                                'opacity:' + col.alpha()
+                                ...(isCSS ? [] : ['opacity:' + col.alpha()])
                             ].join(';')
                         );
                         
