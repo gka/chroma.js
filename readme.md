@@ -61,7 +61,7 @@ Or you can use it in SASS using [chromatic-sass](https://github.com/bugsnag/chro
 
 ### Want to contribute?
 
-Come over and say hi in our [Discord channel](https://discord.gg/5pB7WgDs)!
+Come over and say hi in our [Discord channel](https://discord.gg/7fgurEqTRe)!
 
 ### Build instructions
 
