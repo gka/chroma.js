@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.1.1
+* fix: allow deep-imports in vite projects
+
 ### 3.1.0 
 * feat: parse `'transparent'` as black with 0% opacity - resolves [#280](https://github.com/gka/chroma.js/issues/280)
 * make it easier to access colorbrewer palette names - resolves [#314](https://github.com/gka/chroma.js/issues/314)
