@@ -198,7 +198,7 @@
     };
 
     // this gets updated automatically
-    var version = '3.0.0';
+    var version = '3.1.0';
 
     var chroma = function () {
         var args = [], len = arguments.length;
@@ -593,7 +593,7 @@
         var mode = last(args) || 'lab';
         lcha[0] = rnd2(lcha[0]) + '%';
         lcha[1] = rnd2(lcha[1]);
-        lcha[2] = rnd2(lcha[2]) + 'deg'; // add deg unit to hue
+        lcha[2] = isNaN(lcha[2]) ? 'none' : rnd2(lcha[2]) + 'deg'; // add deg unit to hue
         if (mode === 'lcha' || (lcha.length > 3 && lcha[3] < 1)) {
             lcha[3] = '/ ' + (lcha.length > 3 ? lcha[3] : 1);
         } else {
@@ -715,7 +715,7 @@
         // L in range [0,1]. For use in CSS, multiply by 100 and add a percent
     }
 
-    var oklab2css$1 = function () {
+    var oklab2css = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
@@ -751,20 +751,20 @@
         return [L, c, h ].concat( (rest.length > 0 && rest[0] < 1 ? [rest[0]] : []));
     };
 
-    var oklab2css = function () {
+    var oklch2css = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        var laba = unpack(args, 'lab');
-        laba[0] = rnd2(laba[0] * 100) + '%';
-        laba[1] = rnd3(laba[1]);
-        laba[2] = rnd2(laba[2]) + 'deg';
-        if (laba.length > 3 && laba[3] < 1) {
-            laba[3] = '/ ' + (laba.length > 3 ? laba[3] : 1);
+        var lcha = unpack(args, 'lch');
+        lcha[0] = rnd2(lcha[0] * 100) + '%';
+        lcha[1] = rnd3(lcha[1]);
+        lcha[2] = isNaN(lcha[2]) ? 'none' : rnd2(lcha[2]) + 'deg'; // add deg unit to hue
+        if (lcha.length > 3 && lcha[3] < 1) {
+            lcha[3] = '/ ' + (lcha.length > 3 ? lcha[3] : 1);
         } else {
-            laba.length = 3;
+            lcha.length = 3;
         }
-        return ("oklch(" + (laba.join(' ')) + ")");
+        return ("oklch(" + (lcha.join(' ')) + ")");
     };
 
     var round$4 = Math.round;
@@ -803,10 +803,10 @@
             return cssColor$1;
         }
         if (mode.substr(0, 5) === 'oklab') {
-            return oklab2css$1(rgb2oklab(rgba));
+            return oklab2css(rgb2oklab(rgba));
         }
         if (mode.substr(0, 5) === 'oklch') {
-            return oklab2css(rgb2oklch(rgba));
+            return oklch2css(rgb2oklch(rgba));
         }
         rgba[0] = round$4(rgba[0]);
         rgba[1] = round$4(rgba[1]);
@@ -1175,6 +1175,11 @@
 
     var css2rgb = function (css) {
         css = css.toLowerCase().trim();
+
+        if (css === 'transparent') {
+            return [0, 0, 0, 0];
+        }
+
         var m;
 
         if (input.format.named) {
@@ -1298,7 +1303,8 @@
             RE_RGB_LEGACY.test(s) ||
             RE_RGBA_LEGACY.test(s) ||
             RE_HSL_LEGACY.test(s) ||
-            RE_HSLA_LEGACY.test(s)
+            RE_HSLA_LEGACY.test(s) ||
+            s === 'transparent'
         );
     };
 

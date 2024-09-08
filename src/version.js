@@ -1,2 +1,2 @@
 // this gets updated automatically
-export const version = '3.0.0';
+export const version = '3.1.0';
