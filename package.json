@@ -29,6 +29,24 @@
     "./light": {
       "import": "./index-light.js",
       "require": "./dist/chroma-light.cjs"
+    },
+    "./src/colors/*.js": {
+      "import": "./src/colors/*.js"
+    },
+    "./src/generator/*.js": {
+      "import": "./src/generator/*.js"
+    },
+    "./src/interpolator/*.js": {
+      "import": "./src/interpolator/*.js"
+    },
+    "./src/io/*.js": {
+      "import": "./src/io/*.js"
+    },
+    "./src/ops/*.js": {
+      "import": "./src/ops/*.js"
+    },
+    "./src/utils/*.js": {
+      "import": "./src/utils/*.js"
     }
   },
   "main": "./index.js",
