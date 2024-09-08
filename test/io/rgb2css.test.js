@@ -48,7 +48,28 @@ const tests = {
         rgb: [212, 248, 128, 0.6],
         mode: 'oklch',
         css: 'oklch(92.83% 0.15 123.12deg / 0.6)'
-    }
+    },
+    white_rgb: { rgb: [255, 255, 255], css: 'rgb(255 255 255)' },
+    white_lab: { rgb: [255, 255, 255], mode: 'lab', css: 'lab(100% 0 0)' },
+    white_lch: { rgb: [255, 255, 255], mode: 'lch', css: 'lch(100% 0 none)' },
+    gray_lch: { rgb: [120, 120, 120], mode: 'lch', css: 'lch(50.43% 0 none)' },
+    black_lch: { rgb: [0, 0, 0], mode: 'lch', css: 'lch(0% 0 none)' },
+    white_oklab: {
+        rgb: [255, 255, 255],
+        mode: 'oklab',
+        css: 'oklab(100% 0 0)'
+    },
+    white_oklch: {
+        rgb: [255, 255, 255],
+        mode: 'oklch',
+        css: 'oklch(100% 0 none)'
+    },
+    gray_oklch: {
+        rgb: [120, 120, 120],
+        mode: 'oklch',
+        css: 'oklch(57.27% 0 none)'
+    },
+    black_oklch: { rgb: [0, 0, 0], mode: 'oklch', css: 'oklch(0% 0 none)' }
 };
 
 describe('Testing rgb2css color conversions', () => {

@@ -1,16 +1,16 @@
 import { unpack, rnd2, rnd3 } from '../../utils/index.js';
 
-const oklab2css = (...args) => {
-    const laba = unpack(args, 'lab');
-    laba[0] = rnd2(laba[0] * 100) + '%';
-    laba[1] = rnd3(laba[1]);
-    laba[2] = rnd2(laba[2]) + 'deg';
-    if (laba.length > 3 && laba[3] < 1) {
-        laba[3] = '/ ' + (laba.length > 3 ? laba[3] : 1);
+const oklch2css = (...args) => {
+    const lcha = unpack(args, 'lch');
+    lcha[0] = rnd2(lcha[0] * 100) + '%';
+    lcha[1] = rnd3(lcha[1]);
+    lcha[2] = isNaN(lcha[2]) ? 'none' : rnd2(lcha[2]) + 'deg'; // add deg unit to hue
+    if (lcha.length > 3 && lcha[3] < 1) {
+        lcha[3] = '/ ' + (lcha.length > 3 ? lcha[3] : 1);
     } else {
-        laba.length = 3;
+        lcha.length = 3;
     }
-    return `oklch(${laba.join(' ')})`;
+    return `oklch(${lcha.join(' ')})`;
 };
 
-export default oklab2css;
+export default oklch2css;

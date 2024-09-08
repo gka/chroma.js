@@ -12,7 +12,7 @@ const lch2css = (...args) => {
     let mode = last(args) || 'lab';
     lcha[0] = rnd2(lcha[0]) + '%';
     lcha[1] = rnd2(lcha[1]);
-    lcha[2] = rnd2(lcha[2]) + 'deg'; // add deg unit to hue
+    lcha[2] = isNaN(lcha[2]) ? 'none' : rnd2(lcha[2]) + 'deg'; // add deg unit to hue
     if (mode === 'lcha' || (lcha.length > 3 && lcha[3] < 1)) {
         lcha[3] = '/ ' + (lcha.length > 3 ? lcha[3] : 1);
     } else {
