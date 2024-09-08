@@ -1,7 +1,7 @@
 {
   "name": "chroma-js",
   "description": "JavaScript library for color conversions",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "packageManager": "pnpm@9.6.0",
   "author": "Gregor Aisch",
   "type": "module",
