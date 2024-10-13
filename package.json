@@ -62,22 +62,22 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.25.1",
+    "@babel/eslint-parser": "^7.25.8",
     "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.9.0",
+    "@eslint/js": "^9.12.0",
     "@rollup/plugin-buble": "^1.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "cross-env": "^7.0.3",
-    "eslint": "^9.9.0",
-    "globals": "^15.9.0",
+    "eslint": "^9.12.0",
+    "globals": "^15.11.0",
     "http-server": "^14.1.1",
-    "husky": "^9.1.4",
+    "husky": "^9.1.6",
     "markdown-to-html": "0.0.13",
     "minimatch": "^10.0.1",
     "prettier": "^3.3.3",
-    "rollup": "^4.20.0",
-    "rollup-plugin-license": "^3.5.2",
-    "vitest": "^2.0.5"
+    "rollup": "^4.24.0",
+    "rollup-plugin-license": "^3.5.3",
+    "vitest": "^2.1.2"
   },
   "license": "(BSD-3-Clause AND Apache-2.0)",
   "spm": {
