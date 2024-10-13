@@ -1,4 +1,4 @@
-import { unpack, type } from '../../utils/index.js';
+import { unpack, type, reverse3 } from '../../utils/index.js';
 import chroma from '../../chroma.js';
 import Color from '../../Color.js';
 import input from '../input.js';
@@ -10,7 +10,7 @@ Color.prototype.lch = function () {
     return rgb2lch(this._rgb);
 };
 Color.prototype.hcl = function () {
-    return rgb2lch(this._rgb).reverse();
+    return reverse3(rgb2lch(this._rgb));
 };
 
 const lch = (...args) => new Color(...args, 'lch');

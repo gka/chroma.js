@@ -14,4 +14,14 @@ const PITHIRD = PI / 3;
 const DEG2RAD = PI / 180;
 const RAD2DEG = 180 / PI;
 
-export { PI, TWOPI, PITHIRD, DEG2RAD, RAD2DEG, min, max, rnd2, rnd3 };
+/**
+ * Reverse the first three elements of an array
+ *
+ * @param {any[]} arr
+ * @returns {any[]}
+ */
+function reverse3(arr) {
+    return [...arr.slice(0, 3).toReversed(), ...arr.slice(3)];
+}
+
+export { PI, TWOPI, PITHIRD, DEG2RAD, RAD2DEG, min, max, rnd2, rnd3, reverse3 };

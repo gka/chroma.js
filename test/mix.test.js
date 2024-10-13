@@ -88,4 +88,16 @@ describe('Some tests for chroma.color()', () => {
         const result = chroma.interpolate('red', 'blue', 0.5, 'lrgb');
         expect(result.hex()).toBe('#b400b4');
     });
+
+    it('mix gray and black', () => {
+        const result = chroma.mix('#666666', '#000000', 0.5, 'lch');
+        expect(result.hex()).toBe('#343434');
+        expect(result.css()).toBe('rgb(52 52 52)');
+    });
+
+    it('mix transparent gray and black', () => {
+        const result = chroma.mix('#66666600', '#000000', 0.5, 'lch');
+        expect(result.hex()).toBe('#34343480');
+        expect(result.css()).toBe('rgb(52 52 52 / 0.5)');
+    });
 });
