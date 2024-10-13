@@ -143,6 +143,16 @@
     var DEG2RAD = PI$2 / 180;
     var RAD2DEG = 180 / PI$2;
 
+    /**
+     * Reverse the first three elements of an array
+     *
+     * @param {any[]} arr
+     * @returns {any[]}
+     */
+    function reverse3(arr) {
+        return arr.slice(0, 3).reverse().concat( arr.slice(3));
+    }
+
     var input = {
         format: {},
         autodetect: []
@@ -198,7 +208,7 @@
     };
 
     // this gets updated automatically
-    var version = '3.1.1';
+    var version = '3.1.2';
 
     var chroma = function () {
         var args = [], len = arguments.length;
@@ -1872,7 +1882,7 @@
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
-        var hcl = unpack(args, 'hcl').reverse();
+        var hcl = reverse3(unpack(args, 'hcl'));
         return lch2rgb.apply(void 0, hcl);
     };
 
@@ -1880,7 +1890,7 @@
         return rgb2lch(this._rgb);
     };
     Color.prototype.hcl = function () {
-        return rgb2lch(this._rgb).reverse();
+        return reverse3(rgb2lch(this._rgb));
     };
 
     var lch$1 = function () {
