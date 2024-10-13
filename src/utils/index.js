@@ -21,7 +21,7 @@ const RAD2DEG = 180 / PI;
  * @returns {any[]}
  */
 function reverse3(arr) {
-    return [...arr.slice(0, 3).toReversed(), ...arr.slice(3)];
+    return [...arr.slice(0, 3).reverse(), ...arr.slice(3)];
 }
 
 export { PI, TWOPI, PITHIRD, DEG2RAD, RAD2DEG, min, max, rnd2, rnd3, reverse3 };
