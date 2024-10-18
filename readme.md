@@ -1,8 +1,11 @@
 # Chroma.js
 
-[Chroma.js](https://vis4.net/chromajs/) is a ~~tiny~~ [small-ish](https://bundlephobia.com/result?p=chroma-js) zero-dependency JavaScript library for all kinds of color conversions and color scales.
+[Chroma.js](https://vis4.net/chromajs/) is a ~~tiny~~ [small-ish](https://bundlejs.com/?q=chroma-js) zero-dependency JavaScript library for all kinds of color conversions and color scales.
 
 [![Build Status](https://api.travis-ci.com/gka/chroma.js.svg?branch=master)](https://travis-ci.com/gka/chroma.js)
+[![Build size](https://deno.bundlejs.com/?q=chroma-js&badge)](https://bundlejs.com/?q=chroma-js)
+
+
 
 ### Usage
 
