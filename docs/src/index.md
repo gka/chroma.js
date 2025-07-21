@@ -329,7 +329,7 @@ chroma.blend('4CBBFC', 'EEEE22', 'lighten');
 ### chroma.random
 #### ()
 
-Creates a random color by generating a [random hexadecimal string](https://github.com/gka/chroma.js/blob/master/src/generator/random.coffee#L3-L7).
+Creates a random color by generating a [random hexadecimal string](https://github.com/gka/chroma.js/blob/main/src/generator/random.js#L7-L11).
 
 ```js
 chroma.random();
