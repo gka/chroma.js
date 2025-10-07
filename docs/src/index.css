@@ -71,10 +71,13 @@ table td+td {
 
 
 ul.toc {
-    position: absolute;
-    top: 90px;
-    width: 200px;
+    position: fixed;
+    top: 0px;
+    width: 220px;
+    height: 100%;
+    overflow-y: auto;
     list-style: none;
+    margin: 0;
 }
 
 
@@ -260,7 +263,7 @@ pre .CodeMirror:focus {
     color: #bbb;
 }
 
-❯ .result-display:before {
+.result-display:before {
     content: "RESULT";
     position: absolute;
     left: 0;
@@ -317,7 +320,7 @@ pre .CodeMirror:focus {
 .cm-hidden-text {
     display: inline-block;
     width: 1px;
-    // height:0px;
+    /* height:0px; */
     opacity: 0;
     overflow: hidden;
 }
@@ -377,7 +380,7 @@ pre .CodeMirror:focus {
         /* Hidden by default */
         flex-direction: column;
         align-items: flex-start;
-        padding: 10px;
+        padding: 0px;
     }
 
     /* Menu button */
@@ -459,13 +462,13 @@ pre .CodeMirror:focus {
 
     ul.toc {
         position: static;
-        width: auto;
-        margin-right: 20px;
+        width: calc(100% - 20px);
+        margin-left: 20px;
     }
 
     .toc-container {
         width: 70%;
-        height: 100vh;
+        height: 100%;
         position: fixed;
         top: 0;
         left: 0;
