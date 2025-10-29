@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.1.3
+* updated dependencies
+
 ### 3.1.2
 * fixed a bug in Lch interpolation of hue-less colors
 
