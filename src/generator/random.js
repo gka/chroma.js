@@ -3,10 +3,14 @@ const digits = '0123456789abcdef';
 
 const { floor, random } = Math;
 
-export default () => {
+/**
+ * Generates a random color.
+ * @param {() => number} rng - A random number generator function.
+ */
+export default (rng = random) => {
     let code = '#';
     for (let i = 0; i < 6; i++) {
-        code += digits.charAt(floor(random() * 16));
+        code += digits.charAt(floor(rng() * 16));
     }
     return new Color(code, 'hex');
 };
