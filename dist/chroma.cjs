@@ -208,7 +208,7 @@
     };
 
     // this gets updated automatically
-    var version = '3.1.2';
+    var version = '3.1.4';
 
     var chroma = function () {
         var args = [], len = arguments.length;
@@ -3481,10 +3481,16 @@
     var floor$1 = Math.floor;
     var random = Math.random;
 
-    function random$1 () {
+    /**
+     * Generates a random color.
+     * @param {() => number} rng - A random number generator function.
+     */
+    function random$1 (rng) {
+        if ( rng === void 0 ) rng = random;
+
         var code = '#';
         for (var i = 0; i < 6; i++) {
-            code += digits.charAt(floor$1(random() * 16));
+            code += digits.charAt(floor$1(rng() * 16));
         }
         return new Color(code, 'hex');
     }
