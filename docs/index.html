@@ -242,8 +242,8 @@ chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;darken&#39;);
 chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;lighten&#39;);
 </code></pre>
 <h3 id="chroma-random">chroma.random</h3>
-<h4 id="-">()</h4>
-<p>Creates a random color by generating a <a href="https://github.com/gka/chroma.js/blob/main/src/generator/random.js#L7-L11">random hexadecimal string</a>.</p>
+<h4 id="-rng-math-random-">(rng = Math.random)</h4>
+<p>Creates a random color by generating a <a href="https://github.com/gka/chroma.js/blob/main/src/generator/random.js#L7-L11">random hexadecimal string</a>. You can also pass a custom random number generator function as first argument.</p>
 <pre><code class="lang-js">chroma.random();
 chroma.random();
 chroma.random();
@@ -710,6 +710,10 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 <h2 id="changelog">Changelog</h2>
+<h3 id="3-1-3">3.1.3</h3>
+<ul>
+<li>updated dependencies</li>
+</ul>
 <h3 id="3-1-2">3.1.2</h3>
 <ul>
 <li>fixed a bug in Lch interpolation of hue-less colors</li>
