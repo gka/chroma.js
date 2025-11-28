@@ -410,4 +410,25 @@ describe('Some tests for scale()', () => {
             expect(f(0.625).hex()).toBe(f1(0.75).hex());
         });
     });
+
+    describe('multi-stop domain with matching ramp stops', () => {
+        const f = scale(['yellow', 'red', 'black']).domain([0, 25, 100]);
+    
+        it('returns the original domain positions', () => {
+            expect(f.domain()).toEqual([0, 25, 100]);
+        });
+    
+        it('maps first stop', () => {
+            expect(f(0).hex()).toBe('#ffff00');
+        });
+    
+        it('maps mid stop', () => {
+            expect(f(25).hex()).toBe('#ff8080');
+        });
+    
+        it('maps last stop', () => {
+            expect(f(100).hex()).toBe('#000000');
+        });
+    });
+
 });
