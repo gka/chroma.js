@@ -1,10 +1,8 @@
 ## Changelog
 
-## 3.2.0
+### 3.2.0
 
-### Minor Changes
-
-- 919d003: scale.domain now returns the original domain array when called with no arguments
+- scale.domain now returns the original domain array when called with no arguments
 
 ### 3.1.3
 
