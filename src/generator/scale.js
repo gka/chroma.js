@@ -196,7 +196,7 @@ export default function (colors) {
 
     f.domain = function (domain) {
         if (!arguments.length) {
-            return _domain;
+            return _pos.map(p => _min + p * (_max - _min));;
         }
         _min = domain[0];
         _max = domain[domain.length - 1];

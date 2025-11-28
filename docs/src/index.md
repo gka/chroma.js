@@ -827,7 +827,7 @@ chroma.scale(['yellow', 'red', 'black']);
 ### scale.domain
 #### (domain)
 
-You can change the input domain to match your specific use case.
+You can change the input domain to match your specific use case. If called with no arguments, `scale.domain` returns the original array of positions along the scale where the color ramp was sampled.
 
 ```js
 // default domain is [0,1]
