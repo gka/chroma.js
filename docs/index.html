@@ -543,7 +543,7 @@ chroma.scale([&#39;yellow&#39;, &#39;red&#39;, &#39;black&#39;]);
 </code></pre>
 <h3 id="scale-domain">scale.domain</h3>
 <h4 id="-domain-">(domain)</h4>
-<p>You can change the input domain to match your specific use case.</p>
+<p>You can change the input domain to match your specific use case. If called with no arguments, <code>scale.domain</code> returns the original array of positions along the scale where the color ramp was sampled.</p>
 <pre><code class="lang-js">// default domain is [0,1]
 chroma.scale([&#39;yellow&#39;, &#39;008ae5&#39;]);
 // set domain to [0,100]
@@ -710,6 +710,11 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 <h2 id="changelog">Changelog</h2>
+<h2 id="3-2-0">3.2.0</h2>
+<h3 id="minor-changes">Minor Changes</h3>
+<ul>
+<li>919d003: scale.domain now returns the original domain array when called with no arguments</li>
+</ul>
 <h3 id="3-1-3">3.1.3</h3>
 <ul>
 <li>updated dependencies</li>
@@ -735,7 +740,7 @@ chroma.cubehelix().lightness([0.3,0.7]);
 <li>🎉 NEW: Add support for modern CSS color spaces. This means you can now export and parse CSS colors in <code>lab()</code>, <code>lch()</code>, <code>oklab()</code>, <code>oklch()</code> space.</li>
 <li>🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces via <code>setLabWhitePoint</code>.</li>
 <li>Breaking: <code>color.css()</code> will no longer return <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb#legacy_syntax_comma-separated_values">legacy CSS colors</a> like <code>rgb(255, 255, 0)</code> but use modern CSS colors like <code>rgb(255 255 0)</code> instead.</li>
-<li>fix: you can now use chroma.js both via the default export as well as named exports in ES6. </li>
+<li>fix: you can now use chroma.js both via the default export as well as named exports in ES6.</li>
 <li>fix: switch to W3C implementation of OKLab color space</li>
 </ul>
 <h3 id="2-6-0">2.6.0</h3>

@@ -1,7 +1,7 @@
 /**
  * chroma.js - JavaScript library for color conversions
  *
- * Copyright (c) 2011-2024, Gregor Aisch
+ * Copyright (c) 2011-2025, Gregor Aisch
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -208,7 +208,7 @@
     };
 
     // this gets updated automatically
-    var version = '3.1.2';
+    var version = '3.2.0';
 
     var chroma = function () {
         var args = [], len = arguments.length;
@@ -2867,6 +2867,7 @@
         var _nacol = chroma('#ccc');
         var _spread = 0;
         // const _fixed = false;
+        var _positions = [0, 1];
         var _domain = [0, 1];
         var _pos = [];
         var _padding = [0, 0];
@@ -3035,9 +3036,9 @@
             if (classes != null) {
                 if (type(classes) === 'array') {
                     _classes = classes;
-                    _domain = [classes[0], classes[classes.length - 1]];
+                    _positions = [classes[0], classes[classes.length - 1]];
                 } else {
-                    var d = chroma.analyze(_domain);
+                    var d = chroma.analyze(_positions);
                     if (classes === 0) {
                         _classes = [d.min, d.max];
                     } else {
@@ -3051,8 +3052,11 @@
 
         f.domain = function (domain) {
             if (!arguments.length) {
+                // return original domain
                 return _domain;
             }
+            // store original domain so we can return it later
+            _domain = domain.slice(0);
             _min = domain[0];
             _max = domain[domain.length - 1];
             _pos = [];
@@ -3085,7 +3089,7 @@
                     }
                 }
             }
-            _domain = [_min, _max];
+            _positions = [_min, _max];
             return f;
         };
 
@@ -3181,8 +3185,8 @@
             } else if (numColors === 1) {
                 result = [f(0.5)];
             } else if (numColors > 1) {
-                var dm = _domain[0];
-                var dd = _domain[1] - dm;
+                var dm = _positions[0];
+                var dd = _positions[1] - dm;
                 result = __range__(0, numColors).map(function (i) { return f(dm + (i / (numColors - 1)) * dd); }
                 );
             } else {
@@ -3198,7 +3202,7 @@
                         samples.push((_classes[i - 1] + _classes[i]) * 0.5);
                     }
                 } else {
-                    samples = _domain;
+                    samples = _positions;
                 }
                 result = samples.map(function (v) { return f(v); });
             }

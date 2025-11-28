@@ -1,119 +1,141 @@
 ## Changelog
 
+## 3.2.0
+
+### Minor Changes
+
+- 919d003: scale.domain now returns the original domain array when called with no arguments
+
 ### 3.1.3
-* updated dependencies
+
+- updated dependencies
 
 ### 3.1.2
-* fixed a bug in Lch interpolation of hue-less colors
+
+- fixed a bug in Lch interpolation of hue-less colors
 
 ### 3.1.1
-* fix: allow deep-imports in vite projects
 
-### 3.1.0 
-* feat: parse `'transparent'` as black with 0% opacity - resolves [#280](https://github.com/gka/chroma.js/issues/280)
-* make it easier to access colorbrewer palette names - resolves [#314](https://github.com/gka/chroma.js/issues/314)
-* docs: explain differences to official colorbrewer scales - resolves [#316](https://github.com/gka/chroma.js/issues/316)
-* fix: correct parsing of modern css colors with percentage alpha - resolves [#297](https://github.com/gka/chroma.js/issues/297)
-* fix: css output for hue-less colors in lch() and oklch() - resolves [#357](https://github.com/gka/chroma.js/issues/357)
+- fix: allow deep-imports in vite projects
+
+### 3.1.0
+
+- feat: parse `'transparent'` as black with 0% opacity - resolves [#280](https://github.com/gka/chroma.js/issues/280)
+- make it easier to access colorbrewer palette names - resolves [#314](https://github.com/gka/chroma.js/issues/314)
+- docs: explain differences to official colorbrewer scales - resolves [#316](https://github.com/gka/chroma.js/issues/316)
+- fix: correct parsing of modern css colors with percentage alpha - resolves [#297](https://github.com/gka/chroma.js/issues/297)
+- fix: css output for hue-less colors in lch() and oklch() - resolves [#357](https://github.com/gka/chroma.js/issues/357)
 
 ### 3.0.0
-* 🎉 NEW: Add support for modern CSS color spaces. This means you can now export and parse CSS colors in `lab()`, `lch()`, `oklab()`, `oklch()` space.
-* 🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces via `setLabWhitePoint`.
-* Breaking: `color.css()` will no longer return [legacy CSS colors](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb#legacy_syntax_comma-separated_values) like `rgb(255, 255, 0)` but use modern CSS colors like `rgb(255 255 0)` instead.
-* fix: you can now use chroma.js both via the default export as well as named exports in ES6. 
-* fix: switch to W3C implementation of OKLab color space
+
+- 🎉 NEW: Add support for modern CSS color spaces. This means you can now export and parse CSS colors in `lab()`, `lch()`, `oklab()`, `oklch()` space.
+- 🎉 NEW: you can now control the standard white reference point for the CIE Lab and CIE Lch color spaces via `setLabWhitePoint`.
+- Breaking: `color.css()` will no longer return [legacy CSS colors](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb#legacy_syntax_comma-separated_values) like `rgb(255, 255, 0)` but use modern CSS colors like `rgb(255 255 0)` instead.
+- fix: you can now use chroma.js both via the default export as well as named exports in ES6.
+- fix: switch to W3C implementation of OKLab color space
 
 ### 2.6.0
-* 🎉 NEW: add [`color.shade()`](#color-shade), [`color.tint()`](#color-shade).
-* fix: remove false w3c color cornflower
+
+- 🎉 NEW: add [`color.shade()`](#color-shade), [`color.tint()`](#color-shade).
+- fix: remove false w3c color cornflower
 
 ### 2.5.0
-* refactored code base to ES6 modules
+
+- refactored code base to ES6 modules
 
 ### 2.4.0
-* add support for Oklab and Oklch color spaces
+
+- add support for Oklab and Oklch color spaces
 
 ### 2.3.0
-* use binom of degree n in chroma.bezier
+
+- use binom of degree n in chroma.bezier
 
 ### 2.2.0
-* use Delta e2000 for chroma.deltaE #269
+
+- use Delta e2000 for chroma.deltaE #269
 
 ### 2.0.3
-* hsl2rgb will, like other x2rgb conversions now set the default alpha to 1
+
+- hsl2rgb will, like other x2rgb conversions now set the default alpha to 1
 
 ### 2.0.2
-* use a more mangle-safe check for Color class constructor to fix issues with uglifyjs and terser
+
+- use a more mangle-safe check for Color class constructor to fix issues with uglifyjs and terser
 
 ### 2.0.1
-* added `chroma.valid()` for checking if a color can be parsed by chroma.js
+
+- added `chroma.valid()` for checking if a color can be parsed by chroma.js
 
 ### 2.0.0
-* chroma.js has been ported from CoffeeScript to ES6! This means you can now import parts of chroma in your projects!
-* changed HCG input space from [0..360,0..100,0..100] to [0..360,0..1,0..1] (to be in line with HSL)
-* added new object unpacking (e.g. `hsl2rgb({h,s,l})`)
-* changed default interpolation to `lrgb` in mix/interpolate and average.
-* if colors can't be parsed correctly, chroma will now throw Errors instead of silently failing with console.errors
+
+- chroma.js has been ported from CoffeeScript to ES6! This means you can now import parts of chroma in your projects!
+- changed HCG input space from [0..360,0..100,0..100] to [0..360,0..1,0..1] (to be in line with HSL)
+- added new object unpacking (e.g. `hsl2rgb({h,s,l})`)
+- changed default interpolation to `lrgb` in mix/interpolate and average.
+- if colors can't be parsed correctly, chroma will now throw Errors instead of silently failing with console.errors
 
 ### 1.4.1
-* chroma.scale() now interprets `null` as NaN and returns the fallback color. Before it had interpreted `null` as `0`
-* added `scale.nodata()` to allow customizing the previously hard-coded fallback (aka "no data") color #cccccc
 
+- chroma.scale() now interprets `null` as NaN and returns the fallback color. Before it had interpreted `null` as `0`
+- added `scale.nodata()` to allow customizing the previously hard-coded fallback (aka "no data") color #cccccc
 
 ### 1.4.0
-* color.hex() now automatically sets the mode to 'rgba' if the colors alpha channel is < 1. so `chroma('rgba(255,0,0,.5)').hex()` will now return `"#ff000080"` instead of `"#ff0000"`. if this is not what you want, you must explicitly set the mode to `rgb` using `.hex("rgb")`.
-* bugfix in chroma.average in LRGB mode ([#187](https://github.com/gka/chroma.js/issues/187))
-* chroma.scale now also works with just one color ([#180](https://github.com/gka/chroma.js/issues/180))
 
+- color.hex() now automatically sets the mode to 'rgba' if the colors alpha channel is < 1. so `chroma('rgba(255,0,0,.5)').hex()` will now return `"#ff000080"` instead of `"#ff0000"`. if this is not what you want, you must explicitly set the mode to `rgb` using `.hex("rgb")`.
+- bugfix in chroma.average in LRGB mode ([#187](https://github.com/gka/chroma.js/issues/187))
+- chroma.scale now also works with just one color ([#180](https://github.com/gka/chroma.js/issues/180))
 
 ### 1.3.5
-* added LRGB interpolation
+
+- added LRGB interpolation
 
 ### 1.3.4
-* passing *null* as mode in scale.colors will return chroma objects
+
+- passing _null_ as mode in scale.colors will return chroma objects
 
 ### 1.3.3
 
-* added [color.clipped](https://gka.github.io/chroma.js/#color-clipped)
-* added [chroma.distance](https://gka.github.io/chroma.js/#chroma-distance)
-* added [chroma.deltaE](https://gka.github.io/chroma.js/#chroma-deltae)
-* [color.set](https://gka.github.io/chroma.js/#color-set) now returns a new chroma instance
-* chroma.scale now allows [disabling of internal cache](https://gka.github.io/chroma.js/#scale-cache)
-* [chroma.average](https://gka.github.io/chroma.js/#chroma-average) now works with any color mode
-* added unit tests for color conversions
-* use hex colors as default string representation
-* RGB channels are now stored as floats internally for higher precision
-* bugfix with cubehelix and constant lightness
-* bugfix in chroma.limits quantiles
-* bugfix when running scale.colors(1)
-* bugfix in hsi2rgb color conversion
+- added [color.clipped](https://gka.github.io/chroma.js/#color-clipped)
+- added [chroma.distance](https://gka.github.io/chroma.js/#chroma-distance)
+- added [chroma.deltaE](https://gka.github.io/chroma.js/#chroma-deltae)
+- [color.set](https://gka.github.io/chroma.js/#color-set) now returns a new chroma instance
+- chroma.scale now allows [disabling of internal cache](https://gka.github.io/chroma.js/#scale-cache)
+- [chroma.average](https://gka.github.io/chroma.js/#chroma-average) now works with any color mode
+- added unit tests for color conversions
+- use hex colors as default string representation
+- RGB channels are now stored as floats internally for higher precision
+- bugfix with cubehelix and constant lightness
+- bugfix in chroma.limits quantiles
+- bugfix when running scale.colors(1)
+- bugfix in hsi2rgb color conversion
 
 ### 1.2.2
 
-* scale.colors() now returns the original colors instead of just min/max range
+- scale.colors() now returns the original colors instead of just min/max range
 
 ### 1.2.0
 
-* added chroma.average for averaging colors
+- added chroma.average for averaging colors
 
 ### 1.1.0
 
-* refactored chroma.scale
-* changed behaviour of scale.domain
-* added scale.classes
-* added scale.padding
+- refactored chroma.scale
+- changed behaviour of scale.domain
+- added scale.classes
+- added scale.padding
 
 ### 1.0.2
 
-* standardized alpha channel construction
-* chroma.bezier automatically returns chroma.scale
+- standardized alpha channel construction
+- chroma.bezier automatically returns chroma.scale
 
 ### 1.0.1
 
-* added simple color output to chroma.scale().colors()
+- added simple color output to chroma.scale().colors()
 
 ### 1.0.0
 
-* numeric interpolation does what it should
-* refactored and modularized code base
-* changed argument order of Color::interpolate
+- numeric interpolation does what it should
+- refactored and modularized code base
+- changed argument order of Color::interpolate
