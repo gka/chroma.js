@@ -12,6 +12,7 @@ export default function (colors) {
     let _nacol = chroma('#ccc');
     let _spread = 0;
     // const _fixed = false;
+    let _positions = [0, 1];
     let _domain = [0, 1];
     let _pos = [];
     let _padding = [0, 0];
@@ -180,9 +181,9 @@ export default function (colors) {
         if (classes != null) {
             if (type(classes) === 'array') {
                 _classes = classes;
-                _domain = [classes[0], classes[classes.length - 1]];
+                _positions = [classes[0], classes[classes.length - 1]];
             } else {
-                const d = chroma.analyze(_domain);
+                const d = chroma.analyze(_positions);
                 if (classes === 0) {
                     _classes = [d.min, d.max];
                 } else {
@@ -196,8 +197,11 @@ export default function (colors) {
 
     f.domain = function (domain) {
         if (!arguments.length) {
-            return _pos.map(p => _min + p * (_max - _min));;
+            // return original domain
+            return _domain;
         }
+        // store original domain so we can return it later
+        _domain = domain.slice(0);
         _min = domain[0];
         _max = domain[domain.length - 1];
         _pos = [];
@@ -228,7 +232,7 @@ export default function (colors) {
                 }
             }
         }
-        _domain = [_min, _max];
+        _positions = [_min, _max];
         return f;
     };
 
@@ -324,8 +328,8 @@ export default function (colors) {
         } else if (numColors === 1) {
             result = [f(0.5)];
         } else if (numColors > 1) {
-            const dm = _domain[0];
-            const dd = _domain[1] - dm;
+            const dm = _positions[0];
+            const dd = _positions[1] - dm;
             result = __range__(0, numColors, false).map((i) =>
                 f(dm + (i / (numColors - 1)) * dd)
             );
@@ -342,7 +346,7 @@ export default function (colors) {
                     samples.push((_classes[i - 1] + _classes[i]) * 0.5);
                 }
             } else {
-                samples = _domain;
+                samples = _positions;
             }
             result = samples.map((v) => f(v));
         }

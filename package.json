@@ -51,7 +51,7 @@
   },
   "main": "./index.js",
   "scripts": {
-    "prepublishOnly": "npm test -- --run && node .bin/update-version.cjs && npm run build",
+    "prepublishOnly": "npm test -- --run && node .bin/update-version.cjs && npm run build && npm run docs",
     "build": "rollup -c && cross-env DEV=1 rollup -c ",
     "docs": "cd docs && make",
     "docs-preview": "cd docs && make && make preview",
