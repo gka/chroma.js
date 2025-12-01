@@ -47,6 +47,9 @@
     },
     "./src/utils/*.js": {
       "import": "./src/utils/*.js"
+    },
+    "./src/*.js": {
+      "import": "./src/*.js"
     }
   },
   "main": "./index.js",
