@@ -1,0 +1,73 @@
+/* @flow */
+
+declare class ChromaColor {
+    alpha: (value?: number) => ChromaColor | number;
+    darken(value?: number): ChromaColor;
+    brighten(value?: number): ChromaColor;
+    saturate(value?: number): ChromaColor;
+    desaturate(value?: number): ChromaColor;
+    set(channel: string, value: number):ChromaColor;
+    get(channel: string): number;
+    luminance(value?: number, mode?: string): ChromaColor | number;
+    hex(): string;
+    name(): string;
+    css(mode?: string): string;
+    rgb(round?: boolean): Array<number>;
+    rgba(round?: boolean): Array<number>;
+    hsl(): Array<number>;
+    hsv(): Array<number>;
+    hsi(): Array<number>;
+    lab(): Array<number>;
+    lch(): Array<number>;
+    hcl(): Array<number>;
+    temperature(): number;
+    gl(): Array<number>;
+    clipped(): boolean;
+}
+
+declare interface ChromaScale {
+    domain(domain: Array<any>): ChromaScale;
+    mode(mode: string): ChromaScale;
+    correctLightness(): ChromaScale;
+    cache(value: boolean): boolean;
+    padding(pad: number): ChromaScale;
+    colors(num: number, format?: string): Array<string>;
+    classes(num: number | Array<number>): ChromaScale;
+}
+
+declare interface ChromaCubehelix {
+    start(hue: number): ChromaCubehelix;
+    rotations(num: number): ChromaCubehelix;
+    hue(numOrRange: number | Array<number>): ChromaCubehelix;
+    gamma(factor: number): ChromaCubehelix;
+    lightness(range: Array<number>): ChromaCubehelix;
+    scale(): ChromaScale;
+}
+
+type Chroma = {
+    brewer: Object;
+    (color: any): ChromaColor;
+    hsl(hue: number, saturation: number, lightness: number): ChromaColor;
+    hsv(hue: number, saturation: number, value: number): ChromaColor;
+    lab(lightness: number, a: number, b: number): ChromaColor;
+    lch(lightness: number, ChromaColor: number, hue: number): ChromaColor;
+    hcl(hue: number, ChromaColor: number, lightness: number): ChromaColor;
+    cmyk(cyan: number, magenta: number, yellow: number, black: number): ChromaColor;
+    gl(red: number, green: number, blue: number, alpha?: number): ChromaColor;
+    temperature(value: number): ChromaColor;
+    mix(color1: any, color2: any, ratio?: number, mode?: string): ChromaColor;
+    average(colors: Array<any>, mode?: string): ChromaColor;
+    blend(color1: any, color2: any, mode?: string): ChromaColor;
+    random(): ChromaColor;
+    contrast(color1: any, color2: any): number;
+    distance(color1: any, color2: any, mode?: string): number;
+    deltaE(reference: any, sample: any, l?: number, c?: number): number;
+    limits(data: Array<number>, mode: string, n: number): Array<number>;
+    scale(colors?: any): ChromaScale;
+    bezier(colors: Array<any>): Chroma;
+    cubehelix(start?: number, rotations?: number, hue?: number, gamma?: number, lightness?: Array<number>): ChromaCubehelix;
+}
+
+declare module 'chroma-js' {
+    declare var exports: Chroma;
+}
