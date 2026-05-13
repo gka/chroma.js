@@ -430,4 +430,17 @@ describe('Some tests for scale()', () => {
             expect(f(100).hex()).toBe('#000000');
         });
     });
+
+    describe('classes() before domain() yields same result as domain() before classes()', () => {
+        const a = scale(['black', 'white']).domain([-2, 2]).classes(5);
+        const b = scale(['black', 'white']).classes(5).domain([-2, 2]);
+
+        it('produces matching colors', () => {
+            expect(b.colors(5, 'hex')).toEqual(a.colors(5, 'hex'));
+        });
+
+        it('recomputes class breaks against the domain', () => {
+            expect(b.classes()).toEqual(a.classes());
+        });
+    });
 });

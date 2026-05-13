@@ -17,6 +17,7 @@ export default function (colors) {
     let _pos = [];
     let _padding = [0, 0];
     let _classes = false;
+    let _classCount = null;
     let _colors = [];
     let _out = false;
     let _min = 0;
@@ -177,18 +178,23 @@ export default function (colors) {
         }
     };
 
+    const computeClasses = function (count) {
+        const d = chroma.analyze(_positions);
+        if (count === 0) {
+            return [d.min, d.max];
+        }
+        return chroma.limits(d, 'e', count);
+    };
+
     f.classes = function (classes) {
         if (classes != null) {
             if (type(classes) === 'array') {
                 _classes = classes;
+                _classCount = null;
                 _positions = [classes[0], classes[classes.length - 1]];
             } else {
-                const d = chroma.analyze(_positions);
-                if (classes === 0) {
-                    _classes = [d.min, d.max];
-                } else {
-                    _classes = chroma.limits(d, 'e', classes);
-                }
+                _classCount = classes;
+                _classes = computeClasses(classes);
             }
             return f;
         }
@@ -233,6 +239,9 @@ export default function (colors) {
             }
         }
         _positions = [_min, _max];
+        if (_classCount != null) {
+            _classes = computeClasses(_classCount);
+        }
         return f;
     };
 
