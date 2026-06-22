@@ -35,8 +35,8 @@ describe('Tests for the alpha channel', () => {
     it('parsing hex rgba colors', () => {
         const color = chroma('#ff00004d');
         expect(color.name()).toBe('red');
-        expect(color.alpha()).toBe(0.3);
-        expect(color.rgba()).toEqual([255, 0, 0, 0.3]);
+        expect(color.alpha()).toBe(0x4d / 255);
+        expect(color.rgba()).toEqual([255, 0, 0, 0x4d / 255]);
     });
 
     it('parsing rgba colors', () => {

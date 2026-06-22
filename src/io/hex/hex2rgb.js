@@ -42,7 +42,7 @@ const hex2rgb = (hex) => {
         const r = (u >> 24) & 0xff;
         const g = (u >> 16) & 0xff;
         const b = (u >> 8) & 0xff;
-        const a = Math.round(((u & 0xff) / 0xff) * 100) / 100;
+        const a = (u & 0xff) / 0xff;
         return [r, g, b, a];
     }
 
