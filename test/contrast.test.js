@@ -43,10 +43,8 @@ describe('Testing contrast ratio with APCA', () => {
     });
 
     it('contrast with alpha', () => {
-        // todo: there's a slight difference to the values shown in the APCA demo
-        // when computing contrast between colors with alpha
-        expect(+contrastAPCA('#00000044', 'white').toFixed(1)).toBe(37.3); // 36.7
-        expect(+contrastAPCA('#ffffffc0', 'black').toFixed(1)).toBe(-68); // -68.6
+        expect(+contrastAPCA('#00000044', 'white').toFixed(1)).toBe(36.7);
+        expect(+contrastAPCA('#ffffffc0', 'black').toFixed(1)).toBe(-68.6);
     });
 
     it('inverse contrast', () => {
