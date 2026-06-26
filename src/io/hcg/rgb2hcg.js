@@ -1,12 +1,12 @@
 import { unpack, max, min } from '../../utils/index.js';
 
 const rgb2hcg = (...args) => {
-    const [r, g, b] = unpack(args, 'rgb');
+    const [r, g, b] = unpack(args, 'rgb').map((x) => x / 255);
     const minRgb = min(r, g, b);
     const maxRgb = max(r, g, b);
     const delta = maxRgb - minRgb;
-    const c = (delta * 100) / 255;
-    const _g = (minRgb / (255 - delta)) * 100;
+    const c = delta;
+    const _g = delta < 1 ? minRgb / (1 - delta) : 0;
     let h;
     if (delta === 0) {
         h = Number.NaN;
