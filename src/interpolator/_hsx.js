@@ -1,4 +1,5 @@
 import Color from '../Color.js';
+import { reverse3 } from '../utils/index.js';
 
 export default (col1, col2, f, m) => {
     let xyz0, xyz1;
@@ -19,8 +20,8 @@ export default (col1, col2, f, m) => {
         xyz0 = col1.hcl();
         xyz1 = col2.hcl();
     } else if (m === 'oklch') {
-        xyz0 = col1.oklch().reverse();
-        xyz1 = col2.oklch().reverse();
+        xyz0 = reverse3(col1.oklch());
+        xyz1 = reverse3(col2.oklch());
     }
 
     let hue0, hue1, sat0, sat1, lbv0, lbv1;

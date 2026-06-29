@@ -100,4 +100,13 @@ describe('Some tests for chroma.color()', () => {
         expect(result.hex()).toBe('#34343480');
         expect(result.css()).toBe('rgb(52 52 52 / 0.5)');
     });
+
+    it('mix transparent color in oklch', () => {
+        // alpha on an input must not change the interpolated L, C and H,
+        // only the alpha channel. So the rgb part has to match the opaque mix.
+        const opaque = chroma.mix('#ff0000', '#0000ff', 0.5, 'oklch');
+        const transparent = chroma.mix('#ff000080', '#0000ff', 0.5, 'oklch');
+        expect(transparent.hex('rgb')).toBe(opaque.hex('rgb'));
+        expect(transparent.hex()).toBe('#ba00c2bf');
+    });
 });
