@@ -430,4 +430,18 @@ describe('Some tests for scale()', () => {
             expect(f(100).hex()).toBe('#000000');
         });
     });
+
+    describe('gamma scale with out-of-domain input', () => {
+        const f = scale('YlGn').domain([5, 15]).gamma(1.2);
+
+        it('clamps below domain to left endpoint', () => {
+            expect(f(4).hex()).toBe('#ffffe5');
+            expect(f(4).hex()).toBe(f(5).hex());
+        });
+
+        it('clamps above domain to right endpoint', () => {
+            expect(f(16).hex()).toBe('#004529');
+            expect(f(16).hex()).toBe(f(15).hex());
+        });
+    });
 });

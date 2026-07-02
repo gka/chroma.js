@@ -117,7 +117,9 @@ export default function (colors) {
         }
 
         if (_gamma !== 1) {
-            t = pow(t, _gamma);
+            // clamp before pow: a fractional gamma over a negative base returns
+            // NaN, so out-of-domain values must be pinned to the endpoints first
+            t = pow(limit(t, 0, 1), _gamma);
         }
 
         t = _padding[0] + t * (1 - _padding[0] - _padding[1]);
