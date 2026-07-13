@@ -68,6 +68,12 @@ describe('Tests for the alpha channel', () => {
         expect(color.alpha()).toBe(0.25);
     });
 
+    it('constructing hsla color from object keeps alpha (#219)', () => {
+        const color = chroma({ h: 120, s: 0.8, l: 0.75, a: 0.5 });
+        expect(color.alpha()).toBe(0.5);
+        expect(color.rgba()).toEqual([140, 242, 140, 0.5]);
+    });
+
     it('constructing hsva color', () => {
         const color = chroma(0, 1, 1, 0.25, 'hsv');
         expect(color.name()).toBe('red');
