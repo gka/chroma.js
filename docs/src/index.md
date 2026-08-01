@@ -193,6 +193,17 @@ chroma.lch(80, 40, 130);
 chroma(80, 40, 130, 'lch');
 ```
 
+When round-tripping colors through `Lab` or `Lch`, keep the same Lab white
+point for the whole conversion chain. Chroma.js uses D65 by default, while some
+other color tools and CSS Color 4 examples use D50. Mixing those assumptions can
+produce visibly different RGB results, even if the `Lch` values themselves have
+not been intentionally changed. If you need to match another tool, set the Lab
+white point explicitly before converting:
+
+```js
+chroma.setLabWhitePoint('D50');
+```
+
 ### chroma.hcl
 #### (hue, chroma, lightness)
 
@@ -413,6 +424,7 @@ chroma
     .scale(chroma.brewer.RdBu.slice(1,-1))
     .colors(5);
 ```
+
 
 Of course you can also just construct the scale from the official 5-step colors that you can copy and paste from [colorbrewer2.org](https://colorbrewer2.org/#type=diverging&scheme=RdBu&n=5):
 
@@ -1095,5 +1107,3 @@ chroma.cubehelix()
     .correctLightness()
     .colors(5);
 ```
-
-
