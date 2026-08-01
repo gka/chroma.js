@@ -18,8 +18,17 @@ Color.prototype.rgba = function (rnd = true) {
 const rgb = (...args) => new Color(...args, 'rgb');
 Object.assign(chroma, { rgb });
 
+const isValidChannel = (value) =>
+    type(value) === 'number' && !Number.isNaN(value);
+
 input.format.rgb = (...args) => {
     const rgba = unpack(args, 'rgba');
+    if (!rgba.slice(0, 3).every(isValidChannel)) {
+        throw new Error('invalid rgb color');
+    }
+    if (rgba[3] !== undefined && !isValidChannel(rgba[3])) {
+        throw new Error('invalid rgb color');
+    }
     if (rgba[3] === undefined) rgba[3] = 1;
     return rgba;
 };
@@ -30,6 +39,7 @@ input.autodetect.push({
         args = unpack(args, 'rgba');
         if (
             type(args) === 'array' &&
+            args.slice(0, 3).every(isValidChannel) &&
             (args.length === 3 ||
                 (args.length === 4 &&
                     type(args[3]) == 'number' &&
