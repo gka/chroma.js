@@ -54,4 +54,10 @@ describe('Some tests for chroma.limits()', () => {
     it('logarithmic domain - non-positive values', () => {
         expect(() => limits([-1, 10000], 'log', 4)).toThrow('Logarithmic scales are only possible for values > 0');
     });
+
+    it('k-means classifies all requested clusters', () => {
+        // three well-separated clusters must yield three class breaks; a
+        // corrupted cluster-size tally previously dropped the middle cluster
+        expect(limits([0, 1, 2, 50, 51, 52, 100, 101, 102], 'k', 3)).toEqual([0, 2, 52, 102]);
+    });
 });

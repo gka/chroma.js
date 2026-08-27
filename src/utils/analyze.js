@@ -124,9 +124,11 @@ export function limits(data, mode = 'equal', num = 7) {
                         mindist = dist;
                         best = j;
                     }
-                    clusterSizes[best]++;
-                    assignments[i] = best;
                 }
+                // tally the winning cluster once per point, after the argmin
+                // over j; incrementing inside the loop corrupted clusterSizes
+                clusterSizes[best]++;
+                assignments[i] = best;
             }
 
             // update centroids step
