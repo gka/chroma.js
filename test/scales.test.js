@@ -172,6 +172,50 @@ describe('Some tests for scale()', () => {
         });
     });
 
+    describe('automatic classes follow domain changes', () => {
+        it('produces the same colors regardless of configuration order', () => {
+            const domainFirst = scale(['black', 'white']).domain([-2, 2]).classes(5);
+            const classesFirst = scale(['black', 'white']).classes(5).domain([-2, 2]);
+            const expected = ['#000000', '#404040', '#808080', '#bfbfbf', '#ffffff'];
+
+            expect(classesFirst.classes()).toEqual(domainFirst.classes());
+            expect(classesFirst.colors(5)).toEqual(expected);
+            expect([-2, -1, 0, 1, 2].map((value) => classesFirst(value).hex())).toEqual(expected);
+        });
+
+        it('recomputes boundaries after repeated domain changes', () => {
+            const f = scale(['black', 'white']).classes(4).domain([0, 100]);
+            f(50);
+            f.domain([10, 30]);
+            expect(f.classes()).toEqual([10, 15, 20, 25, 30]);
+            const expected = scale(['black', 'white']).domain([10, 30]).classes(4);
+            expect(f.colors(4)).toEqual(expected.colors(4));
+        });
+
+        it('uses the latest automatic class count', () => {
+            const f = scale(['black', 'white']).classes(5).classes(2).domain([0, 10]);
+            expect(f.classes()).toEqual([0, 5, 10]);
+        });
+
+        it('updates zero-class endpoints while keeping a continuous scale', () => {
+            const f = scale(['black', 'white']).classes(5).classes(0).domain([10, 30]);
+            expect(f.classes()).toEqual([10, 30]);
+            expect(f(20).hex()).toBe('#808080');
+        });
+
+        it('preserves explicit class breaks after automatic classes', () => {
+            const breaks = [0, 2, 7, 10];
+            const f = scale(['black', 'white']).classes(5).classes(breaks).domain([-2, 20]);
+            expect(f.classes()).toEqual(breaks);
+            expect(f(5).hex()).toBe('#808080');
+        });
+
+        it('can return to automatic classes after explicit class breaks', () => {
+            const f = scale(['black', 'white']).classes([0, 2, 7, 10]).classes(2).domain([10, 30]);
+            expect(f.classes()).toEqual([10, 20, 30]);
+        });
+    });
+
     describe('calling domain with no arguments', () => {
         const f = scale('RdYlGn').domain([0, 100]).classes(5);
 
