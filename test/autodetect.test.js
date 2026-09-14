@@ -35,6 +35,16 @@ describe('autodetect color', () => {
         expect(result.hex()).toBe('#0000ff');
     });
 
+    it('rejects non-numeric RGB channels', () => {
+        expect(() => chroma('nonsense', 0, 255, 'rgb')).toThrow('invalid rgb color');
+        expect(() => chroma(null, 0, 255, 'rgb')).toThrow('invalid rgb color');
+    });
+
+    it('still clips out-of-range numeric RGB channels', () => {
+        expect(chroma(-1000, 0, 255, 'rgb').hex()).toBe('#0000ff');
+        expect(chroma(1000, 0, 255, 'rgb').hex()).toBe('#ff00ff');
+    });
+
     it('autodetect rgba color', () => {
         const result = chroma(255, 0, 0, 0.5);
         expect(result.css()).toBe('rgb(255 0 0 / 0.5)');
