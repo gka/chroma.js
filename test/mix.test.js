@@ -95,6 +95,24 @@ describe('Some tests for chroma.color()', () => {
         expect(result.css()).toBe('rgb(52 52 52)');
     });
 
+    it('hcl/lch interpolation reaches pure black exactly, even from a saturated color (#310)', () => {
+        expect(chroma.interpolate('#f00', '#000', 1, 'hcl').hex()).toBe('#000000');
+        expect(chroma.interpolate('#f00', '#000', 1, 'lch').hex()).toBe('#000000');
+        expect(chroma.interpolate('#ccc', '#000', 1, 'hcl').hex()).toBe('#000000');
+        // a target that is only *almost* black should still work as before
+        expect(chroma.interpolate('#f00', '#010101', 1, 'hcl').hex()).toBe('#010101');
+    });
+
+    it('oklch interpolation reaches pure black exactly, even from a saturated color (#310)', () => {
+        expect(chroma.interpolate('#f00', '#000', 1, 'oklch').hex()).toBe('#000000');
+    });
+
+    it('hcl shading toward black still stays vivid at intermediate steps', () => {
+        // the fix for #310 only applies exactly at f === 1; intermediate
+        // steps must keep behaving as before (shade()/tint() rely on this)
+        expect(chroma('red').shade(0.5, 'lch').hex()).toBe('#a60000');
+    });
+
     it('mix transparent gray and black', () => {
         const result = chroma.mix('#66666600', '#000000', 0.5, 'lch');
         expect(result.hex()).toBe('#34343480');

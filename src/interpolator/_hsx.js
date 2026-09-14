@@ -43,10 +43,15 @@ export default (col1, col2, f, m) => {
         hue = hue0 + f * dh;
     } else if (!isNaN(hue0)) {
         hue = hue0;
-        if ((lbv1 == 1 || lbv1 == 0) && m != 'hsv') sat = sat0;
+        // Freezing saturation at sat0 keeps colors looking vivid while
+        // shading/tinting toward an achromatic endpoint (e.g. shade(0.5)).
+        // But once f fully reaches that endpoint (f === 1), the result must
+        // equal it exactly, so the freeze has to stop there and fall through
+        // to the normal interpolation, which resolves to sat1 (see #310).
+        if (f < 1 && (lbv1 == 1 || lbv1 == 0) && m != 'hsv') sat = sat0;
     } else if (!isNaN(hue1)) {
         hue = hue1;
-        if ((lbv0 == 1 || lbv0 == 0) && m != 'hsv') sat = sat1;
+        if (f > 0 && (lbv0 == 1 || lbv0 == 0) && m != 'hsv') sat = sat1;
     } else {
         hue = Number.NaN;
     }
