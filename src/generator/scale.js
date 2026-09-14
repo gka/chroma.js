@@ -17,6 +17,7 @@ export default function (colors) {
     let _pos = [];
     let _padding = [0, 0];
     let _classes = false;
+    let _classCount = null;
     let _colors = [];
     let _out = false;
     let _min = 0;
@@ -180,9 +181,11 @@ export default function (colors) {
     f.classes = function (classes) {
         if (classes != null) {
             if (type(classes) === 'array') {
+                _classCount = null;
                 _classes = classes;
                 _positions = [classes[0], classes[classes.length - 1]];
             } else {
+                _classCount = classes;
                 const d = chroma.analyze(_positions);
                 if (classes === 0) {
                     _classes = [d.min, d.max];
@@ -233,6 +236,9 @@ export default function (colors) {
             }
         }
         _positions = [_min, _max];
+        if (_classCount !== null) {
+            f.classes(_classCount);
+        }
         return f;
     };
 

@@ -951,11 +951,15 @@ chroma.scale('OrRd').classes(5);
 chroma.scale('OrRd').classes(8);
 ```
 
+When classes are specified as a number, their boundaries follow subsequent changes to `scale.domain`, so either configuration order produces the same result.
+
 You can also define custom class breaks by passing them as array:
 
 ```js
 chroma.scale('OrRd').classes([0,0.3,0.55,0.85,1]);
 ```
+
+Explicit class breaks remain unchanged when the domain changes.
 
 ### scale.nodata
 #### (color)
