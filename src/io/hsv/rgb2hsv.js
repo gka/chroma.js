@@ -7,7 +7,7 @@ const { min, max } = Math;
  * - rgb2hsv([r,g,b])
  * - rgb2hsv({r,g,b})
  */
-const rgb2hsl = (...args) => {
+const rgb2hsv = (...args) => {
     args = unpack(args, 'rgb');
     let [r, g, b] = args;
     const min_ = min(r, g, b);
@@ -29,4 +29,4 @@ const rgb2hsl = (...args) => {
     return [h, s, v];
 };
 
-export default rgb2hsl;
+export default rgb2hsv;
