@@ -1,7 +1,7 @@
 import { unpack } from '../../utils/index.js';
 
 const hsl2rgb = (...args) => {
-    args = unpack(args, 'hsl');
+    args = unpack(args, 'hsla');
     const [h, s, l] = args;
     let r, g, b;
     if (s === 0) {
