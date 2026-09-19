@@ -2,6 +2,37 @@ import { describe, it, expect } from 'vitest';
 import chroma from 'chroma-js';
 
 describe('Tests for the alpha channel', () => {
+    describe.each([
+        ['rgb.r', 128],
+        ['hsv.h', 120],
+        ['hsi.h', 120],
+        ['cmyk.c', 0.5],
+        ['hsl.h', 120],
+        ['lab.l', 50]
+    ])('setting %s', (channel, value) => {
+        it.each([0, 0.4, 1])('preserves alpha %s in a new color', (alpha) => {
+            const color = chroma('red').alpha(alpha);
+            const rgba = color.rgba();
+            const result = color.set(channel, value);
+            expect(result.alpha()).toBe(alpha);
+            expect(result.rgb()).toEqual(chroma('red').set(channel, value).rgb());
+            expect(result).not.toBe(color);
+            expect(color.rgba()).toEqual(rgba);
+        });
+
+        it.each([0, 0.4, 1])('preserves alpha %s when mutating', (alpha) => {
+            const color = chroma('red').alpha(alpha);
+            const result = color.set(channel, value, true);
+            expect(result.alpha()).toBe(alpha);
+            expect(result.rgb()).toEqual(chroma('red').set(channel, value).rgb());
+            expect(result).toBe(color);
+        });
+    });
+
+    it('preserves alpha in a relative channel change', () => {
+        expect(chroma('red').alpha(0.4).set('rgb.r', '*0.5').rgba()).toEqual([128, 0, 0, 0.4]);
+    });
+
     it('setting & getting alpha channel', () => {
         const color = chroma('red');
         expect(color.alpha()).toBe(1);
