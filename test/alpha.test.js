@@ -104,6 +104,19 @@ describe('Tests for the alpha channel', () => {
         expect(color.alpha()).toBe(0.25);
     });
 
+    it('defaults alpha to 1 for colors constructed without alpha', () => {
+        for (const color of [chroma.oklab(0.628, 0.225, 0.126), chroma.oklch(0.628, 0.258, 29.23), chroma.gl(1, 0, 0)]) {
+            expect(color.alpha()).toBe(1);
+            expect(color.hex('rgba')).toBe('#ff0000ff');
+        }
+    });
+
+    it('interpolating a color constructed without alpha', () => {
+        const color = chroma.oklch(0.628, 0.258, 29.23);
+        expect(chroma.mix(color, 'blue', 0, 'rgb').hex()).toBe('#ff0000');
+        expect(chroma.scale([color, 'blue'])(0).alpha()).toBe(1);
+    });
+
     it('gl output', () => {
         const color = chroma.gl(1, 0, 0, 0.25);
         expect(color.name()).toBe('red');
