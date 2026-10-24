@@ -329,7 +329,14 @@ chroma.average(colors, 'lch', [1.5,0.5,1,2.3]);
 ### chroma.blend
 #### (color1, color2, mode)
 
-Blends two colors using RGB channel-wise blend functions. Valid blend modes are `multiply`, `darken`, `lighten`, `screen`, `overlay`, `burn`, and `dodge`.
+Blends two colors using RGB channel-wise blend functions. Valid blend modes are `normal`, `multiply`, `darken`, `lighten`, `screen`, `overlay`, `burn`, and `dodge`.
+
+The second color is composited over the first using their alpha values. Fully transparent colors do not affect the visible result. If both colors are transparent, the result is transparent black. Translucent results include alpha in the default `hex()` output (eight hexadecimal digits).
+
+```js
+chroma.blend('blue', 'rgba(255,0,0,0.5)', 'normal').rgba(); // [128, 0, 128, 1]
+chroma.blend('rgba(0,0,255,0.5)', 'rgba(255,0,0,0.5)', 'normal').hex(); // '#aa0055bf'
+```
 
 ```js
 chroma.blend('4CBBFC', 'EEEE22', 'multiply');
