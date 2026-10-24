@@ -18,8 +18,7 @@ const hsi2rgb = (...args) => {
     if (isNaN(h)) h = 0;
     if (isNaN(s)) s = 0;
     // normalize hue
-    if (h > 360) h -= 360;
-    if (h < 0) h += 360;
+    h = ((h % 360) + 360) % 360;
     h /= 360;
     if (h < 1 / 3) {
         b = (1 - s) / 3;
