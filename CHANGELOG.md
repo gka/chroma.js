@@ -1,5 +1,22 @@
 ## Changelog
 
+## 3.3.0
+
+- `chroma.blend()` now takes the alpha of both colors into account, compositing the second color over the first (source-over). Previously alpha was discarded, so a transparent top color still changed the result and two translucent colors produced an opaque one. Blending opaque colors gives the same results as before. Results can now be translucent, in which case `hex()` returns eight digits (e.g. `chroma.blend('rgba(0,0,255,0.5)', 'rgba(255,0,0,0.5)', 'normal').hex()` is `'#aa0055bf'`). Also fixes `burn` throwing for a white backdrop with a black source, which now returns white.
+- Fix `chroma.average()` in hue-based modes (`hsl`, `hsv`, `lch`, `hcl`, …) depending on the order of the colors. The first color's weight was applied to its hue angle as well as its contribution, and an achromatic first color (e.g. white or gray) was counted as hue 0° (red). For example, `chroma.average(['white', 'blue'], 'hsl')` returned `#df9fdf` instead of `#9f9fdf`.
+- Fix hcl/lch/oklch interpolation not reaching pure black/white exactly when interpolating from a saturated color
+- Preserve full alpha precision when parsing `#rrggbbaa` / `#rgba` hex colors. `hex2rgb` rounded the alpha channel to two decimals, so 136 of 256 alpha bytes did not round-trip (for example `chroma('#ff000088').hex()` returned `#ff000087`). Alpha is now parsed exactly as `aa / 255`, matching the RGB channels and CSS Color 4.
+- fix(hcg): return chroma/grayness on [0..1] so rgb2hcg round-trips (#250)
+- Keep the alpha channel when constructing a color from an HSL object. `chroma({ h: 120, s: 0.8, l: 0.75, a: 0.5 })` previously returned an opaque color; it now has an alpha of `0.5`, like the RGB object form already did.
+- Fix `chroma.limits(data, 'k', n)` (k-means) dropping clusters. The cluster tally was incremented inside the nearest-centroid loop, so each point was counted up to `n` times against intermediate best-so-far indices, corrupting the centroid means. It is now counted once per point after the argmin, so well-separated data yields the expected breaks (`chroma.limits([0,1,2,50,51,52,100,101,102], 'k', 3)` returns `[0, 2, 52, 102]`).
+- Handle missing LCH lightness as zero when parsing CSS colors.
+- Fix parsing of legacy `rgba(r, g, b, a)` CSS colors: percentage alpha (e.g. `rgba(255,0,0,50%)`) was read on the 0–255 channel scale and clamped to 1, and `none` produced `NaN` channels
+- Fix alpha being `NaN` for colors constructed without an alpha channel from `oklab`, `oklch` or `gl`
+- Reject non-numeric RGB channels instead of silently treating them as `0`. `chroma('nonsense', 0, 255, 'rgb')` and `chroma(null, 0, 255, 'rgb')` now throw `invalid rgb color`, as do `NaN` channels or alpha. Out-of-range numbers are still clipped as before.
+- Rename the internal RGB-to-HSV converter from `rgb2hsl` to `rgb2hsv`, so stack traces and debugging show the correct name. No change in behavior.
+- Fix `scale.classes(n)` ignoring a later `scale.domain()` call. Class boundaries set with a number are now recomputed when the domain changes, so `.classes(5).domain([-2, 2])` gives the same five colors as `.domain([-2, 2]).classes(5)` instead of only black and white. Explicit class breaks passed as an array are unchanged when the domain changes.
+- Preserve opacity when setting an individual color channel.
+
 ### 3.2.0
 
 - scale.domain now returns the original domain array when called with no arguments
