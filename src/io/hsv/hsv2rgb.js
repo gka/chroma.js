@@ -9,9 +9,7 @@ const hsv2rgb = (...args) => {
     if (s === 0) {
         r = g = b = v;
     } else {
-        if (h === 360) h = 0;
-        if (h > 360) h -= 360;
-        if (h < 0) h += 360;
+        h = ((h % 360) + 360) % 360;
         h /= 60;
 
         const i = floor(h);
