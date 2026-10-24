@@ -25,14 +25,14 @@ const RE_RGB = new RegExp(
         '\\)$'
 );
 const RE_RGB_LEGACY = new RegExp(
-    '^rgb\\(' +
+    '^rgba?\\(' +
         RE_S +
         [INT_OR_PCT, INT_OR_PCT, INT_OR_PCT].join(COMMA) +
         RE_S +
         '\\)$'
 );
 const RE_RGBA_LEGACY = new RegExp(
-    '^rgba\\(' +
+    '^rgba?\\(' +
         RE_S +
         [INT_OR_PCT, INT_OR_PCT, INT_OR_PCT, FLOAT_OR_PCT].join(COMMA) +
         RE_S +
@@ -43,10 +43,15 @@ const RE_HSL = new RegExp(
     '^hsla?\\(' + RE_S + [ANLGE, PCT, PCT].join(SEP) + ALPHA + '\\)$'
 );
 const RE_HSL_LEGACY = new RegExp(
-    '^hsl?\\(' + RE_S + [ANLGE, PCT, PCT].join(COMMA) + RE_S + '\\)$'
+    '^hsla?\\(' + RE_S + [ANLGE, PCT, PCT].join(COMMA) + RE_S + '\\)$'
 );
-const RE_HSLA_LEGACY =
-    /^hsla\(\s*(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)%\s*,\s*(-?\d+(?:\.\d+)?)%\s*,\s*([01]|[01]?\.\d+)\)$/;
+const RE_HSLA_LEGACY = new RegExp(
+    '^hsla?\\(' +
+        RE_S +
+        [ANLGE, PCT, PCT, FLOAT_OR_PCT].join(COMMA) +
+        RE_S +
+        '\\)$'
+);
 
 const RE_LAB = new RegExp(
     '^lab\\(' +
@@ -154,13 +159,11 @@ const css2rgb = (css) => {
     // hsla(0,100%,50%,0.5)
     if ((m = css.match(RE_HSLA_LEGACY))) {
         const hsl = m.slice(1, 4);
-        hsl[1] *= 0.01;
-        hsl[2] *= 0.01;
-        const rgb = hsl2rgb(hsl);
-        for (let i = 0; i < 3; i++) {
-            rgb[i] = round(rgb[i]);
-        }
-        rgb[3] = +m[4]; // default alpha = 1
+        hsl[0] = +noneToValue(hsl[0].replace('deg', ''), 0);
+        hsl[1] = +percentToAbsolute(noneToValue(hsl[1], 0), 0, 100) * 0.01;
+        hsl[2] = +percentToAbsolute(noneToValue(hsl[2], 0), 0, 100) * 0.01;
+        const rgb = roundRGB(hsl2rgb(hsl));
+        rgb[3] = +percentToAbsolute(noneToValue(m[4], 0), 0, 1);
         return rgb;
     }
 
