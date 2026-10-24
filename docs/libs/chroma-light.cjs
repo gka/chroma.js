@@ -77,7 +77,7 @@
             if (i < 3) {
                 if (rgb[i] < 0 || rgb[i] > 255) { rgb._clipped = true; }
                 rgb[i] = limit(rgb[i], 0, 255);
-            } else if (i === 3) {
+            } else if (i === 3 && rgb.length > 3) {
                 rgb[i] = limit(rgb[i], 0, 1);
             }
         }
@@ -194,7 +194,7 @@
     };
 
     // this gets updated automatically
-    var version = '3.2.0';
+    var version = '3.3.0';
 
     var chroma = function () {
         var args = [], len = arguments.length;
@@ -747,7 +747,7 @@
 
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
-        args = unpack(args, 'hsl');
+        args = unpack(args, 'hsla');
         var h = args[0];
         var s = args[1];
         var l = args[2];
@@ -1127,10 +1127,12 @@
 
         // rgba(250,20,0,0.4)
         if ((m = css.match(RE_RGBA_LEGACY))) {
-            var rgb$1 = m.slice(1, 5);
-            for (var i$1 = 0; i$1 < 4; i$1++) {
-                rgb$1[i$1] = +percentToAbsolute(rgb$1[i$1], 0, 255);
+            var rgb$1 = m.slice(1, 4);
+            for (var i$1 = 0; i$1 < 3; i$1++) {
+                rgb$1[i$1] = +percentToAbsolute(noneToValue(rgb$1[i$1], 0), 0, 255);
             }
+            rgb$1 = roundRGB(rgb$1);
+            rgb$1[3] = +percentToAbsolute(noneToValue(m[4], 0), 0, 1);
             return rgb$1;
         }
 
@@ -1177,7 +1179,7 @@
 
         if ((m = css.match(RE_LCH))) {
             var lch = m.slice(1, 4);
-            lch[0] = percentToAbsolute(lch[0], 0, 100);
+            lch[0] = percentToAbsolute(noneToValue(lch[0], 0), 0, 100);
             lch[1] = percentToAbsolute(noneToValue(lch[1], 0), 0, 150, false);
             lch[2] = +noneToValue(lch[2].replace('deg', ''), 0);
             // convert to D50 Lab whitepoint
@@ -1302,7 +1304,7 @@
             var r$1 = (u$1 >> 24) & 0xff;
             var g$1 = (u$1 >> 16) & 0xff;
             var b$1 = (u$1 >> 8) & 0xff;
-            var a = Math.round(((u$1 & 0xff) / 0xff) * 100) / 100;
+            var a = (u$1 & 0xff) / 0xff;
             return [r$1, g$1, b$1, a];
         }
 
@@ -1482,11 +1484,19 @@
     };
     Object.assign(chroma, { rgb: rgb });
 
+    var isValidChannel = function (value) { return type(value) === 'number' && !Number.isNaN(value); };
+
     input.format.rgb = function () {
         var args = [], len = arguments.length;
         while ( len-- ) args[ len ] = arguments[ len ];
 
         var rgba = unpack(args, 'rgba');
+        if (!rgba.slice(0, 3).every(isValidChannel)) {
+            throw new Error('invalid rgb color');
+        }
+        if (rgba[3] !== undefined && !isValidChannel(rgba[3])) {
+            throw new Error('invalid rgb color');
+        }
         if (rgba[3] === undefined) { rgba[3] = 1; }
         return rgba;
     };
@@ -1500,6 +1510,7 @@
             args = unpack(args, 'rgba');
             if (
                 type(args) === 'array' &&
+                args.slice(0, 3).every(isValidChannel) &&
                 (args.length === 3 ||
                     (args.length === 4 &&
                         type(args[3]) == 'number' &&
@@ -1621,7 +1632,7 @@
                 } else {
                     throw new Error("unsupported value for Color.set");
                 }
-                var out = new Color(src, mode);
+                var out = new Color(src, mode).alpha(this.alpha(), true);
                 if (mutate) {
                     this._rgb = out._rgb;
                     return this;

@@ -159,6 +159,9 @@ chroma(&#39;hotpink&#39;).lab();
 <pre><code class="lang-js">chroma.lch(80, 40, 130);
 chroma(80, 40, 130, &#39;lch&#39;);
 </code></pre>
+<p>When round-tripping colors through <code>Lab</code> or <code>Lch</code>, keep the same Lab white<br>point for the whole conversion chain. Chroma.js uses D65 by default, while some<br>other color tools and CSS Color 4 examples use D50. Mixing those assumptions can<br>produce visibly different RGB results, even if the <code>Lch</code> values themselves have<br>not been intentionally changed. If you need to match another tool, set the Lab<br>white point explicitly before converting:</p>
+<pre><code class="lang-js">chroma.setLabWhitePoint(&#39;D50&#39;);
+</code></pre>
 <h3 id="chroma-hcl">chroma.hcl</h3>
 <h4 id="-hue-chroma-lightness-">(hue, chroma, lightness)</h4>
 <p>You can use <strong>hcl</strong> instead of Lch. Lightness and hue channels are switched to be more consistent with HSL.</p>
@@ -236,7 +239,11 @@ chroma.average(colors, &#39;lch&#39;, [1.5,0.5,1,2.3]);
 </code></pre>
 <h3 id="chroma-blend">chroma.blend</h3>
 <h4 id="-color1-color2-mode-">(color1, color2, mode)</h4>
-<p>Blends two colors using RGB channel-wise blend functions. Valid blend modes are <code>multiply</code>, <code>darken</code>, <code>lighten</code>, <code>screen</code>, <code>overlay</code>, <code>burn</code>, and <code>dodge</code>.</p>
+<p>Blends two colors using RGB channel-wise blend functions. Valid blend modes are <code>normal</code>, <code>multiply</code>, <code>darken</code>, <code>lighten</code>, <code>screen</code>, <code>overlay</code>, <code>burn</code>, and <code>dodge</code>.</p>
+<p>The second color is composited over the first using their alpha values. Fully transparent colors do not affect the visible result. If both colors are transparent, the result is transparent black. Translucent results include alpha in the default <code>hex()</code> output (eight hexadecimal digits).</p>
+<pre><code class="lang-js">chroma.blend(&#39;blue&#39;, &#39;rgba(255,0,0,0.5)&#39;, &#39;normal&#39;).rgba(); // [128, 0, 128, 1]
+chroma.blend(&#39;rgba(0,0,255,0.5)&#39;, &#39;rgba(255,0,0,0.5)&#39;, &#39;normal&#39;).hex(); // &#39;#aa0055bf&#39;
+</code></pre>
 <pre><code class="lang-js">chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;multiply&#39;);
 chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;darken&#39;);
 chroma.blend(&#39;4CBBFC&#39;, &#39;EEEE22&#39;, &#39;lighten&#39;);
@@ -618,9 +625,11 @@ chroma.scale(&#39;OrRd&#39;);
 chroma.scale(&#39;OrRd&#39;).classes(5);
 chroma.scale(&#39;OrRd&#39;).classes(8);
 </code></pre>
+<p>When classes are specified as a number, their boundaries follow subsequent changes to <code>scale.domain</code>, so either configuration order produces the same result.</p>
 <p>You can also define custom class breaks by passing them as array:</p>
 <pre><code class="lang-js">chroma.scale(&#39;OrRd&#39;).classes([0,0.3,0.55,0.85,1]);
 </code></pre>
+<p>Explicit class breaks remain unchanged when the domain changes.</p>
 <h3 id="scale-nodata">scale.nodata</h3>
 <h4 id="-color-">(color)</h4>
 <p>When you pass a non-numeric value like <code>null</code> or <code>undefined</code> to a chroma.scale, &quot;#cccccc&quot; is returned as fallback or &quot;no data&quot; color. You can change the no-data color:</p>
@@ -710,6 +719,24 @@ chroma.cubehelix().lightness([0.3,0.7]);
     .colors(5);
 </code></pre>
 <h2 id="changelog">Changelog</h2>
+<h3 id="3-3-0">3.3.0</h3>
+<ul>
+<li><code>chroma.blend()</code> now takes the alpha of both colors into account, compositing the second color over the first (source-over). Previously alpha was discarded, so a transparent top color still changed the result and two translucent colors produced an opaque one. Blending opaque colors gives the same results as before. Results can now be translucent, in which case <code>hex()</code> returns eight digits (e.g. <code>chroma.blend(&#39;rgba(0,0,255,0.5)&#39;, &#39;rgba(255,0,0,0.5)&#39;, &#39;normal&#39;).hex()</code> is <code>&#39;#aa0055bf&#39;</code>). Also fixes <code>burn</code> throwing for a white backdrop with a black source, which now returns white.</li>
+<li>Fix <code>chroma.average()</code> in hue-based modes (<code>hsl</code>, <code>hsv</code>, <code>lch</code>, <code>hcl</code>, …) depending on the order of the colors. The first color&#39;s weight was applied to its hue angle as well as its contribution, and an achromatic first color (e.g. white or gray) was counted as hue 0° (red). For example, <code>chroma.average([&#39;white&#39;, &#39;blue&#39;], &#39;hsl&#39;)</code> returned <code>#df9fdf</code> instead of <code>#9f9fdf</code>.</li>
+<li>Fix hcl/lch/oklch interpolation not reaching pure black/white exactly when interpolating from a saturated color</li>
+<li>Preserve full alpha precision when parsing <code>#rrggbbaa</code> / <code>#rgba</code> hex colors. <code>hex2rgb</code> rounded the alpha channel to two decimals, so 136 of 256 alpha bytes did not round-trip (for example <code>chroma(&#39;#ff000088&#39;).hex()</code> returned <code>#ff000087</code>). Alpha is now parsed exactly as <code>aa / 255</code>, matching the RGB channels and CSS Color 4.</li>
+<li>Fix the <code>hcg</code> color space. <code>color.hcg()</code> returned chroma and grayness on a 0–100 scale while <code>chroma.hcg()</code> expects 0–1, so converting a color to HCG and back, as well as mixing, averaging or building scales in <code>hcg</code> mode, produced black or threw an error. <code>color.hcg()</code> now returns chroma and grayness on a 0–1 scale.</li>
+<li>Keep the alpha channel when constructing a color from an HSL object. <code>chroma({ h: 120, s: 0.8, l: 0.75, a: 0.5 })</code> previously returned an opaque color; it now has an alpha of <code>0.5</code>, like the RGB object form already did.</li>
+<li>Fix <code>chroma.limits(data, &#39;k&#39;, n)</code> (k-means) dropping clusters. The cluster tally was incremented inside the nearest-centroid loop, so each point was counted up to <code>n</code> times against intermediate best-so-far indices, corrupting the centroid means. It is now counted once per point after the argmin, so well-separated data yields the expected breaks (<code>chroma.limits([0,1,2,50,51,52,100,101,102], &#39;k&#39;, 3)</code> returns <code>[0, 2, 52, 102]</code>).</li>
+<li>Handle missing LCH lightness as zero when parsing CSS colors.</li>
+<li>Fix parsing of legacy <code>rgba(r, g, b, a)</code> CSS colors: percentage alpha (e.g. <code>rgba(255,0,0,50%)</code>) was read on the 0–255 channel scale and clamped to 1, and <code>none</code> produced <code>NaN</code> channels</li>
+<li>Fix alpha being <code>NaN</code> for colors constructed without an alpha channel from <code>oklab</code>, <code>oklch</code> or <code>gl</code></li>
+<li>Reject non-numeric RGB channels instead of silently treating them as <code>0</code>. <code>chroma(&#39;nonsense&#39;, 0, 255, &#39;rgb&#39;)</code> and <code>chroma(null, 0, 255, &#39;rgb&#39;)</code> now throw <code>invalid rgb color</code>, as do <code>NaN</code> channels or alpha. Out-of-range numbers are still clipped as before.</li>
+<li>Rename the internal RGB-to-HSV converter from <code>rgb2hsl</code> to <code>rgb2hsv</code>, so stack traces and debugging show the correct name. No change in behavior.</li>
+<li>Fix <code>scale.classes(n)</code> ignoring a later <code>scale.domain()</code> call. Class boundaries set with a number are now recomputed when the domain changes, so <code>.classes(5).domain([-2, 2])</code> gives the same five colors as <code>.domain([-2, 2]).classes(5)</code> instead of only black and white. Explicit class breaks passed as an array are unchanged when the domain changes.</li>
+<li>Fix scales with a <code>gamma()</code> throwing for values outside the domain. <code>chroma.scale(&#39;YlGn&#39;).domain([5, 15]).gamma(1.2)(4)</code> previously threw an error; out-of-domain values are now clamped to the nearest end of the scale, as they are without a gamma.</li>
+<li>Preserve opacity when setting an individual color channel.</li>
+</ul>
 <h3 id="3-2-0">3.2.0</h3>
 <ul>
 <li>scale.domain now returns the original domain array when called with no arguments</li>
