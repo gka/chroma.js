@@ -29,7 +29,7 @@ Color.prototype.set = function (mc, value, mutate = false) {
             } else {
                 throw new Error(`unsupported value for Color.set`);
             }
-            const out = new Color(src, mode);
+            const out = new Color(src, mode).alpha(this.alpha(), true);
             if (mutate) {
                 this._rgb = out._rgb;
                 return this;
