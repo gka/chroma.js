@@ -27,12 +27,16 @@ export default (colors, mode = 'lrgb', weights = null) => {
     let dy = 0;
     // initial color
     for (let i = 0; i < xyz.length; i++) {
-        xyz[i] = (xyz[i] || 0) * weights[0];
         cnt.push(isNaN(xyz[i]) ? 0 : weights[0]);
-        if (mode.charAt(i) === 'h' && !isNaN(xyz[i])) {
-            const A = (xyz[i] / 180) * PI;
-            dx += cos(A) * weights[0];
-            dy += sin(A) * weights[0];
+        if (mode.charAt(i) === 'h') {
+            if (!isNaN(xyz[i])) {
+                const A = (xyz[i] / 180) * PI;
+                dx += cos(A) * weights[0];
+                dy += sin(A) * weights[0];
+            }
+            xyz[i] = 0;
+        } else {
+            xyz[i] = (xyz[i] || 0) * weights[0];
         }
     }
 

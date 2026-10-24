@@ -55,4 +55,26 @@ describe('Tests for average color', () => {
         const result = average(colors, 'hsl', [0.25, 1, 0.5]);
         expect(result.hex()).toBe('#8163e5');
     });
+
+    // see https://github.com/gka/chroma.js/issues/252
+    // the weighted circular mean of hues must be independent of color order:
+    // averaging the same colors with the same weights, listed in a different
+    // order, must yield the same hue. Previously the first color's hue was
+    // weighted twice (its angle was scaled by the weight before cos/sin),
+    // breaking this property whenever weights[0] !== 1 and the first hue !== 0.
+    it('weighted hue average is order-independent', () => {
+        const a = average(['cyan', 'red'], 'hsl', [1, 4]).get('hsl.h');
+        const b = average(['red', 'cyan'], 'hsl', [4, 1]).get('hsl.h');
+        expect(a).toBeCloseTo(b, 6);
+        // red (hue 0) carries 4x the weight of cyan (hue 180), so the
+        // resultant hue must sit at 0, not be pulled away by cyan.
+        expect(a).toBeCloseTo(0, 4);
+    });
+
+    it('weighted lch hue average matches circular mean', () => {
+        const h1 = average(['#ff0000', '#00ff00'], 'lch', [3, 1]).get('lch.h');
+        const h2 = average(['#00ff00', '#ff0000'], 'lch', [1, 3]).get('lch.h');
+        expect(h1).toBeCloseTo(h2, 6);
+        expect(h1).toBeCloseTo(51.6798, 3);
+    });
 });
