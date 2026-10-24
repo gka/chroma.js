@@ -5,6 +5,7 @@
 
 import '../io/rgb/index.js';
 import chroma from '../chroma.js';
+import limit from '../utils/limit.js';
 
 const blend = (bottom, top, mode) => {
     if (!blend[mode]) {
@@ -14,9 +15,27 @@ const blend = (bottom, top, mode) => {
 };
 
 const blend_f = (f) => (bottom, top) => {
-    const c0 = chroma(top).rgb();
-    const c1 = chroma(bottom).rgb();
-    return chroma.rgb(f(c0, c1));
+    const c0 = chroma(top).rgba();
+    const c1 = chroma(bottom).rgba();
+    c0[3] = limit(c0[3], 0, 1);
+    c1[3] = limit(c1[3], 0, 1);
+    const alpha = c0[3] + c1[3] * (1 - c0[3]);
+    if (alpha === 0) return chroma.rgb(0, 0, 0, 0);
+    if (c0[3] === 0) return chroma.rgb(c1);
+    if (c1[3] === 0) return chroma.rgb(c0);
+
+    const out = f(c0, c1);
+    if (c0[3] === 1 && c1[3] === 1) return chroma.rgb(out);
+
+    // Source-over composition: blend only where source and backdrop overlap.
+    for (let i = 0; i < 3; i++) {
+        out[i] =
+            (c0[3] * (1 - c1[3]) * c0[i] +
+                c0[3] * c1[3] * limit(out[i], 0, 255) +
+                (1 - c0[3]) * c1[3] * c1[i]) /
+            alpha;
+    }
+    return chroma.rgb(...out, alpha);
 };
 
 const each = (f) => (c0, c1) => {
@@ -34,7 +53,8 @@ const lighten = (a, b) => (a > b ? a : b);
 const screen = (a, b) => 255 * (1 - (1 - a / 255) * (1 - b / 255));
 const overlay = (a, b) =>
     b < 128 ? (2 * a * b) / 255 : 255 * (1 - 2 * (1 - a / 255) * (1 - b / 255));
-const burn = (a, b) => 255 * (1 - (1 - b / 255) / (a / 255));
+const burn = (a, b) =>
+    b === 255 ? 255 : 255 * (1 - (1 - b / 255) / (a / 255));
 const dodge = (a, b) => {
     if (a === 255) return 255;
     a = (255 * (b / 255)) / (1 - a / 255);
