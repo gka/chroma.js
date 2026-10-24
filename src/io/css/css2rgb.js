@@ -180,7 +180,7 @@ const css2rgb = (css) => {
 
     if ((m = css.match(RE_LCH))) {
         const lch = m.slice(1, 4);
-        lch[0] = percentToAbsolute(lch[0], 0, 100);
+        lch[0] = percentToAbsolute(noneToValue(lch[0], 0), 0, 100);
         lch[1] = percentToAbsolute(noneToValue(lch[1], 0), 0, 150, false);
         lch[2] = +noneToValue(lch[2].replace('deg', ''), 0);
         // convert to D50 Lab whitepoint
