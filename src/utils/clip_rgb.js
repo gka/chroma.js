@@ -7,7 +7,7 @@ export default (rgb) => {
         if (i < 3) {
             if (rgb[i] < 0 || rgb[i] > 255) rgb._clipped = true;
             rgb[i] = limit(rgb[i], 0, 255);
-        } else if (i === 3) {
+        } else if (i === 3 && rgb.length > 3) {
             rgb[i] = limit(rgb[i], 0, 1);
         }
     }
