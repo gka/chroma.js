@@ -130,10 +130,12 @@ const css2rgb = (css) => {
 
     // rgba(250,20,0,0.4)
     if ((m = css.match(RE_RGBA_LEGACY))) {
-        const rgb = m.slice(1, 5);
-        for (let i = 0; i < 4; i++) {
-            rgb[i] = +percentToAbsolute(rgb[i], 0, 255);
+        let rgb = m.slice(1, 4);
+        for (let i = 0; i < 3; i++) {
+            rgb[i] = +percentToAbsolute(noneToValue(rgb[i], 0), 0, 255);
         }
+        rgb = roundRGB(rgb);
+        rgb[3] = +percentToAbsolute(noneToValue(m[4], 0), 0, 1);
         return rgb;
     }
 
