@@ -24,4 +24,20 @@ describe('Some tests for chroma.num()', () => {
 
         expect(colors[4].num()).toBe(0xff0000);
     });
+
+    it('rounds fractional channels', () => {
+        // rgb channels are stored as floats, e.g. after interpolation
+        const color = chroma.scale(['white', 'red'])(0.5);
+        expect(color.hex()).toBe('#ff8080');
+        expect(color.num()).toBe(0xff8080);
+
+        const fractional = chroma(10.6, 20.4, 30.5);
+        expect(fractional.num()).toBe(0x0b141f);
+        expect(Number.isInteger(chroma.lab(50, 20, 30).num())).toBe(true);
+    });
+
+    it('num round-trips through hex', () => {
+        const color = chroma.lab(50, 20, 30);
+        expect(chroma(color.num()).hex()).toBe(color.hex());
+    });
 });
