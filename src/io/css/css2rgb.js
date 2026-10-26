@@ -77,6 +77,16 @@ const RE_OKLCH = new RegExp(
         '\\)$'
 );
 
+const SRGB_VALUE = /([+-]?(?:\d*\.\d+|\d+)(?:e[+-]?\d+)?%?|none)/.source;
+const RE_SRGB = new RegExp(
+    '^\\s*color\\(\\s*srgb\\s+' +
+        [SRGB_VALUE, SRGB_VALUE, SRGB_VALUE].join(SEP) +
+        '(?:\\s*/\\s*' +
+        SRGB_VALUE +
+        ')?\\s*\\)\\s*$',
+    'i'
+);
+
 const { round } = Math;
 
 const roundRGB = (rgb) => {
@@ -114,6 +124,17 @@ const css2rgb = (css) => {
             return input.format.named(css);
             // eslint-disable-next-line
         } catch (e) {}
+    }
+
+    if ((m = css.match(RE_SRGB))) {
+        const rgb = m
+            .slice(1, 4)
+            .map((v) => percentToAbsolute(noneToValue(v, 0), 0, 1) * 255);
+        rgb[3] =
+            m[4] !== undefined
+                ? percentToAbsolute(noneToValue(m[4], 0), 0, 1)
+                : 1;
+        return rgb;
     }
 
     // rgb(250 20 0) or rgb(250,20,0)
@@ -233,6 +254,7 @@ css2rgb.test = (s) => {
         RE_RGBA_LEGACY.test(s) ||
         RE_HSL_LEGACY.test(s) ||
         RE_HSLA_LEGACY.test(s) ||
+        RE_SRGB.test(s) ||
         s === 'transparent'
     );
 };
