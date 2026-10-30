@@ -334,7 +334,7 @@ export default function (colors) {
         if (arguments.length === 0) {
             result = _colors.slice(0);
         } else if (numColors === 1) {
-            result = [f(0.5)];
+            result = [f(_positions[0] + (_positions[1] - _positions[0]) * 0.5)];
         } else if (numColors > 1) {
             const dm = _positions[0];
             const dd = _positions[1] - dm;

@@ -56,6 +56,13 @@ describe('Some tests for scale()', () => {
         });
     });
 
+    it.each([{ domain: [0, 1] }, { domain: [10, 20] }, { domain: [-20, -10] }, { domain: [20, 10] }])(
+        'samples a single color at the center of domain $domain',
+        ({ domain }) => {
+            expect(scale(['white', 'black']).domain(domain).colors(1)).toEqual(['#808080']);
+        }
+    );
+
     describe('simple hsv scale (white-->black), classified', () => {
         const f = scale(['white', 'black']).classes(7).mode('hsv');
 
