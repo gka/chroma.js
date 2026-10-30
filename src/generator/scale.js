@@ -210,6 +210,8 @@ export default function (colors) {
         _min = domain[0];
         _max = domain[domain.length - 1];
         _pos = [];
+        tMapDomain = (t) => t;
+        resetCache();
         const k = _colors.length;
         if (domain.length === k && _min !== _max) {
             // update positions
