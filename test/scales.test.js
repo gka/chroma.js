@@ -4,6 +4,28 @@ import chroma from 'chroma-js';
 const scale = chroma.scale;
 
 describe('Some tests for scale()', () => {
+    it('clears cached colors when domain positions change', () => {
+        const colors = ['red', 'yellow', 'blue'];
+        const reused = scale(colors).domain([0, 10, 100]);
+        reused(50);
+
+        reused.domain([0, 50, 100]);
+
+        const fresh = scale(colors).domain([0, 50, 100]);
+        expect(reused(50).hex()).toBe(fresh(50).hex());
+    });
+
+    it.each([{ domain: [0, 100] }, { domain: [0, 50, 100] }])('removes an old nonlinear mapping when domain becomes $domain', ({ domain }) => {
+        const colors = ['white', 'black'];
+        const reused = scale(colors).domain([0, 10, 100]);
+        reused.domain(domain);
+        const fresh = scale(colors).domain(domain);
+
+        for (const value of [0, 10, 25, 50, 75, 100]) {
+            expect(reused(value).hex()).toBe(fresh(value).hex());
+        }
+    });
+
     describe('simple rgb scale (white-->black)', () => {
         const f = scale(['white', 'black']);
 
