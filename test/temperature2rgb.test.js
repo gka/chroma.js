@@ -1,9 +1,16 @@
 import { describe, it, expect } from 'vitest';
+import chroma from '../index.js';
 import temperature2rgb from '../src/io/temp/temperature2rgb.js';
 
 const { round } = Math;
 
 describe('Testing Kelvin color conversions', () => {
+    [1000, 1500, 1750, 1999, 2000].forEach((kelvin) => {
+        it(`estimates ${kelvin} K from its temperature color`, () => {
+            expect(Math.abs(chroma.temperature(kelvin).temperature() - kelvin)).toBeLessThanOrEqual(1);
+        });
+    });
+
     const cases = {
         '1k': { in: 1000, out: [255, 58, 0, 1] },
         '4k': { in: 4000, out: [255, 208, 164, 1] },
