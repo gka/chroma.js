@@ -7,6 +7,9 @@ describe('Testing CSS2RGB color conversions', () => {
     const testCases = {
         // modern css colors
         'rgb(0 0 0)': [0, 0, 0, 1],
+        'rgb(127.5 0 0)': [128, 0, 0, 1],
+        'rgb(255.0, 0, 0)': [255, 0, 0, 1],
+        'rgba(255.0, 0, 0, 0.5)': [255, 0, 0, 0.5],
         'rgb(0% 0% 0%)': [0, 0, 0, 1],
         'rgb(0% 100% 100%)': [0, 255, 255, 1],
         'rgb(none none 50%)': [0, 0, 128, 1],
