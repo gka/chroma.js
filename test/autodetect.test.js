@@ -59,4 +59,15 @@ describe('autodetect color', () => {
         const result = chroma('hsl(120deg 100% 50%)');
         expect(result.name()).toBe('lime');
     });
+
+    it('autodetect css colors regardless of case', () => {
+        expect(chroma('RGB(0, 255, 0)').name()).toBe('lime');
+        expect(chroma('HSL(120deg 100% 50%)').name()).toBe('lime');
+        expect(chroma('TRANSPARENT').alpha()).toBe(0);
+    });
+
+    it('autodetect css colors with surrounding whitespace', () => {
+        expect(chroma(' rgb(0, 255, 0) ').name()).toBe('lime');
+        expect(chroma('hsl(120, 100%, 50%) ').name()).toBe('lime');
+    });
 });
