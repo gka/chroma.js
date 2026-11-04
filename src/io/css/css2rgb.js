@@ -7,7 +7,8 @@ import input from '../input.js';
 import limit from '../../utils/limit.js';
 import { getLabWhitePoint, setLabWhitePoint } from '../lab/lab-constants.js';
 
-const INT_OR_PCT = /((?:-?\d+)|(?:-?\d+(?:\.\d+)?)%|none)/.source;
+// CSS rgb() channels are <number> or <percentage>, not only integers
+const NUM_OR_PCT = /((?:-?(?:\d+(?:\.\d*)?|\.\d+)%?)|none)/.source;
 const FLOAT_OR_PCT = /((?:-?(?:\d+(?:\.\d*)?|\.\d+)%?)|none)/.source;
 const PCT = /((?:-?(?:\d+(?:\.\d*)?|\.\d+)%)|none)/.source;
 const RE_S = /\s*/.source;
@@ -20,21 +21,21 @@ const ALPHA = /\s*(?:\/\s*((?:[01]|[01]?\.\d+)|\d+(?:\.\d+)?%))?/.source;
 const RE_RGB = new RegExp(
     '^rgba?\\(' +
         RE_S +
-        [INT_OR_PCT, INT_OR_PCT, INT_OR_PCT].join(SEP) +
+        [NUM_OR_PCT, NUM_OR_PCT, NUM_OR_PCT].join(SEP) +
         ALPHA +
         '\\)$'
 );
 const RE_RGB_LEGACY = new RegExp(
     '^rgb\\(' +
         RE_S +
-        [INT_OR_PCT, INT_OR_PCT, INT_OR_PCT].join(COMMA) +
+        [NUM_OR_PCT, NUM_OR_PCT, NUM_OR_PCT].join(COMMA) +
         RE_S +
         '\\)$'
 );
 const RE_RGBA_LEGACY = new RegExp(
     '^rgba\\(' +
         RE_S +
-        [INT_OR_PCT, INT_OR_PCT, INT_OR_PCT, FLOAT_OR_PCT].join(COMMA) +
+        [NUM_OR_PCT, NUM_OR_PCT, NUM_OR_PCT, FLOAT_OR_PCT].join(COMMA) +
         RE_S +
         '\\)$'
 );
