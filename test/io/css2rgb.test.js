@@ -60,4 +60,9 @@ describe('Testing CSS2RGB color conversions', () => {
             expect(css2rgb(name)).toEqual(testCases[name]);
         });
     });
+
+    it('should not accept hs() as a legacy hsl() color', () => {
+        expect(css2rgb.test('hs(0, 100%, 50%)')).toBe(false);
+        expect(chroma.valid('hs(0, 100%, 50%)')).toBe(false);
+    });
 });
