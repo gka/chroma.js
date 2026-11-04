@@ -57,4 +57,12 @@ describe('Test switching of Lab illuminant', () => {
         chroma.setLabWhitePoint('d65');
         expect(chroma('yellow').lab().map(rnd)).toEqual([97.14, -21.55, 94.48]);
     });
+
+    it('uses distinct white points for illuminants A and B', () => {
+        chroma.setLabWhitePoint('a');
+        expect(chroma('yellow').lab().map(rnd)).toEqual([98.41, -5.64, 87.72]);
+        chroma.setLabWhitePoint('b');
+        expect(chroma('yellow').lab().map(rnd)).toEqual([97.55, -15.68, 93.82]);
+        chroma.setLabWhitePoint('d65');
+    });
 });
