@@ -1,7 +1,7 @@
 const { PI, min, max } = Math;
 
 const rnd2 = (a) => Math.round(a * 100) / 100;
-const rnd3 = (a) => Math.round(a * 100) / 100;
+const rnd3 = (a) => Math.round(a * 1000) / 1000;
 
 export { default as clip_rgb } from './clip_rgb.js';
 export { default as limit } from './limit.js';
