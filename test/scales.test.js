@@ -172,6 +172,27 @@ describe('Some tests for scale()', () => {
         });
     });
 
+    describe('colorbrewer scale - reversed domain - classified', () => {
+        const f = scale('RdYlGn').domain([100, 0]).classes(5);
+
+        it('starts green', () => {
+            expect(f(0).hex()).toBe('#006837');
+        });
+
+        it('mid yellow', () => {
+            expect(f(50).hex()).toBe('#ffffbf');
+        });
+
+        it('ends red', () => {
+            expect(f(100).hex()).toBe('#a50026');
+        });
+
+        it('classes before domain', () => {
+            const g = scale('RdYlGn').classes(5).domain([100, 0]);
+            expect([0, 50, 100].map((v) => g(v).hex())).toEqual(['#006837', '#ffffbf', '#a50026']);
+        });
+    });
+
     describe('automatic classes follow domain changes', () => {
         it('produces the same colors regardless of configuration order', () => {
             const domainFirst = scale(['black', 'white']).domain([-2, 2]).classes(5);
