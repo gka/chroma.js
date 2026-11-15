@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import rgb2oklab from '../../src/io/oklab/rgb2oklab.js';
+import chroma from 'chroma-js';
 
 const round = (digits) => {
     const d = Math.pow(10, digits);
@@ -37,6 +38,32 @@ describe('Testing OKLab color conversions', () => {
         it(`rgb2oklab ${key} converts object`, () => {
             const [r, g, b] = rgb;
             expect(rgb2oklab({ r, g, b }).map(rnd)).toEqual(out);
+        });
+    });
+});
+
+describe('OKLab ignores the Lab white point', () => {
+    afterEach(() => {
+        chroma.setLabWhitePoint('d65');
+    });
+
+    ['d65', 'd50'].forEach((whitePoint) => {
+        it(`converts to oklab and oklch with ${whitePoint}`, () => {
+            chroma.setLabWhitePoint(whitePoint);
+            const oklab = chroma('#7654cd').oklab();
+            expect(oklab[0]).toBeCloseTo(0.5443, 3);
+            expect(oklab[1]).toBeCloseTo(0.0682, 3);
+            expect(oklab[2]).toBeCloseTo(-0.1656, 3);
+            const oklch = chroma('#7654cd').oklch();
+            expect(oklch[0]).toBeCloseTo(0.5443, 3);
+            expect(oklch[1]).toBeCloseTo(0.1791, 3);
+            expect(oklch[2]).toBeCloseTo(292.38, 1);
+        });
+
+        it(`converts from oklab and oklch with ${whitePoint}`, () => {
+            chroma.setLabWhitePoint(whitePoint);
+            expect(chroma.oklab(0.5443, 0.0682, -0.1656).hex()).toBe('#7654cd');
+            expect(chroma.oklch(0.5443, 0.1791, 292.38).hex()).toBe('#7654cd');
         });
     });
 });
