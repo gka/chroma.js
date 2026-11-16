@@ -13,7 +13,8 @@ const PCT = /((?:-?(?:\d+(?:\.\d*)?|\.\d+)%)|none)/.source;
 const RE_S = /\s*/.source;
 const SEP = /\s+/.source;
 const COMMA = /\s*,\s*/.source;
-const ANLGE = /((?:-?(?:\d+(?:\.\d*)?|\.\d+)(?:deg)?)|none)/.source;
+const ANLGE = /((?:-?(?:\d+(?:\.\d*)?|\.\d+)(?:deg|grad|rad|turn)?)|none)/
+    .source;
 const ALPHA = /\s*(?:\/\s*((?:[01]|[01]?\.\d+)|\d+(?:\.\d+)?%))?/.source;
 
 // e.g. rgb(250 20 0), rgb(100% 50% 20%), rgb(100% 50% 20% / 0.5)
@@ -100,6 +101,17 @@ const noneToValue = (v, noneValue) => {
     return v === 'none' ? noneValue : v;
 };
 
+// degrees per unit, see https://www.w3.org/TR/css-values-4/#angles
+const ANGLE_UNITS = { deg: 1, grad: 360 / 400, rad: 180 / Math.PI, turn: 360 };
+
+// converts a CSS <hue> (a number or an angle) to degrees
+const hueToDegrees = (hue) => {
+    if (hue === 'none') return 0;
+    const unit = hue.match(/(deg|grad|rad|turn)$/);
+    if (!unit) return +hue;
+    return parseFloat(hue) * ANGLE_UNITS[unit[1]];
+};
+
 const css2rgb = (css) => {
     css = css.toLowerCase().trim();
 
@@ -142,7 +154,7 @@ const css2rgb = (css) => {
     // hsl(0,100%,50%)
     if ((m = css.match(RE_HSL)) || (m = css.match(RE_HSL_LEGACY))) {
         const hsl = m.slice(1, 4);
-        hsl[0] = +noneToValue(hsl[0].replace('deg', ''), 0);
+        hsl[0] = hueToDegrees(hsl[0]);
         hsl[1] = +percentToAbsolute(noneToValue(hsl[1], 0), 0, 100) * 0.01;
         hsl[2] = +percentToAbsolute(noneToValue(hsl[2], 0), 0, 100) * 0.01;
         const rgb = roundRGB(hsl2rgb(hsl));
@@ -184,7 +196,7 @@ const css2rgb = (css) => {
         const lch = m.slice(1, 4);
         lch[0] = percentToAbsolute(noneToValue(lch[0], 0), 0, 100);
         lch[1] = percentToAbsolute(noneToValue(lch[1], 0), 0, 150, false);
-        lch[2] = +noneToValue(lch[2].replace('deg', ''), 0);
+        lch[2] = hueToDegrees(lch[2]);
         // convert to D50 Lab whitepoint
         const wp = getLabWhitePoint();
         setLabWhitePoint('d50');
@@ -211,7 +223,7 @@ const css2rgb = (css) => {
         const oklch = m.slice(1, 4);
         oklch[0] = percentToAbsolute(noneToValue(oklch[0], 0), 0, 1);
         oklch[1] = percentToAbsolute(noneToValue(oklch[1], 0), 0, 0.4, false);
-        oklch[2] = +noneToValue(oklch[2].replace('deg', ''), 0);
+        oklch[2] = hueToDegrees(oklch[2]);
         const rgb = roundRGB(oklch2rgb(oklch));
         const alpha = m[4] !== undefined ? +percentToAbsolute(m[4], 0, 1) : 1;
         rgb[3] = alpha;
