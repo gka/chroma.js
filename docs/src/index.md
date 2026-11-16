@@ -384,6 +384,7 @@ Read more about how to interpret and use this metric at [APCA Readability Criter
 #### (color1, color2, mode='lab')
 
 Computes the [Euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance#Three_dimensions) between two colors in a given color space (default is `Lab`).
+In color spaces with a hue channel (such as `hsl` or `lch`), the hue difference is measured the short way around the color wheel.
 
 ```js
 chroma.distance('#fff', '#ff0', 'rgb');
