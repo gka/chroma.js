@@ -1,13 +1,28 @@
 import { unpack } from '../../utils/index.js';
 import multiplyMatrices from '../../utils/multiply-matrices.js';
-import { xyz2rgb } from '../lab/lab2rgb.js';
+import { compand } from '../lab/lab2rgb.js';
+import LAB_CONSTANTS from '../lab/lab-constants.js';
 
 const oklab2rgb = (...args) => {
     args = unpack(args, 'lab');
     const [L, a, b, ...rest] = args;
     const [X, Y, Z] = OKLab_to_XYZ([L, a, b]);
-    const [r, g, b_] = xyz2rgb(X, Y, Z);
+    const [r, g, b_] = xyzD652rgb(X, Y, Z);
     return [r, g, b_, ...(rest.length > 0 && rest[0] < 1 ? [rest[0]] : [])];
+};
+
+const xyzD652rgb = (x, y, z) => {
+    const { MtxXYZ2RGB } = LAB_CONSTANTS;
+    const r = compand(
+        x * MtxXYZ2RGB.m00 + y * MtxXYZ2RGB.m10 + z * MtxXYZ2RGB.m20
+    );
+    const g = compand(
+        x * MtxXYZ2RGB.m01 + y * MtxXYZ2RGB.m11 + z * MtxXYZ2RGB.m21
+    );
+    const b = compand(
+        x * MtxXYZ2RGB.m02 + y * MtxXYZ2RGB.m12 + z * MtxXYZ2RGB.m22
+    );
+    return [r * 255, g * 255, b * 255];
 };
 
 // from https://www.w3.org/TR/css-color-4/#color-conversion-code

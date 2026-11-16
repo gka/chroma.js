@@ -1,12 +1,25 @@
 import { unpack } from '../../utils/index.js';
 import multiplyMatrices from '../../utils/multiply-matrices.js';
-import { rgb2xyz } from '../lab/rgb2lab.js';
+import { gammaAdjustSRGB } from '../lab/rgb2lab.js';
+import LAB_CONSTANTS from '../lab/lab-constants.js';
 
 const rgb2oklab = (...args) => {
     const [r, g, b, ...rest] = unpack(args, 'rgb');
-    const xyz = rgb2xyz(r, g, b);
+    const xyz = rgb2xyzD65(r, g, b);
     const oklab = XYZ_to_OKLab(xyz);
     return [...oklab, ...(rest.length > 0 && rest[0] < 1 ? [rest[0]] : [])];
+};
+
+const rgb2xyzD65 = (r, g, b) => {
+    r = gammaAdjustSRGB(r / 255);
+    g = gammaAdjustSRGB(g / 255);
+    b = gammaAdjustSRGB(b / 255);
+    const { MtxRGB2XYZ } = LAB_CONSTANTS;
+    return [
+        r * MtxRGB2XYZ.m00 + g * MtxRGB2XYZ.m10 + b * MtxRGB2XYZ.m20,
+        r * MtxRGB2XYZ.m01 + g * MtxRGB2XYZ.m11 + b * MtxRGB2XYZ.m21,
+        r * MtxRGB2XYZ.m02 + g * MtxRGB2XYZ.m12 + b * MtxRGB2XYZ.m22
+    ];
 };
 
 // from https://www.w3.org/TR/css-color-4/#color-conversion-code
