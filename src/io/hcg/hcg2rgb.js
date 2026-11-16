@@ -18,9 +18,7 @@ const hcg2rgb = (...args) => {
     if (c === 0) {
         r = g = b = _g;
     } else {
-        if (h === 360) h = 0;
-        if (h > 360) h -= 360;
-        if (h < 0) h += 360;
+        h = ((h % 360) + 360) % 360;
         h /= 60;
         const i = floor(h);
         const f = h - i;

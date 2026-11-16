@@ -11,7 +11,7 @@ const hsl2rgb = (...args) => {
         const c = [0, 0, 0];
         const t2 = l < 0.5 ? l * (1 + s) : l + s - l * s;
         const t1 = 2 * l - t2;
-        const h_ = h / 360;
+        const h_ = (((h % 360) + 360) % 360) / 360;
         t3[0] = h_ + 1 / 3;
         t3[1] = h_;
         t3[2] = h_ - 1 / 3;
