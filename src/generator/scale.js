@@ -100,6 +100,7 @@ export default function (colors) {
                 // find the class
                 const c = getClass(val);
                 t = c / (_classes.length - 2);
+                if (_max < _min) t = 1 - t; // reversed domain
             } else if (_max !== _min) {
                 // just interpolate between min/max
                 t = (val - _min) / (_max - _min);
