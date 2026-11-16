@@ -26,6 +26,11 @@ describe('Tests for average color', () => {
         expect(Math.round(result)).toBe(45);
     });
 
+    it('average h in oklch wraps around 0', () => {
+        const result = average([chroma.oklch(0.6, 0.2, 350), chroma.oklch(0.6, 0.2, 10)], 'oklch').get('oklch.h');
+        expect(Math.round(result)).toBe(0);
+    });
+
     it('average in hsl of same colors', () => {
         const result = average(['#02c03a', '#02c03a'], 'hsl');
         expect(result.hex()).toBe('#02c03a');

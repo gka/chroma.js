@@ -20,6 +20,8 @@ export default (colors, mode = 'lrgb', weights = null) => {
     if (mode === 'lrgb') {
         return _average_lrgb(colors, weights);
     }
+    // channel letters, with oklch's hue at index 2
+    const channels = mode.replace(/^ok/, '');
     const first = colors.shift();
     const xyz = first.get(mode);
     const cnt = [];
@@ -28,7 +30,7 @@ export default (colors, mode = 'lrgb', weights = null) => {
     // initial color
     for (let i = 0; i < xyz.length; i++) {
         cnt.push(isNaN(xyz[i]) ? 0 : weights[0]);
-        if (mode.charAt(i) === 'h') {
+        if (channels.charAt(i) === 'h') {
             if (!isNaN(xyz[i])) {
                 const A = (xyz[i] / 180) * PI;
                 dx += cos(A) * weights[0];
@@ -47,7 +49,7 @@ export default (colors, mode = 'lrgb', weights = null) => {
         for (let i = 0; i < xyz.length; i++) {
             if (!isNaN(xyz2[i])) {
                 cnt[i] += weights[ci + 1];
-                if (mode.charAt(i) === 'h') {
+                if (channels.charAt(i) === 'h') {
                     const A = (xyz2[i] / 180) * PI;
                     dx += cos(A) * weights[ci + 1];
                     dy += sin(A) * weights[ci + 1];
@@ -59,7 +61,7 @@ export default (colors, mode = 'lrgb', weights = null) => {
     });
 
     for (let i = 0; i < xyz.length; i++) {
-        if (mode.charAt(i) === 'h') {
+        if (channels.charAt(i) === 'h') {
             let A = (atan2(dy / cnt[i], dx / cnt[i]) / PI) * 180;
             while (A < 0) A += 360;
             while (A >= 360) A -= 360;
