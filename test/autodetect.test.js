@@ -59,4 +59,23 @@ describe('autodetect color', () => {
         const result = chroma('hsl(120deg 100% 50%)');
         expect(result.name()).toBe('lime');
     });
+
+    describe('autodetect css colors regardless of case and surrounding whitespace', () => {
+        const testCases = {
+            'RGB(0, 255, 0)': [0, 255, 0, 1],
+            'Rgba(0 255 0 / 50%)': [0, 255, 0, 0.5],
+            'HSL(120, 100%, 50%)': [0, 255, 0, 1],
+            'LAB(50 0 0)': [119, 119, 119, 1],
+            'OKLCH(0.5 0 0)': [99, 99, 99, 1],
+            ' rgb(0, 255, 0)\n': [0, 255, 0, 1],
+            TRANSPARENT: [0, 0, 0, 0]
+        };
+
+        Object.keys(testCases).forEach((css) => {
+            it(`autodetect ${JSON.stringify(css)}`, () => {
+                expect(chroma.valid(css)).toBe(true);
+                expect(chroma(css).rgba()).toStrictEqual(testCases[css]);
+            });
+        });
+    });
 });

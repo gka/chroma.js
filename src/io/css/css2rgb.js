@@ -232,6 +232,8 @@ const css2rgb = (css) => {
 };
 
 css2rgb.test = (s) => {
+    // normalize like css2rgb does, so chroma('RGB(...)') is detected
+    s = s.toLowerCase().trim();
     return (
         // modern
         RE_RGB.test(s) ||
