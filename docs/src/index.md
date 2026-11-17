@@ -907,7 +907,7 @@ chroma.scale('YlGn').gamma(2);
 
 ### scale.correctLightness
 
-This makes sure the lightness range is spread evenly across a color scale. Especially useful when working with [multi-hue color scales](https://www.vis4.net/blog/2013/09/mastering-multi-hued-color-scales/), where simple gamma correction can't help you very much.
+This makes sure the lightness range is spread evenly across a color scale. Especially useful when working with [multi-hue color scales](https://www.vis4.net/blog/mastering-multi-hued-color-scales/), where simple gamma correction can't help you very much.
 
 ```js
 chroma.scale(['black', 'red', 'yellow', 'white']);
