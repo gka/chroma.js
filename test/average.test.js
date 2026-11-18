@@ -51,6 +51,11 @@ describe('Tests for average color', () => {
         expect(result.hex()).toBe('#bf80bf');
     });
 
+    it('accepts weights from a frozen palette without modifying them', () => {
+        const weights = Object.freeze([1, 1, 2]);
+        expect(average(colors, 'rgb', weights).hex()).toBe('#bf80bf');
+    });
+
     it('three colors, weighted lrgb average', () => {
         const result = average(colors, 'lrgb', [1, 3, 2]);
         expect(result.hex()).toBe('#b493e9');
