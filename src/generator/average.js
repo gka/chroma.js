@@ -12,9 +12,7 @@ export default (colors, mode = 'lrgb', weights = null) => {
         weights.reduce(function (a, b) {
             return a + b;
         });
-    weights.forEach((w, i) => {
-        weights[i] *= k;
-    });
+    weights = weights.map((weight) => weight * k);
     // convert colors to Color objects
     colors = colors.map((c) => new Color(c));
     if (mode === 'lrgb') {
