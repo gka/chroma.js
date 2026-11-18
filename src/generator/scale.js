@@ -110,11 +110,12 @@ export default function (colors) {
             t = val;
         }
 
-        // domain map
-        t = tMapDomain(t);
-
         if (!bypassMap) {
-            t = tMapLightness(t); // lightness correction
+            // domain map
+            t = tMapDomain(t);
+            // lightness correction (it samples the scale with bypassMap, so
+            // its t is already domain-mapped and must not be mapped again)
+            t = tMapLightness(t);
         }
 
         if (_gamma !== 1) {
