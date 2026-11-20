@@ -63,12 +63,30 @@ describe('Testing CSS2RGB color conversions', () => {
         'lch(93.12% 58.8 128.4667grad)': [212, 248, 128, 1], // #d4f880
         'oklch(92.83% 0.15 2.14885rad)': [212, 248, 130, 1],
         'hsl(1foo 100% 50%)': undefined,
-        transparent: [0, 0, 0, 0]
+        transparent: [0, 0, 0, 0],
+        // named colors
+        red: [255, 0, 0, 1],
+        ' RebeccaPurple ': [102, 51, 153, 1],
+        constructor: undefined
     };
 
     Object.keys(testCases).forEach((name) => {
         it(`should correctly parse ${name}`, () => {
             expect(css2rgb(name)).toEqual(testCases[name]);
         });
+    });
+
+    it('should use a replaced named color parser', () => {
+        const named = chroma.input.format.named;
+        chroma.input.format.named = (name) => {
+            if (name === 'brand') return [1, 2, 3, 1];
+            throw new Error('unknown color name: ' + name);
+        };
+        try {
+            expect(css2rgb('brand')).toEqual([1, 2, 3, 1]);
+            expect(css2rgb('red')).toEqual(undefined);
+        } finally {
+            chroma.input.format.named = named;
+        }
     });
 });

@@ -121,9 +121,13 @@ const css2rgb = (css) => {
 
     let m;
 
-    if (input.format.named) {
+    const named = input.format.named;
+    if (named && named.lookup) {
+        const rgb = named.lookup(css);
+        if (rgb) return rgb;
+    } else if (named) {
         try {
-            return input.format.named(css);
+            return named(css);
             // eslint-disable-next-line
         } catch (e) {}
     }

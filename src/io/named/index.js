@@ -20,6 +20,12 @@ input.format.named = (name) => {
     throw new Error('unknown color name: ' + name);
 };
 
+// css2rgb uses this to skip the error for strings that are not color names
+input.format.named.lookup = (name) => {
+    const hex = w3cx11[name];
+    if (typeof hex === 'string') return hex2rgb(hex);
+};
+
 input.autodetect.push({
     p: 5,
     test: (h, ...rest) => {
