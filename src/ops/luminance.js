@@ -33,7 +33,7 @@ Color.prototype.luminance = function (lum, mode = 'rgb') {
             cur_lum > lum
                 ? test(new Color([0, 0, 0]), this)
                 : test(this, new Color([255, 255, 255]))
-        ).rgb();
+        ).rgb(false);
         return new Color([...rgb, this._rgb[3]]);
     }
     return rgb2luminance(...this._rgb.slice(0, 3));
