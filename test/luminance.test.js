@@ -7,6 +7,19 @@ const rnd = function (f, d) {
 };
 
 describe('Testing relative luminance', () => {
+    for (const mode of ['rgb', 'lab']) {
+        for (const target of [0.1, 0.2, 0.5, 0.9]) {
+            it(`preserves target luminance ${target} in ${mode}`, () => {
+                const original = chroma('black').alpha(0.4);
+                const adjusted = original.luminance(target, mode);
+
+                expect(adjusted.luminance()).toBeCloseTo(target, 5);
+                expect(adjusted.alpha()).toBe(0.4);
+                expect(original.rgba()).toEqual([0, 0, 0, 0.4]);
+            });
+        }
+    }
+
     const testCases = [
         {
             name: 'black',
