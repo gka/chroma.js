@@ -7,6 +7,8 @@ describe('Some tests for chroma.valid', () => {
     it('valid color', () => {
         expect(valid('red')).toBe(true);
         expect(valid('transparent')).toBe(true);
+        expect(valid('RGB(255, 0, 0)')).toBe(true);
+        expect(valid(' rgb(255 0 0) ')).toBe(true);
     });
 
     it('invalid color', () => {
