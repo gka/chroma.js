@@ -15,7 +15,7 @@ const SEP = /\s+/.source;
 const COMMA = /\s*,\s*/.source;
 const ANLGE = /((?:-?(?:\d+(?:\.\d*)?|\.\d+)(?:deg|grad|rad|turn)?)|none)/
     .source;
-const ALPHA = /\s*(?:\/\s*((?:[01]|[01]?\.\d+)|\d+(?:\.\d+)?%))?/.source;
+const ALPHA = '\\s*(?:/\\s*' + FLOAT_OR_PCT + ')?\\s*';
 
 // e.g. rgb(250 20 0), rgb(100% 50% 20%), rgb(100% 50% 20% / 0.5)
 const RE_RGB = new RegExp(
@@ -135,7 +135,10 @@ const css2rgb = (css) => {
             rgb[i] = +percentToAbsolute(noneToValue(rgb[i], 0), 0, 255);
         }
         rgb = roundRGB(rgb);
-        const alpha = m[4] !== undefined ? +percentToAbsolute(m[4], 0, 1) : 1;
+        const alpha =
+            m[4] !== undefined
+                ? +percentToAbsolute(noneToValue(m[4], 0), 0, 1)
+                : 1;
         rgb[3] = alpha; // default alpha
         return rgb;
     }
@@ -158,7 +161,10 @@ const css2rgb = (css) => {
         hsl[1] = +percentToAbsolute(noneToValue(hsl[1], 0), 0, 100) * 0.01;
         hsl[2] = +percentToAbsolute(noneToValue(hsl[2], 0), 0, 100) * 0.01;
         const rgb = roundRGB(hsl2rgb(hsl));
-        const alpha = m[4] !== undefined ? +percentToAbsolute(m[4], 0, 1) : 1;
+        const alpha =
+            m[4] !== undefined
+                ? +percentToAbsolute(noneToValue(m[4], 0), 0, 1)
+                : 1;
         rgb[3] = alpha;
         return rgb;
     }
@@ -187,7 +193,10 @@ const css2rgb = (css) => {
         const rgb = roundRGB(lab2rgb(lab));
         // convert back to original Lab whitepoint
         setLabWhitePoint(wp);
-        const alpha = m[4] !== undefined ? +percentToAbsolute(m[4], 0, 1) : 1;
+        const alpha =
+            m[4] !== undefined
+                ? +percentToAbsolute(noneToValue(m[4], 0), 0, 1)
+                : 1;
         rgb[3] = alpha;
         return rgb;
     }
@@ -203,7 +212,10 @@ const css2rgb = (css) => {
         const rgb = roundRGB(lch2rgb(lch));
         // convert back to original Lab whitepoint
         setLabWhitePoint(wp);
-        const alpha = m[4] !== undefined ? +percentToAbsolute(m[4], 0, 1) : 1;
+        const alpha =
+            m[4] !== undefined
+                ? +percentToAbsolute(noneToValue(m[4], 0), 0, 1)
+                : 1;
         rgb[3] = alpha;
         return rgb;
     }
@@ -214,7 +226,10 @@ const css2rgb = (css) => {
         oklab[1] = percentToAbsolute(noneToValue(oklab[1], 0), -0.4, 0.4, true);
         oklab[2] = percentToAbsolute(noneToValue(oklab[2], 0), -0.4, 0.4, true);
         const rgb = roundRGB(oklab2rgb(oklab));
-        const alpha = m[4] !== undefined ? +percentToAbsolute(m[4], 0, 1) : 1;
+        const alpha =
+            m[4] !== undefined
+                ? +percentToAbsolute(noneToValue(m[4], 0), 0, 1)
+                : 1;
         rgb[3] = alpha;
         return rgb;
     }
@@ -225,7 +240,10 @@ const css2rgb = (css) => {
         oklch[1] = percentToAbsolute(noneToValue(oklch[1], 0), 0, 0.4, false);
         oklch[2] = hueToDegrees(oklch[2]);
         const rgb = roundRGB(oklch2rgb(oklch));
-        const alpha = m[4] !== undefined ? +percentToAbsolute(m[4], 0, 1) : 1;
+        const alpha =
+            m[4] !== undefined
+                ? +percentToAbsolute(noneToValue(m[4], 0), 0, 1)
+                : 1;
         rgb[3] = alpha;
         return rgb;
     }
