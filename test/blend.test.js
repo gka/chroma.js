@@ -91,6 +91,19 @@ describe('Testing blend modes', () => {
         expect(result.rgba(false)).toEqual([40, 40, 40, 1]);
     });
 
+    it.each([
+        ['black', 'white', [0, 0, 0, 1]],
+        ['red', 'white', [255, 0, 0, 1]],
+        ['#808080', 'white', [255, 255, 255, 1]],
+        [
+            [0, 0, 0, 0.5],
+            [255, 255, 255, 0.5],
+            [85, 85, 85, 0.75]
+        ]
+    ])('blends dodge endpoints (%j, %j)', (bottom, top, expected) => {
+        expect(blend(bottom, top, 'dodge').rgba(false)).toEqual(expected);
+    });
+
     it('handles a white burn backdrop with a black source', () => {
         expect(blend('white', 'black', 'burn').hex()).toBe('#ffffff');
         expect(blend([255, 255, 255, 0.5], [0, 0, 0, 0.5], 'burn').rgba(false)).toEqual([170, 170, 170, 0.75]);

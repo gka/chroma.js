@@ -56,6 +56,7 @@ const overlay = (a, b) =>
 const burn = (a, b) =>
     b === 255 ? 255 : 255 * (1 - (1 - b / 255) / (a / 255));
 const dodge = (a, b) => {
+    if (b === 0) return 0;
     if (a === 255) return 255;
     a = (255 * (b / 255)) / (1 - a / 255);
     return a > 255 ? 255 : a;
