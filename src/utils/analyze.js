@@ -151,7 +151,8 @@ export function limits(data, mode = 'equal', num = 7) {
             // check convergence
             repeat = false;
             for (let j = 0; j < num; j++) {
-                if (newCentroids[j] !== centroids[j]) {
+                // An empty cluster has a NaN centroid and no assignments to move.
+                if (clusterSizes[j] && newCentroids[j] !== centroids[j]) {
                     repeat = true;
                     break;
                 }

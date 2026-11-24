@@ -55,6 +55,20 @@ describe('Some tests for chroma.limits()', () => {
         expect(() => limits([-1, 10000], 'log', 4)).toThrow('Logarithmic scales are only possible for values > 0');
     });
 
+    it('converges when some k-means clusters are empty', () => {
+        let reads = 0;
+        const values = new Proxy([0, 0, 0, 80, 80], {
+            get(target, key) {
+                if (key === '0') reads++;
+                return target[key];
+            }
+        });
+
+        expect(limits({ min: 0, max: 80, values }, 'k', 7)).toEqual([0, 80]);
+        // Stable clusters should finish well before the 200-iteration cap.
+        expect(reads).toBeLessThan(50);
+    });
+
     it('k-means classifies all requested clusters', () => {
         // three well-separated clusters must yield three class breaks; a
         // corrupted cluster-size tally previously dropped the middle cluster
