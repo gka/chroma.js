@@ -15,7 +15,7 @@ const SEP = /\s+/.source;
 const COMMA = /\s*,\s*/.source;
 const ANLGE = /((?:-?(?:\d+(?:\.\d*)?|\.\d+)(?:deg|grad|rad|turn)?)|none)/
     .source;
-const ALPHA = '\\s*(?:/\\s*' + FLOAT_OR_PCT + ')?\\s*';
+const ALPHA = '(?:\\s*/\\s*' + FLOAT_OR_PCT + ')?\\s*';
 
 // e.g. rgb(250 20 0), rgb(100% 50% 20%), rgb(100% 50% 20% / 0.5)
 const RE_RGB = new RegExp(

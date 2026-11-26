@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { execFileSync } from 'node:child_process';
 import chroma from 'chroma-js';
 
 describe('modern CSS alpha components', () => {
@@ -10,6 +11,23 @@ describe('modern CSS alpha components', () => {
         'oklab(50% 0 0',
         'oklch(50% 0.1 120'
     ];
+
+    it('rejects long invalid whitespace without excessive backtracking', () => {
+        execFileSync(
+            process.execPath,
+            [
+                '--input-type=module',
+                '-e',
+                `import chroma from 'chroma-js';
+                for (const color of ${JSON.stringify(colors)}) {
+                    if (chroma.valid(color + ' '.repeat(100000) + 'x)')) {
+                        throw new Error('invalid CSS color accepted');
+                    }
+                }`
+            ],
+            { timeout: 2000 }
+        );
+    });
 
     it.each(colors)('resolves missing alpha to zero in %s', (color) => {
         expect(chroma.css(`${color} / none)`).alpha()).toBe(0);
