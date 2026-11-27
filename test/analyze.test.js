@@ -13,6 +13,13 @@ describe('Some tests for analyze()', () => {
         expect(result.domain).toEqual([1, 5]);
     });
 
+    it('computes numeric limits for values read as strings', () => {
+        const result = analyze([{ value: '2' }, { value: '10' }, { value: 'missing' }], 'value');
+        expect(result.sum).toBe(12);
+        expect(result.domain).toEqual([2, 10]);
+        expect(result.limits('e', 2)).toEqual([2, 6, 10]);
+    });
+
     it('analyze an object of numbers', () => {
         const result = analyze({ a: 1, b: 2, c: 2, d: 3, e: 4, f: 5 });
         expect(result.sum).toBe(17);

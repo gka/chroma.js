@@ -16,6 +16,7 @@ export function analyze(data, key = null) {
     data.forEach((val) => {
         if (key && type(val) === 'object') val = val[key];
         if (val !== undefined && val !== null && !isNaN(val)) {
+            val = Number(val);
             r.values.push(val);
             r.sum += val;
             if (val < r.min) r.min = val;
