@@ -4,6 +4,19 @@ import chroma from 'chroma-js';
 const scale = chroma.scale;
 
 describe('Some tests for scale()', () => {
+    it('samples a palette even when individual lookups have an output format', () => {
+        const f = scale(['black', 'white']).out('hex');
+        expect(f(0.5)).toBe('#808080');
+        expect(f.colors(1)).toEqual(['#808080']);
+        expect(f.colors(1, null)).toEqual(['#808080']);
+        expect(f.colors(3, 'rgb')).toEqual([
+            [0, 0, 0],
+            [128, 128, 128],
+            [255, 255, 255]
+        ]);
+        expect(f.classes([0, 1, 2]).colors(0)).toEqual(['#000000', '#ffffff']);
+    });
+
     describe('simple rgb scale (white-->black)', () => {
         const f = scale(['white', 'black']);
 

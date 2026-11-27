@@ -329,17 +329,18 @@ export default function (colors) {
         if (arguments.length < 2) {
             out = 'hex';
         }
+        const sample = chroma[out] ? (value) => chroma(getColor(value)) : f;
         let result = [];
 
         if (arguments.length === 0) {
             result = _colors.slice(0);
         } else if (numColors === 1) {
-            result = [f(0.5)];
+            result = [sample(0.5)];
         } else if (numColors > 1) {
             const dm = _positions[0];
             const dd = _positions[1] - dm;
             result = __range__(0, numColors, false).map((i) =>
-                f(dm + (i / (numColors - 1)) * dd)
+                sample(dm + (i / (numColors - 1)) * dd)
             );
         } else {
             // returns all colors based on the defined classes
@@ -356,7 +357,7 @@ export default function (colors) {
             } else {
                 samples = _positions;
             }
-            result = samples.map((v) => f(v));
+            result = samples.map(sample);
         }
 
         if (chroma[out]) {
